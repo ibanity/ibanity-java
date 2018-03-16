@@ -16,7 +16,6 @@ import java.util.UUID;
 public class FinancialInstitutionsServiceImpl extends AbstractServiceImpl implements FinancialInstitutionsService{
     private static final Logger LOGGER = LogManager.getLogger(FinancialInstitutionsServiceImpl.class);
 
-    private static final String FINANCIAL_INSTITUTION_ID_TAG = "<FI_ID>";
     private static final String ACCOUNT_INFORMATION_ACCESS_REQUEST_PATH = "/customer/financial-institutions/"+FINANCIAL_INSTITUTION_ID_TAG;
 
     private final ResourceRepositoryV2<FinancialInstitution, UUID> financialInstitutionsRepo;

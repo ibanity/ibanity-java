@@ -17,6 +17,8 @@ public abstract class AbstractServiceImpl {
 
     private static HashMap<String,CrnkClient> apiClients = new HashMap<>();
 
+    protected static final String FINANCIAL_INSTITUTION_ID_TAG = "<FI_ID>";
+
     public AbstractServiceImpl() {
     }
 
