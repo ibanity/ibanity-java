@@ -1,5 +1,7 @@
 package com.ibanity.api.impl;
 
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ibanity.api.configuration.IbanityConfiguration;
 import com.ibanity.models.CustomerAccessToken;
 import com.ibanity.network.http.client.HttpClientIbanityIntegration;
@@ -18,6 +20,9 @@ public abstract class AbstractServiceImpl {
     private static HashMap<String,CrnkClient> apiClients = new HashMap<>();
 
     protected static final String FINANCIAL_INSTITUTION_ID_TAG = "<FI_ID>";
+    protected static final String ACCOUNT_ID_TAG = "<ACCOUNT_ID>";
+    protected static final String ACCOUNT_INFORMATION_ACCESS_REQUEST_ID_TAG = "<ACCOUNT_INFORMATION_ACCESS_REQUEST_ID>";
+
 
     public AbstractServiceImpl() {
     }
@@ -29,6 +34,8 @@ public abstract class AbstractServiceImpl {
         }
         else {
             apiClient = new CrnkClient(IBANITY_API_ENDPOINT + path);
+            apiClient.getObjectMapper().registerModule(new Jdk8Module());
+            apiClient.getObjectMapper().registerModule(new JavaTimeModule());
             HttpClientAdapter adapter = (HttpClientAdapter) apiClient.getHttpAdapter();
             adapter.addListener(new HttpClientIbanityIntegration());
             apiClients.put(path, apiClient);
@@ -38,6 +45,8 @@ public abstract class AbstractServiceImpl {
 
     protected CrnkClient getApiClient(String path, CustomerAccessToken customerAccessToken){
         CrnkClient apiClient = new CrnkClient(IBANITY_API_ENDPOINT + path);
+        apiClient.getObjectMapper().registerModule(new Jdk8Module());
+        apiClient.getObjectMapper().registerModule(new JavaTimeModule());
         HttpClientAdapter adapter = (HttpClientAdapter) apiClient.getHttpAdapter();
         adapter.addListener(new HttpClientIbanityIntegration(customerAccessToken));
         return apiClient;

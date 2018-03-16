@@ -17,10 +17,12 @@ public class CustomerAccessToken extends AbstractModel{
     }
 
     public CustomerAccessToken(String application_customer_reference) {
+        super();
         this.application_customer_reference = application_customer_reference;
     }
 
     public CustomerAccessToken() {
+        super();
     }
 
 

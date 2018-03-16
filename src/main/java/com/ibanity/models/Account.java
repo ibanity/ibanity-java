@@ -24,7 +24,7 @@ public class Account extends AbstractModel {
     @JsonApiRelation(lookUp= LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL,serialize=SerializeType.ONLY_ID)
     private FinancialInstitution financialInstitution;
 
-    public Account(UUID id, String subType, String currency, String description, String reference, String referenceType, Double currentBalance, Double availableBalance) {
+    public Account(UUID id, String subType, String currency, String description, String reference, String referenceType, Double currentBalance, Double availableBalance, UUID financialInstitutionId) {
         super(id);
         this.subType = subType;
         this.currency = currency;
@@ -33,9 +33,17 @@ public class Account extends AbstractModel {
         this.referenceType = referenceType;
         this.currentBalance = currentBalance;
         this.availableBalance = availableBalance;
+        this.financialInstitution = new FinancialInstitution(financialInstitutionId);
     }
 
     public Account() {
+        super();
+        this.financialInstitution = new FinancialInstitution();
+    }
+
+    public Account(UUID id, UUID financialInstitutionId) {
+        super(id);
+        this.financialInstitution = new FinancialInstitution(financialInstitutionId);
     }
 
     public String getSubType() {

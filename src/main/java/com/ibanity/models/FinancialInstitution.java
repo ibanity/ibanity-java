@@ -24,6 +24,7 @@ public class FinancialInstitution extends AbstractModel {
     }
 
     public FinancialInstitution() {
+        super();
     }
 
     public Boolean getSandbox() {

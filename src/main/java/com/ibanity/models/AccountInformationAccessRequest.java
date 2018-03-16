@@ -13,7 +13,6 @@ import java.util.UUID;
 public class AccountInformationAccessRequest extends AbstractModel{
     private String redirectUri;
     private String consentReference;
-
     @JsonApiLinksInformation
     private AccountInformationAccessLinks links;
 
@@ -21,10 +20,16 @@ public class AccountInformationAccessRequest extends AbstractModel{
         super();
     }
 
+    public AccountInformationAccessRequest(UUID id) {
+        super(id);
+        this.links = new AccountInformationAccessLinks();
+    }
+
     public AccountInformationAccessRequest(UUID id, String redirectUri, String consentReference) {
         super(id);
         this.redirectUri = redirectUri;
         this.consentReference = consentReference;
+        this.links = new AccountInformationAccessLinks();
     }
 
     public String getRedirectUri() {
@@ -84,5 +89,4 @@ public class AccountInformationAccessRequest extends AbstractModel{
                 .append("redirectUri", redirectUri)
                 .toString();
     }
-
 }
