@@ -53,7 +53,7 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
     }
 
     @Override
-    public void removeAccountsAccess(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountInformationAccessRequestId, UUID accountInformationAccessAuthorizationId) {
+    public void removeAccountAccess(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountInformationAccessRequestId, UUID accountInformationAccessAuthorizationId) {
         getAccountInformationAccessAuthorizationRepo(customerAccessToken, financialInstitutionId, accountInformationAccessRequestId).delete(accountInformationAccessAuthorizationId);
     }
 

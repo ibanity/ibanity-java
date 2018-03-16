@@ -58,5 +58,5 @@ public interface AccountsService {
      * @param accountInformationAccessRequestId The Id of the Account Information Access Request through which the access was requested originally
      * @param accountInformationAccessAuthorizationId The Id of the Account Information Access Authorization that we want to remove
      */
-    void removeAccountsAccess(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountInformationAccessRequestId, UUID accountInformationAccessAuthorizationId);
+    void removeAccountAccess(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountInformationAccessRequestId, UUID accountInformationAccessAuthorizationId);
 }
