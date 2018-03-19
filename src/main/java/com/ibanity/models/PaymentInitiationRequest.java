@@ -1,9 +1,7 @@
 package com.ibanity.models;
 
-import io.crnk.core.resource.annotations.JsonApiRelation;
-import io.crnk.core.resource.annotations.JsonApiResource;
-import io.crnk.core.resource.annotations.LookupIncludeBehavior;
-import io.crnk.core.resource.annotations.SerializeType;
+import com.ibanity.models.links.PaymentAccessLinks;
+import io.crnk.core.resource.annotations.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -19,7 +17,7 @@ public class PaymentInitiationRequest extends AbstractModel{
     private String remittanceInformationType;
     private String remittanceInformation;
     private String currency;
-    private Double ammount;
+    private Double amount;
     private String debtorName;
     private String debtorAccountReference;
     private String debtorAccountReferenceType;
@@ -29,11 +27,18 @@ public class PaymentInitiationRequest extends AbstractModel{
     private String creditorAgent;
     private String creditorAgentType;
     private String status;
+    private String redirectUri;
+    private String customerIp;
+    private String customerAgent;
+
+
+    @JsonApiLinksInformation
+    private PaymentAccessLinks links;
 
     @JsonApiRelation(lookUp= LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL,serialize= SerializeType.ONLY_ID)
-    private FinancialInstitution financialInstitution;
+    private FinancialInstitution financialInstitution = null;
 
-    public PaymentInitiationRequest(UUID id, String consentReference, String endToEndId, String productType, String remittanceInformationType, String remittanceInformation, String currency, Double ammount, String debtorName, String debtorAccountReference, String debtorAccountReferenceType, String creditorName, String creditorAccountReference, String creditorAccountReferenceType, String creditorAgent, String creditorAgentType, String status, UUID financialInstitutionId) {
+    public PaymentInitiationRequest(UUID id, String consentReference, String endToEndId, String productType, String remittanceInformationType, String remittanceInformation, String currency, Double amount, String debtorName, String debtorAccountReference, String debtorAccountReferenceType, String creditorName, String creditorAccountReference, String creditorAccountReferenceType, String creditorAgent, String creditorAgentType, String status, UUID financialInstitutionId, String redirectUri) {
         super(id);
         this.consentReference = consentReference;
         this.endToEndId = endToEndId;
@@ -41,7 +46,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         this.remittanceInformationType = remittanceInformationType;
         this.remittanceInformation = remittanceInformation;
         this.currency = currency;
-        this.ammount = ammount;
+        this.amount = amount;
         this.debtorName = debtorName;
         this.debtorAccountReference = debtorAccountReference;
         this.debtorAccountReferenceType = debtorAccountReferenceType;
@@ -52,6 +57,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         this.creditorAgentType = creditorAgentType;
         this.status = status;
         this.financialInstitution = new FinancialInstitution(financialInstitutionId);
+        this.redirectUri = redirectUri;
     }
 
     public PaymentInitiationRequest() {
@@ -112,12 +118,12 @@ public class PaymentInitiationRequest extends AbstractModel{
         this.currency = currency;
     }
 
-    public Double getAmmount() {
-        return ammount;
+    public Double getAmount() {
+        return amount;
     }
 
-    public void setAmmount(Double ammount) {
-        this.ammount = ammount;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
     public String getDebtorName() {
@@ -200,6 +206,39 @@ public class PaymentInitiationRequest extends AbstractModel{
         this.financialInstitution = financialInstitution;
     }
 
+    public PaymentAccessLinks getLinks() {
+        return links;
+    }
+
+    public void setLinks(PaymentAccessLinks links) {
+        this.links = links;
+    }
+
+    public String getRedirectUri() {
+        return redirectUri;
+    }
+
+    public void setRedirectUri(String redirectUri) {
+        this.redirectUri = redirectUri;
+    }
+
+    public String getCustomerIp() {
+        return customerIp;
+    }
+
+    public void setCustomerIp(String customerIp) {
+        this.customerIp = customerIp;
+    }
+
+    public String getCustomerAgent() {
+        return customerAgent;
+    }
+
+    public void setCustomerAgent(String customerAgent) {
+        this.customerAgent = customerAgent;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -216,7 +255,7 @@ public class PaymentInitiationRequest extends AbstractModel{
                 .append(getRemittanceInformationType(), that.getRemittanceInformationType())
                 .append(getRemittanceInformation(), that.getRemittanceInformation())
                 .append(getCurrency(), that.getCurrency())
-                .append(getAmmount(), that.getAmmount())
+                .append(getAmount(), that.getAmount())
                 .append(getDebtorName(), that.getDebtorName())
                 .append(getDebtorAccountReference(), that.getDebtorAccountReference())
                 .append(getDebtorAccountReferenceType(), that.getDebtorAccountReferenceType())
@@ -226,6 +265,11 @@ public class PaymentInitiationRequest extends AbstractModel{
                 .append(getCreditorAgent(), that.getCreditorAgent())
                 .append(getCreditorAgentType(), that.getCreditorAgentType())
                 .append(getStatus(), that.getStatus())
+                .append(getRedirectUri(), that.getRedirectUri())
+                .append(getCustomerIp(), that.getCustomerIp())
+                .append(getCustomerAgent(), that.getCustomerAgent())
+                .append(getLinks(), that.getLinks())
+                .append(getFinancialInstitution(), that.getFinancialInstitution())
                 .isEquals();
     }
 
@@ -239,7 +283,7 @@ public class PaymentInitiationRequest extends AbstractModel{
                 .append(getRemittanceInformationType())
                 .append(getRemittanceInformation())
                 .append(getCurrency())
-                .append(getAmmount())
+                .append(getAmount())
                 .append(getDebtorName())
                 .append(getDebtorAccountReference())
                 .append(getDebtorAccountReferenceType())
@@ -249,13 +293,18 @@ public class PaymentInitiationRequest extends AbstractModel{
                 .append(getCreditorAgent())
                 .append(getCreditorAgentType())
                 .append(getStatus())
+                .append(getRedirectUri())
+                .append(getCustomerIp())
+                .append(getCustomerAgent())
+                .append(getLinks())
+                .append(getFinancialInstitution())
                 .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("ammount", ammount)
+                .append("amount", amount)
                 .append("consentReference", consentReference)
                 .append("creditorAccountReference", creditorAccountReference)
                 .append("creditorAccountReferenceType", creditorAccountReferenceType)
@@ -263,13 +312,17 @@ public class PaymentInitiationRequest extends AbstractModel{
                 .append("creditorAgentType", creditorAgentType)
                 .append("creditorName", creditorName)
                 .append("currency", currency)
+                .append("customerAgent", customerAgent)
+                .append("customerIp", customerIp)
                 .append("debtorAccountReference", debtorAccountReference)
                 .append("debtorAccountReferenceType", debtorAccountReferenceType)
                 .append("debtorName", debtorName)
                 .append("endToEndId", endToEndId)
                 .append("financialInstitution", financialInstitution)
                 .append("id", getId())
+                .append("links", links)
                 .append("productType", productType)
+                .append("redirectUri", redirectUri)
                 .append("remittanceInformation", remittanceInformation)
                 .append("remittanceInformationType", remittanceInformationType)
                 .append("status", status)

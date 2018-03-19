@@ -1,14 +1,8 @@
 package com.ibanity;
 
-import com.ibanity.api.AccountsService;
-import com.ibanity.api.CustomerAccessTokensService;
-import com.ibanity.api.FinancialInstitutionsService;
-import com.ibanity.api.TransactionsService;
+import com.ibanity.api.*;
 import com.ibanity.api.configuration.IbanityConfiguration;
-import com.ibanity.api.impl.AccountsServiceImpl;
-import com.ibanity.api.impl.CustomerAccessTokensServiceImpl;
-import com.ibanity.api.impl.FinancialInstitutionsServiceImpl;
-import com.ibanity.api.impl.TransactionsServiceImpl;
+import com.ibanity.api.impl.*;
 import com.ibanity.exceptions.ResourceNotFoundException;
 import com.ibanity.models.*;
 import org.apache.logging.log4j.LogManager;
@@ -26,11 +20,13 @@ public class Client {
 
     //Don't forget to configure the REDIRECT URL in your Application configuration on the iBanity Developper Portal
     private static final String FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL = "https://faketpp.com/accounts-access-granted";
+    private static final String FAKE_TPP_PAYMENT_INITIATION_REDIRECT_URL = "https://faketpp.com/payment-initiation-redirect";
 
     private FinancialInstitutionsService financialInstitutionsService = new FinancialInstitutionsServiceImpl();
     private CustomerAccessTokensService customerAccessTokensService = new CustomerAccessTokensServiceImpl();
     private AccountsService accountsService = new AccountsServiceImpl();
     private TransactionsService transactionsService = new TransactionsServiceImpl();
+    private PaymentsService paymentsService = new PaymentsServiceImpl();
 
     public static void main(String[] args){
         Client client  = new Client();
@@ -56,7 +52,8 @@ public class Client {
         accountInformationAccessRequest.setFinancialInstitution(inUseFinancialInstitution.get());
         AccountInformationAccessRequest resultingAccountInformationAccessRequest = accountsService.getAccountsInformationAccessRedirectUrl(generatedCustomerAccessToken, accountInformationAccessRequest);
         LOGGER.debug("AccountInformationAccessRequest:"+resultingAccountInformationAccessRequest.toString());
-        LOGGER.debug("Accounts Information Access Request: End-User to be redirected to:"+resultingAccountInformationAccessRequest.getLinks().getRedirect());
+        LOGGER.debug("Accounts Information Access Request: End-User to be redirected to :\n"+resultingAccountInformationAccessRequest.getLinks().getRedirect());
+        LOGGER.debug("in order to specify which Financial Institution's accounts will be authorised to be accessed through the TPP.");
         LOGGER.debug("End : Account Information Access Request");
 
         Scanner s = new Scanner(System.in);
@@ -84,6 +81,26 @@ public class Client {
         LOGGER.debug("Start : Remove Account Access Authorization");
         accountsService.revokeAccountsAccessAuthorization(generatedCustomerAccessToken, inUseFinancialInstitution.get().getId(), inUseAccountInformationAccessAuthorization.get());
         LOGGER.debug("Stop : Remove Account Access Authorization");
+
+        LOGGER.debug("Start : Payment Initiation Request");
+        PaymentInitiationRequest paymentInitiationRequest = new PaymentInitiationRequest();
+        paymentInitiationRequest.setRedirectUri(FAKE_TPP_PAYMENT_INITIATION_REDIRECT_URL);
+        paymentInitiationRequest.setFinancialInstitution(inUseFinancialInstitution.get());
+        paymentInitiationRequest.setConsentReference(UUID.randomUUID().toString());
+        paymentInitiationRequest.setEndToEndId(UUID.randomUUID().toString());
+        paymentInitiationRequest.setCustomerIp("192.168.0.1");
+        paymentInitiationRequest.setCustomerAgent("Mozilla");
+        paymentInitiationRequest.setProductType("sepa-credit-transfer");
+        paymentInitiationRequest.setRemittanceInformationType("unstructured");
+        paymentInitiationRequest.setCurrency("EUR");
+        paymentInitiationRequest.setAmount(new Double(50.4));
+        paymentInitiationRequest.setCreditorName("Fake Creditor Name");
+        paymentInitiationRequest.setCreditorAccountReference("BE23947805459949");
+        paymentInitiationRequest.setCreditorAccountReferenceType("IBAN");
+        PaymentInitiationRequest resultingPaymentInitiationRequest = paymentsService.initiatePaymentRequest(generatedCustomerAccessToken, paymentInitiationRequest);
+        LOGGER.debug("Payment Initiation: End User to be redirected to :\n"+resultingPaymentInitiationRequest.getLinks().getRedirect()+":\n in order to complete/proceed with the payment process.");
+        LOGGER.debug("End : Payment Initiation Request");
+
     }
 
     public void getFinancialInstitutions() {

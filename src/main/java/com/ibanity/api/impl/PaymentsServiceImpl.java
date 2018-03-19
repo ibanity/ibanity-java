@@ -15,8 +15,8 @@ public class PaymentsServiceImpl extends AbstractServiceImpl implements Payments
     private static final String PAYMENT_INITIATION_REQUESTS_PATH = "/customer/financial-institutions/"+FINANCIAL_INSTITUTION_ID_TAG;
 
     @Override
-    public PaymentInitiationRequest initiatePaymentRequest(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, PaymentInitiationRequest paymentInitiationRequest) {
-        return getRepository(customerAccessToken, financialInstitutionId).create(paymentInitiationRequest);
+    public PaymentInitiationRequest initiatePaymentRequest(CustomerAccessToken customerAccessToken, PaymentInitiationRequest paymentInitiationRequest) {
+        return getRepository(customerAccessToken, paymentInitiationRequest.getFinancialInstitution().getId()).create(paymentInitiationRequest);
     }
 
     @Override
