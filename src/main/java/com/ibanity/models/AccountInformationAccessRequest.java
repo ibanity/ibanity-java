@@ -1,8 +1,7 @@
 package com.ibanity.models;
 
 import com.ibanity.models.links.AccountInformationAccessLinks;
-import io.crnk.core.resource.annotations.JsonApiLinksInformation;
-import io.crnk.core.resource.annotations.JsonApiResource;
+import io.crnk.core.resource.annotations.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -16,6 +15,9 @@ public class AccountInformationAccessRequest extends AbstractModel{
     @JsonApiLinksInformation
     private AccountInformationAccessLinks links;
 
+    @JsonApiRelation(lookUp= LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL,serialize= SerializeType.ONLY_ID)
+    private FinancialInstitution financialInstitution = null;
+
     public AccountInformationAccessRequest() {
         super();
     }
@@ -25,10 +27,9 @@ public class AccountInformationAccessRequest extends AbstractModel{
         this.links = new AccountInformationAccessLinks();
     }
 
-    public AccountInformationAccessRequest(UUID id, String redirectUri, String consentReference) {
+    public AccountInformationAccessRequest(UUID id, UUID financialInstitutionId) {
         super(id);
-        this.redirectUri = redirectUri;
-        this.consentReference = consentReference;
+        this.financialInstitution = new FinancialInstitution(financialInstitutionId);
         this.links = new AccountInformationAccessLinks();
     }
 
@@ -54,6 +55,14 @@ public class AccountInformationAccessRequest extends AbstractModel{
 
     public void setLinks(AccountInformationAccessLinks links) {
         this.links = links;
+    }
+
+    public FinancialInstitution getFinancialInstitution() {
+        return financialInstitution;
+    }
+
+    public void setFinancialInstitution(FinancialInstitution financialInstitution) {
+        this.financialInstitution = financialInstitution;
     }
 
     @Override
@@ -84,9 +93,11 @@ public class AccountInformationAccessRequest extends AbstractModel{
     public String toString() {
         return new ToStringBuilder(this)
                 .append("consentReference", consentReference)
+                .append("financialInstitution", financialInstitution)
                 .append("id", getId())
                 .append("links", links)
                 .append("redirectUri", redirectUri)
                 .toString();
     }
+
 }

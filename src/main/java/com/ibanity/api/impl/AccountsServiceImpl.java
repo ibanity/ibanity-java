@@ -19,8 +19,7 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
 
     private static final String ACCOUNTS_REQUEST_PATH = "/customer";
     private static final String ACCOUNTS_FI_REQUEST_PATH = ACCOUNTS_REQUEST_PATH+ "/financial-institutions/"+FINANCIAL_INSTITUTION_ID_TAG;
-    private static final String ACCOUNT_INFORMATION_ACCESS_REQUEST_PATH = ACCOUNTS_FI_REQUEST_PATH + "/account-information-access-requests"+ACCOUNT_INFORMATION_ACCESS_REQUEST_ID_TAG;
-    private static final String ACCOUNT_INFORMATION_ACCESS_AUTHORIZATION_PATH = ACCOUNT_INFORMATION_ACCESS_REQUEST_PATH + "/account-information-access-authorizations";
+    private static final String ACCOUNT_INFORMATION_ACCESS_REQUEST_PATH = ACCOUNTS_FI_REQUEST_PATH + "/account-information-access-requests/"+ACCOUNT_INFORMATION_ACCESS_REQUEST_ID_TAG;
 
     public AccountsServiceImpl() {
         super();
@@ -41,24 +40,24 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
 
 
     @Override
-    public AccountInformationAccessRequest getAccountInformationAccessRedirectUrl(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, AccountInformationAccessRequest accountInformationAccessRequest) {
-        String correctPath = ACCOUNTS_FI_REQUEST_PATH.replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString());
+    public AccountInformationAccessRequest getAccountsInformationAccessRedirectUrl(CustomerAccessToken customerAccessToken, AccountInformationAccessRequest accountInformationAccessRequest) {
+        String correctPath = ACCOUNTS_FI_REQUEST_PATH.replace(FINANCIAL_INSTITUTION_ID_TAG, accountInformationAccessRequest.getFinancialInstitution().getId().toString());
         ResourceRepositoryV2<AccountInformationAccessRequest, UUID> accountInformationAccessRequestRepo = getApiClient(correctPath, customerAccessToken).getRepositoryForType(AccountInformationAccessRequest.class);
         return accountInformationAccessRequestRepo.create(accountInformationAccessRequest);
     }
 
     @Override
-    public List<AccountInformationAccessAuthorization> getAccountInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountInformationAccessRequestId) {
-        return getAccountInformationAccessAuthorizationRepo(customerAccessToken, financialInstitutionId, accountInformationAccessRequestId).findAll(new QuerySpec(AccountInformationAccessAuthorization.class));
+    public List<AccountInformationAccessAuthorization> getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, AccountInformationAccessRequest accountInformationAccessRequest) {
+        return getAccountInformationAccessAuthorizationRepo(customerAccessToken, accountInformationAccessRequest.getFinancialInstitution().getId(), accountInformationAccessRequest.getId()).findAll(new QuerySpec(AccountInformationAccessAuthorization.class));
     }
 
     @Override
-    public void removeAccountAccess(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountInformationAccessRequestId, UUID accountInformationAccessAuthorizationId) {
-        getAccountInformationAccessAuthorizationRepo(customerAccessToken, financialInstitutionId, accountInformationAccessRequestId).delete(accountInformationAccessAuthorizationId);
+    public void revokeAccountsAccessAuthorization(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, AccountInformationAccessAuthorization accountInformationAccessAuthorization) {
+        getAccountInformationAccessAuthorizationRepo(customerAccessToken, financialInstitutionId, accountInformationAccessAuthorization.getAccountInformationAccessRequest().getId()).delete(accountInformationAccessAuthorization.getId());
     }
 
     private ResourceRepositoryV2<AccountInformationAccessAuthorization, UUID> getAccountInformationAccessAuthorizationRepo(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountInformationAccessRequestId) {
-        String correctPath = ACCOUNT_INFORMATION_ACCESS_AUTHORIZATION_PATH
+        String correctPath = ACCOUNT_INFORMATION_ACCESS_REQUEST_PATH
                 .replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString())
                 .replace(ACCOUNT_INFORMATION_ACCESS_REQUEST_ID_TAG, accountInformationAccessRequestId.toString());
         return getApiClient(correctPath, customerAccessToken).getRepositoryForType(AccountInformationAccessAuthorization.class);

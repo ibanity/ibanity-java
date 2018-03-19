@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class PaymentsServiceImpl extends AbstractServiceImpl implements PaymentsService{
     private static final Logger LOGGER = LogManager.getLogger(PaymentsServiceImpl.class);
-    private static final String PAYMENT_INITIATION_REQUESTS_PATH = "/customer/financial-institutions/"+FINANCIAL_INSTITUTION_ID_TAG+"/payment-initiation-requests";
+    private static final String PAYMENT_INITIATION_REQUESTS_PATH = "/customer/financial-institutions/"+FINANCIAL_INSTITUTION_ID_TAG;
 
     @Override
     public PaymentInitiationRequest initiatePaymentRequest(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, PaymentInitiationRequest paymentInitiationRequest) {

@@ -1,6 +1,6 @@
 package com.ibanity.models;
 
-import io.crnk.core.resource.annotations.JsonApiResource;
+import io.crnk.core.resource.annotations.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,17 +13,31 @@ public class AccountInformationAccessAuthorization extends AbstractModel{
     private String accountReference;
     private Instant revokedAt;
 
+    @JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, repositoryBehavior = RelationshipRepositoryBehavior.DEFAULT, serialize = SerializeType.ONLY_ID)
+    private AccountInformationAccessRequest accountInformationAccessRequest = null;
+
     public AccountInformationAccessAuthorization() {
+        super();
     }
 
-    public AccountInformationAccessAuthorization(UUID id, String accountReference, Instant revokedAt) {
+    public AccountInformationAccessAuthorization(UUID id, String accountReference, Instant revokedAt, AccountInformationAccessRequest accountInformationAccessRequest) {
         super(id);
         this.accountReference = accountReference;
         this.revokedAt = revokedAt;
+        setAccountInformationAccessRequest(accountInformationAccessRequest);
     }
 
-    public AccountInformationAccessAuthorization(UUID id) {
+    public AccountInformationAccessAuthorization(UUID id, AccountInformationAccessRequest accountInformationAccessRequest) {
         super(id);
+        setAccountInformationAccessRequest(accountInformationAccessRequest);
+    }
+
+    public AccountInformationAccessRequest getAccountInformationAccessRequest() {
+        return accountInformationAccessRequest;
+    }
+
+    public void setAccountInformationAccessRequest(AccountInformationAccessRequest accountInformationAccessRequest) {
+        this.accountInformationAccessRequest = accountInformationAccessRequest;
     }
 
     public String getAccountReference() {
@@ -69,6 +83,7 @@ public class AccountInformationAccessAuthorization extends AbstractModel{
     @Override
     public String toString() {
         return new ToStringBuilder(this)
+                .append("accountInformationAccessRequest", accountInformationAccessRequest)
                 .append("accountReference", accountReference)
                 .append("id", getId())
                 .append("revokedAt", revokedAt)
