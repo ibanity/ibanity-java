@@ -1,7 +1,7 @@
 package com.ibanity;
 
 import com.ibanity.api.*;
-import com.ibanity.api.configuration.IbanityConfiguration;
+import com.ibanity.api.configuration.IBanityConfiguration;
 import com.ibanity.api.impl.*;
 import com.ibanity.exceptions.ResourceNotFoundException;
 import com.ibanity.models.*;
@@ -16,11 +16,11 @@ import java.util.concurrent.atomic.AtomicReference;
 public class Client {
     private static final Logger LOGGER = LogManager.getLogger(Client.class);
 
-    private static final String IBANITY_API_ENDPOINT = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "api.endpoint");
+    private static final String IBANITY_API_ENDPOINT = IBanityConfiguration.getConfiguration().getString(IBanityConfiguration.IBANITY_PROPERTIES_PREFIX + "api.endpoint");
 
     //Don't forget to configure the REDIRECT URL in your Application configuration on the iBanity Developper Portal
     private static final String FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL = "https://faketpp.com/accounts-access-granted";
-    private static final String FAKE_TPP_PAYMENT_INITIATION_REDIRECT_URL = "https://faketpp.com/payment-initiation-redirect";
+    private static final String FAKE_TPP_PAYMENT_INITIATION_REDIRECT_URL = "https://faketpp2.com/payment-initiation-redirect";
 
     private FinancialInstitutionsService financialInstitutionsService = new FinancialInstitutionsServiceImpl();
     private CustomerAccessTokensService customerAccessTokensService = new CustomerAccessTokensServiceImpl();
@@ -40,8 +40,8 @@ public class Client {
                                                             LOGGER.debug(financialInstitution.toString());}
                                                             );
         LOGGER.debug("Start : Customer Access Token Request");
-        CustomerAccessToken customerAccessToken = new CustomerAccessToken("application_customer_reference");
-        CustomerAccessToken generatedCustomerAccessToken = customerAccessTokensService.createCustomerAccessToken(customerAccessToken);
+        CustomerAccessToken customerAccessTokenRequest = new CustomerAccessToken("application_customer_reference");
+        CustomerAccessToken generatedCustomerAccessToken = customerAccessTokensService.createCustomerAccessToken(customerAccessTokenRequest);
         LOGGER.debug(generatedCustomerAccessToken);
         LOGGER.debug("End : Customer Access Token Request");
 

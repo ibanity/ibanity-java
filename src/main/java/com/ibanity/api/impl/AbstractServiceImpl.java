@@ -2,9 +2,9 @@ package com.ibanity.api.impl;
 
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.ibanity.api.configuration.IbanityConfiguration;
+import com.ibanity.api.configuration.IBanityConfiguration;
 import com.ibanity.models.CustomerAccessToken;
-import com.ibanity.network.http.client.HttpClientIbanityIntegration;
+import com.ibanity.network.http.client.IBanityAccessTokenAdapterListener;
 import io.crnk.client.CrnkClient;
 import io.crnk.client.http.apache.HttpClientAdapter;
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 public abstract class AbstractServiceImpl {
     private static final Logger LOGGER = LogManager.getLogger(AbstractServiceImpl.class);
 
-    private static final String IBANITY_API_ENDPOINT = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "api.endpoint");
+    private static final String IBANITY_API_ENDPOINT = IBanityConfiguration.getConfiguration().getString(IBanityConfiguration.IBANITY_PROPERTIES_PREFIX + "api.endpoint");
 
     private static HashMap<String,CrnkClient> apiClients = new HashMap<>();
 
@@ -33,11 +33,7 @@ public abstract class AbstractServiceImpl {
             apiClient = apiClients.get(path);
         }
         else {
-            apiClient = new CrnkClient(IBANITY_API_ENDPOINT + path);
-            apiClient.getObjectMapper().registerModule(new Jdk8Module());
-            apiClient.getObjectMapper().registerModule(new JavaTimeModule());
-            HttpClientAdapter adapter = (HttpClientAdapter) apiClient.getHttpAdapter();
-            adapter.addListener(new HttpClientIbanityIntegration());
+            apiClient = getApiClient(path, null);
             apiClients.put(path, apiClient);
         }
         return apiClient;
@@ -48,7 +44,10 @@ public abstract class AbstractServiceImpl {
         apiClient.getObjectMapper().registerModule(new Jdk8Module());
         apiClient.getObjectMapper().registerModule(new JavaTimeModule());
         HttpClientAdapter adapter = (HttpClientAdapter) apiClient.getHttpAdapter();
-        adapter.addListener(new HttpClientIbanityIntegration(customerAccessToken));
+        if (customerAccessToken == null){
+            adapter.addListener(new IBanityAccessTokenAdapterListener());
+        }
+        adapter.addListener(new IBanityAccessTokenAdapterListener(customerAccessToken));
         return apiClient;
     }
 }

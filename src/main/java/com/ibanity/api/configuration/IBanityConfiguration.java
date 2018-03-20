@@ -12,14 +12,14 @@ import org.apache.logging.log4j.Logger;
 import java.util.Arrays;
 import java.util.List;
 
-public class IbanityConfiguration {
+public class IBanityConfiguration {
 
     public static final String IBANITY_PROPERTIES_PREFIX = "ibanity.";
 
     private static final String PROPERTIES_FILE = "ibanity.properties";
     private static Configuration CONFIGURATION = null;
 
-    private static final Logger LOGGER = LogManager.getLogger(IbanityConfiguration.class);
+    private static final Logger LOGGER = LogManager.getLogger(IBanityConfiguration.class);
 
     public static Configuration getConfiguration() {
         if (CONFIGURATION == null) {
