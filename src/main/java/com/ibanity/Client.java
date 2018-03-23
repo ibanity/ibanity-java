@@ -1,10 +1,11 @@
 package com.ibanity;
 
-import com.ibanity.api.*;
-import com.ibanity.api.configuration.IBanityConfiguration;
-import com.ibanity.api.impl.*;
-import com.ibanity.exceptions.ResourceNotFoundException;
-import com.ibanity.models.*;
+import com.ibanity.client.api.*;
+import com.ibanity.client.api.configuration.IBanityConfiguration;
+import com.ibanity.client.api.impl.*;
+import com.ibanity.client.exceptions.ResourceNotFoundException;
+import com.ibanity.client.models.*;
+import com.ibanity.client.paging.PagingSpec;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,14 +32,32 @@ public class Client {
     public static void main(String[] args){
         Client client  = new Client();
         client.startFlow1();
+
+
     }
 
     public void startFlow1(){
+
+        LOGGER.debug("Start : List of Financial Institutions: starting with 1 FI");
+
         AtomicReference<FinancialInstitution> inUseFinancialInstitution = new AtomicReference();
-        financialInstitutionsService.getFinancialInstitutions().stream().forEach(financialInstitution -> {
+        PagingSpec pagingSpec = new PagingSpec();
+        pagingSpec.setLimit(1);
+        financialInstitutionsService.getFinancialInstitutions(pagingSpec).stream().forEach(financialInstitution -> {
                                                             inUseFinancialInstitution.set(financialInstitution);
                                                             LOGGER.debug(financialInstitution.toString());}
                                                             );
+        LOGGER.debug("END : List of Financial Institutions: starting with 1 FI");
+        LOGGER.debug("Start : List of Financial Institutions: after:"+inUseFinancialInstitution.get().getId()+":");
+        pagingSpec.setAfter(inUseFinancialInstitution.get().getId());
+        pagingSpec.setLimit(10);
+        financialInstitutionsService.getFinancialInstitutions(pagingSpec).stream().forEach(financialInstitution -> {
+            inUseFinancialInstitution.set(financialInstitution);
+            LOGGER.debug(financialInstitution.toString());}
+        );
+        LOGGER.debug("END : List of Financial Institutions: after:");
+
+
         LOGGER.debug("Start : Customer Access Token Request");
         CustomerAccessToken customerAccessTokenRequest = new CustomerAccessToken("application_customer_reference");
         CustomerAccessToken generatedCustomerAccessToken = customerAccessTokensService.createCustomerAccessToken(customerAccessTokenRequest);
@@ -69,13 +88,42 @@ public class Client {
 
 
         AtomicReference<Account> inUseAccount = new AtomicReference();
-        LOGGER.debug("Start : Accounts details");
-        accountsService.getCustomerAccounts(generatedCustomerAccessToken).forEach(account -> LOGGER.debug(account.toString()));
-        accountsService.getCustomerAccounts(generatedCustomerAccessToken,inUseFinancialInstitution.get().getId()).forEach(account -> {inUseAccount.set(account); LOGGER.debug(account.toString());});
-        LOGGER.debug("End : Accounts details");
+        LOGGER.debug("Start : get All Accounts");
+        List<Account> accounts = accountsService.getCustomerAccounts(generatedCustomerAccessToken);
+        accounts.forEach(account -> LOGGER.debug(account.toString()));
+        LOGGER.debug("End : get All Accounts");
+        LOGGER.debug("Start : get All Accounts for financial institution:"+inUseFinancialInstitution.get().getId()+":");
+        accountsService.getCustomerAccounts(generatedCustomerAccessToken,inUseFinancialInstitution.get().getId(), pagingSpec).forEach(account -> {inUseAccount.set(account); LOGGER.debug(account.toString());});
+        LOGGER.debug("End : get All Accounts for financial institution:"+inUseFinancialInstitution.get().getId()+":");
+
+        pagingSpec = new PagingSpec();
+        pagingSpec.setLimit(2);
+        LOGGER.debug("Start : Accounts details 2 of them");
+        accountsService.getCustomerAccounts(generatedCustomerAccessToken, pagingSpec).forEach(account -> {inUseAccount.set(account); LOGGER.debug(account.toString());});
+        LOGGER.debug("End : Accounts details 2 of them");
+
+        UUID afterUUID = inUseAccount.get().getId();
+        pagingSpec.setAfter(afterUUID);
+        LOGGER.debug("Start : Accounts details next 2");
+        accountsService.getCustomerAccounts(generatedCustomerAccessToken, pagingSpec).forEach(account ->{inUseAccount.set(account); LOGGER.debug(account.toString());});
+        LOGGER.debug("End : Accounts details next 2");
+
+        UUID beforeUUID = inUseAccount.get().getId();
+
+        pagingSpec = new PagingSpec();
+        pagingSpec.setAfter(beforeUUID);
+        pagingSpec.setLimit(100);
+        LOGGER.debug("Start : Accounts details all the rest");
+        accountsService.getCustomerAccounts(generatedCustomerAccessToken, pagingSpec).forEach(account -> {inUseAccount.set(account); LOGGER.debug(account.toString());});
+        LOGGER.debug("End : Accounts details all the rest");
+
 
         LOGGER.debug("Start : Transactions details");
-        transactionsService.getAccountTransactions(generatedCustomerAccessToken, inUseAccount.get()).forEach(transaction -> LOGGER.debug(transaction.toString()));
+        List<Transaction> transactionsList = transactionsService.getAccountTransactions(generatedCustomerAccessToken, inUseAccount.get());
+        transactionsList.stream().forEach(transaction -> LOGGER.debug(transaction.toString()));
+
+        transactionsList = transactionsService.getAccountTransactions(generatedCustomerAccessToken, inUseAccount.get());
+        transactionsList.stream().forEach(transaction -> LOGGER.debug(transaction.toString()));
         LOGGER.debug("End : Transactions details");
 
         LOGGER.debug("Start : Remove Account Access Authorization");
@@ -115,8 +163,8 @@ public class Client {
         }
     }
 
-    public void getCustomerAccessToken(){
-        CustomerAccessToken customerAccessToken = new CustomerAccessToken("application_customer_reference");
-        LOGGER.debug(customerAccessTokensService.createCustomerAccessToken(customerAccessToken));
-    }
+//    public void getCustomerAccessToken(){
+//        CustomerAccessToken customerAccessToken = new CustomerAccessToken("application_customer_reference");
+//        LOGGER.debug(customerAccessTokensService.createCustomerAccessToken(customerAccessToken));
+//    }
 }

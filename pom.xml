@@ -17,10 +17,11 @@
         <commons-io.version>2.6</commons-io.version>
         <log4j.version>2.6.1</log4j.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
-        <crnk.version>2.5.20180314134358</crnk.version>
+        <crnk.version>1.0.0-SNAPSHOT</crnk.version>
         <httpclient.version>4.5.5</httpclient.version>
         <jackson.version>2.9.4</jackson.version>
         <bcpkix-jdk14.version>1.59</bcpkix-jdk14.version>
+        <reflections.version>0.9.11</reflections.version>
     </properties>
 
     <dependencies>
@@ -78,6 +79,11 @@
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk14</artifactId>
             <version>${bcpkix-jdk14.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>${reflections.version}</version>
         </dependency>
     </dependencies>
 </project>
