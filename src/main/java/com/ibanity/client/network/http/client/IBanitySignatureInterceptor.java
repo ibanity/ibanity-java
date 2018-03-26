@@ -93,12 +93,16 @@ public class IBanitySignatureInterceptor implements HttpRequestInterceptor {
         httpRequest.addHeader(HEADER_NAME_DATE, Instant.now().toString());
     }
 
-    private void setRequestTargetHeader(HttpRequest httpRequest) {
-        HttpRequestWrapper requestWrapper = (HttpRequestWrapper) httpRequest;
-        String value = StringUtils.lowerCase(requestWrapper.getRequestLine().getMethod())
+    private String getRequestTargetHeaderValue(HttpRequestWrapper requestWrapper){
+        return  StringUtils.lowerCase(requestWrapper.getRequestLine().getMethod())
                 + HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR
                 + requestWrapper.getRequestLine().getUri();
 
+    }
+
+    private void setRequestTargetHeader(HttpRequest httpRequest) {
+        HttpRequestWrapper requestWrapper = (HttpRequestWrapper) httpRequest;
+        String value = getRequestTargetHeaderValue(requestWrapper);
         httpRequest.addHeader(HEADER_NAME_REQUEST_TARGET, value);
         LOGGER.debug("setRequestTargetHeader:"+value);
     }
@@ -151,11 +155,16 @@ public class IBanitySignatureInterceptor implements HttpRequestInterceptor {
     private String generateSignatureString(HttpRequestWrapper requestWrapper, String signatureHeaders) {
         StringBuilder signature = new StringBuilder();
         Stream.of(StringUtils.split(signatureHeaders, HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR))
-                .filter(headerName ->  ! StringUtils.equalsIgnoreCase(headerName, HEADER_NAME_REQUEST_TARGET))
                 .forEach(headerName -> {
-                    Header header = requestWrapper.getFirstHeader(headerName);
-                    signature.append(StringUtils.lowerCase(header.getName())).append(": ").append(header.getValue()).append("\n");
+                    if (! StringUtils.equalsIgnoreCase(headerName, HEADER_NAME_REQUEST_TARGET)) {
+                        Header header = requestWrapper.getFirstHeader(headerName);
+                        signature.append(StringUtils.lowerCase(header.getName())).append(": ").append(header.getValue()).append("\n");
+                    }
+                    else {
+                        signature.append(StringUtils.lowerCase(headerName)).append(": ").append(getRequestTargetHeaderValue(requestWrapper)).append("\n");
+                    }
                 });
+        signature.deleteCharAt(signature.lastIndexOf("\n"));
         LOGGER.debug("generateSignatureString:\n"+signature.toString()+"\n:");
         return signature.toString();
     }
@@ -168,7 +177,7 @@ public class IBanitySignatureInterceptor implements HttpRequestInterceptor {
             signature.update(signatureString.getBytes());
             byte[] signedData = signature.sign();
 
-            String base64SignatureValue = Base64.getEncoder().encodeToString(signedData);
+            String base64SignatureValue = Base64.getUrlEncoder().encodeToString(signedData);
             LOGGER.debug("Signature:" + base64SignatureValue);
             return base64SignatureValue;
         } catch (Exception e) {
