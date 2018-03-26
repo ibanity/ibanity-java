@@ -3,7 +3,6 @@ package com.ibanity;
 import com.ibanity.client.api.*;
 import com.ibanity.client.api.configuration.IBanityConfiguration;
 import com.ibanity.client.api.impl.*;
-import com.ibanity.client.exceptions.ResourceNotFoundException;
 import com.ibanity.client.models.*;
 import com.ibanity.client.paging.PagingSpec;
 import org.apache.logging.log4j.LogManager;
@@ -14,14 +13,13 @@ import java.util.Scanner;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class Client {
-    private static final Logger LOGGER = LogManager.getLogger(Client.class);
+public class ClientSample {
+    private static final Logger LOGGER = LogManager.getLogger(ClientSample.class);
 
     private static final String IBANITY_API_ENDPOINT = IBanityConfiguration.getConfiguration().getString(IBanityConfiguration.IBANITY_PROPERTIES_PREFIX + "api.endpoint");
 
-    //Don't forget to configure the REDIRECT URL in your Application configuration on the iBanity Developper Portal
-    private static final String FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL = "https://faketpp.com/accounts-access-granted";
-    private static final String FAKE_TPP_PAYMENT_INITIATION_REDIRECT_URL = "https://faketpp2.com/payment-initiation-redirect";
+    private static final String FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL = IBanityConfiguration.getConfiguration().getString(IBanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.accounts.information.access.result.redirect.url");
+    private static final String FAKE_TPP_PAYMENT_INITIATION_REDIRECT_URL = IBanityConfiguration.getConfiguration().getString(IBanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.payments.initiation.result.redirect.url");
 
     private FinancialInstitutionsService financialInstitutionsService = new FinancialInstitutionsServiceImpl();
     private CustomerAccessTokensService customerAccessTokensService = new CustomerAccessTokensServiceImpl();
@@ -30,13 +28,11 @@ public class Client {
     private PaymentsService paymentsService = new PaymentsServiceImpl();
 
     public static void main(String[] args){
-        Client client  = new Client();
-        client.startFlow1();
-
-
+        ClientSample client  = new ClientSample();
+        client.startFlow();
     }
 
-    public void startFlow1(){
+    public void startFlow(){
 
         LOGGER.debug("Start : List of Financial Institutions: starting with 1 FI");
 
@@ -71,7 +67,9 @@ public class Client {
         accountInformationAccessRequest.setFinancialInstitution(inUseFinancialInstitution.get());
         AccountInformationAccessRequest resultingAccountInformationAccessRequest = accountsService.getAccountsInformationAccessRedirectUrl(generatedCustomerAccessToken, accountInformationAccessRequest);
         LOGGER.debug("AccountInformationAccessRequest:"+resultingAccountInformationAccessRequest.toString());
-        LOGGER.debug("Accounts Information Access Request: End-User to be redirected to :\n"+resultingAccountInformationAccessRequest.getLinks().getRedirect());
+        LOGGER.warn("#######################################");
+        LOGGER.warn("Accounts Information Access Request: End-User to be redirected to :\n"+resultingAccountInformationAccessRequest.getLinks().getRedirect());
+        LOGGER.warn("#######################################");
         LOGGER.debug("in order to specify which Financial Institution's accounts will be authorised to be accessed through the TPP.");
         LOGGER.debug("End : Account Information Access Request");
 
@@ -146,25 +144,9 @@ public class Client {
         paymentInitiationRequest.setCreditorAccountReference("BE23947805459949");
         paymentInitiationRequest.setCreditorAccountReferenceType("IBAN");
         PaymentInitiationRequest resultingPaymentInitiationRequest = paymentsService.initiatePaymentRequest(generatedCustomerAccessToken, paymentInitiationRequest);
-        LOGGER.debug("Payment Initiation: End User to be redirected to :\n"+resultingPaymentInitiationRequest.getLinks().getRedirect()+":\n in order to complete/proceed with the payment process.");
+        LOGGER.warn("#######################################");
+        LOGGER.warn("Payment Initiation: End User to be redirected to :\n"+resultingPaymentInitiationRequest.getLinks().getRedirect()+":\n in order to complete/proceed with the payment process.");
+        LOGGER.warn("#######################################");
         LOGGER.debug("End : Payment Initiation Request");
-
     }
-
-    public void getFinancialInstitutions() {
-        financialInstitutionsService.getFinancialInstitutions().stream().forEach(financialInstitution -> LOGGER.debug(financialInstitution.toString()));
-    }
-
-    public void getFinancialInstitution(UUID id){
-        try {
-            LOGGER.debug(financialInstitutionsService.getFinancialInstitution(id).toString());
-        } catch (ResourceNotFoundException e) {
-            LOGGER.debug(e.getMessage());
-        }
-    }
-
-//    public void getCustomerAccessToken(){
-//        CustomerAccessToken customerAccessToken = new CustomerAccessToken("application_customer_reference");
-//        LOGGER.debug(customerAccessTokensService.createCustomerAccessToken(customerAccessToken));
-//    }
 }
