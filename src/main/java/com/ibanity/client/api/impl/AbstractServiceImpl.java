@@ -2,7 +2,6 @@ package com.ibanity.client.api.impl;
 
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.google.common.collect.ImmutableList;
 import com.ibanity.client.api.configuration.IBanityConfiguration;
 import com.ibanity.client.exceptions.IBanityException;
 import com.ibanity.client.models.AbstractModel;
@@ -11,11 +10,6 @@ import com.ibanity.client.network.http.client.IBanityAccessTokenAdapterListener;
 import com.ibanity.client.paging.PagingBehavior;
 import io.crnk.client.CrnkClient;
 import io.crnk.client.http.apache.HttpClientAdapter;
-import io.crnk.core.boot.CrnkProperties;
-import io.crnk.core.engine.information.resource.ResourceInformationProvider;
-import io.crnk.core.engine.internal.information.resource.DefaultResourceFieldInformationProvider;
-import io.crnk.core.engine.internal.information.resource.DefaultResourceInformationProvider;
-import io.crnk.core.engine.internal.jackson.JacksonResourceFieldInformationProvider;
 import io.crnk.core.module.Module;
 import io.crnk.core.module.SimpleModule;
 import io.crnk.core.queryspec.QuerySpec;
@@ -79,19 +73,8 @@ public abstract class AbstractServiceImpl {
     }
 
     private Module getIBanityModule(){
-
-        ResourceInformationProvider resourceInformationProvider = new DefaultResourceInformationProvider
-                (key -> {
-                    if (CrnkProperties.RESOURCE_SEARCH_PACKAGE.equals(key)) {
-                        return "com.ibanity.api";
-                    } else {
-                        return System.getProperty(key);
-                    }
-                },
-                        ImmutableList.of(new PagingBehavior()),
-                        new DefaultResourceFieldInformationProvider(), new JacksonResourceFieldInformationProvider());
         SimpleModule iBanityModule = new SimpleModule("iBanity");
-        iBanityModule.addResourceInformationProvider(resourceInformationProvider);
+        iBanityModule.addPagingBehavior(new PagingBehavior());
         return iBanityModule;
     }
 
