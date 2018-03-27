@@ -10,6 +10,10 @@ import com.ibanity.client.network.http.client.IBanityAccessTokenAdapterListener;
 import com.ibanity.client.paging.PagingBehavior;
 import io.crnk.client.CrnkClient;
 import io.crnk.client.http.apache.HttpClientAdapter;
+import io.crnk.core.engine.internal.information.resource.DefaultResourceFieldInformationProvider;
+import io.crnk.core.engine.internal.information.resource.DefaultResourceInformationProvider;
+import io.crnk.core.engine.internal.jackson.JacksonResourceFieldInformationProvider;
+import io.crnk.core.engine.properties.NullPropertiesProvider;
 import io.crnk.core.module.Module;
 import io.crnk.core.module.SimpleModule;
 import io.crnk.core.queryspec.QuerySpec;
@@ -61,7 +65,7 @@ public abstract class AbstractServiceImpl {
         CrnkClient apiClient = new CrnkClient(IBANITY_API_ENDPOINT + path, CrnkClient.ClientType.OBJECT_LINKS);
         apiClient.getObjectMapper().registerModule(new Jdk8Module());
         apiClient.getObjectMapper().registerModule(new JavaTimeModule());
-        apiClient.addModule(getIBanityModule());
+        apiClient.addModule(getIBanityModule(apiClient.getModuleRegistry().getContext()));
         HttpClientAdapter adapter = (HttpClientAdapter) apiClient.getHttpAdapter();
         if (customerAccessToken == null){
             adapter.addListener(new IBanityAccessTokenAdapterListener());
@@ -72,10 +76,16 @@ public abstract class AbstractServiceImpl {
         return apiClient;
     }
 
-    private Module getIBanityModule(){
+    private Module getIBanityModule(Module.ModuleContext context){
         SimpleModule iBanityModule = new SimpleModule("iBanity");
-        iBanityModule.addPagingBehavior(new PagingBehavior());
+        iBanityModule.addResourceInformationProvider(new DefaultResourceInformationProvider(
+                new NullPropertiesProvider()
+                , new PagingBehavior()
+                , new DefaultResourceFieldInformationProvider()
+                , new JacksonResourceFieldInformationProvider()
+        ));
+
+        iBanityModule.setupModule(context);
         return iBanityModule;
     }
-
 }
