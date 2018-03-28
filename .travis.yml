@@ -5,4 +5,12 @@ jdk:
 
 sudo: false
 
-script: mvn clean verify
+install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+script: mvn clean verify -B
+
+cache:
+  directories:
+    - ~/.m2/repository
+
+after_success:
+  - ./travis-ci/deploy.sh
