@@ -4,6 +4,10 @@ This Java Client library offers various Services you can use in order to submit 
 ## Configuration
 * Adapt the ibanity.properties data based on your iBanity environment. 
 (See comments inside the properties file)
+## Crnk: JSON API library
+For the implementation of this iBanity APIs Client library, we rely heavily on the CRNK library that follows the JSON API specification and recommendations. 
+
+More details about CRNK can be found here: [http://www.crnk.io](http://www.crnk.io)
 ## Requirements
 * Java 8 (or above)
 * Maven (for compilation)

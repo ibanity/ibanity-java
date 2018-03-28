@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ibanity</groupId>
+    <groupId>com.ibanity.apis</groupId>
     <artifactId>ibanity-java</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -100,7 +100,7 @@
                         <!-- automatically creates the classpath using all project dependencies,
                              also adding the project build directory -->
                         <classpath/>
-                        <argument>com.ibanity.ClientSample</argument>
+                        <argument>com.ibanity.apis.ClientSample</argument>
                     </arguments>
                 </configuration>
             </plugin>
