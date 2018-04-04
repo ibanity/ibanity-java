@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.UUID;
 
-@JsonApiResource(type = "accounts", pagingBehavior = PagingBehavior.class)
+@JsonApiResource(type = "account", resourcePath = "accounts", pagingBehavior = PagingBehavior.class)
 public class Account extends AbstractModel {
 
     private String subType;
@@ -22,7 +22,7 @@ public class Account extends AbstractModel {
     private Double currentBalance;
     private Double availableBalance;
 
-    @JsonApiRelation(lookUp= LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL,serialize=SerializeType.ONLY_ID)
+    @JsonApiRelation(lookUp=LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL,serialize=SerializeType.ONLY_ID)
     private FinancialInstitution financialInstitution;
 
     public Account(UUID id, String subType, String currency, String description, String reference, String referenceType, Double currentBalance, Double availableBalance, UUID financialInstitutionId) {

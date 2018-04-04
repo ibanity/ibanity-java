@@ -2,20 +2,14 @@ package com.ibanity.apis.client.services.impl;
 
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.ibanity.apis.client.services.configuration.IBanityConfiguration;
 import com.ibanity.apis.client.exceptions.IBanityException;
 import com.ibanity.apis.client.models.AbstractModel;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.network.http.client.IBanityAccessTokenAdapterListener;
-import com.ibanity.apis.client.paging.PagingBehavior;
+import com.ibanity.apis.client.services.configuration.IBanityConfiguration;
 import io.crnk.client.CrnkClient;
 import io.crnk.client.http.apache.HttpClientAdapter;
-import io.crnk.core.engine.internal.information.resource.DefaultResourceFieldInformationProvider;
-import io.crnk.core.engine.internal.information.resource.DefaultResourceInformationProvider;
-import io.crnk.core.engine.internal.jackson.JacksonResourceFieldInformationProvider;
-import io.crnk.core.engine.properties.NullPropertiesProvider;
-import io.crnk.core.module.Module;
-import io.crnk.core.module.SimpleModule;
+import io.crnk.core.boot.CrnkProperties;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryV2;
 import io.crnk.core.resource.list.ResourceList;
@@ -62,10 +56,11 @@ public abstract class AbstractServiceImpl {
     }
 
     protected CrnkClient getApiClient(String path, CustomerAccessToken customerAccessToken){
+        System.setProperty(CrnkProperties.RESOURCE_SEARCH_PACKAGE, "com.ibanity.apis");
         CrnkClient apiClient = new CrnkClient(IBANITY_API_ENDPOINT + path, CrnkClient.ClientType.OBJECT_LINKS);
         apiClient.getObjectMapper().registerModule(new Jdk8Module());
         apiClient.getObjectMapper().registerModule(new JavaTimeModule());
-        apiClient.addModule(getIBanityModule(apiClient.getModuleRegistry().getContext()));
+
         HttpClientAdapter adapter = (HttpClientAdapter) apiClient.getHttpAdapter();
         if (customerAccessToken == null){
             adapter.addListener(new IBanityAccessTokenAdapterListener());
@@ -74,18 +69,5 @@ public abstract class AbstractServiceImpl {
             adapter.addListener(new IBanityAccessTokenAdapterListener(customerAccessToken));
         }
         return apiClient;
-    }
-
-    private Module getIBanityModule(Module.ModuleContext context){
-        SimpleModule iBanityModule = new SimpleModule("iBanity");
-        iBanityModule.addResourceInformationProvider(new DefaultResourceInformationProvider(
-                new NullPropertiesProvider()
-                , new PagingBehavior()
-                , new DefaultResourceFieldInformationProvider()
-                , new JacksonResourceFieldInformationProvider()
-        ));
-
-        iBanityModule.setupModule(context);
-        return iBanityModule;
     }
 }

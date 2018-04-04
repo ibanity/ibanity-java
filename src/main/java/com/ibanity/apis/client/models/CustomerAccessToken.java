@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.UUID;
 
-@JsonApiResource(type = "customer-access-tokens", pagingBehavior = PagingBehavior.class)
+@JsonApiResource(type="customerAccessToken", resourcePath = "customer-access-tokens", pagingBehavior = PagingBehavior.class)
 public class CustomerAccessToken extends AbstractModel{
     private String token;
     private String application_customer_reference;

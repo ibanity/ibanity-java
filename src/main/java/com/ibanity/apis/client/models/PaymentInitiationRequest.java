@@ -2,7 +2,11 @@ package com.ibanity.apis.client.models;
 
 import com.ibanity.apis.client.models.links.PaymentAccessLinks;
 import com.ibanity.apis.client.paging.PagingBehavior;
-import io.crnk.core.resource.annotations.*;
+import io.crnk.core.resource.annotations.JsonApiLinksInformation;
+import io.crnk.core.resource.annotations.JsonApiRelation;
+import io.crnk.core.resource.annotations.JsonApiResource;
+import io.crnk.core.resource.annotations.LookupIncludeBehavior;
+import io.crnk.core.resource.annotations.SerializeType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -10,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.UUID;
 
 
-@JsonApiResource(type = "payment-initiation-requests", pagingBehavior = PagingBehavior.class)
+@JsonApiResource(type= "paymentInitiationRequest", resourcePath = "payment-initiation-requests", pagingBehavior = PagingBehavior.class)
 public class PaymentInitiationRequest extends AbstractModel{
     private String consentReference;
     private String endToEndId;

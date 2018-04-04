@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.time.Instant;
 import java.util.UUID;
 
-@JsonApiResource(type = "transactions", pagingBehavior = PagingBehavior.class)
+@JsonApiResource(type = "transaction", resourcePath = "transactions", pagingBehavior = PagingBehavior.class)
 public class Transaction extends AbstractModel{
     private Double amount;
     private String currency;

@@ -8,10 +8,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.UUID;
 
-@JsonApiResource(type = FinancialInstitution.RESOURCE_TYPE, pagingBehavior = PagingBehavior.class)
+@JsonApiResource(type = FinancialInstitution.RESOURCE_TYPE, resourcePath = "financial-institutions", pagingBehavior = PagingBehavior.class)
 public class FinancialInstitution extends AbstractModel {
 
-    public static final String RESOURCE_TYPE = "financial-institutions";
+    public static final String RESOURCE_TYPE = "financialInstitution";
     private Boolean sandbox;
     private String name;
 

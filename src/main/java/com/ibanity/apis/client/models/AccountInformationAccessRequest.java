@@ -1,15 +1,19 @@
 package com.ibanity.apis.client.models;
 
-import com.ibanity.apis.client.paging.PagingBehavior;
 import com.ibanity.apis.client.models.links.AccountInformationAccessLinks;
-import io.crnk.core.resource.annotations.*;
+import com.ibanity.apis.client.paging.PagingBehavior;
+import io.crnk.core.resource.annotations.JsonApiLinksInformation;
+import io.crnk.core.resource.annotations.JsonApiRelation;
+import io.crnk.core.resource.annotations.JsonApiResource;
+import io.crnk.core.resource.annotations.LookupIncludeBehavior;
+import io.crnk.core.resource.annotations.SerializeType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.UUID;
 
-@JsonApiResource(type = "account-information-access-requests", pagingBehavior = PagingBehavior.class)
+@JsonApiResource(type = "accountInformationAccessRequest", resourcePath = "account-information-access-requests", pagingBehavior = PagingBehavior.class)
 public class AccountInformationAccessRequest extends AbstractModel{
     private String redirectUri;
     private String consentReference;
