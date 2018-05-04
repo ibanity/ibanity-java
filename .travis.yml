@@ -5,7 +5,12 @@ jdk:
 
 sudo: false
 
-install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+## export GPG details
+before_install:
+    - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
+    - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
+
+install: mvn install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
 script: mvn clean verify -B
 
 cache:
