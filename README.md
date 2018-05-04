@@ -20,7 +20,7 @@ More details about CRNK can be found here: [http://www.crnk.io](http://www.crnk.
     mvn clean compile exec:exec 
     ```
 
-#Build Status
+# Build Status
 https://travis-ci.org/ibanity/ibanity-java
 [![build_status](https://travis-ci.org/ibanity/ibanity-java.svg?branch=master)](https://travis-ci.org/ibanity/ibanity-java)
 
