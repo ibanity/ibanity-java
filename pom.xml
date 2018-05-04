@@ -37,7 +37,7 @@
         <log4j.version>2.11.0</log4j.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
         <!--crnk.version>2.5.20180326220647</crnk.version-->
-        <crnk.version>0.0.0-SNAPSHOT</crnk.version>
+        <crnk.version>2.6.20180430102904</crnk.version>
         <httpclient.version>4.5.5</httpclient.version>
         <jackson.version>2.9.5</jackson.version>
         <bcpkix-jdk14.version>1.59</bcpkix-jdk14.version>

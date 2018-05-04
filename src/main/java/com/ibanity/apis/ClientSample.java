@@ -1,10 +1,24 @@
 package com.ibanity.apis;
 
-import com.ibanity.apis.client.services.*;
-import com.ibanity.apis.client.services.configuration.IBanityConfiguration;
-import com.ibanity.apis.client.services.impl.*;
-import com.ibanity.apis.client.models.*;
+import com.ibanity.apis.client.models.Account;
+import com.ibanity.apis.client.models.AccountInformationAccessAuthorization;
+import com.ibanity.apis.client.models.AccountInformationAccessRequest;
+import com.ibanity.apis.client.models.CustomerAccessToken;
+import com.ibanity.apis.client.models.FinancialInstitution;
+import com.ibanity.apis.client.models.PaymentInitiationRequest;
+import com.ibanity.apis.client.models.Transaction;
 import com.ibanity.apis.client.paging.PagingSpec;
+import com.ibanity.apis.client.services.AccountsService;
+import com.ibanity.apis.client.services.CustomerAccessTokensService;
+import com.ibanity.apis.client.services.FinancialInstitutionsService;
+import com.ibanity.apis.client.services.PaymentsService;
+import com.ibanity.apis.client.services.TransactionsService;
+import com.ibanity.apis.client.services.configuration.IBanityConfiguration;
+import com.ibanity.apis.client.services.impl.AccountsServiceImpl;
+import com.ibanity.apis.client.services.impl.CustomerAccessTokensServiceImpl;
+import com.ibanity.apis.client.services.impl.FinancialInstitutionsServiceImpl;
+import com.ibanity.apis.client.services.impl.PaymentsServiceImpl;
+import com.ibanity.apis.client.services.impl.TransactionsServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,101 +48,101 @@ public class ClientSample {
 
     public void startFlow(){
 
-        LOGGER.debug("Start : List of Financial Institutions: starting with 1 FI");
+        LOGGER.info("Start : List of Financial Institutions: starting with 1 FI");
 
         AtomicReference<FinancialInstitution> inUseFinancialInstitution = new AtomicReference();
         PagingSpec pagingSpec = new PagingSpec();
         pagingSpec.setLimit(1);
         financialInstitutionsService.getFinancialInstitutions(pagingSpec).stream().forEach(financialInstitution -> {
                                                             inUseFinancialInstitution.set(financialInstitution);
-                                                            LOGGER.debug(financialInstitution.toString());}
+                                                            LOGGER.info(financialInstitution.toString());}
                                                             );
-        LOGGER.debug("END : List of Financial Institutions: starting with 1 FI");
-        LOGGER.debug("Start : List of Financial Institutions: after:"+inUseFinancialInstitution.get().getId()+":");
+        LOGGER.info("END : List of Financial Institutions: starting with 1 FI");
+        LOGGER.info("Start : List of Financial Institutions: after:"+inUseFinancialInstitution.get().getId()+":");
         pagingSpec.setAfter(inUseFinancialInstitution.get().getId());
         pagingSpec.setLimit(10);
         financialInstitutionsService.getFinancialInstitutions(pagingSpec).stream().forEach(financialInstitution -> {
             inUseFinancialInstitution.set(financialInstitution);
-            LOGGER.debug(financialInstitution.toString());}
+            LOGGER.info(financialInstitution.toString());}
         );
-        LOGGER.debug("END : List of Financial Institutions: after:");
+        LOGGER.info("END : List of Financial Institutions: after:");
 
 
-        LOGGER.debug("Start : Customer Access Token Request");
+        LOGGER.info("Start : Customer Access Token Request");
         CustomerAccessToken customerAccessTokenRequest = new CustomerAccessToken("application_customer_reference");
         CustomerAccessToken generatedCustomerAccessToken = customerAccessTokensService.createCustomerAccessToken(customerAccessTokenRequest);
-        LOGGER.debug(generatedCustomerAccessToken);
-        LOGGER.debug("End : Customer Access Token Request");
+        LOGGER.info(generatedCustomerAccessToken);
+        LOGGER.info("End : Customer Access Token Request");
 
-        LOGGER.debug("Start : Accounts Information Access Request");
+        LOGGER.info("Start : Accounts Information Access Request");
         AccountInformationAccessRequest accountInformationAccessRequest = new AccountInformationAccessRequest();
         accountInformationAccessRequest.setConsentReference(UUID.randomUUID().toString());
         accountInformationAccessRequest.setRedirectUri(FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL);
         accountInformationAccessRequest.setFinancialInstitution(inUseFinancialInstitution.get());
         AccountInformationAccessRequest resultingAccountInformationAccessRequest = accountsService.getAccountsInformationAccessRedirectUrl(generatedCustomerAccessToken, accountInformationAccessRequest);
-        LOGGER.debug("AccountInformationAccessRequest:"+resultingAccountInformationAccessRequest.toString());
+        LOGGER.info("AccountInformationAccessRequest:"+resultingAccountInformationAccessRequest.toString());
         LOGGER.warn("#######################################");
         LOGGER.warn("Accounts Information Access Request: End-User to be redirected to :\n"+resultingAccountInformationAccessRequest.getLinks().getRedirect());
         LOGGER.warn("#######################################");
-        LOGGER.debug("in order to specify which Financial Institution's accounts will be authorised to be accessed through the TPP.");
-        LOGGER.debug("End : Account Information Access Request");
+        LOGGER.info("in order to specify which Financial Institution's accounts will be authorised to be accessed through the TPP.");
+        LOGGER.info("End : Account Information Access Request");
 
         Scanner s = new Scanner(System.in);
         System.out.println("Please use the URL provided here above (End-User to be redirected to:...) in order to authorize accounts then, once authorization done, Press ENTER to proceed......");
         s.nextLine();
 
-        LOGGER.debug("Start : AccountInformationAccessAuthorization");
+        LOGGER.info("Start : AccountInformationAccessAuthorization");
         AccountInformationAccessAuthorization accountInformationAccessAuthorization = new AccountInformationAccessAuthorization();
         AtomicReference<AccountInformationAccessAuthorization> inUseAccountInformationAccessAuthorization = new AtomicReference();
         List<AccountInformationAccessAuthorization> accountsAuthorizations = accountsService.getAccountsInformationAccessAuthorizations(generatedCustomerAccessToken, resultingAccountInformationAccessRequest);
-        accountsAuthorizations.stream().forEach(authorization -> {inUseAccountInformationAccessAuthorization.set(authorization); LOGGER.debug(authorization.toString());});
-        LOGGER.debug("END : AccountInformationAccessAuthorization");
+        accountsAuthorizations.stream().forEach(authorization -> {inUseAccountInformationAccessAuthorization.set(authorization); LOGGER.info(authorization.toString());});
+        LOGGER.info("END : AccountInformationAccessAuthorization");
 
 
         AtomicReference<Account> inUseAccount = new AtomicReference();
-        LOGGER.debug("Start : get All Accounts");
+        LOGGER.info("Start : get All Accounts");
         List<Account> accounts = accountsService.getCustomerAccounts(generatedCustomerAccessToken);
-        accounts.forEach(account -> LOGGER.debug(account.toString()));
-        LOGGER.debug("End : get All Accounts");
-        LOGGER.debug("Start : get All Accounts for financial institution:"+inUseFinancialInstitution.get().getId()+":");
-        accountsService.getCustomerAccounts(generatedCustomerAccessToken,inUseFinancialInstitution.get().getId(), pagingSpec).forEach(account -> {inUseAccount.set(account); LOGGER.debug(account.toString());});
-        LOGGER.debug("End : get All Accounts for financial institution:"+inUseFinancialInstitution.get().getId()+":");
+        accounts.forEach(account -> LOGGER.info(account.toString()));
+        LOGGER.info("End : get All Accounts");
+        LOGGER.info("Start : get All Accounts for financial institution:"+inUseFinancialInstitution.get().getId()+":");
+        accountsService.getCustomerAccounts(generatedCustomerAccessToken,inUseFinancialInstitution.get().getId(), pagingSpec).forEach(account -> {inUseAccount.set(account); LOGGER.info(account.toString());});
+        LOGGER.info("End : get All Accounts for financial institution:"+inUseFinancialInstitution.get().getId()+":");
 
         pagingSpec = new PagingSpec();
         pagingSpec.setLimit(2);
-        LOGGER.debug("Start : Accounts details 2 of them");
-        accountsService.getCustomerAccounts(generatedCustomerAccessToken, pagingSpec).forEach(account -> {inUseAccount.set(account); LOGGER.debug(account.toString());});
-        LOGGER.debug("End : Accounts details 2 of them");
+        LOGGER.info("Start : Accounts details 2 of them");
+        accountsService.getCustomerAccounts(generatedCustomerAccessToken, pagingSpec).forEach(account -> {inUseAccount.set(account); LOGGER.info(account.toString());});
+        LOGGER.info("End : Accounts details 2 of them");
 
         UUID afterUUID = inUseAccount.get().getId();
         pagingSpec.setAfter(afterUUID);
-        LOGGER.debug("Start : Accounts details next 2");
-        accountsService.getCustomerAccounts(generatedCustomerAccessToken, pagingSpec).forEach(account ->{inUseAccount.set(account); LOGGER.debug(account.toString());});
-        LOGGER.debug("End : Accounts details next 2");
+        LOGGER.info("Start : Accounts details next 2");
+        accountsService.getCustomerAccounts(generatedCustomerAccessToken, pagingSpec).forEach(account ->{inUseAccount.set(account); LOGGER.info(account.toString());});
+        LOGGER.info("End : Accounts details next 2");
 
         UUID beforeUUID = inUseAccount.get().getId();
 
         pagingSpec = new PagingSpec();
         pagingSpec.setAfter(beforeUUID);
         pagingSpec.setLimit(100);
-        LOGGER.debug("Start : Accounts details all the rest");
-        accountsService.getCustomerAccounts(generatedCustomerAccessToken, pagingSpec).forEach(account -> {inUseAccount.set(account); LOGGER.debug(account.toString());});
-        LOGGER.debug("End : Accounts details all the rest");
+        LOGGER.info("Start : Accounts details all the rest");
+        accountsService.getCustomerAccounts(generatedCustomerAccessToken, pagingSpec).forEach(account -> {inUseAccount.set(account); LOGGER.info(account.toString());});
+        LOGGER.info("End : Accounts details all the rest");
 
 
-        LOGGER.debug("Start : Transactions details");
+        LOGGER.info("Start : Transactions details");
         List<Transaction> transactionsList = transactionsService.getAccountTransactions(generatedCustomerAccessToken, inUseAccount.get());
-        transactionsList.stream().forEach(transaction -> LOGGER.debug(transaction.toString()));
+        transactionsList.stream().forEach(transaction -> LOGGER.info(transaction.toString()));
 
         transactionsList = transactionsService.getAccountTransactions(generatedCustomerAccessToken, inUseAccount.get());
-        transactionsList.stream().forEach(transaction -> LOGGER.debug(transaction.toString()));
-        LOGGER.debug("End : Transactions details");
+        transactionsList.stream().forEach(transaction -> LOGGER.info(transaction.toString()));
+        LOGGER.info("End : Transactions details");
 
-        LOGGER.debug("Start : Remove Account Access Authorization");
+        LOGGER.info("Start : Remove Account Access Authorization");
         accountsService.revokeAccountsAccessAuthorization(generatedCustomerAccessToken, inUseFinancialInstitution.get().getId(), inUseAccountInformationAccessAuthorization.get());
-        LOGGER.debug("Stop : Remove Account Access Authorization");
+        LOGGER.info("Stop : Remove Account Access Authorization");
 
-        LOGGER.debug("Start : Payment Initiation Request");
+        LOGGER.info("Start : Payment Initiation Request");
         PaymentInitiationRequest paymentInitiationRequest = new PaymentInitiationRequest();
         paymentInitiationRequest.setRedirectUri(FAKE_TPP_PAYMENT_INITIATION_REDIRECT_URL);
         paymentInitiationRequest.setFinancialInstitution(inUseFinancialInstitution.get());
@@ -147,6 +161,6 @@ public class ClientSample {
         LOGGER.warn("#######################################");
         LOGGER.warn("Payment Initiation: End User to be redirected to :\n"+resultingPaymentInitiationRequest.getLinks().getRedirect()+":\n in order to complete/proceed with the payment process.");
         LOGGER.warn("#######################################");
-        LOGGER.debug("End : Payment Initiation Request");
+        LOGGER.info("End : Payment Initiation Request");
     }
 }

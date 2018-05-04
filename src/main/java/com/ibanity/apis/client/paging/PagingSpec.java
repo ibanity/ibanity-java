@@ -21,6 +21,10 @@ public class PagingSpec implements io.crnk.core.queryspec.pagingspec.PagingSpec 
         this.after = after;
     }
 
+    public PagingSpec clone() {
+        return this;
+    }
+
     public Integer getLimit() {
         return limit;
     }
