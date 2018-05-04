@@ -18,4 +18,4 @@ cache:
     - ~/.m2/repository
 
 after_success:
-  - ./travis-ci/deploy.sh
+  - bash ./travis-ci/deploy.sh
