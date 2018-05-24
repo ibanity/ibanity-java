@@ -1,7 +1,6 @@
 package com.ibanity.apis;
 
 import com.ibanity.apis.client.models.Account;
-import com.ibanity.apis.client.models.AccountInformationAccessAuthorization;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.FinancialInstitution;
@@ -80,6 +79,7 @@ public class ClientSample {
         accountInformationAccessRequest.setRedirectUri(FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL);
         accountInformationAccessRequest.setFinancialInstitution(inUseFinancialInstitution.get());
         AccountInformationAccessRequest resultingAccountInformationAccessRequest = accountsService.getAccountsInformationAccessRedirectUrl(generatedCustomerAccessToken, accountInformationAccessRequest);
+        resultingAccountInformationAccessRequest.setFinancialInstitution(inUseFinancialInstitution.get());
         LOGGER.info("AccountInformationAccessRequest:"+resultingAccountInformationAccessRequest.toString());
         LOGGER.warn("#######################################");
         LOGGER.warn("Accounts Information Access Request: End-User to be redirected to :\n"+resultingAccountInformationAccessRequest.getLinks().getRedirect());
@@ -90,14 +90,6 @@ public class ClientSample {
         Scanner s = new Scanner(System.in);
         System.out.println("Please use the URL provided here above (End-User to be redirected to:...) in order to authorize accounts then, once authorization done, Press ENTER to proceed......");
         s.nextLine();
-
-        LOGGER.info("Start : AccountInformationAccessAuthorization");
-        AccountInformationAccessAuthorization accountInformationAccessAuthorization = new AccountInformationAccessAuthorization();
-        AtomicReference<AccountInformationAccessAuthorization> inUseAccountInformationAccessAuthorization = new AtomicReference();
-        List<AccountInformationAccessAuthorization> accountsAuthorizations = accountsService.getAccountsInformationAccessAuthorizations(generatedCustomerAccessToken, resultingAccountInformationAccessRequest);
-        accountsAuthorizations.stream().forEach(authorization -> {inUseAccountInformationAccessAuthorization.set(authorization); LOGGER.info(authorization.toString());});
-        LOGGER.info("END : AccountInformationAccessAuthorization");
-
 
         AtomicReference<Account> inUseAccount = new AtomicReference();
         LOGGER.info("Start : get All Accounts");
@@ -137,10 +129,6 @@ public class ClientSample {
         transactionsList = transactionsService.getAccountTransactions(generatedCustomerAccessToken, inUseAccount.get());
         transactionsList.stream().forEach(transaction -> LOGGER.info(transaction.toString()));
         LOGGER.info("End : Transactions details");
-
-        LOGGER.info("Start : Remove Account Access Authorization");
-        accountsService.revokeAccountsAccessAuthorization(generatedCustomerAccessToken, inUseFinancialInstitution.get().getId(), inUseAccountInformationAccessAuthorization.get());
-        LOGGER.info("Stop : Remove Account Access Authorization");
 
         LOGGER.info("Start : Payment Initiation Request");
         PaymentInitiationRequest paymentInitiationRequest = new PaymentInitiationRequest();

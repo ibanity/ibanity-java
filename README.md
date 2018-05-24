@@ -1,5 +1,4 @@
-# ibanity-java
-#Java wrapper for the iBanity API
+# Java wrapper for the iBanity API
 This Java Client library offers various Services you can use in order to submit requests towards the iBanity Platform.
 ## Configuration
 * Adapt the ibanity.properties data based on your iBanity environment. 
