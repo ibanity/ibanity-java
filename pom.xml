@@ -64,6 +64,7 @@
         <!-- Artifact Dependencies Version-->
         <commons-configuration2.version>2.2</commons-configuration2.version>
         <commons-io.version>2.6</commons-io.version>
+        <commons-math3.version>3.6.1</commons-math3.version>
         <log4j.version>2.11.0</log4j.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
         <!--crnk.version>2.5.20180326220647</crnk.version-->
@@ -72,6 +73,9 @@
         <jackson.version>2.9.5</jackson.version>
         <bcpkix-jdk14.version>1.59</bcpkix-jdk14.version>
         <reflections.version>0.9.11</reflections.version>
+
+        <!-- IBAN Generator -->
+        <iban4j.version>3.2.1</iban4j.version>
 
         <!-- Maven Pluging Version -->
         <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
@@ -92,6 +96,11 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>${commons-math3.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -143,6 +152,13 @@
             <artifactId>reflections</artifactId>
             <version>${reflections.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.iban4j</groupId>
+            <artifactId>iban4j</artifactId>
+            <version>${iban4j.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

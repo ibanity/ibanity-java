@@ -1,4 +1,9 @@
 # Java wrapper for the iBanity API
+
+[![Maven Central](https://img.shields.io/maven-central/v/com.ibanity.apis/ibanity-java.svg)](http://mvnrepository.com/artifact/com.ibanity.apis/ibanity-java)
+[![Build Status](https://travis-ci.org/ibanity/ibanity-java.svg?branch=master)](https://travis-ci.org/ibanity/ibanity-java)
+[![License](https://img.shields.io/cocoapods/l/AFNetworking.svg)](https://github.com/ibanity/ibanity-java/blob/master/LICENSE)
+
 This Java Client library offers various Services you can use in order to submit requests towards the iBanity Platform.
 ## Configuration
 * Adapt the ibanity.properties data based on your iBanity environment. 
@@ -18,8 +23,4 @@ More details about CRNK can be found here: [http://www.crnk.io](http://www.crnk.
     ```
     mvn clean compile exec:exec 
     ```
-
-# Build Status
-https://travis-ci.org/ibanity/ibanity-java
-[![build_status](https://travis-ci.org/ibanity/ibanity-java.svg?branch=master)](https://travis-ci.org/ibanity/ibanity-java)
 

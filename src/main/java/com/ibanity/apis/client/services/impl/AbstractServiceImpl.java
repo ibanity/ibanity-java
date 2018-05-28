@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.services.impl;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ibanity.apis.client.exceptions.IBanityException;
@@ -26,8 +27,10 @@ public abstract class AbstractServiceImpl {
 
     private static HashMap<String,CrnkClient> apiClients = new HashMap<>();
 
+    protected static final String FINANCIAL_INSTITUTIONS_PATH = "financial-institutions";
     protected static final String FINANCIAL_INSTITUTION_ID_TAG = "<FI_ID>";
     protected static final String ACCOUNT_ID_TAG = "<ACCOUNT_ID>";
+    protected static final String USER_ID_TAG = "<USER_ID>";
     protected static final String ACCOUNT_INFORMATION_ACCESS_REQUEST_ID_TAG = "<ACCOUNT_INFORMATION_ACCESS_REQUEST_ID>";
 
 
@@ -60,6 +63,7 @@ public abstract class AbstractServiceImpl {
         CrnkClient apiClient = new CrnkClient(IBANITY_API_ENDPOINT + path, CrnkClient.ClientType.OBJECT_LINKS);
         apiClient.getObjectMapper().registerModule(new Jdk8Module());
         apiClient.getObjectMapper().registerModule(new JavaTimeModule());
+        apiClient.getObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
         HttpClientAdapter adapter = (HttpClientAdapter) apiClient.getHttpAdapter();
         if (customerAccessToken == null){
