@@ -23,4 +23,6 @@ More details about CRNK can be found here: [http://www.crnk.io](http://www.crnk.
     ```
     mvn clean compile exec:exec 
     ```
+  
+* A sample Java Client Class (**ClientSanboxSample.java**) to show how to create Sandbox Accounts/Transactions that can be queried by the (**ClientSample.java**)
 
