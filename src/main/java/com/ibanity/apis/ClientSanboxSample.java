@@ -101,7 +101,7 @@ public class ClientSanboxSample {
                 Instant executionDate = now.plus(3, ChronoUnit.DAYS);
                 Instant valueDate = now.minus(1, ChronoUnit.DAYS);
                 FinancialInstitutionTransaction sandboxTransaction = new FinancialInstitutionTransaction();
-                sandboxTransaction.setAccount(createdSandboxAccount);
+                sandboxTransaction.setFinancialInstitutionAccount(createdSandboxAccount);
                 sandboxTransaction.setAmount(Precision.round(random.doubles(10,1000).findFirst().getAsDouble() * (random .nextBoolean() ? -1 : 1), 2));
                 sandboxTransaction.setCounterpartName("Stroman, Hettinger and Swift");
                 sandboxTransaction.setCounterpartReference(Iban.random(CountryCode.BE).getAccountNumber());

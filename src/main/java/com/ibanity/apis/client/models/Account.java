@@ -2,7 +2,6 @@ package com.ibanity.apis.client.models;
 
 import com.ibanity.apis.client.paging.PagingBehavior;
 import io.crnk.core.resource.annotations.JsonApiResource;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.UUID;
 
@@ -19,12 +18,5 @@ public class Account extends AbstractAccount {
 
     public Account(UUID id, String subType, String currency, String description, String reference, String referenceType, Double currentBalance, Double availableBalance, String subType1, String currency1, String description1, String reference1, String referenceType1, Double currentBalance1, Double availableBalance1, FinancialInstitution financialInstitution) {
         super(id, subType, currency, description, reference, referenceType, currentBalance, availableBalance);
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append(super.toString())
-                .toString();
     }
 }

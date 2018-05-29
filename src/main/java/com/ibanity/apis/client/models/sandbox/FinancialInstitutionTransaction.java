@@ -3,7 +3,10 @@ package com.ibanity.apis.client.models.sandbox;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ibanity.apis.client.models.AbstractTransaction;
 import com.ibanity.apis.client.paging.PagingBehavior;
+import io.crnk.core.resource.annotations.JsonApiRelation;
 import io.crnk.core.resource.annotations.JsonApiResource;
+import io.crnk.core.resource.annotations.LookupIncludeBehavior;
+import io.crnk.core.resource.annotations.SerializeType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -20,6 +23,9 @@ public class FinancialInstitutionTransaction extends AbstractTransaction {
     Instant updatedAt;
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
     Instant deletedAt;
+
+    @JsonApiRelation(lookUp= LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL,serialize= SerializeType.ONLY_ID)
+    private FinancialInstitutionAccount financialInstitutionAccount;
 
     public FinancialInstitutionTransaction() {
         super();
@@ -61,14 +67,12 @@ public class FinancialInstitutionTransaction extends AbstractTransaction {
         this.deletedAt = deletedAt;
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append(super.toString())
-                .append("createdAt", createdAt)
-                .append("deletedAt", deletedAt)
-                .append("updatedAt", updatedAt)
-                .toString();
+    public FinancialInstitutionAccount getFinancialInstitutionAccount() {
+        return financialInstitutionAccount;
+    }
+
+    public void setFinancialInstitutionAccount(FinancialInstitutionAccount financialInstitutionAccount) {
+        this.financialInstitutionAccount = financialInstitutionAccount;
     }
 
     @Override
@@ -84,6 +88,7 @@ public class FinancialInstitutionTransaction extends AbstractTransaction {
                 .append(getCreatedAt(), that.getCreatedAt())
                 .append(getUpdatedAt(), that.getUpdatedAt())
                 .append(getDeletedAt(), that.getDeletedAt())
+                .append(getFinancialInstitutionAccount(), that.getFinancialInstitutionAccount())
                 .isEquals();
     }
 
@@ -94,6 +99,18 @@ public class FinancialInstitutionTransaction extends AbstractTransaction {
                 .append(getCreatedAt())
                 .append(getUpdatedAt())
                 .append(getDeletedAt())
+                .append(getFinancialInstitutionAccount())
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append(super.toString())
+                .append("createdAt", createdAt)
+                .append("deletedAt", deletedAt)
+                .append("financialInstitutionAccount", financialInstitutionAccount)
+                .append("updatedAt", updatedAt)
+                .toString();
     }
 }

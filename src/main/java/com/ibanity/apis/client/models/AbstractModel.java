@@ -1,13 +1,16 @@
 package com.ibanity.apis.client.models;
 
 import io.crnk.core.resource.annotations.JsonApiId;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.util.Objects;
 import java.util.UUID;
 
 public abstract class AbstractModel {
     @JsonApiId
     protected UUID id;
+
 
     public AbstractModel(UUID id) {
         this.id = id;
@@ -27,21 +30,27 @@ public abstract class AbstractModel {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (!(o instanceof AbstractModel)) return false;
+
         AbstractModel that = (AbstractModel) o;
-        return Objects.equals(getId(), that.getId());
+
+        return new EqualsBuilder()
+                .append(getId(), that.getId())
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(getId());
+        return new HashCodeBuilder(17, 37)
+                .append(getId())
+                .toHashCode();
     }
 
     @Override
     public String toString() {
-        return "AbstractModel{" +
-                "id=" + id +
-                '}';
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .toString();
     }
 }

@@ -2,10 +2,6 @@ package com.ibanity.apis.client.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ibanity.apis.client.models.sandbox.FinancialInstitutionAccount;
-import io.crnk.core.resource.annotations.JsonApiRelation;
-import io.crnk.core.resource.annotations.LookupIncludeBehavior;
-import io.crnk.core.resource.annotations.SerializeType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -39,10 +35,6 @@ public abstract class AbstractTransaction extends AbstractModel{
     @JsonProperty("counterpart_reference")
     private String counterpartReference;
 
-
-    @JsonApiRelation(lookUp= LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL,serialize= SerializeType.ONLY_ID)
-    private FinancialInstitutionAccount account;
-
     public AbstractTransaction(UUID id, Double amount, String currency, Instant valueDate, Instant executionDate, String description, String remittanceInformationType, String remittanceInformation, String counterpartName, String counterpartReference) {
         super(id);
         this.amount = amount;
@@ -54,12 +46,10 @@ public abstract class AbstractTransaction extends AbstractModel{
         this.remittanceInformation = remittanceInformation;
         this.counterpartName = counterpartName;
         this.counterpartReference = counterpartReference;
-        this.account = new FinancialInstitutionAccount();
     }
 
     public AbstractTransaction(UUID id,  UUID financialInstitutionAccountId, UUID financialInstitutionId ) {
         super(id);
-        this.account = new FinancialInstitutionAccount(financialInstitutionAccountId, financialInstitutionId);
     }
 
     public AbstractTransaction() {
@@ -137,14 +127,6 @@ public abstract class AbstractTransaction extends AbstractModel{
         this.counterpartReference = counterpartReference;
     }
 
-    public FinancialInstitutionAccount getAccount() {
-        return account;
-    }
-
-    public void setAccount(FinancialInstitutionAccount account) {
-        this.account = account;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -164,7 +146,6 @@ public abstract class AbstractTransaction extends AbstractModel{
                 .append(getRemittanceInformation(), that.getRemittanceInformation())
                 .append(getCounterpartName(), that.getCounterpartName())
                 .append(getCounterpartReference(), that.getCounterpartReference())
-                .append(getAccount(), that.getAccount())
                 .isEquals();
     }
 
@@ -181,7 +162,6 @@ public abstract class AbstractTransaction extends AbstractModel{
                 .append(getRemittanceInformation())
                 .append(getCounterpartName())
                 .append(getCounterpartReference())
-                .append(getAccount())
                 .toHashCode();
     }
 
@@ -189,7 +169,6 @@ public abstract class AbstractTransaction extends AbstractModel{
     public String toString() {
         return new ToStringBuilder(this)
                 .append(super.toString())
-                .append("account", account)
                 .append("amount", amount)
                 .append("counterpartName", counterpartName)
                 .append("counterpartReference", counterpartReference)
