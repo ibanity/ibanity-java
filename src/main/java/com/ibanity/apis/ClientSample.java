@@ -68,7 +68,7 @@ public class ClientSample {
 
 
         LOGGER.info("Start : Customer Access Token Request");
-        CustomerAccessToken customerAccessTokenRequest = new CustomerAccessToken("application_customer_reference");
+        CustomerAccessToken customerAccessTokenRequest = new CustomerAccessToken(UUID.randomUUID().toString());
         CustomerAccessToken generatedCustomerAccessToken = customerAccessTokensService.createCustomerAccessToken(customerAccessTokenRequest);
         LOGGER.info(generatedCustomerAccessToken);
         LOGGER.info("End : Customer Access Token Request");
@@ -123,11 +123,11 @@ public class ClientSample {
 
 
         LOGGER.info("Start : Transactions details");
-        List<Transaction> transactionsList = transactionsService.getAccountTransactions(generatedCustomerAccessToken, inUseAccount.get());
-        transactionsList.stream().forEach(transaction -> LOGGER.info(transaction.toString()));
-
-        transactionsList = transactionsService.getAccountTransactions(generatedCustomerAccessToken, inUseAccount.get());
-        transactionsList.stream().forEach(transaction -> LOGGER.info(transaction.toString()));
+        accounts.stream().forEach(account -> {
+            LOGGER.info("Transactions Details of Account:"+account.getReference()+":");
+            List<Transaction> transactionsList = transactionsService.getAccountTransactions(generatedCustomerAccessToken, account);
+            transactionsList.stream().forEach(transaction -> LOGGER.info(transaction.toString()));
+        });
         LOGGER.info("End : Transactions details");
 
         LOGGER.info("Start : Payment Initiation Request");

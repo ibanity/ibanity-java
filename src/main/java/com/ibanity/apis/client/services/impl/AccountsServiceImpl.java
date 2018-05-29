@@ -1,11 +1,12 @@
 package com.ibanity.apis.client.services.impl;
 
-import com.ibanity.apis.client.services.AccountsService;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.AccountInformationAccessAuthorization;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.CustomerAccessToken;
+import com.ibanity.apis.client.models.sandbox.FinancialInstitutionAccount;
 import com.ibanity.apis.client.paging.PagingSpec;
+import com.ibanity.apis.client.services.AccountsService;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryV2;
 import io.crnk.core.resource.list.ResourceList;
@@ -18,9 +19,13 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
 
     private static final Logger LOGGER = LogManager.getLogger(AccountsServiceImpl.class);
 
-    private static final String ACCOUNTS_REQUEST_PATH = "/customer";
-    private static final String ACCOUNTS_FI_REQUEST_PATH = ACCOUNTS_REQUEST_PATH+ "/financial-institutions/"+FINANCIAL_INSTITUTION_ID_TAG;
+    private static final String ACCOUNTS_REQUEST_PATH                   = "/customer";
+    private static final String ACCOUNTS_FI_REQUEST_PATH                = ACCOUNTS_REQUEST_PATH + "/"+FINANCIAL_INSTITUTIONS_PATH + "/"+ FINANCIAL_INSTITUTION_ID_TAG;
     private static final String ACCOUNT_INFORMATION_ACCESS_REQUEST_PATH = ACCOUNTS_FI_REQUEST_PATH + "/account-information-access-requests/"+ACCOUNT_INFORMATION_ACCESS_REQUEST_ID_TAG;
+
+    private static final String SANDBOX_PATH                            = "/sandbox";
+    private static final String SANDBOX_ACCOUNTS_FI_REQUEST_PATH        = SANDBOX_PATH+ "/"+FINANCIAL_INSTITUTIONS_PATH + "/"+FINANCIAL_INSTITUTION_ID_TAG;
+    private static final String SANDBOX_USER_ACCOUNTS_FI_REQUEST_PATH   = SANDBOX_ACCOUNTS_FI_REQUEST_PATH+"/financial-institution-users/"+USER_ID_TAG;
 
     public AccountsServiceImpl() {
         super();
@@ -75,6 +80,18 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
     @Override
     public void revokeAccountsAccessAuthorization(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, AccountInformationAccessAuthorization accountInformationAccessAuthorization) {
         getAccountInformationAccessAuthorizationRepo(customerAccessToken, financialInstitutionId, accountInformationAccessAuthorization.getAccountInformationAccessRequest().getId()).delete(accountInformationAccessAuthorization.getId());
+    }
+
+    @Override
+    public FinancialInstitutionAccount createSandBoxAccount(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID financialInstitutionUserId, FinancialInstitutionAccount sandboxAccount) {
+        String correctPath = SANDBOX_USER_ACCOUNTS_FI_REQUEST_PATH
+                .replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString())
+                .replace(USER_ID_TAG, financialInstitutionUserId.toString())
+                ;
+        ResourceRepositoryV2<FinancialInstitutionAccount, UUID> accountsRepo = getApiClient(correctPath, customerAccessToken).getRepositoryForType(FinancialInstitutionAccount.class);
+        FinancialInstitutionAccount createdAccount = accountsRepo.create(sandboxAccount);
+
+        return createdAccount;
     }
 
     private ResourceRepositoryV2<AccountInformationAccessAuthorization, UUID> getAccountInformationAccessAuthorizationRepo(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountInformationAccessRequestId) {
