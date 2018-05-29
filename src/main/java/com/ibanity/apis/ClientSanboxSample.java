@@ -8,13 +8,11 @@ import com.ibanity.apis.client.paging.PagingSpec;
 import com.ibanity.apis.client.services.AccountsService;
 import com.ibanity.apis.client.services.CustomerAccessTokensService;
 import com.ibanity.apis.client.services.FinancialInstitutionsService;
-import com.ibanity.apis.client.services.PaymentsService;
 import com.ibanity.apis.client.services.TransactionsService;
 import com.ibanity.apis.client.services.configuration.IBanityConfiguration;
 import com.ibanity.apis.client.services.impl.AccountsServiceImpl;
 import com.ibanity.apis.client.services.impl.CustomerAccessTokensServiceImpl;
 import com.ibanity.apis.client.services.impl.FinancialInstitutionsServiceImpl;
-import com.ibanity.apis.client.services.impl.PaymentsServiceImpl;
 import com.ibanity.apis.client.services.impl.TransactionsServiceImpl;
 import org.apache.commons.math3.util.Precision;
 import org.apache.logging.log4j.LogManager;
@@ -22,7 +20,6 @@ import org.apache.logging.log4j.Logger;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 
-import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -34,21 +31,15 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ClientSanboxSample {
     private static final Logger LOGGER = LogManager.getLogger(ClientSanboxSample.class);
 
-    private static final String IBANITY_API_ENDPOINT = IBanityConfiguration.getConfiguration().getString(IBanityConfiguration.IBANITY_PROPERTIES_PREFIX + "services.endpoint");
-
     private static final String IBANITY_CLIENT_SANDBOX_USER_ID = IBanityConfiguration.getConfiguration().getString(IBanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.sandox.user_id");
 
-    private static final String FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL = IBanityConfiguration.getConfiguration().getString(IBanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.accounts.information.access.result.redirect.url");
-    private static final String FAKE_TPP_PAYMENT_INITIATION_REDIRECT_URL = IBanityConfiguration.getConfiguration().getString(IBanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.payments.initiation.result.redirect.url");
-
-    private static DecimalFormat df2 = new DecimalFormat(".##");
-
+    private static final Integer SANDBOX_ACCOUNTS_TO_CREATE = 5;
+    private static final Integer SANDBOX_TRANSACTIONS_T0_CREATE_PER_ACCOUNT = 20;
 
     private FinancialInstitutionsService financialInstitutionsService = new FinancialInstitutionsServiceImpl();
     private CustomerAccessTokensService customerAccessTokensService = new CustomerAccessTokensServiceImpl();
     private AccountsService accountsService = new AccountsServiceImpl();
     private TransactionsService transactionsService = new TransactionsServiceImpl();
-    private PaymentsService paymentsService = new PaymentsServiceImpl();
 
     public static void main(String[] args){
         ClientSanboxSample client  = new ClientSanboxSample();
@@ -72,7 +63,7 @@ public class ClientSanboxSample {
 
         List<FinancialInstitutionAccount> sandboxAccounts = new ArrayList<>();
 
-        for (int index = 0 ; index < 30; index++) {
+        for (int index = 0 ; index < SANDBOX_ACCOUNTS_TO_CREATE; index++) {
             FinancialInstitutionAccount sandboxAccount = new FinancialInstitutionAccount();
             sandboxAccount.setSubType("checking");
             sandboxAccount.setReference(Iban.random(CountryCode.BE).toString());
@@ -96,7 +87,7 @@ public class ClientSanboxSample {
         Random random = new Random();
 
         sandboxAccounts.stream().forEach(createdSandboxAccount -> {
-            for (int index = 0; index < 100 ; index++) {
+            for (int index = 0; index < SANDBOX_TRANSACTIONS_T0_CREATE_PER_ACCOUNT ; index++) {
                 Instant now = Instant.now();
                 Instant executionDate = now.plus(3, ChronoUnit.DAYS);
                 Instant valueDate = now.minus(1, ChronoUnit.DAYS);
