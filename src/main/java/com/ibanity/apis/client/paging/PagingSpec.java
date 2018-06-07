@@ -1,38 +1,35 @@
 package com.ibanity.apis.client.paging;
 
+import io.crnk.core.queryspec.pagingspec.OffsetLimitPagingSpec;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.UUID;
 
-public class PagingSpec implements io.crnk.core.queryspec.pagingspec.PagingSpec {
+public class PagingSpec extends OffsetLimitPagingSpec implements io.crnk.core.queryspec.pagingspec.PagingSpec {
 
-    private Integer limit = new Integer(10);
     private UUID before = null;
     private UUID after = null;
 
 
-    public PagingSpec() {}
+    public PagingSpec(OffsetLimitPagingSpec offsetLimitPagingSpec) {
+        super(offsetLimitPagingSpec.getLimit(), offsetLimitPagingSpec.getOffset());
+    }
 
-    public PagingSpec(Integer limit, UUID before, UUID after) {
-        this.limit = limit;
+    public PagingSpec() {
+        super();
+        setLimit(10L);
+    }
+
+    public PagingSpec(Long limit, UUID before, UUID after) {
+        setLimit(limit);
         this.before = before;
         this.after = after;
     }
 
-    public PagingSpec clone() {
-        return this;
-    }
-
-    public Integer getLimit() {
-        return limit;
-    }
-
-
-    public PagingSpec setLimit(final Integer limit) {
-        this.limit = limit;
-        return this;
+    public PagingSpec(Long offset, Long limit) {
+        super(offset, limit);
     }
 
     public UUID getBefore() {
@@ -52,6 +49,15 @@ public class PagingSpec implements io.crnk.core.queryspec.pagingspec.PagingSpec 
     }
 
     @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append(super.toString())
+                .append("after", after)
+                .append("before", before)
+                .toString();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
@@ -60,7 +66,7 @@ public class PagingSpec implements io.crnk.core.queryspec.pagingspec.PagingSpec 
         PagingSpec that = (PagingSpec) o;
 
         return new EqualsBuilder()
-                .append(getLimit(), that.getLimit())
+                .appendSuper(super.equals(o))
                 .append(getBefore(), that.getBefore())
                 .append(getAfter(), that.getAfter())
                 .isEquals();
@@ -69,18 +75,9 @@ public class PagingSpec implements io.crnk.core.queryspec.pagingspec.PagingSpec 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(getLimit())
+                .appendSuper(super.hashCode())
                 .append(getBefore())
                 .append(getAfter())
                 .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("after", after)
-                .append("before", before)
-                .append("limit", limit)
-                .toString();
     }
 }

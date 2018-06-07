@@ -31,4 +31,25 @@ public interface FinancialInstitutionsService {
      * @throws ResourceNotFoundException when the provided ID is not known
      */
     FinancialInstitution getFinancialInstitution(UUID financialInstitutionId) throws ResourceNotFoundException;
+
+    /**
+     * Create a new Sandbox Financial Institution
+     * @param financialInstitution the details of the financial institution
+     * @return the newly created financial institution details
+     */
+    FinancialInstitution createSandboxFinancialInstitution(FinancialInstitution financialInstitution);
+
+    /**
+     * Update an existing Sandbox Financial Institution
+     * @param financialInstitution to details of the financial institution to be updated
+     * @return the updated version
+     */
+    FinancialInstitution updateSandboxFinancialInstitution(FinancialInstitution financialInstitution);
+
+    /**
+     * Delete an Sandbox Financial Institution
+     * @param financialInstitutionId the iBanity UUID of the Financial Institution
+     * @throws ResourceNotFoundException when the provided ID is not known
+     */
+    void deleteSandboxFinancialInstitution(UUID financialInstitutionId) throws ResourceNotFoundException;
 }

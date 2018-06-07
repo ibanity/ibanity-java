@@ -5,7 +5,11 @@ import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.apache.commons.configuration2.io.*;
+import org.apache.commons.configuration2.io.ClasspathLocationStrategy;
+import org.apache.commons.configuration2.io.CombinedLocationStrategy;
+import org.apache.commons.configuration2.io.FileLocationStrategy;
+import org.apache.commons.configuration2.io.FileSystemLocationStrategy;
+import org.apache.commons.configuration2.io.ProvidedURLLocationStrategy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,6 +18,7 @@ import java.util.List;
 
 public class IBanityConfiguration {
 
+    public static final String SANBOX_PREFIX_PATH = "/sandbox";
     public static final String IBANITY_PROPERTIES_PREFIX = "ibanity.";
 
     private static final String PROPERTIES_FILE = "ibanity.properties";
