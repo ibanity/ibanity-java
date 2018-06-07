@@ -1,5 +1,6 @@
 package com.ibanity.apis;
 
+import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.CustomerAccessToken;
@@ -120,6 +121,16 @@ public class ClientSample {
         LOGGER.info("Start : Accounts details all the rest");
         accountsService.getCustomerAccounts(generatedCustomerAccessToken, pagingSpec).forEach(account -> {inUseAccount.set(account); LOGGER.info(account.toString());});
         LOGGER.info("End : Accounts details all the rest");
+
+
+        LOGGER.info("Start : get Account with Id:"+beforeUUID+": from Financial Institution:" + inUseFinancialInstitution.get().getId());
+
+        try {
+            accountsService.getCustomerAccount(generatedCustomerAccessToken,beforeUUID, inUseFinancialInstitution.get().getId());
+        } catch (ResourceNotFoundException e) {
+            LOGGER.info(e);
+        }
+
 
 
         LOGGER.info("Start : Transactions details");

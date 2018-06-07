@@ -129,7 +129,7 @@ public class ClientSanboxSample {
 
         sandboxAccount2.setFinancialInstitution(newFinancialInstitution);
 
-        accountsService.createSandBoxAccount(generatedCustomerAccessToken
+        FinancialInstitutionAccount sandboxAccountToGet = accountsService.createSandBoxAccount(generatedCustomerAccessToken
                 , newFinancialInstitution.getId()
                 , financialInstitutionUser.getId()
                 , sandboxAccount2);
