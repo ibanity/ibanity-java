@@ -50,7 +50,7 @@
     <properties>
 
         <!-- Artifact Version parts -->
-        <revision>1.1</revision>
+        <revision>1.2</revision>
         <changelist>-SNAPSHOT</changelist>
         <timestamp>${maven.build.timestamp}</timestamp>
 

@@ -1,12 +1,16 @@
 package com.ibanity.apis.client.network.http.client;
 
-import com.ibanity.apis.client.services.configuration.IBanityConfiguration;
 import com.ibanity.apis.client.exceptions.InvalidDefaultHttpHeaderForSignatureException;
 import com.ibanity.apis.client.exceptions.SignatureException;
+import com.ibanity.apis.client.services.configuration.IBanityConfiguration;
 import org.apache.commons.codec.digest.MessageDigestAlgorithms;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.*;
+import org.apache.http.Header;
+import org.apache.http.HttpException;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpRequestWrapper;
 import org.apache.http.protocol.HttpContext;
@@ -23,7 +27,13 @@ import org.bouncycastle.openssl.jcajce.JcePEMDecryptorProviderBuilder;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.security.*;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.Security;
+import java.security.Signature;
 import java.security.cert.X509Certificate;
 import java.time.Instant;
 import java.util.Base64;
@@ -240,7 +250,7 @@ public class IBanitySignatureInterceptor implements HttpRequestInterceptor {
         // Adding Authorization header if present
         Stream.of(requestWrapper.getAllHeaders()).filter(header -> StringUtils.equalsIgnoreCase(header.getName(), HttpHeaders.AUTHORIZATION)).findFirst().ifPresent(header -> headersValue.append(HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR).append(StringUtils.lowerCase(header.getName())));
 
-        // Adding iBanity specific headers if present
+        // Adding Ibanity specific headers if present
         Stream.of(requestWrapper.getAllHeaders()).filter(header -> StringUtils.startsWithIgnoreCase(header.getName(), IBANITY_HEADER_NAME_PREFIX)).forEach(header -> headersValue.append(HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR).append(header.getName()));
 
         LOGGER.debug("getSignatureHeaders value:"+headersValue+":");

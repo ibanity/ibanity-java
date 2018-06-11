@@ -1,5 +1,6 @@
 package com.ibanity.apis;
 
+import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.CustomerAccessToken;
@@ -51,7 +52,7 @@ public class ClientSample {
 
         AtomicReference<FinancialInstitution> inUseFinancialInstitution = new AtomicReference();
         PagingSpec pagingSpec = new PagingSpec();
-        pagingSpec.setLimit(1);
+        pagingSpec.setLimit(1L);
         financialInstitutionsService.getFinancialInstitutions(pagingSpec).stream().forEach(financialInstitution -> {
                                                             inUseFinancialInstitution.set(financialInstitution);
                                                             LOGGER.info(financialInstitution.toString());}
@@ -59,7 +60,7 @@ public class ClientSample {
         LOGGER.info("END : List of Financial Institutions: starting with 1 FI");
         LOGGER.info("Start : List of Financial Institutions: after:"+inUseFinancialInstitution.get().getId()+":");
         pagingSpec.setAfter(inUseFinancialInstitution.get().getId());
-        pagingSpec.setLimit(10);
+        pagingSpec.setLimit(10L);
         financialInstitutionsService.getFinancialInstitutions(pagingSpec).stream().forEach(financialInstitution -> {
             inUseFinancialInstitution.set(financialInstitution);
             LOGGER.info(financialInstitution.toString());}
@@ -101,7 +102,7 @@ public class ClientSample {
         LOGGER.info("End : get All Accounts for financial institution:"+inUseFinancialInstitution.get().getId()+":");
 
         pagingSpec = new PagingSpec();
-        pagingSpec.setLimit(2);
+        pagingSpec.setLimit(2L);
         LOGGER.info("Start : Accounts details 2 of them");
         accountsService.getCustomerAccounts(generatedCustomerAccessToken, pagingSpec).forEach(account -> {inUseAccount.set(account); LOGGER.info(account.toString());});
         LOGGER.info("End : Accounts details 2 of them");
@@ -116,10 +117,18 @@ public class ClientSample {
 
         pagingSpec = new PagingSpec();
         pagingSpec.setAfter(beforeUUID);
-        pagingSpec.setLimit(100);
+        pagingSpec.setLimit(100L);
         LOGGER.info("Start : Accounts details all the rest");
         accountsService.getCustomerAccounts(generatedCustomerAccessToken, pagingSpec).forEach(account -> {inUseAccount.set(account); LOGGER.info(account.toString());});
         LOGGER.info("End : Accounts details all the rest");
+
+        LOGGER.info("Start : get Account with Id:"+beforeUUID+": from Financial Institution:" + inUseFinancialInstitution.get().getId());
+        try {
+            LOGGER.info("Account = "+ accountsService.getCustomerAccount(generatedCustomerAccessToken, beforeUUID, inUseFinancialInstitution.get().getId()).toString());
+        } catch (ResourceNotFoundException e) {
+            LOGGER.info(e);
+        }
+        LOGGER.info("END : get Account with Id:"+beforeUUID+": from Financial Institution:" + inUseFinancialInstitution.get().getId());
 
 
         LOGGER.info("Start : Transactions details");

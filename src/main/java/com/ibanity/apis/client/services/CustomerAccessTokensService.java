@@ -3,7 +3,7 @@ package com.ibanity.apis.client.services;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 
 /**
- * Service to manage the Authorization Token necessary to access iBanity APIs
+ * Service to manage the Authorization Token necessary to access Ibanity APIs
  */
 public interface CustomerAccessTokensService {
 

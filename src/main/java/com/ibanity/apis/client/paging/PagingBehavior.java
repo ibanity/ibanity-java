@@ -3,6 +3,8 @@ package com.ibanity.apis.client.paging;
 import com.ibanity.apis.client.exceptions.BadRequestException;
 import io.crnk.core.engine.query.QueryAdapter;
 import io.crnk.core.exception.ParametersDeserializationException;
+import io.crnk.core.queryspec.pagingspec.OffsetLimitPagingBehavior;
+import io.crnk.core.queryspec.pagingspec.OffsetLimitPagingSpec;
 import io.crnk.core.queryspec.pagingspec.PagingSpecUrlBuilder;
 import io.crnk.core.resource.links.PagedLinksInformation;
 import io.crnk.core.resource.list.ResourceList;
@@ -10,9 +12,14 @@ import io.crnk.core.resource.meta.HasMoreResourcesMetaInformation;
 import io.crnk.core.resource.meta.PagedMetaInformation;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
-public class PagingBehavior implements io.crnk.core.queryspec.pagingspec.PagingBehavior<PagingSpec> {
+public class PagingBehavior extends OffsetLimitPagingBehavior implements io.crnk.core.queryspec.pagingspec.PagingBehavior<OffsetLimitPagingSpec> {
 
     private final static String LIMIT_PARAMETER     = "limit";
     private static final String BEFORE_PARAMETER    = "before";
@@ -21,16 +28,20 @@ public class PagingBehavior implements io.crnk.core.queryspec.pagingspec.PagingB
     private static final Integer MAX_PAGE_LIMIT = 100;
 
     @Override
-    public Map<String, Set<String>> serialize(final PagingSpec pagingSpec, final String resourceType) {
+    public Map<String, Set<String>> serialize(final OffsetLimitPagingSpec offsetLimitPagingSpec, final String resourceType) {
+
         Map<String, Set<String>> values = new HashMap<>();
-        if (pagingSpec.getLimit() != null) {
-            values.put(String.format("%s", LIMIT_PARAMETER), new HashSet<>(Arrays.asList(Long.toString(pagingSpec.getLimit()))));
+        if (offsetLimitPagingSpec.getLimit() != null) {
+            values.put(String.format("%s", LIMIT_PARAMETER), new HashSet<>(Arrays.asList(Long.toString(offsetLimitPagingSpec.getLimit()))));
         }
-        if (pagingSpec.getBefore() != null) {
-            values.put(String.format("%s", BEFORE_PARAMETER), new HashSet<>(Arrays.asList(pagingSpec.getBefore().toString())));
-        }
-        if (pagingSpec.getAfter() != null) {
-            values.put(String.format("%s", AFTER_PARAMETER), new HashSet<>(Arrays.asList(pagingSpec.getAfter().toString())));
+        if (offsetLimitPagingSpec instanceof PagingSpec) {
+            PagingSpec pagingSpec = (PagingSpec) offsetLimitPagingSpec;
+            if (pagingSpec.getBefore() != null) {
+                values.put(String.format("%s", BEFORE_PARAMETER), new HashSet<>(Arrays.asList(pagingSpec.getBefore().toString())));
+            }
+            if (pagingSpec.getAfter() != null) {
+                values.put(String.format("%s", AFTER_PARAMETER), new HashSet<>(Arrays.asList(pagingSpec.getAfter().toString())));
+            }
         }
 
         return values;
@@ -43,7 +54,7 @@ public class PagingBehavior implements io.crnk.core.queryspec.pagingspec.PagingB
         for (Map.Entry<String, Set<String>> param : parameters.entrySet()) {
             switch(StringUtils.lowerCase(param.getKey())) {
                 case LIMIT_PARAMETER :
-                    Integer limit = getIntegerValue(param.getKey(), param.getValue());
+                    Long limit = getLongValue(param.getKey(), param.getValue());
                     if (MAX_PAGE_LIMIT != null && limit != null && limit > MAX_PAGE_LIMIT) {
                         throw new BadRequestException(
                                 String.format("%s legacy value %d is larger than the maximum allowed of %d", LIMIT_PARAMETER, limit, MAX_PAGE_LIMIT)
@@ -91,8 +102,15 @@ public class PagingBehavior implements io.crnk.core.queryspec.pagingspec.PagingB
     }
 
     @Override
-    public boolean isRequired(final PagingSpec pagingSpec) {
-        return pagingSpec.getAfter() !=  null || pagingSpec.getBefore() !=  null || pagingSpec.getLimit() != null;
+    public boolean isRequired(final OffsetLimitPagingSpec offsetLimitPagingSpec) {
+        if (offsetLimitPagingSpec instanceof PagingSpec) {
+            PagingSpec pagingSpec = (PagingSpec) offsetLimitPagingSpec;
+            return pagingSpec.getAfter() !=  null || pagingSpec.getBefore() !=  null || pagingSpec.getLimit() != null;
+        }
+        else {
+            return offsetLimitPagingSpec.getLimit() != null;
+
+        }
     }
 
     private void doEnrichPageLinksInformation(PagedLinksInformation linksInformation, Long total,
@@ -100,7 +118,7 @@ public class PagingBehavior implements io.crnk.core.queryspec.pagingspec.PagingB
                                               boolean hasResults,
                                               PagingSpecUrlBuilder urlBuilder) {
         PagingSpec offsetLimitPagingSpec = (PagingSpec) queryAdapter.getPagingSpec();
-        int pageSize = offsetLimitPagingSpec.getLimit();
+        long pageSize = offsetLimitPagingSpec.getLimit();
         UUID after = offsetLimitPagingSpec.getAfter();
         UUID before = offsetLimitPagingSpec.getBefore();
 //        long currentPage = offset / pageSize;
@@ -158,13 +176,13 @@ public class PagingBehavior implements io.crnk.core.queryspec.pagingspec.PagingB
                 || pagedLinksInformation.getPrev() != null || pagedLinksInformation.getNext() != null;
     }
 
-    private Integer getIntegerValue(final String name, final Set<String> values) {
+    private Long getLongValue(final String name, final Set<String> values) {
         if (values.size() > 1) {
             throw new ParametersDeserializationException(name);
         }
 
         try {
-            return Integer.parseInt(values.iterator().next());
+            return Long.parseLong(values.iterator().next());
         } catch (RuntimeException e) {
             throw new ParametersDeserializationException(name);
         }
