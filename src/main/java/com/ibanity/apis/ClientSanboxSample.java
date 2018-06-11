@@ -29,12 +29,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ClientSanboxSample {
     private static final Logger LOGGER = LogManager.getLogger(ClientSanboxSample.class);
 
     private static final Integer SANDBOX_ACCOUNTS_TO_CREATE = 5;
-    private static final Integer SANDBOX_TRANSACTIONS_T0_CREATE_PER_ACCOUNT = 20;
+    private static final Integer SANDBOX_TRANSACTIONS_T0_CREATE_PER_ACCOUNT = 10;
 
     private FinancialInstitutionsService financialInstitutionsService = new FinancialInstitutionsServiceImpl();
     private CustomerAccessTokensService customerAccessTokensService = new CustomerAccessTokensServiceImpl();
@@ -99,7 +100,7 @@ public class ClientSanboxSample {
         try {
             usersService.getSandboxFinancialInstitutionUser(financialInstitutionUser.getId());
         } catch (ResourceNotFoundException e) {
-            LOGGER.info(e);
+            LOGGER.error(e);
         }
 
         LOGGER.info("Got Sandbox Financial Institution User");
@@ -107,7 +108,7 @@ public class ClientSanboxSample {
         try {
             usersService.deleteSandboxFinancialInstitutionUser(financialInstitutionUser.getId());
         } catch (ResourceNotFoundException e) {
-            LOGGER.info(e);
+            LOGGER.error(e);
         }
 
         LOGGER.info("Sandbox Financial Institution User deleted");
@@ -120,19 +121,14 @@ public class ClientSanboxSample {
         financialInstitutionUser = usersService.createSandboxFinancialInstitutionUser(financialInstitutionUser);
 
         LOGGER.info("Start : Adding account to User's Financial Institution");
-        FinancialInstitutionAccount sandboxAccount2 = new FinancialInstitutionAccount();
-        sandboxAccount2.setSubType("checking");
-        sandboxAccount2.setReference("BE02379129664149");
-        sandboxAccount2.setReferenceType("IBAN");
-        sandboxAccount2.setDescription("Checking Account");
-        sandboxAccount2.setCurrency("EUR");
+        FinancialInstitutionAccount sandboxAccountToPlayWith = new FinancialInstitutionAccount();
+        sandboxAccountToPlayWith.setSubType("checking");
+        sandboxAccountToPlayWith.setReference("BE02379129664149");
+        sandboxAccountToPlayWith.setReferenceType("IBAN");
+        sandboxAccountToPlayWith.setDescription("Checking Account");
+        sandboxAccountToPlayWith.setCurrency("EUR");
 
-        sandboxAccount2.setFinancialInstitution(newFinancialInstitution);
-
-        FinancialInstitutionAccount sandboxAccountToGet = accountsService.createSandBoxAccount(generatedCustomerAccessToken
-                , newFinancialInstitution.getId()
-                , financialInstitutionUser.getId()
-                , sandboxAccount2);
+        sandboxAccountToPlayWith.setFinancialInstitution(newFinancialInstitution);
 
         for (int index = 0 ; index < SANDBOX_ACCOUNTS_TO_CREATE; index++) {
             FinancialInstitutionAccount sandboxAccount = new FinancialInstitutionAccount();
@@ -153,29 +149,31 @@ public class ClientSanboxSample {
 
         LOGGER.info("END : Adding account to User's Financial Institutions");
 
-        LOGGER.info("Start : Adding transactions to to User's Financial Institutions's account");
+        LOGGER.info("Start : Deleting sandbox account");
 
-        Random random = new Random();
+        sandboxAccountToPlayWith = accountsService.createSandBoxAccount(generatedCustomerAccessToken
+                , newFinancialInstitution.getId()
+                , financialInstitutionUser.getId()
+                , sandboxAccountToPlayWith);
+
+        final AtomicReference<FinancialInstitutionAccount> inUseFinancialInstitutionAccount = new AtomicReference();
+
+        accountsService.deleteSandBoxAccount(generatedCustomerAccessToken
+                , newFinancialInstitution.getId()
+                , financialInstitutionUser.getId()
+                , sandboxAccountToPlayWith.getId());
+
+        LOGGER.info("End : Deleting sandbox account");
+
+        LOGGER.info("Start : Adding transactions to User's Financial Institutions's account");
+
 
         final UUID newFinancialInstitutionId  = newFinancialInstitution.getId();
         final UUID financialInstitutionUserId = financialInstitutionUser.getId();
 
         sandboxAccounts.stream().forEach(createdSandboxAccount -> {
             for (int index = 0; index < SANDBOX_TRANSACTIONS_T0_CREATE_PER_ACCOUNT ; index++) {
-                Instant executionDate = now.plus(3, ChronoUnit.DAYS);
-                Instant valueDate = now.minus(1, ChronoUnit.DAYS);
-                FinancialInstitutionTransaction sandboxTransaction = new FinancialInstitutionTransaction();
-                sandboxTransaction.setFinancialInstitutionAccount(createdSandboxAccount);
-                sandboxTransaction.setAmount(Precision.round(random.doubles(10,1000).findFirst().getAsDouble() * (random .nextBoolean() ? -1 : 1), 2));
-                sandboxTransaction.setCounterpartName("Stroman, Hettinger and Swift");
-                sandboxTransaction.setCounterpartReference(Iban.random(CountryCode.BE).getAccountNumber());
-                sandboxTransaction.setCurrency("EUR");
-                sandboxTransaction.setDescription("Car rental");
-                sandboxTransaction.setExecutionDate(executionDate);
-                sandboxTransaction.setRemittanceInformation("Aspernatur et quibusdam.");
-                sandboxTransaction.setRemittanceInformationType("unstructured");
-                sandboxTransaction.setValueDate(valueDate);
-
+                FinancialInstitutionTransaction sandboxTransaction = generateNewTransaction(createdSandboxAccount);
                 FinancialInstitutionTransaction createdSandboxTransaction = transactionsService.createSandBoxTransaction(
                         generatedCustomerAccessToken
                         , newFinancialInstitutionId
@@ -185,7 +183,45 @@ public class ClientSanboxSample {
                 );
                 LOGGER.info("SandboxAccount:"+createdSandboxAccount.getReference()+":Transaction:"+createdSandboxTransaction.getId()+":created");
             }
+            inUseFinancialInstitutionAccount.set(createdSandboxAccount);
         });
-        LOGGER.info("END : Adding transactions to to User's Financial Institutions's account");
+        LOGGER.info("END : Adding transactions to User's Financial Institutions's account");
+
+        LOGGER.info("Start : Deleting transaction from User's Financial Institutions's account");
+        FinancialInstitutionTransaction sandboxTransaction = generateNewTransaction(inUseFinancialInstitutionAccount.get());
+        FinancialInstitutionTransaction createdSandboxTransaction = transactionsService.createSandBoxTransaction(
+                generatedCustomerAccessToken
+                , newFinancialInstitutionId
+                , financialInstitutionUserId
+                , inUseFinancialInstitutionAccount.get().getId()
+                , sandboxTransaction
+        );
+        try {
+            transactionsService.deleteSandboxFinancialInstitutionTransaction(customerAccessTokenRequest, newFinancialInstitutionId, financialInstitutionUserId, inUseFinancialInstitutionAccount.get().getId(), createdSandboxTransaction.getId());
+        } catch (ResourceNotFoundException e) {
+            LOGGER.error(e);
+        }
+
+        LOGGER.info("End : Deleting transaction from User's Financial Institutions's account");
+    }
+
+    private FinancialInstitutionTransaction generateNewTransaction(FinancialInstitutionAccount createdSandboxAccount){
+        Instant now = Instant.now();
+        Random random = new Random();
+
+        Instant executionDate = now.plus(3, ChronoUnit.DAYS);
+        Instant valueDate = now.minus(1, ChronoUnit.DAYS);
+        FinancialInstitutionTransaction sandboxTransaction = new FinancialInstitutionTransaction();
+        sandboxTransaction.setFinancialInstitutionAccount(createdSandboxAccount);
+        sandboxTransaction.setAmount(Precision.round(random.doubles(10,1000).findFirst().getAsDouble() * (random .nextBoolean() ? -1 : 1), 2));
+        sandboxTransaction.setCounterpartName("Stroman, Hettinger and Swift");
+        sandboxTransaction.setCounterpartReference(Iban.random(CountryCode.BE).getAccountNumber());
+        sandboxTransaction.setCurrency("EUR");
+        sandboxTransaction.setDescription("Car rental");
+        sandboxTransaction.setExecutionDate(executionDate);
+        sandboxTransaction.setRemittanceInformation("Aspernatur et quibusdam.");
+        sandboxTransaction.setRemittanceInformationType("unstructured");
+        sandboxTransaction.setValueDate(valueDate);
+        return sandboxTransaction;
     }
 }

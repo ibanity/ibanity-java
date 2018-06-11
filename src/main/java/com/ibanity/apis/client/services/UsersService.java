@@ -49,7 +49,7 @@ public interface UsersService {
 
     /**
      * Delete an Sandbox Financial Institution User
-     * @param sandboxFinancialInstitutionUserId the iBanity UUID of the Financial Institution User
+     * @param sandboxFinancialInstitutionUserId the id of the Financial Institution User
      * @throws ResourceNotFoundException when the provided ID is not known
      */
     void deleteSandboxFinancialInstitutionUser(UUID sandboxFinancialInstitutionUserId) throws ResourceNotFoundException;

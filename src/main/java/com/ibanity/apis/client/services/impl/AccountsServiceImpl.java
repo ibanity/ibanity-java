@@ -20,14 +20,14 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
 
     private static final Logger LOGGER = LogManager.getLogger(AccountsServiceImpl.class);
 
-    private static final String ACCOUNTS_REQUEST_PATH                   = "/customer";
-    private static final String ACCOUNT_REQUEST_PATH                    = "/accounts";
-    private static final String ACCOUNTS_FI_REQUEST_PATH                = ACCOUNTS_REQUEST_PATH + "/"+FINANCIAL_INSTITUTIONS_PATH + "/"+ FINANCIAL_INSTITUTION_ID_TAG;
-    private static final String ACCOUNT_INFORMATION_ACCESS_REQUEST_PATH = ACCOUNTS_FI_REQUEST_PATH + "/account-information-access-requests/"+ACCOUNT_INFORMATION_ACCESS_REQUEST_ID_TAG;
+    private static final String ACCOUNTS_REQUEST_PATH                           = "/customer";
+    private static final String ACCOUNT_REQUEST_PATH                            = "/accounts";
+    private static final String ACCOUNTS_FI_REQUEST_PATH                        = ACCOUNTS_REQUEST_PATH + "/"+FINANCIAL_INSTITUTIONS_PATH + "/"+ FINANCIAL_INSTITUTION_ID_TAG;
+    private static final String ACCOUNT_INFORMATION_ACCESS_REQUEST_PATH         = ACCOUNTS_FI_REQUEST_PATH + "/account-information-access-requests/"+ACCOUNT_INFORMATION_ACCESS_REQUEST_ID_TAG;
 
-    private static final String SANDBOX_PATH                            = "/sandbox";
-    private static final String SANDBOX_ACCOUNTS_FI_REQUEST_PATH        = SANDBOX_PATH+ "/"+FINANCIAL_INSTITUTIONS_PATH + "/"+FINANCIAL_INSTITUTION_ID_TAG;
-    private static final String SANDBOX_USER_ACCOUNTS_FI_REQUEST_PATH   = SANDBOX_ACCOUNTS_FI_REQUEST_PATH+"/financial-institution-users/"+USER_ID_TAG;
+    private static final String SANDBOX_PATH                                    = "/sandbox";
+    private static final String SANDBOX_ACCOUNTS_FI_REQUEST_PATH                = SANDBOX_PATH+ "/"+FINANCIAL_INSTITUTIONS_PATH + "/"+FINANCIAL_INSTITUTION_ID_TAG;
+    private static final String SANDBOX_USER_ACCOUNTS_FI_REQUEST_PATH           = SANDBOX_ACCOUNTS_FI_REQUEST_PATH+"/financial-institution-users/"+USER_ID_TAG;
 
     public AccountsServiceImpl() {
         super();
@@ -109,6 +109,16 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
         FinancialInstitutionAccount createdAccount = accountsRepo.create(sandboxAccount);
 
         return createdAccount;
+    }
+
+    @Override
+    public void deleteSandBoxAccount(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID financialInstitutionUserId, UUID sandboxAccountId) {
+        String correctPath = SANDBOX_USER_ACCOUNTS_FI_REQUEST_PATH
+                .replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString())
+                .replace(USER_ID_TAG, financialInstitutionUserId.toString())
+                ;
+        ResourceRepositoryV2<FinancialInstitutionAccount, UUID> accountsRepo = getApiClient(correctPath, customerAccessToken).getRepositoryForType(FinancialInstitutionAccount.class);
+        accountsRepo.delete(sandboxAccountId);
     }
 
     private ResourceRepositoryV2<AccountInformationAccessAuthorization, UUID> getAccountInformationAccessAuthorizationRepo(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountInformationAccessRequestId) {

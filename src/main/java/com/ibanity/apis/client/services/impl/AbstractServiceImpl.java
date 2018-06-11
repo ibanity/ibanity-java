@@ -27,10 +27,10 @@ public abstract class AbstractServiceImpl {
 
     private static HashMap<String,CrnkClient> apiClients = new HashMap<>();
 
-    protected static final String FINANCIAL_INSTITUTIONS_PATH = "financial-institutions";
-    protected static final String FINANCIAL_INSTITUTION_ID_TAG = "<FI_ID>";
-    protected static final String ACCOUNT_ID_TAG = "<ACCOUNT_ID>";
-    protected static final String USER_ID_TAG = "<USER_ID>";
+    protected static final String FINANCIAL_INSTITUTIONS_PATH               = "financial-institutions";
+    protected static final String FINANCIAL_INSTITUTION_ID_TAG              = "<FI_ID>";
+    protected static final String ACCOUNT_ID_TAG                            = "<ACCOUNT_ID>";
+    protected static final String USER_ID_TAG                               = "<USER_ID>";
     protected static final String ACCOUNT_INFORMATION_ACCESS_REQUEST_ID_TAG = "<ACCOUNT_INFORMATION_ACCESS_REQUEST_ID>";
 
 

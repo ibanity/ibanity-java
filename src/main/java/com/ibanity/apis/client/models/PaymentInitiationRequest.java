@@ -75,6 +75,10 @@ public class PaymentInitiationRequest extends AbstractModel{
         this.financialInstitution = new FinancialInstitution(financialInstitutionId);
     }
 
+    public void setFinancialInstitutionId(UUID financialInstitutionId){
+        this.financialInstitution = new FinancialInstitution(financialInstitutionId);
+    }
+
     public String getConsentReference() {
         return consentReference;
     }

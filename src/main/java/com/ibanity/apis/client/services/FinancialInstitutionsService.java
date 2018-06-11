@@ -12,13 +12,13 @@ import java.util.UUID;
  */
 public interface FinancialInstitutionsService {
     /**
-     * Get all Financial Institutions supported by iBanity
+     * Get all Financial Institutions supported by Ibanity
      * @return List of Financial Institutions
      */
     List<FinancialInstitution> getFinancialInstitutions();
 
     /**
-     * Get all Financial Institutions supported by iBanity using the provided PagingSpec
+     * Get all Financial Institutions supported by Ibanity using the provided PagingSpec
      * @param pagingSpec The paging specification to be used for gathering the financial institutions list
      * @return List of Financial Institutions
      */
@@ -26,7 +26,7 @@ public interface FinancialInstitutionsService {
 
     /**
      * Get the details of a specific Financial Institution
-     * @param financialInstitutionId the iBanity UUID of the Financial Institution
+     * @param financialInstitutionId the id of the Financial Institution
      * @return The Financial Institution Details
      * @throws ResourceNotFoundException when the provided ID is not known
      */
@@ -48,7 +48,7 @@ public interface FinancialInstitutionsService {
 
     /**
      * Delete an Sandbox Financial Institution
-     * @param financialInstitutionId the iBanity UUID of the Financial Institution
+     * @param financialInstitutionId the id of the Financial Institution
      * @throws ResourceNotFoundException when the provided ID is not known
      */
     void deleteSandboxFinancialInstitution(UUID financialInstitutionId) throws ResourceNotFoundException;

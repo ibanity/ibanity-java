@@ -66,6 +66,5 @@ public class UsersServiceImpl extends AbstractServiceImpl implements UsersServic
             LOGGER.debug(errorMessage);
             throw new ResourceNotFoundException(errorMessage);
         }
-
     }
 }

@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.services.impl;
 
+import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.Transaction;
@@ -16,12 +17,13 @@ import java.util.UUID;
 
 public class TransactionsServiceImpl extends AbstractServiceImpl implements TransactionsService {
     private static final Logger LOGGER = LogManager.getLogger(TransactionsServiceImpl.class);
-    private static final String TRANSACTIONS_REQUEST_PATH = "/customer/financial-institutions/"+FINANCIAL_INSTITUTION_ID_TAG+"/accounts/"+ACCOUNT_ID_TAG;
 
-    private static final String SANDBOX_PATH                            = "/sandbox";
-    private static final String SANDBOX_ACCOUNTS_FI_REQUEST_PATH        = SANDBOX_PATH+ "/"+FINANCIAL_INSTITUTIONS_PATH + "/"+FINANCIAL_INSTITUTION_ID_TAG;
-    private static final String SANDBOX_USER_ACCOUNTS_FI_REQUEST_PATH   = SANDBOX_ACCOUNTS_FI_REQUEST_PATH+"/financial-institution-users/"+USER_ID_TAG;
-    private static final String SANDBOX_ACCOUNTS_TXN_FI_REQUEST_PATH   = SANDBOX_USER_ACCOUNTS_FI_REQUEST_PATH+"/financial-institution-accounts/"+ACCOUNT_ID_TAG;
+    private static final String TRANSACTIONS_REQUEST_PATH                   = "/customer/financial-institutions/"+FINANCIAL_INSTITUTION_ID_TAG+"/accounts/"+ACCOUNT_ID_TAG;
+
+    private static final String SANDBOX_PATH                                = "/sandbox";
+    private static final String SANDBOX_ACCOUNTS_FI_REQUEST_PATH            = SANDBOX_PATH+ "/"+FINANCIAL_INSTITUTIONS_PATH + "/"+FINANCIAL_INSTITUTION_ID_TAG;
+    private static final String SANDBOX_USER_ACCOUNTS_FI_REQUEST_PATH       = SANDBOX_ACCOUNTS_FI_REQUEST_PATH+"/financial-institution-users/"+USER_ID_TAG;
+    private static final String SANDBOX_ACCOUNTS_TXN_FI_REQUEST_PATH        = SANDBOX_USER_ACCOUNTS_FI_REQUEST_PATH+"/financial-institution-accounts/"+ACCOUNT_ID_TAG;
 
     public TransactionsServiceImpl() {
         super();
@@ -56,6 +58,23 @@ public class TransactionsServiceImpl extends AbstractServiceImpl implements Tran
         FinancialInstitutionTransaction createdTransaction = transactionsRepo.create(sandboxTransaction);
 
         return createdTransaction;
+    }
+
+    @Override
+    public void deleteSandboxFinancialInstitutionTransaction(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID financialInstitutionUserId, UUID sandboxAccountId, UUID sandboxTransactionId) throws ResourceNotFoundException {
+        try {
+            String correctPath = SANDBOX_ACCOUNTS_TXN_FI_REQUEST_PATH
+                    .replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString())
+                    .replace(USER_ID_TAG, financialInstitutionUserId.toString())
+                    .replace(ACCOUNT_ID_TAG, sandboxAccountId.toString())
+                    ;
+            ResourceRepositoryV2<FinancialInstitutionTransaction, UUID> transactionsRepo = getApiClient(correctPath, customerAccessToken).getRepositoryForType(FinancialInstitutionTransaction.class);
+            transactionsRepo.delete(sandboxTransactionId);
+        } catch (io.crnk.core.exception.ResourceNotFoundException e) {
+            String errorMessage = "Resource with ID:"+sandboxTransactionId+": not found";
+            LOGGER.debug(errorMessage);
+            throw new ResourceNotFoundException(errorMessage);
+        }
     }
 
     private ResourceRepositoryV2<Transaction, UUID> getRepository(CustomerAccessToken customerAccessToken, Account account){

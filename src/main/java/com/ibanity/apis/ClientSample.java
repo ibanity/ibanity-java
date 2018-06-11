@@ -122,15 +122,13 @@ public class ClientSample {
         accountsService.getCustomerAccounts(generatedCustomerAccessToken, pagingSpec).forEach(account -> {inUseAccount.set(account); LOGGER.info(account.toString());});
         LOGGER.info("End : Accounts details all the rest");
 
-
         LOGGER.info("Start : get Account with Id:"+beforeUUID+": from Financial Institution:" + inUseFinancialInstitution.get().getId());
-
         try {
-            accountsService.getCustomerAccount(generatedCustomerAccessToken,beforeUUID, inUseFinancialInstitution.get().getId());
+            LOGGER.info("Account = "+ accountsService.getCustomerAccount(generatedCustomerAccessToken, beforeUUID, inUseFinancialInstitution.get().getId()).toString());
         } catch (ResourceNotFoundException e) {
             LOGGER.info(e);
         }
-
+        LOGGER.info("END : get Account with Id:"+beforeUUID+": from Financial Institution:" + inUseFinancialInstitution.get().getId());
 
 
         LOGGER.info("Start : Transactions details");
