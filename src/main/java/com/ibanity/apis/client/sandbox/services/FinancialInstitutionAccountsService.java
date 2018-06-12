@@ -13,7 +13,8 @@ public interface FinancialInstitutionAccountsService {
      * @param financialInstitutionId The Id of the financial institution
      * @param financialInstitutionUserId The Id of the financial institution user to which the financial institution account is linked
      * @param financialInstitutionAccountId the UUID of the FinancialInstitutionAccount
-     * @return
+     * @return the financial institution account
+     * @throws ResourceNotFoundException when the provided ID is not known
      */
     FinancialInstitutionAccount getFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) throws ResourceNotFoundException;
 
