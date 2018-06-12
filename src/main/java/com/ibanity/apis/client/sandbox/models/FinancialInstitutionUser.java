@@ -1,20 +1,13 @@
-package com.ibanity.apis.client.models.sandbox;
+package com.ibanity.apis.client.sandbox.models;
 
-import com.ibanity.apis.client.models.AbstractModel;
-import com.ibanity.apis.client.paging.IBanityPagingBehavior;
+import com.ibanity.apis.client.paging.IbanityPagingBehavior;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.time.Instant;
-
-@JsonApiResource(type = "financialInstitutionUser", resourcePath = "financial-institution-users", pagingBehavior = IBanityPagingBehavior.class)
-public class FinancialInstitutionUser extends AbstractModel {
-
-    Instant createdAt;
-    Instant updatedAt;
-    Instant deletedAt;
+@JsonApiResource(type = "financialInstitutionUser", resourcePath = "financial-institution-users", pagingBehavior = IbanityPagingBehavior.class)
+public class FinancialInstitutionUser extends AbstractTimestamps {
 
     String password;
     String firstName;
@@ -76,9 +69,6 @@ public class FinancialInstitutionUser extends AbstractModel {
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(createdAt, that.createdAt)
-                .append(updatedAt, that.updatedAt)
-                .append(deletedAt, that.deletedAt)
                 .append(getPassword(), that.getPassword())
                 .append(getFirstName(), that.getFirstName())
                 .append(getLastName(), that.getLastName())
@@ -90,9 +80,6 @@ public class FinancialInstitutionUser extends AbstractModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
-                .append(createdAt)
-                .append(updatedAt)
-                .append(deletedAt)
                 .append(getPassword())
                 .append(getFirstName())
                 .append(getLastName())

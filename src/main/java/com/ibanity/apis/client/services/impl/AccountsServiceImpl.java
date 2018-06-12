@@ -5,8 +5,7 @@ import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.AccountInformationAccessAuthorization;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.CustomerAccessToken;
-import com.ibanity.apis.client.models.sandbox.FinancialInstitutionAccount;
-import com.ibanity.apis.client.paging.IBanityPagingSpec;
+import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.services.AccountsService;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryV2;
@@ -16,8 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.UUID;
 
-import static com.ibanity.apis.client.services.configuration.IBanityConfiguration.FORWARD_SLASH;
-import static com.ibanity.apis.client.services.configuration.IBanityConfiguration.SANBOX_PREFIX_PATH;
+import static com.ibanity.apis.client.services.configuration.IbanityConfiguration.FORWARD_SLASH;
 
 public class AccountsServiceImpl extends AbstractServiceImpl implements AccountsService {
 
@@ -26,9 +24,6 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
     private static final String ACCOUNTS_REQUEST_PATH                           = FORWARD_SLASH + "customer";
     private static final String ACCOUNTS_FI_REQUEST_PATH                        = ACCOUNTS_REQUEST_PATH + FORWARD_SLASH +FINANCIAL_INSTITUTIONS_PATH + FORWARD_SLASH + FINANCIAL_INSTITUTION_ID_TAG;
     private static final String ACCOUNT_INFORMATION_ACCESS_REQUEST_PATH         = ACCOUNTS_FI_REQUEST_PATH + FORWARD_SLASH + "account-information-access-requests" + FORWARD_SLASH + ACCOUNT_INFORMATION_ACCESS_REQUEST_ID_TAG;
-
-    private static final String SANDBOX_ACCOUNTS_FI_REQUEST_PATH                = SANBOX_PREFIX_PATH+ FORWARD_SLASH + FINANCIAL_INSTITUTIONS_PATH + FORWARD_SLASH + FINANCIAL_INSTITUTION_ID_TAG;
-    private static final String SANDBOX_USER_ACCOUNTS_FI_REQUEST_PATH           = SANDBOX_ACCOUNTS_FI_REQUEST_PATH + FORWARD_SLASH + "financial-institution-users" + FORWARD_SLASH + USER_ID_TAG;
 
     public AccountsServiceImpl() {
         super();
@@ -51,11 +46,11 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
 
     @Override
     public ResourceList<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken) {
-        return getCustomerAccounts(customerAccessToken, new IBanityPagingSpec());
+        return getCustomerAccounts(customerAccessToken, new IbanityPagingSpec());
     }
 
     @Override
-    public ResourceList<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, IBanityPagingSpec pagingSpec) {
+    public ResourceList<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, IbanityPagingSpec pagingSpec) {
         ResourceRepositoryV2<Account, UUID> accountsRepo = getApiClient(ACCOUNTS_REQUEST_PATH, customerAccessToken).getRepositoryForType(Account.class);
         QuerySpec querySpec = new QuerySpec(Account.class);
         querySpec.setPagingSpec(pagingSpec);
@@ -64,11 +59,11 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
 
     @Override
     public ResourceList<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, UUID financialInstitutionId) {
-        return getCustomerAccounts(customerAccessToken, financialInstitutionId, new IBanityPagingSpec());
+        return getCustomerAccounts(customerAccessToken, financialInstitutionId, new IbanityPagingSpec());
     }
 
     @Override
-    public ResourceList<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, IBanityPagingSpec pagingSpec) {
+    public ResourceList<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, IbanityPagingSpec pagingSpec) {
         String correctPath = ACCOUNTS_FI_REQUEST_PATH.replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString());
         ResourceRepositoryV2<Account, UUID> accountsFinancialInstitutionRepo = getApiClient(correctPath, customerAccessToken).getRepositoryForType(Account.class);
         QuerySpec querySpec = new QuerySpec(Account.class);
@@ -85,11 +80,11 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
 
     @Override
     public ResourceList<AccountInformationAccessAuthorization> getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, AccountInformationAccessRequest accountInformationAccessRequest) {
-        return getAccountsInformationAccessAuthorizations(customerAccessToken, accountInformationAccessRequest, new IBanityPagingSpec());
+        return getAccountsInformationAccessAuthorizations(customerAccessToken, accountInformationAccessRequest, new IbanityPagingSpec());
     }
 
     @Override
-    public ResourceList<AccountInformationAccessAuthorization> getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, AccountInformationAccessRequest accountInformationAccessRequest, IBanityPagingSpec pagingSpec) {
+    public ResourceList<AccountInformationAccessAuthorization> getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, AccountInformationAccessRequest accountInformationAccessRequest, IbanityPagingSpec pagingSpec) {
         QuerySpec querySpec = new QuerySpec(AccountInformationAccessAuthorization.class);
         querySpec.setPagingSpec(pagingSpec);
         return findAll(querySpec, getAccountInformationAccessAuthorizationRepo(customerAccessToken, accountInformationAccessRequest.getFinancialInstitution().getId(), accountInformationAccessRequest.getId()));
@@ -98,26 +93,6 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
     @Override
     public void revokeAccountsAccessAuthorization(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, AccountInformationAccessAuthorization accountInformationAccessAuthorization) {
         getAccountInformationAccessAuthorizationRepo(customerAccessToken, financialInstitutionId, accountInformationAccessAuthorization.getAccountInformationAccessRequest().getId()).delete(accountInformationAccessAuthorization.getId());
-    }
-
-    @Override
-    public FinancialInstitutionAccount createSandBoxAccount(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID financialInstitutionUserId, FinancialInstitutionAccount sandboxAccount) {
-        String correctPath = SANDBOX_USER_ACCOUNTS_FI_REQUEST_PATH
-                .replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString())
-                .replace(USER_ID_TAG, financialInstitutionUserId.toString())
-                ;
-        ResourceRepositoryV2<FinancialInstitutionAccount, UUID> accountsRepo = getApiClient(correctPath, customerAccessToken).getRepositoryForType(FinancialInstitutionAccount.class);
-        return accountsRepo.create(sandboxAccount);
-    }
-
-    @Override
-    public void deleteSandBoxAccount(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID financialInstitutionUserId, UUID sandboxAccountId) {
-        String correctPath = SANDBOX_USER_ACCOUNTS_FI_REQUEST_PATH
-                .replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString())
-                .replace(USER_ID_TAG, financialInstitutionUserId.toString())
-                ;
-        ResourceRepositoryV2<FinancialInstitutionAccount, UUID> accountsRepo = getApiClient(correctPath, customerAccessToken).getRepositoryForType(FinancialInstitutionAccount.class);
-        accountsRepo.delete(sandboxAccountId);
     }
 
     private ResourceRepositoryV2<AccountInformationAccessAuthorization, UUID> getAccountInformationAccessAuthorizationRepo(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountInformationAccessRequestId) {

@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-public class IBanityPagingBehavior extends OffsetLimitPagingBehavior implements PagingBehavior<OffsetLimitPagingSpec> {
+public class IbanityPagingBehavior extends OffsetLimitPagingBehavior implements PagingBehavior<OffsetLimitPagingSpec> {
 
     private static final String LIMIT_PARAMETER     = "limit";
     private static final String BEFORE_PARAMETER    = "before";
@@ -29,8 +29,8 @@ public class IBanityPagingBehavior extends OffsetLimitPagingBehavior implements 
         if (offsetLimitPagingSpec.getLimit() != null) {
             values.put(String.format("%s", LIMIT_PARAMETER), new HashSet<>(Arrays.asList(Long.toString(offsetLimitPagingSpec.getLimit()))));
         }
-        if (offsetLimitPagingSpec instanceof IBanityPagingSpec) {
-            IBanityPagingSpec pagingSpec = (IBanityPagingSpec) offsetLimitPagingSpec;
+        if (offsetLimitPagingSpec instanceof IbanityPagingSpec) {
+            IbanityPagingSpec pagingSpec = (IbanityPagingSpec) offsetLimitPagingSpec;
             if (pagingSpec.getBefore() != null) {
                 values.put(String.format("%s", BEFORE_PARAMETER), new HashSet<>(Arrays.asList(pagingSpec.getBefore().toString())));
             }
@@ -43,8 +43,8 @@ public class IBanityPagingBehavior extends OffsetLimitPagingBehavior implements 
     }
 
     @Override
-    public IBanityPagingSpec deserialize(final Map<String, Set<String>> parameters) {
-        IBanityPagingSpec result = createDefaultPagingSpec();
+    public IbanityPagingSpec deserialize(final Map<String, Set<String>> parameters) {
+        IbanityPagingSpec result = createDefaultPagingSpec();
 
         for (Map.Entry<String, Set<String>> param : parameters.entrySet()) {
             switch(StringUtils.lowerCase(param.getKey())) {
@@ -72,19 +72,19 @@ public class IBanityPagingBehavior extends OffsetLimitPagingBehavior implements 
     }
 
     @Override
-    public IBanityPagingSpec createEmptyPagingSpec() {
-        return new IBanityPagingSpec();
+    public IbanityPagingSpec createEmptyPagingSpec() {
+        return new IbanityPagingSpec();
     }
 
     @Override
-    public IBanityPagingSpec createDefaultPagingSpec() {
-        return new IBanityPagingSpec();
+    public IbanityPagingSpec createDefaultPagingSpec() {
+        return new IbanityPagingSpec();
     }
 
     @Override
     public boolean isRequired(final OffsetLimitPagingSpec offsetLimitPagingSpec) {
-        if (offsetLimitPagingSpec instanceof IBanityPagingSpec) {
-            IBanityPagingSpec pagingSpec = (IBanityPagingSpec) offsetLimitPagingSpec;
+        if (offsetLimitPagingSpec instanceof IbanityPagingSpec) {
+            IbanityPagingSpec pagingSpec = (IbanityPagingSpec) offsetLimitPagingSpec;
             return pagingSpec.getAfter() !=  null || pagingSpec.getBefore() !=  null || pagingSpec.getLimit() != null;
         }
         else {

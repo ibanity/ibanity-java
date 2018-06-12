@@ -16,7 +16,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Arrays;
 import java.util.List;
 
-public class IBanityConfiguration {
+public class IbanityConfiguration {
 
     public static final String FORWARD_SLASH = "/";
     public static final String SANBOX_PREFIX_PATH = FORWARD_SLASH + "sandbox";
@@ -25,9 +25,9 @@ public class IBanityConfiguration {
     private static final String PROPERTIES_FILE = "ibanity.properties";
     private static Configuration configuration = null;
 
-    private static final Logger LOGGER = LogManager.getLogger(IBanityConfiguration.class);
+    private static final Logger LOGGER = LogManager.getLogger(IbanityConfiguration.class);
 
-    private IBanityConfiguration() {
+    private IbanityConfiguration() {
     }
 
     public static Configuration getConfiguration() {

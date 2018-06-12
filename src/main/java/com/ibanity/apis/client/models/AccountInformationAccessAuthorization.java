@@ -1,6 +1,6 @@
 package com.ibanity.apis.client.models;
 
-import com.ibanity.apis.client.paging.IBanityPagingBehavior;
+import com.ibanity.apis.client.paging.IbanityPagingBehavior;
 import io.crnk.core.resource.annotations.JsonApiRelation;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import io.crnk.core.resource.annotations.LookupIncludeBehavior;
@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.time.Instant;
 import java.util.UUID;
 
-@JsonApiResource(type = "account-information-access-authorizations", pagingBehavior = IBanityPagingBehavior.class)
+@JsonApiResource(type = "account-information-access-authorizations", pagingBehavior = IbanityPagingBehavior.class)
 public class AccountInformationAccessAuthorization extends AbstractModel{
     private String accountReference;
     private Instant revokedAt;

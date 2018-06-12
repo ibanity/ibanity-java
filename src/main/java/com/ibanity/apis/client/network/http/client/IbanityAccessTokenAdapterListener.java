@@ -10,20 +10,20 @@ import org.apache.http.message.BasicHeader;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class IBanityAccessTokenAdapterListener implements HttpClientAdapterListener {
+public class IbanityAccessTokenAdapterListener implements HttpClientAdapterListener {
 
     CustomerAccessToken customerAccessToken = null;
-    public IBanityAccessTokenAdapterListener() {
+    public IbanityAccessTokenAdapterListener() {
     }
 
-    public IBanityAccessTokenAdapterListener(CustomerAccessToken customerAccessToken) {
+    public IbanityAccessTokenAdapterListener(CustomerAccessToken customerAccessToken) {
         this.customerAccessToken = customerAccessToken;
     }
 
     @Override
     public void onBuild(HttpClientBuilder httpClientBuilder) {
-        httpClientBuilder.setSSLContext(IBanityHttpUtils.getSSLContext());
-        httpClientBuilder.addInterceptorLast(new IBanitySignatureInterceptor());
+        httpClientBuilder.setSSLContext(IbanityHttpUtils.getSSLContext());
+        httpClientBuilder.addInterceptorLast(new IbanitySignatureInterceptor());
         if (customerAccessToken != null){
             httpClientBuilder.setDefaultHeaders(getAuthorizationtHttpRequestHeaders(customerAccessToken));
         }

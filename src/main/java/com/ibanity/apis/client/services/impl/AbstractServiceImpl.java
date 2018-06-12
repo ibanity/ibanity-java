@@ -3,11 +3,11 @@ package com.ibanity.apis.client.services.impl;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.ibanity.apis.client.exceptions.IBanityException;
+import com.ibanity.apis.client.exceptions.IbanityException;
 import com.ibanity.apis.client.models.AbstractModel;
 import com.ibanity.apis.client.models.CustomerAccessToken;
-import com.ibanity.apis.client.network.http.client.IBanityAccessTokenAdapterListener;
-import com.ibanity.apis.client.services.configuration.IBanityConfiguration;
+import com.ibanity.apis.client.network.http.client.IbanityAccessTokenAdapterListener;
+import com.ibanity.apis.client.services.configuration.IbanityConfiguration;
 import io.crnk.client.CrnkClient;
 import io.crnk.client.http.apache.HttpClientAdapter;
 import io.crnk.core.boot.CrnkProperties;
@@ -23,7 +23,7 @@ import java.util.UUID;
 public abstract class AbstractServiceImpl {
     private static final Logger LOGGER = LogManager.getLogger(AbstractServiceImpl.class);
 
-    private static final String IBANITY_API_ENDPOINT = IBanityConfiguration.getConfiguration().getString(IBanityConfiguration.IBANITY_PROPERTIES_PREFIX + "api.endpoint");
+    private static final String IBANITY_API_ENDPOINT = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "api.endpoint");
 
     private static HashMap<String,CrnkClient> apiClients = new HashMap<>();
 
@@ -54,7 +54,7 @@ public abstract class AbstractServiceImpl {
             return repository.findAll(querySpec);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
-            throw new IBanityException(e.getMessage(), e);
+            throw new IbanityException(e.getMessage(), e);
         }
     }
 
@@ -67,10 +67,10 @@ public abstract class AbstractServiceImpl {
 
         HttpClientAdapter adapter = (HttpClientAdapter) apiClient.getHttpAdapter();
         if (customerAccessToken == null){
-            adapter.addListener(new IBanityAccessTokenAdapterListener());
+            adapter.addListener(new IbanityAccessTokenAdapterListener());
         }
         else {
-            adapter.addListener(new IBanityAccessTokenAdapterListener(customerAccessToken));
+            adapter.addListener(new IbanityAccessTokenAdapterListener(customerAccessToken));
         }
         return apiClient;
     }

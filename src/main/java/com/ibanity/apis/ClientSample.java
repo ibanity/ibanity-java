@@ -8,13 +8,13 @@ import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.PaymentInitiationRequest;
 import com.ibanity.apis.client.models.Transaction;
-import com.ibanity.apis.client.paging.IBanityPagingSpec;
+import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.services.AccountsService;
 import com.ibanity.apis.client.services.CustomerAccessTokensService;
 import com.ibanity.apis.client.services.FinancialInstitutionsService;
 import com.ibanity.apis.client.services.PaymentsService;
 import com.ibanity.apis.client.services.TransactionsService;
-import com.ibanity.apis.client.services.configuration.IBanityConfiguration;
+import com.ibanity.apis.client.services.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.services.impl.AccountsServiceImpl;
 import com.ibanity.apis.client.services.impl.CustomerAccessTokensServiceImpl;
 import com.ibanity.apis.client.services.impl.FinancialInstitutionsServiceImpl;
@@ -32,8 +32,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ClientSample {
     private static final Logger LOGGER = LogManager.getLogger(ClientSample.class);
 
-    private static final String FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL = IBanityConfiguration.getConfiguration().getString(IBanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.accounts.information.access.result.redirect.url");
-    private static final String FAKE_TPP_PAYMENT_INITIATION_REDIRECT_URL = IBanityConfiguration.getConfiguration().getString(IBanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.payments.initiation.result.redirect.url");
+    private static final String FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.accounts.information.access.result.redirect.url");
+    private static final String FAKE_TPP_PAYMENT_INITIATION_REDIRECT_URL = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.payments.initiation.result.redirect.url");
 
     private static final String LOGGER_LINE_SEPARATOR = "#######################################";
 
@@ -53,7 +53,7 @@ public class ClientSample {
         LOGGER.info("Start : List of Financial Institutions: starting with 1 FI");
 
         AtomicReference<FinancialInstitution> inUseFinancialInstitution = new AtomicReference();
-        IBanityPagingSpec pagingSpec = new IBanityPagingSpec();
+        IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
         pagingSpec.setLimit(1L);
         financialInstitutionsService.getFinancialInstitutions(pagingSpec).stream().forEach(financialInstitution -> {
                                                             inUseFinancialInstitution.set(financialInstitution);
@@ -104,7 +104,7 @@ public class ClientSample {
         accountsService.getCustomerAccounts(generatedCustomerAccessToken,inUseFinancialInstitution.get().getId(), pagingSpec).forEach(account -> {inUseAccount.set(account); LOGGER.info(account.toString());});
         LOGGER.info("End : get All Accounts for financial institution:"+inUseFinancialInstitution.get().getId()+":");
 
-        pagingSpec = new IBanityPagingSpec();
+        pagingSpec = new IbanityPagingSpec();
         pagingSpec.setLimit(2L);
         LOGGER.info("Start : Accounts details 2 of them");
         accountsService.getCustomerAccounts(generatedCustomerAccessToken, pagingSpec).forEach(account -> {inUseAccount.set(account); LOGGER.info(account.toString());});
@@ -118,7 +118,7 @@ public class ClientSample {
 
         UUID beforeUUID = inUseAccount.get().getId();
 
-        pagingSpec = new IBanityPagingSpec();
+        pagingSpec = new IbanityPagingSpec();
         pagingSpec.setAfter(beforeUUID);
         pagingSpec.setLimit(100L);
         LOGGER.info("Start : Accounts details all the rest");

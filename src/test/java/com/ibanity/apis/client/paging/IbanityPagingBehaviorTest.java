@@ -18,10 +18,10 @@ import static org.junit.Assert.assertTrue;
  * @version 1.0
  * @since <pre>Jun 12, 2018</pre>
  */
-public class IBanityPagingBehaviorTest {
+public class IbanityPagingBehaviorTest {
 
-    IBanityPagingSpec iBanityPagingSpec;
-    IBanityPagingBehavior iBanityPagingBehavior;
+    IbanityPagingSpec iBanityPagingSpec;
+    IbanityPagingBehavior iBanityPagingBehavior;
 
     private static final String AFTER = "after";
     private static final String BEFORE = "before";
@@ -30,8 +30,8 @@ public class IBanityPagingBehaviorTest {
 
     @Before
     public void before() throws Exception {
-        iBanityPagingBehavior = new IBanityPagingBehavior();
-        iBanityPagingSpec = new IBanityPagingSpec();
+        iBanityPagingBehavior = new IbanityPagingBehavior();
+        iBanityPagingSpec = new IbanityPagingSpec();
         iBanityPagingSpec.setLimit(Long.valueOf(LIMIT_VALUE));
     }
 
@@ -71,7 +71,7 @@ public class IBanityPagingBehaviorTest {
         iBanityPagingSpec.setAfter(afterUUID);
         iBanityPagingSpec.setBefore(beforeUUID);
         Map<String, Set<String>> serializedValues = iBanityPagingBehavior.serialize(iBanityPagingSpec, null);
-        IBanityPagingSpec iBanityPagingSpecResult = iBanityPagingBehavior.deserialize(serializedValues);
+        IbanityPagingSpec iBanityPagingSpecResult = iBanityPagingBehavior.deserialize(serializedValues);
         assertTrue(iBanityPagingSpec.equals(iBanityPagingSpecResult));
     }
 
@@ -80,10 +80,10 @@ public class IBanityPagingBehaviorTest {
      */
     @Test
     public void testCreateEmptyPagingSpec() throws Exception {
-        IBanityPagingSpec iBanityPagingSpecResult = iBanityPagingBehavior.createEmptyPagingSpec();
+        IbanityPagingSpec iBanityPagingSpecResult = iBanityPagingBehavior.createEmptyPagingSpec();
         assertNull(iBanityPagingSpecResult.getAfter());
         assertNull(iBanityPagingSpecResult.getBefore());
-        assertTrue(iBanityPagingSpecResult.getLimit() == IBanityPagingSpec.LIMIT_DEFAULT);
+        assertTrue(iBanityPagingSpecResult.getLimit() == IbanityPagingSpec.LIMIT_DEFAULT);
     }
 
     /**
@@ -99,7 +99,7 @@ public class IBanityPagingBehaviorTest {
      */
     @Test
     public void testIsRequired() throws Exception {
-        IBanityPagingSpec iBanityPagingSpecResult = iBanityPagingBehavior.createEmptyPagingSpec();
+        IbanityPagingSpec iBanityPagingSpecResult = iBanityPagingBehavior.createEmptyPagingSpec();
         assertTrue(iBanityPagingBehavior.isRequired(iBanityPagingSpecResult));
     }
 } 

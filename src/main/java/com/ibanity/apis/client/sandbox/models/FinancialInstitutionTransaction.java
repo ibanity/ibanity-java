@@ -1,8 +1,8 @@
-package com.ibanity.apis.client.models.sandbox;
+package com.ibanity.apis.client.sandbox.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ibanity.apis.client.models.AbstractTransaction;
-import com.ibanity.apis.client.paging.IBanityPagingBehavior;
+import com.ibanity.apis.client.paging.IbanityPagingBehavior;
 import io.crnk.core.resource.annotations.JsonApiRelation;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import io.crnk.core.resource.annotations.LookupIncludeBehavior;
@@ -13,22 +13,18 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.time.Instant;
 
-@JsonApiResource(type = "financialInstitutionTransaction", resourcePath = "financial-institution-transactions", pagingBehavior = IBanityPagingBehavior.class)
+@JsonApiResource(type = "financialInstitutionTransaction", resourcePath = "financial-institution-transactions", pagingBehavior = IbanityPagingBehavior.class)
 public class FinancialInstitutionTransaction extends AbstractTransaction {
-
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
-    Instant createdAt;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
-    Instant updatedAt;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
-    Instant deletedAt;
 
     @JsonApiRelation(lookUp= LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL,serialize= SerializeType.ONLY_ID)
     private FinancialInstitutionAccount financialInstitutionAccount;
 
-    public FinancialInstitutionTransaction() {
-        super();
-    }
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
+    Instant createdAt = null;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
+    Instant updatedAt = null;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
+    Instant deletedAt = null;
 
     public Instant getCreatedAt() {
         return createdAt;
@@ -76,6 +72,9 @@ public class FinancialInstitutionTransaction extends AbstractTransaction {
                 .append(getUpdatedAt(), that.getUpdatedAt())
                 .append(getDeletedAt(), that.getDeletedAt())
                 .append(getFinancialInstitutionAccount(), that.getFinancialInstitutionAccount())
+                .append(getCreatedAt(), that.getCreatedAt())
+                .append(getUpdatedAt(), that.getUpdatedAt())
+                .append(getDeletedAt(), that.getDeletedAt())
                 .isEquals();
     }
 
@@ -87,6 +86,9 @@ public class FinancialInstitutionTransaction extends AbstractTransaction {
                 .append(getUpdatedAt())
                 .append(getDeletedAt())
                 .append(getFinancialInstitutionAccount())
+                .append(getCreatedAt())
+                .append(getUpdatedAt())
+                .append(getDeletedAt())
                 .toHashCode();
     }
 
@@ -94,10 +96,10 @@ public class FinancialInstitutionTransaction extends AbstractTransaction {
     public String toString() {
         return new ToStringBuilder(this)
                 .append(super.toString())
-                .append("createdAt", createdAt)
-                .append("deletedAt", deletedAt)
                 .append("financialInstitutionAccount", financialInstitutionAccount)
-                .append("updatedAt", updatedAt)
+                .append("createdAt", getCreatedAt())
+                .append("deletedAt", getDeletedAt())
+                .append("updatedAt", getUpdatedAt())
                 .toString();
     }
 }

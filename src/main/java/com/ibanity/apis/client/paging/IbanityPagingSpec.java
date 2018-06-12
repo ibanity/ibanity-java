@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.UUID;
 
-public class IBanityPagingSpec extends OffsetLimitPagingSpec implements PagingSpec {
+public class IbanityPagingSpec extends OffsetLimitPagingSpec implements PagingSpec {
 
     private UUID before = null;
     private UUID after = null;
@@ -16,22 +16,22 @@ public class IBanityPagingSpec extends OffsetLimitPagingSpec implements PagingSp
     public static final Long LIMIT_DEFAULT = 10L;
 
 
-    public IBanityPagingSpec(OffsetLimitPagingSpec offsetLimitPagingSpec) {
+    public IbanityPagingSpec(OffsetLimitPagingSpec offsetLimitPagingSpec) {
         super(offsetLimitPagingSpec.getLimit(), offsetLimitPagingSpec.getOffset());
     }
 
-    public IBanityPagingSpec() {
+    public IbanityPagingSpec() {
         super();
         setLimit(LIMIT_DEFAULT);
     }
 
-    public IBanityPagingSpec(Long limit, UUID before, UUID after) {
+    public IbanityPagingSpec(Long limit, UUID before, UUID after) {
         setLimit(limit);
         this.before = before;
         this.after = after;
     }
 
-    public IBanityPagingSpec(Long offset, Long limit) {
+    public IbanityPagingSpec(Long offset, Long limit) {
         super(offset, limit);
     }
 
@@ -64,9 +64,9 @@ public class IBanityPagingSpec extends OffsetLimitPagingSpec implements PagingSp
     public boolean equals(Object o) {
         if (this == o) return true;
 
-        if (!(o instanceof IBanityPagingSpec)) return false;
+        if (!(o instanceof IbanityPagingSpec)) return false;
 
-        IBanityPagingSpec that = (IBanityPagingSpec) o;
+        IbanityPagingSpec that = (IbanityPagingSpec) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))

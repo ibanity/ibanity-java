@@ -2,7 +2,7 @@ package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.PaymentInitiationRequest;
-import com.ibanity.apis.client.paging.IBanityPagingSpec;
+import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.services.PaymentsService;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryV2;
@@ -20,7 +20,7 @@ public class PaymentsServiceImpl extends AbstractServiceImpl implements Payments
     @Override
     public PaymentInitiationRequest getPaymentInitiationRequest(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID paymentInitiationRequestId) {
         QuerySpec querySpec = new QuerySpec(PaymentInitiationRequest.class);
-        IBanityPagingSpec pagingSpec = new IBanityPagingSpec();
+        IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
         querySpec.setPagingSpec(pagingSpec);
         return getRepository(customerAccessToken, financialInstitutionId).findOne(paymentInitiationRequestId, querySpec);
     }

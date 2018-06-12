@@ -1,6 +1,6 @@
 package com.ibanity.apis.client.models;
 
-import com.ibanity.apis.client.paging.IBanityPagingBehavior;
+import com.ibanity.apis.client.paging.IbanityPagingBehavior;
 import io.crnk.core.resource.annotations.JsonApiRelation;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import io.crnk.core.resource.annotations.LookupIncludeBehavior;
@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-@JsonApiResource(type = "transaction", resourcePath = "transactions", pagingBehavior = IBanityPagingBehavior.class)
+@JsonApiResource(type = "transaction", resourcePath = "transactions", pagingBehavior = IbanityPagingBehavior.class)
 public class Transaction extends AbstractTransaction {
 
     @JsonApiRelation(lookUp= LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL,serialize= SerializeType.ONLY_ID)

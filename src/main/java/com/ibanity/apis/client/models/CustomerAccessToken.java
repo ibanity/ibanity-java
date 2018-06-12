@@ -1,7 +1,7 @@
 package com.ibanity.apis.client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ibanity.apis.client.paging.IBanityPagingBehavior;
+import com.ibanity.apis.client.paging.IbanityPagingBehavior;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.UUID;
 
-@JsonApiResource(type="customerAccessToken", resourcePath = "customer-access-tokens", pagingBehavior = IBanityPagingBehavior.class)
+@JsonApiResource(type="customerAccessToken", resourcePath = "customer-access-tokens", pagingBehavior = IbanityPagingBehavior.class)
 public class CustomerAccessToken extends AbstractModel{
     private String token;
 
