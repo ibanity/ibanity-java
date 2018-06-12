@@ -1,7 +1,7 @@
 package com.ibanity.apis.client.models;
 
 import com.ibanity.apis.client.models.links.PaymentAccessLinks;
-import com.ibanity.apis.client.paging.PagingBehavior;
+import com.ibanity.apis.client.paging.IbanityPagingBehavior;
 import io.crnk.core.resource.annotations.JsonApiLinksInformation;
 import io.crnk.core.resource.annotations.JsonApiRelation;
 import io.crnk.core.resource.annotations.JsonApiResource;
@@ -14,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.UUID;
 
 
-@JsonApiResource(type= "paymentInitiationRequest", resourcePath = "payment-initiation-requests", pagingBehavior = PagingBehavior.class)
+@JsonApiResource(type= "paymentInitiationRequest", resourcePath = "payment-initiation-requests", pagingBehavior = IbanityPagingBehavior.class)
 public class PaymentInitiationRequest extends AbstractModel{
     private String consentReference;
     private String endToEndId;
@@ -42,28 +42,6 @@ public class PaymentInitiationRequest extends AbstractModel{
 
     @JsonApiRelation(lookUp= LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL,serialize= SerializeType.ONLY_ID)
     private FinancialInstitution financialInstitution = null;
-
-    public PaymentInitiationRequest(UUID id, String consentReference, String endToEndId, String productType, String remittanceInformationType, String remittanceInformation, String currency, Double amount, String debtorName, String debtorAccountReference, String debtorAccountReferenceType, String creditorName, String creditorAccountReference, String creditorAccountReferenceType, String creditorAgent, String creditorAgentType, String status, UUID financialInstitutionId, String redirectUri) {
-        super(id);
-        this.consentReference = consentReference;
-        this.endToEndId = endToEndId;
-        this.productType = productType;
-        this.remittanceInformationType = remittanceInformationType;
-        this.remittanceInformation = remittanceInformation;
-        this.currency = currency;
-        this.amount = amount;
-        this.debtorName = debtorName;
-        this.debtorAccountReference = debtorAccountReference;
-        this.debtorAccountReferenceType = debtorAccountReferenceType;
-        this.creditorName = creditorName;
-        this.creditorAccountReference = creditorAccountReference;
-        this.creditorAccountReferenceType = creditorAccountReferenceType;
-        this.creditorAgent = creditorAgent;
-        this.creditorAgentType = creditorAgentType;
-        this.status = status;
-        this.financialInstitution = new FinancialInstitution(financialInstitutionId);
-        this.redirectUri = redirectUri;
-    }
 
     public PaymentInitiationRequest() {
         super();

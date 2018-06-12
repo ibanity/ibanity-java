@@ -24,17 +24,6 @@ public abstract class AbstractAccount extends AbstractModel{
     @JsonApiRelation(lookUp=LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL,serialize=SerializeType.ONLY_ID)
     private FinancialInstitution financialInstitution;
 
-    public AbstractAccount(UUID id, String subType, String currency, String description, String reference, String referenceType, Double currentBalance, Double availableBalance) {
-        super(id);
-        this.subType = subType;
-        this.currency = currency;
-        this.description = description;
-        this.reference = reference;
-        this.referenceType = referenceType;
-        this.currentBalance = currentBalance;
-        this.availableBalance = availableBalance;
-    }
-
     public AbstractAccount() {
         this.financialInstitution = new FinancialInstitution();
     }

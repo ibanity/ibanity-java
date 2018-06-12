@@ -1,34 +1,24 @@
-package com.ibanity.apis.client.models.sandbox;
+package com.ibanity.apis.client.sandbox.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ibanity.apis.client.models.AbstractAccount;
-import com.ibanity.apis.client.models.FinancialInstitution;
-import com.ibanity.apis.client.paging.PagingBehavior;
+import com.ibanity.apis.client.paging.IbanityPagingBehavior;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.time.Instant;
-import java.util.UUID;
 
-@JsonApiResource(type = "financialInstitutionAccount", resourcePath = "financial-institution-accounts", pagingBehavior = PagingBehavior.class)
+@JsonApiResource(type = "financialInstitutionAccount", resourcePath = "financial-institution-accounts", pagingBehavior = IbanityPagingBehavior.class)
 public class FinancialInstitutionAccount extends AbstractAccount {
 
-    Instant createdAt;
-    Instant updatedAt;
-    Instant deletedAt;
-
-    public FinancialInstitutionAccount() {
-        super();
-    }
-
-    public FinancialInstitutionAccount(UUID id, UUID financialInstitutionId) {
-        super(id, financialInstitutionId);
-    }
-
-    public FinancialInstitutionAccount(UUID id, String subType, String currency, String description, String reference, String referenceType, Double currentBalance, Double availableBalance, String subType1, String currency1, String description1, String reference1, String referenceType1, Double currentBalance1, Double availableBalance1, FinancialInstitution financialInstitution) {
-        super(id, subType, currency, description, reference, referenceType, currentBalance, availableBalance);
-    }
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
+    Instant createdAt = null;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
+    Instant updatedAt = null;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
+    Instant deletedAt = null;
 
     public Instant getCreatedAt() {
         return createdAt;
@@ -58,9 +48,9 @@ public class FinancialInstitutionAccount extends AbstractAccount {
     public String toString() {
         return new ToStringBuilder(this)
                 .append(super.toString())
-                .append("createdAt", createdAt)
-                .append("deletedAt", deletedAt)
-                .append("updatedAt", updatedAt)
+                .append("createdAt", getCreatedAt())
+                .append("deletedAt", getDeletedAt())
+                .append("updatedAt", getUpdatedAt())
                 .toString();
     }
 

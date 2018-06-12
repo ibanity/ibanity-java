@@ -1,22 +1,19 @@
 package com.ibanity.apis;
 
 import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
-import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.FinancialInstitution;
-import com.ibanity.apis.client.models.sandbox.FinancialInstitutionAccount;
-import com.ibanity.apis.client.models.sandbox.FinancialInstitutionTransaction;
-import com.ibanity.apis.client.models.sandbox.FinancialInstitutionUser;
-import com.ibanity.apis.client.paging.PagingSpec;
-import com.ibanity.apis.client.services.AccountsService;
-import com.ibanity.apis.client.services.CustomerAccessTokensService;
-import com.ibanity.apis.client.services.FinancialInstitutionsService;
-import com.ibanity.apis.client.services.TransactionsService;
-import com.ibanity.apis.client.services.UsersService;
-import com.ibanity.apis.client.services.impl.AccountsServiceImpl;
-import com.ibanity.apis.client.services.impl.CustomerAccessTokensServiceImpl;
-import com.ibanity.apis.client.services.impl.FinancialInstitutionsServiceImpl;
-import com.ibanity.apis.client.services.impl.TransactionsServiceImpl;
-import com.ibanity.apis.client.services.impl.UsersServiceImpl;
+import com.ibanity.apis.client.paging.IbanityPagingSpec;
+import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
+import com.ibanity.apis.client.sandbox.models.FinancialInstitutionTransaction;
+import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
+import com.ibanity.apis.client.sandbox.services.FinancialInstitutionAccountsService;
+import com.ibanity.apis.client.sandbox.services.FinancialInstitutionTransactionsService;
+import com.ibanity.apis.client.sandbox.services.FinancialInstitutionUsersService;
+import com.ibanity.apis.client.sandbox.services.SandboxFinancialInstitutionsService;
+import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionAccountsServiceImpl;
+import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionTransactionsServiceImpl;
+import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionUsersServiceImpl;
+import com.ibanity.apis.client.sandbox.services.impl.SandboxFinancialInstitutionsServiceImpl;
 import org.apache.commons.math3.util.Precision;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,11 +34,10 @@ public class ClientSanboxSample {
     private static final Integer SANDBOX_ACCOUNTS_TO_CREATE = 5;
     private static final Integer SANDBOX_TRANSACTIONS_T0_CREATE_PER_ACCOUNT = 10;
 
-    private FinancialInstitutionsService financialInstitutionsService = new FinancialInstitutionsServiceImpl();
-    private CustomerAccessTokensService customerAccessTokensService = new CustomerAccessTokensServiceImpl();
-    private AccountsService accountsService = new AccountsServiceImpl();
-    private TransactionsService transactionsService = new TransactionsServiceImpl();
-    private UsersService usersService = new UsersServiceImpl();
+    private SandboxFinancialInstitutionsService financialInstitutionsService = new SandboxFinancialInstitutionsServiceImpl();
+    private FinancialInstitutionAccountsService financialInstitutionAccountsService = new FinancialInstitutionAccountsServiceImpl();
+    private FinancialInstitutionTransactionsService financialInstitutionTransactionsService = new FinancialInstitutionTransactionsServiceImpl();
+    private FinancialInstitutionUsersService financialInstitutionUsersService = new FinancialInstitutionUsersServiceImpl();
 
     public static void main(String[] args){
         ClientSanboxSample client  = new ClientSanboxSample();
@@ -53,29 +49,32 @@ public class ClientSanboxSample {
         Instant now = Instant.now();
 
         LOGGER.info("Start : Creating a new Financial Institution");
-        PagingSpec pagingSpec = new PagingSpec();
+        IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
         pagingSpec.setLimit(1L);
-        financialInstitutionsService.getFinancialInstitutions(pagingSpec).stream().forEach(financialInstitution -> {
-                                                            LOGGER.info(financialInstitution.toString());}
-                                                            );
-
-        CustomerAccessToken customerAccessTokenRequest = new CustomerAccessToken("application_customer_reference");
-        CustomerAccessToken generatedCustomerAccessToken = customerAccessTokensService.createCustomerAccessToken(customerAccessTokenRequest);
+        financialInstitutionsService.getFinancialInstitutions(pagingSpec).stream().forEach(financialInstitution -> LOGGER.info(financialInstitution.toString()));
 
         FinancialInstitution newFinancialInstitution = new FinancialInstitution();
         newFinancialInstitution.setSandbox(Boolean.TRUE);
         newFinancialInstitution.setName("FI-"+now);
 
-        newFinancialInstitution = financialInstitutionsService.createSandboxFinancialInstitution(newFinancialInstitution);
+        newFinancialInstitution = financialInstitutionsService.createFinancialInstitution(newFinancialInstitution);
 
-        LOGGER.info("New Sandbox Financial Institution created:"+newFinancialInstitution.toString());
+        LOGGER.info("New Financial Institution created:"+newFinancialInstitution.toString());
 
         newFinancialInstitution.setName("FI-"+now);
-        newFinancialInstitution = financialInstitutionsService.updateSandboxFinancialInstitution(newFinancialInstitution);
-        LOGGER.info("New Sandbox Financial Institution updated:"+newFinancialInstitution.toString());
+        newFinancialInstitution = financialInstitutionsService.updateFinancialInstitution(newFinancialInstitution);
+        LOGGER.info("New Financial Institution updated:"+newFinancialInstitution.toString());
 
         try {
-            financialInstitutionsService.deleteSandboxFinancialInstitution(newFinancialInstitution.getId());
+            financialInstitutionsService.getFinancialInstitution(newFinancialInstitution.getId());
+            LOGGER.info("New Financial Institution found:"+newFinancialInstitution.toString());
+
+        } catch (ResourceNotFoundException e) {
+            LOGGER.error(e);
+        }
+
+        try {
+            financialInstitutionsService.deleteFinancialInstitution(newFinancialInstitution.getId());
         } catch (ResourceNotFoundException e) {
             LOGGER.info(e);
         }
@@ -88,82 +87,92 @@ public class ClientSanboxSample {
         financialInstitutionUser.setLogin("Login-"+now);
         financialInstitutionUser.setPassword("Password-"+now);
 
-        financialInstitutionUser = usersService.createSandboxFinancialInstitutionUser(financialInstitutionUser);
-        LOGGER.info("New Sandbox Financial Institution User created:"+financialInstitutionUser.toString());
+        financialInstitutionUser = financialInstitutionUsersService.createFinancialInstitutionUser(financialInstitutionUser);
+        LOGGER.info("New Financial Institution User created:"+financialInstitutionUser.toString());
 
         financialInstitutionUser.setPassword("password");
-        usersService.updateSandboxFinancialInstitutionUser(financialInstitutionUser);
-        LOGGER.info("New Sandbox Financial Institution User updated:"+financialInstitutionUser.toString());
+        financialInstitutionUser = financialInstitutionUsersService.updateFinancialInstitutionUser(financialInstitutionUser);
+        LOGGER.info("New Financial Institution User updated:"+financialInstitutionUser.toString());
 
-        usersService.getSandboxFinancialInstitutionUsers().stream().forEach(financialInstitutionUser1 -> LOGGER.info("Financial Institution User:"+financialInstitutionUser1.toString()));
+        financialInstitutionUsersService.getFinancialInstitutionUsers().stream().forEach(financialInstitutionUser1 -> LOGGER.info("Financial Institution User:"+financialInstitutionUser1.toString()));
 
         try {
-            usersService.getSandboxFinancialInstitutionUser(financialInstitutionUser.getId());
+            financialInstitutionUsersService.getFinancialInstitutionUser(financialInstitutionUser.getId());
         } catch (ResourceNotFoundException e) {
             LOGGER.error(e);
         }
 
-        LOGGER.info("Got Sandbox Financial Institution User");
+        LOGGER.info("Got Financial Institution User");
 
         try {
-            usersService.deleteSandboxFinancialInstitutionUser(financialInstitutionUser.getId());
+            financialInstitutionUsersService.deleteFinancialInstitutionUser(financialInstitutionUser.getId());
         } catch (ResourceNotFoundException e) {
             LOGGER.error(e);
         }
 
-        LOGGER.info("Sandbox Financial Institution User deleted");
+        LOGGER.info("Financial Institution User deleted");
 
         newFinancialInstitution.setId(null);
-        newFinancialInstitution = financialInstitutionsService.createSandboxFinancialInstitution(newFinancialInstitution);
+        newFinancialInstitution = financialInstitutionsService.createFinancialInstitution(newFinancialInstitution);
 
-        List<FinancialInstitutionAccount> sandboxAccounts = new ArrayList<>();
+        List<FinancialInstitutionAccount> financialInstitutionAccounts = new ArrayList<>();
 
-        financialInstitutionUser = usersService.createSandboxFinancialInstitutionUser(financialInstitutionUser);
+        financialInstitutionUser = financialInstitutionUsersService.createFinancialInstitutionUser(financialInstitutionUser);
 
         LOGGER.info("Start : Adding account to User's Financial Institution");
-        FinancialInstitutionAccount sandboxAccountToPlayWith = new FinancialInstitutionAccount();
-        sandboxAccountToPlayWith.setSubType("checking");
-        sandboxAccountToPlayWith.setReference("BE02379129664149");
-        sandboxAccountToPlayWith.setReferenceType("IBAN");
-        sandboxAccountToPlayWith.setDescription("Checking Account");
-        sandboxAccountToPlayWith.setCurrency("EUR");
-
-        sandboxAccountToPlayWith.setFinancialInstitution(newFinancialInstitution);
 
         for (int index = 0 ; index < SANDBOX_ACCOUNTS_TO_CREATE; index++) {
-            FinancialInstitutionAccount sandboxAccount = new FinancialInstitutionAccount();
-            sandboxAccount.setSubType("checking");
-            sandboxAccount.setReference(Iban.random(CountryCode.BE).toString());
-            sandboxAccount.setReferenceType("IBAN");
-            sandboxAccount.setDescription("Checking Account");
-            sandboxAccount.setCurrency("EUR");
-            sandboxAccount.setFinancialInstitution(newFinancialInstitution);
+            FinancialInstitutionAccount financialInstitutionAccount = new FinancialInstitutionAccount();
+            financialInstitutionAccount.setSubType("checking");
+            financialInstitutionAccount.setReference(Iban.random(CountryCode.BE).toString());
+            financialInstitutionAccount.setReferenceType("IBAN");
+            financialInstitutionAccount.setDescription("Checking Account");
+            financialInstitutionAccount.setCurrency("EUR");
+            financialInstitutionAccount.setFinancialInstitution(newFinancialInstitution);
 
-            FinancialInstitutionAccount createdSandboxAccount = accountsService.createSandBoxAccount(generatedCustomerAccessToken
-                    , newFinancialInstitution.getId()
+            financialInstitutionAccount = financialInstitutionAccountsService.createFinancialInstitutionAccount(
+                    newFinancialInstitution.getId()
                     , financialInstitutionUser.getId()
-                    , sandboxAccount);
-            sandboxAccounts.add(createdSandboxAccount);
-            LOGGER.info("Account:"+createdSandboxAccount.getReference()+":created.");
+                    , financialInstitutionAccount);
+            financialInstitutionAccounts.add(financialInstitutionAccount);
+            LOGGER.info("Account:"+financialInstitutionAccount.getReference()+":created.");
         }
 
         LOGGER.info("END : Adding account to User's Financial Institutions");
 
-        LOGGER.info("Start : Deleting sandbox account");
 
-        sandboxAccountToPlayWith = accountsService.createSandBoxAccount(generatedCustomerAccessToken
-                , newFinancialInstitution.getId()
+        FinancialInstitutionAccount financialInstitutionAccountToPlayWith = new FinancialInstitutionAccount();
+        financialInstitutionAccountToPlayWith.setSubType("checking");
+        financialInstitutionAccountToPlayWith.setReference("BE02379129664149");
+        financialInstitutionAccountToPlayWith.setReferenceType("IBAN");
+        financialInstitutionAccountToPlayWith.setDescription("Checking Account");
+        financialInstitutionAccountToPlayWith.setCurrency("EUR");
+
+        financialInstitutionAccountToPlayWith.setFinancialInstitution(newFinancialInstitution);
+
+        financialInstitutionAccountToPlayWith = financialInstitutionAccountsService.createFinancialInstitutionAccount(
+                newFinancialInstitution.getId()
                 , financialInstitutionUser.getId()
-                , sandboxAccountToPlayWith);
+                , financialInstitutionAccountToPlayWith);
 
-        final AtomicReference<FinancialInstitutionAccount> inUseFinancialInstitutionAccount = new AtomicReference();
+        LOGGER.info("Start : Finding FinancialInstitutionAccount");
 
-        accountsService.deleteSandBoxAccount(generatedCustomerAccessToken
-                , newFinancialInstitution.getId()
+        try {
+            financialInstitutionAccountToPlayWith = financialInstitutionAccountsService.getFinancialInstitutionAccount(newFinancialInstitution.getId(),financialInstitutionUser.getId(), financialInstitutionAccountToPlayWith.getId());
+        } catch (ResourceNotFoundException e) {
+            LOGGER.error(e);
+        }
+
+        LOGGER.info("End : Finding FinancialInstitutionAccount");
+
+        LOGGER.info("Start : Deleting FinancialInstitutionAccount");
+
+        financialInstitutionAccountsService.deleteFinancialInstitutionAccount(
+                newFinancialInstitution.getId()
                 , financialInstitutionUser.getId()
-                , sandboxAccountToPlayWith.getId());
+                , financialInstitutionAccountToPlayWith.getId());
 
-        LOGGER.info("End : Deleting sandbox account");
+        LOGGER.info("End : Deleting FinancialInstitutionAccount");
 
         LOGGER.info("Start : Adding transactions to User's Financial Institutions's account");
 
@@ -171,33 +180,43 @@ public class ClientSanboxSample {
         final UUID newFinancialInstitutionId  = newFinancialInstitution.getId();
         final UUID financialInstitutionUserId = financialInstitutionUser.getId();
 
-        sandboxAccounts.stream().forEach(createdSandboxAccount -> {
+        final AtomicReference<FinancialInstitutionAccount> inUseFinancialInstitutionAccount = new AtomicReference();
+
+        financialInstitutionAccounts.stream().forEach(financialInstitutionAccount -> {
             for (int index = 0; index < SANDBOX_TRANSACTIONS_T0_CREATE_PER_ACCOUNT ; index++) {
-                FinancialInstitutionTransaction sandboxTransaction = generateNewTransaction(createdSandboxAccount);
-                FinancialInstitutionTransaction createdSandboxTransaction = transactionsService.createSandBoxTransaction(
-                        generatedCustomerAccessToken
-                        , newFinancialInstitutionId
+                FinancialInstitutionTransaction financialInstitutionTransaction = generateNewTransaction(financialInstitutionAccount);
+                FinancialInstitutionTransaction createdFinancialInstitutionTransaction = financialInstitutionTransactionsService.createFinancialInstitutionTransaction(
+                          newFinancialInstitutionId
                         , financialInstitutionUserId
-                        , createdSandboxAccount.getId()
-                        , sandboxTransaction
+                        , financialInstitutionAccount.getId()
+                        , financialInstitutionTransaction
                 );
-                LOGGER.info("SandboxAccount:"+createdSandboxAccount.getReference()+":Transaction:"+createdSandboxTransaction.getId()+":created");
+                LOGGER.info("FinancialInstitutionAccount:"+financialInstitutionAccount.getReference()+":Transaction:"+createdFinancialInstitutionTransaction.getId()+":created");
             }
-            inUseFinancialInstitutionAccount.set(createdSandboxAccount);
+            inUseFinancialInstitutionAccount.set(financialInstitutionAccount);
         });
         LOGGER.info("END : Adding transactions to User's Financial Institutions's account");
 
-        LOGGER.info("Start : Deleting transaction from User's Financial Institutions's account");
-        FinancialInstitutionTransaction sandboxTransaction = generateNewTransaction(inUseFinancialInstitutionAccount.get());
-        FinancialInstitutionTransaction createdSandboxTransaction = transactionsService.createSandBoxTransaction(
-                generatedCustomerAccessToken
-                , newFinancialInstitutionId
+        FinancialInstitutionTransaction financialInstitutionTransaction = generateNewTransaction(inUseFinancialInstitutionAccount.get());
+        FinancialInstitutionTransaction createdFinancialInstitutionTransaction = financialInstitutionTransactionsService.createFinancialInstitutionTransaction(
+                  newFinancialInstitutionId
                 , financialInstitutionUserId
                 , inUseFinancialInstitutionAccount.get().getId()
-                , sandboxTransaction
+                , financialInstitutionTransaction
         );
+        LOGGER.info("Start : Finding transaction from User's Financial Institutions's account");
         try {
-            transactionsService.deleteSandboxFinancialInstitutionTransaction(customerAccessTokenRequest, newFinancialInstitutionId, financialInstitutionUserId, inUseFinancialInstitutionAccount.get().getId(), createdSandboxTransaction.getId());
+            financialInstitutionTransactionsService.getFinancialInstitutionTransaction(newFinancialInstitutionId, financialInstitutionUserId, inUseFinancialInstitutionAccount.get().getId(), createdFinancialInstitutionTransaction.getId());
+        } catch (ResourceNotFoundException e) {
+            LOGGER.error(e);
+        }
+
+        LOGGER.info("End : Finding transaction from User's Financial Institutions's account");
+
+
+        LOGGER.info("Start : Deleting transaction from User's Financial Institutions's account");
+        try {
+            financialInstitutionTransactionsService.deleteFinancialInstitutionTransaction(newFinancialInstitutionId, financialInstitutionUserId, inUseFinancialInstitutionAccount.get().getId(), createdFinancialInstitutionTransaction.getId());
         } catch (ResourceNotFoundException e) {
             LOGGER.error(e);
         }
@@ -205,23 +224,23 @@ public class ClientSanboxSample {
         LOGGER.info("End : Deleting transaction from User's Financial Institutions's account");
     }
 
-    private FinancialInstitutionTransaction generateNewTransaction(FinancialInstitutionAccount createdSandboxAccount){
+    private FinancialInstitutionTransaction generateNewTransaction(FinancialInstitutionAccount createdFinancialInstitutionAccount){
         Instant now = Instant.now();
         Random random = new Random();
 
         Instant executionDate = now.plus(3, ChronoUnit.DAYS);
         Instant valueDate = now.minus(1, ChronoUnit.DAYS);
-        FinancialInstitutionTransaction sandboxTransaction = new FinancialInstitutionTransaction();
-        sandboxTransaction.setFinancialInstitutionAccount(createdSandboxAccount);
-        sandboxTransaction.setAmount(Precision.round(random.doubles(10,1000).findFirst().getAsDouble() * (random .nextBoolean() ? -1 : 1), 2));
-        sandboxTransaction.setCounterpartName("Stroman, Hettinger and Swift");
-        sandboxTransaction.setCounterpartReference(Iban.random(CountryCode.BE).getAccountNumber());
-        sandboxTransaction.setCurrency("EUR");
-        sandboxTransaction.setDescription("Car rental");
-        sandboxTransaction.setExecutionDate(executionDate);
-        sandboxTransaction.setRemittanceInformation("Aspernatur et quibusdam.");
-        sandboxTransaction.setRemittanceInformationType("unstructured");
-        sandboxTransaction.setValueDate(valueDate);
-        return sandboxTransaction;
+        FinancialInstitutionTransaction financialInstitutionTransaction = new FinancialInstitutionTransaction();
+        financialInstitutionTransaction.setFinancialInstitutionAccount(createdFinancialInstitutionAccount);
+        financialInstitutionTransaction.setAmount(Precision.round(random.doubles(10,1000).findFirst().getAsDouble() * (random .nextBoolean() ? -1 : 1), 2));
+        financialInstitutionTransaction.setCounterpartName("Stroman, Hettinger and Swift");
+        financialInstitutionTransaction.setCounterpartReference(Iban.random(CountryCode.BE).getAccountNumber());
+        financialInstitutionTransaction.setCurrency("EUR");
+        financialInstitutionTransaction.setDescription("Car rental");
+        financialInstitutionTransaction.setExecutionDate(executionDate);
+        financialInstitutionTransaction.setRemittanceInformation("Aspernatur et quibusdam.");
+        financialInstitutionTransaction.setRemittanceInformationType("unstructured");
+        financialInstitutionTransaction.setValueDate(valueDate);
+        return financialInstitutionTransaction;
     }
 }

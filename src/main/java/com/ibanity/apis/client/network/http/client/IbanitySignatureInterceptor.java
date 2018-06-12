@@ -2,7 +2,7 @@ package com.ibanity.apis.client.network.http.client;
 
 import com.ibanity.apis.client.exceptions.InvalidDefaultHttpHeaderForSignatureException;
 import com.ibanity.apis.client.exceptions.SignatureException;
-import com.ibanity.apis.client.services.configuration.IBanityConfiguration;
+import com.ibanity.apis.client.services.configuration.IbanityConfiguration;
 import org.apache.commons.codec.digest.MessageDigestAlgorithms;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -39,20 +39,19 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.stream.Stream;
 
-public class IBanitySignatureInterceptor implements HttpRequestInterceptor {
-    private static final Logger LOGGER = LogManager.getLogger(IBanitySignatureInterceptor.class);
+public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
+    private static final Logger LOGGER = LogManager.getLogger(IbanitySignatureInterceptor.class);
 
     private static final String DIGEST_ALGORITHM                                                    = MessageDigestAlgorithms.SHA_256;
-    private static final String IBANITY_CLIENT_SSL_CERTIFICATE_ID_PROPERTY_KEY                      = IBanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.certificate.id";
-    private static final String IBANITY_CLIENT_SSL_CERTIFICATE_PRIVATE_KEY_PATH_PROPERTY_KEY        = IBanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.private.certificate.private_key.path";
-    private static final String IBANITY_CLIENT_SSL_CERTIFICATE_PRIVATE_KEY_PASSWORD_PROPERTY_KEY    = IBanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.private.certificate.private_key.password";
+    private static final String IBANITY_CLIENT_SSL_CERTIFICATE_ID_PROPERTY_KEY                      = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.certificate.id";
+    private static final String IBANITY_CLIENT_SSL_CERTIFICATE_PRIVATE_KEY_PATH_PROPERTY_KEY        = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.private.certificate.private_key.path";
+    private static final String IBANITY_CLIENT_SSL_CERTIFICATE_PRIVATE_KEY_PASSWORD_PROPERTY_KEY    = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.private.certificate.private_key.password";
     private static final String IBANITY_HEADER_NAME_PREFIX                                          = "ibanity-";
     private static final String HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR                             = " ";
     private static final String HEADER_NAME_DIGEST                                                  = "digest";
     private static final String HEADER_NAME_HOST                                                    = "host";
     private static final String HEADER_NAME_DATE                                                    = "date";
     private static final String HEADER_NAME_REQUEST_TARGET                                          = "(request-target)";
-    private static final String HEADER_NAME_SIGNATURE                                               = "signature";
     private static final String DEFAULT_SIGNATURE_HEADERS_NAME                                      = HEADER_NAME_DIGEST
                                                                                                         + HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR
                                                                                                         + HEADER_NAME_HOST
@@ -65,36 +64,34 @@ public class IBanitySignatureInterceptor implements HttpRequestInterceptor {
     @Override
     public void process(HttpRequest httpRequest, HttpContext httpContext) throws HttpException, IOException {
         try {
-            byte[] body = new String("").getBytes();
+            byte[] body = "".getBytes();
             HttpRequestWrapper requestWrapper = (HttpRequestWrapper) httpRequest;
             if (requestWrapper.getOriginal() instanceof HttpEntityEnclosingRequestBase) {
                 body = IOUtils.toByteArray(((HttpEntityEnclosingRequestBase)requestWrapper.getOriginal()).getEntity().getContent()) ;
             }
             setDefaultHttpHeaderValues(httpRequest, body);
-            setSignatureHeader(httpRequest, body);
+            setSignatureHeader(httpRequest);
 
         } catch (Exception e) {
             throw new IOException(e.getMessage(),e);
         }
     }
 
-    private void setDefaultHttpHeaderValues(HttpRequest httpRequest, byte[] body) throws com.ibanity.apis.client.exceptions.DigestException {
+    private void setDefaultHttpHeaderValues(HttpRequest httpRequest, byte[] body) throws com.ibanity.apis.client.exceptions.DigestException, InvalidDefaultHttpHeaderForSignatureException {
         for (String headerName : DEFAULT_SIGNATURE_HEADERS_NAME.split(HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR)) {
             switch (StringUtils.lowerCase(headerName)) {
                 case HEADER_NAME_DIGEST:
                     setDigestHeader(httpRequest, body);
                     break;
                 case HEADER_NAME_HOST:
-                    setHostHeader(httpRequest);
                     break;
                 case HEADER_NAME_REQUEST_TARGET:
-                    //setRequestTargetHeader(httpRequest);
                     break;
                 case HEADER_NAME_DATE:
                     setDateHeader(httpRequest);
                     break;
                 default:
-                    new InvalidDefaultHttpHeaderForSignatureException();
+                    throw new InvalidDefaultHttpHeaderForSignatureException();
             }
         }
     }
@@ -110,17 +107,6 @@ public class IBanitySignatureInterceptor implements HttpRequestInterceptor {
 
     }
 
-    private void setRequestTargetHeader(HttpRequest httpRequest) {
-        HttpRequestWrapper requestWrapper = (HttpRequestWrapper) httpRequest;
-        String value = getRequestTargetHeaderValue(requestWrapper);
-        httpRequest.addHeader(HEADER_NAME_REQUEST_TARGET, value);
-        LOGGER.debug("setRequestTargetHeader:"+value);
-    }
-
-    private void setHostHeader(HttpRequest httpRequest) {
-        // HOST already set by framework
-    }
-
     private void setDigestHeader(HttpRequest httpRequest, byte[] body) throws com.ibanity.apis.client.exceptions.DigestException {
         String digestValue;
         try {
@@ -133,12 +119,12 @@ public class IBanitySignatureInterceptor implements HttpRequestInterceptor {
         }
     }
 
-    private void setSignatureHeader(HttpRequest httpRequest, byte[] body) throws com.ibanity.apis.client.exceptions.SignatureException {
+    private void setSignatureHeader(HttpRequest httpRequest) throws com.ibanity.apis.client.exceptions.SignatureException {
         HttpRequestWrapper requestWrapper = (HttpRequestWrapper) httpRequest;
         StringBuilder signatureHeaderValueBuilder = new StringBuilder();
         signatureHeaderValueBuilder
                 .append("keyId=\"")
-                .append(IBanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SSL_CERTIFICATE_ID_PROPERTY_KEY))
+                .append(IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SSL_CERTIFICATE_ID_PROPERTY_KEY))
                 .append("\"");
         signatureHeaderValueBuilder
                 .append(HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR)
@@ -198,7 +184,7 @@ public class IBanitySignatureInterceptor implements HttpRequestInterceptor {
     }
 
     private String getSignatureAlgorithm(boolean forAlgorithmHeader) throws com.ibanity.apis.client.exceptions.SignatureException {
-        KeyStore ks = IBanityHttpUtils.getCertificateKeyStore();
+        KeyStore ks = IbanityHttpUtils.getCertificateKeyStore();
         String signatureAlgorithm;
         try {
             X509Certificate certificate = (X509Certificate) ks.getCertificateChain("application certificate")[0];
@@ -226,21 +212,24 @@ public class IBanitySignatureInterceptor implements HttpRequestInterceptor {
     private PrivateKey getCertificatePrivateKey() throws IOException {
         Security.addProvider(new BouncyCastleProvider());
 
-        PEMParser pemParser = new PEMParser(
-                new InputStreamReader(
-                        new FileInputStream(
-                                IBanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SSL_CERTIFICATE_PRIVATE_KEY_PATH_PROPERTY_KEY)
-                        )
+        try (
+                PEMParser pemParser = new PEMParser(
+                    new InputStreamReader(
+                            new FileInputStream(
+                                    IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SSL_CERTIFICATE_PRIVATE_KEY_PATH_PROPERTY_KEY)
+                            )
+                    )
                 )
-        );
-        PEMEncryptedKeyPair encryptedKeyPair = (PEMEncryptedKeyPair) pemParser.readObject();
-        PEMDecryptorProvider decryptorProvider = new JcePEMDecryptorProviderBuilder().build(
-                IBanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SSL_CERTIFICATE_PRIVATE_KEY_PASSWORD_PROPERTY_KEY).toCharArray()
-        );
-        PEMKeyPair pemKeyPair = encryptedKeyPair.decryptKeyPair(decryptorProvider);
+            ) {
+            PEMEncryptedKeyPair encryptedKeyPair = (PEMEncryptedKeyPair) pemParser.readObject();
+            PEMDecryptorProvider decryptorProvider = new JcePEMDecryptorProviderBuilder().build(
+                    IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SSL_CERTIFICATE_PRIVATE_KEY_PASSWORD_PROPERTY_KEY).toCharArray()
+            );
+            PEMKeyPair pemKeyPair = encryptedKeyPair.decryptKeyPair(decryptorProvider);
 
-        JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
-        return converter.getPrivateKey(pemKeyPair.getPrivateKeyInfo());
+            JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
+            return converter.getPrivateKey(pemKeyPair.getPrivateKeyInfo());
+        }
     }
 
     private String getSignatureHeaders(HttpRequestWrapper requestWrapper) {
