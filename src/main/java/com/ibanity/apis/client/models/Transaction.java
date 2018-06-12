@@ -1,15 +1,15 @@
 package com.ibanity.apis.client.models;
 
-import com.ibanity.apis.client.paging.PagingBehavior;
+import com.ibanity.apis.client.paging.IBanityPagingBehavior;
 import io.crnk.core.resource.annotations.JsonApiRelation;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import io.crnk.core.resource.annotations.LookupIncludeBehavior;
 import io.crnk.core.resource.annotations.SerializeType;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.time.Instant;
-import java.util.UUID;
-
-@JsonApiResource(type = "transaction", resourcePath = "transactions", pagingBehavior = PagingBehavior.class)
+@JsonApiResource(type = "transaction", resourcePath = "transactions", pagingBehavior = IBanityPagingBehavior.class)
 public class Transaction extends AbstractTransaction {
 
     @JsonApiRelation(lookUp= LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL,serialize= SerializeType.ONLY_ID)
@@ -19,19 +19,41 @@ public class Transaction extends AbstractTransaction {
         super();
     }
 
-    public Transaction(UUID id,  UUID financialInstitutionAccountId, UUID financialInstitutionId) {
-        super(id, financialInstitutionAccountId,financialInstitutionId);
-    }
-
-    public Transaction(UUID id, Double amount, String currency, Instant valueDate, Instant executionDate, String description, String remittanceInformationType, String remittanceInformation, String counterpartName, String counterpartReference) {
-        super(id, amount, currency, valueDate, executionDate, description, remittanceInformationType, remittanceInformation, counterpartName, counterpartReference);
-    }
-
     public Account getAccount() {
         return account;
     }
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (!(o instanceof Transaction)) return false;
+
+        Transaction that = (Transaction) o;
+
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(getAccount(), that.getAccount())
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(getAccount())
+                .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append(super.toString())
+                .append("account", account)
+                .toString();
     }
 }

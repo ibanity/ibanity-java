@@ -5,7 +5,7 @@ import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.Transaction;
 import com.ibanity.apis.client.models.sandbox.FinancialInstitutionTransaction;
-import com.ibanity.apis.client.paging.PagingSpec;
+import com.ibanity.apis.client.paging.IBanityPagingSpec;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,7 +31,7 @@ public interface TransactionsService {
      * @param pagingSpec The paging specification to be used for tuning the resulting list
      * @return list of customer's accounts transactions in the specified financial institution (including paginations details)
      */
-    List<Transaction> getAccountTransactions(CustomerAccessToken customerAccessToken, Account account, PagingSpec pagingSpec);
+    List<Transaction> getAccountTransactions(CustomerAccessToken customerAccessToken, Account account, IBanityPagingSpec pagingSpec);
 
     /**
      * Get a specific transaction details

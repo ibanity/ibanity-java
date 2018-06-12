@@ -2,7 +2,7 @@ package com.ibanity.apis.client.models.sandbox;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ibanity.apis.client.models.AbstractTransaction;
-import com.ibanity.apis.client.paging.PagingBehavior;
+import com.ibanity.apis.client.paging.IBanityPagingBehavior;
 import io.crnk.core.resource.annotations.JsonApiRelation;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import io.crnk.core.resource.annotations.LookupIncludeBehavior;
@@ -12,9 +12,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.time.Instant;
-import java.util.UUID;
 
-@JsonApiResource(type = "financialInstitutionTransaction", resourcePath = "financial-institution-transactions", pagingBehavior = PagingBehavior.class)
+@JsonApiResource(type = "financialInstitutionTransaction", resourcePath = "financial-institution-transactions", pagingBehavior = IBanityPagingBehavior.class)
 public class FinancialInstitutionTransaction extends AbstractTransaction {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
@@ -30,18 +29,6 @@ public class FinancialInstitutionTransaction extends AbstractTransaction {
     public FinancialInstitutionTransaction() {
         super();
     }
-
-    public FinancialInstitutionTransaction(UUID id,  UUID financialInstitutionAccountId, UUID financialInstitutionId) {
-        super(id, financialInstitutionAccountId,financialInstitutionId);
-    }
-
-    public FinancialInstitutionTransaction(UUID id, Double amount, String currency, Instant valueDate, Instant executionDate, String description, String remittanceInformationType, String remittanceInformation, String counterpartName, String counterpartReference, Instant createdAt, Instant updatedAt, Instant deletedAt) {
-        super(id, amount, currency, valueDate, executionDate, description, remittanceInformationType, remittanceInformation, counterpartName, counterpartReference);
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
-    }
-
 
     public Instant getCreatedAt() {
         return createdAt;

@@ -7,7 +7,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.time.Instant;
-import java.util.UUID;
 
 public abstract class AbstractTransaction extends AbstractModel{
 
@@ -34,23 +33,6 @@ public abstract class AbstractTransaction extends AbstractModel{
 
     @JsonProperty("counterpart_reference")
     private String counterpartReference;
-
-    public AbstractTransaction(UUID id, Double amount, String currency, Instant valueDate, Instant executionDate, String description, String remittanceInformationType, String remittanceInformation, String counterpartName, String counterpartReference) {
-        super(id);
-        this.amount = amount;
-        this.currency = currency;
-        this.valueDate = valueDate;
-        this.executionDate = executionDate;
-        this.description = description;
-        this.remittanceInformationType = remittanceInformationType;
-        this.remittanceInformation = remittanceInformation;
-        this.counterpartName = counterpartName;
-        this.counterpartReference = counterpartReference;
-    }
-
-    public AbstractTransaction(UUID id,  UUID financialInstitutionAccountId, UUID financialInstitutionId ) {
-        super(id);
-    }
 
     public AbstractTransaction() {
     }

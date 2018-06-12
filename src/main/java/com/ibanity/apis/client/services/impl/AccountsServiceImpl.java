@@ -6,7 +6,7 @@ import com.ibanity.apis.client.models.AccountInformationAccessAuthorization;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.sandbox.FinancialInstitutionAccount;
-import com.ibanity.apis.client.paging.PagingSpec;
+import com.ibanity.apis.client.paging.IBanityPagingSpec;
 import com.ibanity.apis.client.services.AccountsService;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryV2;
@@ -16,18 +16,19 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.UUID;
 
+import static com.ibanity.apis.client.services.configuration.IBanityConfiguration.FORWARD_SLASH;
+import static com.ibanity.apis.client.services.configuration.IBanityConfiguration.SANBOX_PREFIX_PATH;
+
 public class AccountsServiceImpl extends AbstractServiceImpl implements AccountsService {
 
     private static final Logger LOGGER = LogManager.getLogger(AccountsServiceImpl.class);
 
-    private static final String ACCOUNTS_REQUEST_PATH                           = "/customer";
-    private static final String ACCOUNT_REQUEST_PATH                            = "/accounts";
-    private static final String ACCOUNTS_FI_REQUEST_PATH                        = ACCOUNTS_REQUEST_PATH + "/"+FINANCIAL_INSTITUTIONS_PATH + "/"+ FINANCIAL_INSTITUTION_ID_TAG;
-    private static final String ACCOUNT_INFORMATION_ACCESS_REQUEST_PATH         = ACCOUNTS_FI_REQUEST_PATH + "/account-information-access-requests/"+ACCOUNT_INFORMATION_ACCESS_REQUEST_ID_TAG;
+    private static final String ACCOUNTS_REQUEST_PATH                           = FORWARD_SLASH + "customer";
+    private static final String ACCOUNTS_FI_REQUEST_PATH                        = ACCOUNTS_REQUEST_PATH + FORWARD_SLASH +FINANCIAL_INSTITUTIONS_PATH + FORWARD_SLASH + FINANCIAL_INSTITUTION_ID_TAG;
+    private static final String ACCOUNT_INFORMATION_ACCESS_REQUEST_PATH         = ACCOUNTS_FI_REQUEST_PATH + FORWARD_SLASH + "account-information-access-requests" + FORWARD_SLASH + ACCOUNT_INFORMATION_ACCESS_REQUEST_ID_TAG;
 
-    private static final String SANDBOX_PATH                                    = "/sandbox";
-    private static final String SANDBOX_ACCOUNTS_FI_REQUEST_PATH                = SANDBOX_PATH+ "/"+FINANCIAL_INSTITUTIONS_PATH + "/"+FINANCIAL_INSTITUTION_ID_TAG;
-    private static final String SANDBOX_USER_ACCOUNTS_FI_REQUEST_PATH           = SANDBOX_ACCOUNTS_FI_REQUEST_PATH+"/financial-institution-users/"+USER_ID_TAG;
+    private static final String SANDBOX_ACCOUNTS_FI_REQUEST_PATH                = SANBOX_PREFIX_PATH+ FORWARD_SLASH + FINANCIAL_INSTITUTIONS_PATH + FORWARD_SLASH + FINANCIAL_INSTITUTION_ID_TAG;
+    private static final String SANDBOX_USER_ACCOUNTS_FI_REQUEST_PATH           = SANDBOX_ACCOUNTS_FI_REQUEST_PATH + FORWARD_SLASH + "financial-institution-users" + FORWARD_SLASH + USER_ID_TAG;
 
     public AccountsServiceImpl() {
         super();
@@ -50,11 +51,11 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
 
     @Override
     public ResourceList<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken) {
-        return getCustomerAccounts(customerAccessToken, new PagingSpec());
+        return getCustomerAccounts(customerAccessToken, new IBanityPagingSpec());
     }
 
     @Override
-    public ResourceList<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, PagingSpec pagingSpec) {
+    public ResourceList<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, IBanityPagingSpec pagingSpec) {
         ResourceRepositoryV2<Account, UUID> accountsRepo = getApiClient(ACCOUNTS_REQUEST_PATH, customerAccessToken).getRepositoryForType(Account.class);
         QuerySpec querySpec = new QuerySpec(Account.class);
         querySpec.setPagingSpec(pagingSpec);
@@ -63,11 +64,11 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
 
     @Override
     public ResourceList<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, UUID financialInstitutionId) {
-        return getCustomerAccounts(customerAccessToken, financialInstitutionId, new PagingSpec());
+        return getCustomerAccounts(customerAccessToken, financialInstitutionId, new IBanityPagingSpec());
     }
 
     @Override
-    public ResourceList<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, PagingSpec pagingSpec) {
+    public ResourceList<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, IBanityPagingSpec pagingSpec) {
         String correctPath = ACCOUNTS_FI_REQUEST_PATH.replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString());
         ResourceRepositoryV2<Account, UUID> accountsFinancialInstitutionRepo = getApiClient(correctPath, customerAccessToken).getRepositoryForType(Account.class);
         QuerySpec querySpec = new QuerySpec(Account.class);
@@ -84,11 +85,11 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
 
     @Override
     public ResourceList<AccountInformationAccessAuthorization> getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, AccountInformationAccessRequest accountInformationAccessRequest) {
-        return getAccountsInformationAccessAuthorizations(customerAccessToken, accountInformationAccessRequest, new PagingSpec());
+        return getAccountsInformationAccessAuthorizations(customerAccessToken, accountInformationAccessRequest, new IBanityPagingSpec());
     }
 
     @Override
-    public ResourceList<AccountInformationAccessAuthorization> getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, AccountInformationAccessRequest accountInformationAccessRequest, PagingSpec pagingSpec) {
+    public ResourceList<AccountInformationAccessAuthorization> getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, AccountInformationAccessRequest accountInformationAccessRequest, IBanityPagingSpec pagingSpec) {
         QuerySpec querySpec = new QuerySpec(AccountInformationAccessAuthorization.class);
         querySpec.setPagingSpec(pagingSpec);
         return findAll(querySpec, getAccountInformationAccessAuthorizationRepo(customerAccessToken, accountInformationAccessRequest.getFinancialInstitution().getId(), accountInformationAccessRequest.getId()));
@@ -106,9 +107,7 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
                 .replace(USER_ID_TAG, financialInstitutionUserId.toString())
                 ;
         ResourceRepositoryV2<FinancialInstitutionAccount, UUID> accountsRepo = getApiClient(correctPath, customerAccessToken).getRepositoryForType(FinancialInstitutionAccount.class);
-        FinancialInstitutionAccount createdAccount = accountsRepo.create(sandboxAccount);
-
-        return createdAccount;
+        return accountsRepo.create(sandboxAccount);
     }
 
     @Override

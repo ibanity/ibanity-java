@@ -6,7 +6,7 @@ import com.ibanity.apis.client.models.AccountInformationAccessAuthorization;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.sandbox.FinancialInstitutionAccount;
-import com.ibanity.apis.client.paging.PagingSpec;
+import com.ibanity.apis.client.paging.IBanityPagingSpec;
 
 import java.util.List;
 import java.util.UUID;
@@ -40,7 +40,7 @@ public interface AccountsService {
      * @param pagingSpec The paging specification to be used for tuning the resulting list
      * @return list of all customer's accounts
      */
-    List<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, PagingSpec pagingSpec);
+    List<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, IBanityPagingSpec pagingSpec);
 
     /**
      * Get customer's accounts from a particular financial institution
@@ -59,7 +59,7 @@ public interface AccountsService {
      * @param pagingSpec The paging specification to be used for tuning the resulting list
      * @return list of customer's accounts in the specified financial institution
      */
-    List<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, PagingSpec pagingSpec);
+    List<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, IBanityPagingSpec pagingSpec);
 
     /**
      * Provide the URL to be redirected to the PSU (end-user) Web Browser.
@@ -88,7 +88,7 @@ public interface AccountsService {
      * @param pagingSpec The paging specification to be used for tuning the resulting list
      * @return the list of authorizations details
      */
-    List<AccountInformationAccessAuthorization> getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, AccountInformationAccessRequest accountInformationAccessRequest, PagingSpec pagingSpec);
+    List<AccountInformationAccessAuthorization> getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, AccountInformationAccessRequest accountInformationAccessRequest, IBanityPagingSpec pagingSpec);
 
     /**
      * Revoke an Account Access Authorization

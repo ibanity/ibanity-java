@@ -1,17 +1,15 @@
 package com.ibanity.apis.client.models.sandbox;
 
 import com.ibanity.apis.client.models.AbstractAccount;
-import com.ibanity.apis.client.models.FinancialInstitution;
-import com.ibanity.apis.client.paging.PagingBehavior;
+import com.ibanity.apis.client.paging.IBanityPagingBehavior;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.time.Instant;
-import java.util.UUID;
 
-@JsonApiResource(type = "financialInstitutionAccount", resourcePath = "financial-institution-accounts", pagingBehavior = PagingBehavior.class)
+@JsonApiResource(type = "financialInstitutionAccount", resourcePath = "financial-institution-accounts", pagingBehavior = IBanityPagingBehavior.class)
 public class FinancialInstitutionAccount extends AbstractAccount {
 
     Instant createdAt;
@@ -20,14 +18,6 @@ public class FinancialInstitutionAccount extends AbstractAccount {
 
     public FinancialInstitutionAccount() {
         super();
-    }
-
-    public FinancialInstitutionAccount(UUID id, UUID financialInstitutionId) {
-        super(id, financialInstitutionId);
-    }
-
-    public FinancialInstitutionAccount(UUID id, String subType, String currency, String description, String reference, String referenceType, Double currentBalance, Double availableBalance, String subType1, String currency1, String description1, String reference1, String referenceType1, Double currentBalance1, Double availableBalance1, FinancialInstitution financialInstitution) {
-        super(id, subType, currency, description, reference, referenceType, currentBalance, availableBalance);
     }
 
     public Instant getCreatedAt() {

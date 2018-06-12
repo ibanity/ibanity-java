@@ -6,7 +6,7 @@ import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.sandbox.FinancialInstitutionAccount;
 import com.ibanity.apis.client.models.sandbox.FinancialInstitutionTransaction;
 import com.ibanity.apis.client.models.sandbox.FinancialInstitutionUser;
-import com.ibanity.apis.client.paging.PagingSpec;
+import com.ibanity.apis.client.paging.IBanityPagingSpec;
 import com.ibanity.apis.client.services.AccountsService;
 import com.ibanity.apis.client.services.CustomerAccessTokensService;
 import com.ibanity.apis.client.services.FinancialInstitutionsService;
@@ -53,13 +53,12 @@ public class ClientSanboxSample {
         Instant now = Instant.now();
 
         LOGGER.info("Start : Creating a new Financial Institution");
-        PagingSpec pagingSpec = new PagingSpec();
+        IBanityPagingSpec pagingSpec = new IBanityPagingSpec();
         pagingSpec.setLimit(1L);
-        financialInstitutionsService.getFinancialInstitutions(pagingSpec).stream().forEach(financialInstitution -> {
-                                                            LOGGER.info(financialInstitution.toString());}
-                                                            );
+        financialInstitutionsService.getFinancialInstitutions(pagingSpec).stream().forEach(financialInstitution -> LOGGER.info(financialInstitution.toString()));
 
-        CustomerAccessToken customerAccessTokenRequest = new CustomerAccessToken("application_customer_reference");
+        CustomerAccessToken customerAccessTokenRequest = new CustomerAccessToken();
+        customerAccessTokenRequest.setApplicationCustomerReference("application_customer_reference");
         CustomerAccessToken generatedCustomerAccessToken = customerAccessTokensService.createCustomerAccessToken(customerAccessTokenRequest);
 
         FinancialInstitution newFinancialInstitution = new FinancialInstitution();

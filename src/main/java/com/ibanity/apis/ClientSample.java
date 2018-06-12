@@ -1,5 +1,6 @@
 package com.ibanity.apis;
 
+import com.google.common.net.InetAddresses;
 import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
@@ -7,7 +8,7 @@ import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.PaymentInitiationRequest;
 import com.ibanity.apis.client.models.Transaction;
-import com.ibanity.apis.client.paging.PagingSpec;
+import com.ibanity.apis.client.paging.IBanityPagingSpec;
 import com.ibanity.apis.client.services.AccountsService;
 import com.ibanity.apis.client.services.CustomerAccessTokensService;
 import com.ibanity.apis.client.services.FinancialInstitutionsService;
@@ -23,6 +24,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -30,10 +32,10 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ClientSample {
     private static final Logger LOGGER = LogManager.getLogger(ClientSample.class);
 
-    private static final String IBANITY_API_ENDPOINT = IBanityConfiguration.getConfiguration().getString(IBanityConfiguration.IBANITY_PROPERTIES_PREFIX + "services.endpoint");
-
     private static final String FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL = IBanityConfiguration.getConfiguration().getString(IBanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.accounts.information.access.result.redirect.url");
     private static final String FAKE_TPP_PAYMENT_INITIATION_REDIRECT_URL = IBanityConfiguration.getConfiguration().getString(IBanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.payments.initiation.result.redirect.url");
+
+    private static final String LOGGER_LINE_SEPARATOR = "#######################################";
 
     private FinancialInstitutionsService financialInstitutionsService = new FinancialInstitutionsServiceImpl();
     private CustomerAccessTokensService customerAccessTokensService = new CustomerAccessTokensServiceImpl();
@@ -51,7 +53,7 @@ public class ClientSample {
         LOGGER.info("Start : List of Financial Institutions: starting with 1 FI");
 
         AtomicReference<FinancialInstitution> inUseFinancialInstitution = new AtomicReference();
-        PagingSpec pagingSpec = new PagingSpec();
+        IBanityPagingSpec pagingSpec = new IBanityPagingSpec();
         pagingSpec.setLimit(1L);
         financialInstitutionsService.getFinancialInstitutions(pagingSpec).stream().forEach(financialInstitution -> {
                                                             inUseFinancialInstitution.set(financialInstitution);
@@ -69,7 +71,8 @@ public class ClientSample {
 
 
         LOGGER.info("Start : Customer Access Token Request");
-        CustomerAccessToken customerAccessTokenRequest = new CustomerAccessToken(UUID.randomUUID().toString());
+        CustomerAccessToken customerAccessTokenRequest = new CustomerAccessToken(UUID.randomUUID());
+        customerAccessTokenRequest.setApplicationCustomerReference("application_customer_reference");
         CustomerAccessToken generatedCustomerAccessToken = customerAccessTokensService.createCustomerAccessToken(customerAccessTokenRequest);
         LOGGER.info(generatedCustomerAccessToken);
         LOGGER.info("End : Customer Access Token Request");
@@ -82,14 +85,14 @@ public class ClientSample {
         AccountInformationAccessRequest resultingAccountInformationAccessRequest = accountsService.getAccountsInformationAccessRedirectUrl(generatedCustomerAccessToken, accountInformationAccessRequest);
         resultingAccountInformationAccessRequest.setFinancialInstitution(inUseFinancialInstitution.get());
         LOGGER.info("AccountInformationAccessRequest:"+resultingAccountInformationAccessRequest.toString());
-        LOGGER.warn("#######################################");
+        LOGGER.warn(LOGGER_LINE_SEPARATOR);
         LOGGER.warn("Accounts Information Access Request: End-User to be redirected to :\n"+resultingAccountInformationAccessRequest.getLinks().getRedirect());
-        LOGGER.warn("#######################################");
+        LOGGER.warn(LOGGER_LINE_SEPARATOR);
         LOGGER.info("in order to specify which Financial Institution's accounts will be authorised to be accessed through the TPP.");
         LOGGER.info("End : Account Information Access Request");
 
         Scanner s = new Scanner(System.in);
-        System.out.println("Please use the URL provided here above (End-User to be redirected to:...) in order to authorize accounts then, once authorization done, Press ENTER to proceed......");
+        LOGGER.warn("Please use the URL provided here above (End-User to be redirected to:...) in order to authorize accounts then, once authorization done, Press ENTER to proceed......");
         s.nextLine();
 
         AtomicReference<Account> inUseAccount = new AtomicReference();
@@ -101,7 +104,7 @@ public class ClientSample {
         accountsService.getCustomerAccounts(generatedCustomerAccessToken,inUseFinancialInstitution.get().getId(), pagingSpec).forEach(account -> {inUseAccount.set(account); LOGGER.info(account.toString());});
         LOGGER.info("End : get All Accounts for financial institution:"+inUseFinancialInstitution.get().getId()+":");
 
-        pagingSpec = new PagingSpec();
+        pagingSpec = new IBanityPagingSpec();
         pagingSpec.setLimit(2L);
         LOGGER.info("Start : Accounts details 2 of them");
         accountsService.getCustomerAccounts(generatedCustomerAccessToken, pagingSpec).forEach(account -> {inUseAccount.set(account); LOGGER.info(account.toString());});
@@ -115,7 +118,7 @@ public class ClientSample {
 
         UUID beforeUUID = inUseAccount.get().getId();
 
-        pagingSpec = new PagingSpec();
+        pagingSpec = new IBanityPagingSpec();
         pagingSpec.setAfter(beforeUUID);
         pagingSpec.setLimit(100L);
         LOGGER.info("Start : Accounts details all the rest");
@@ -140,24 +143,25 @@ public class ClientSample {
         LOGGER.info("End : Transactions details");
 
         LOGGER.info("Start : Payment Initiation Request");
+        Random random = new Random();
         PaymentInitiationRequest paymentInitiationRequest = new PaymentInitiationRequest();
         paymentInitiationRequest.setRedirectUri(FAKE_TPP_PAYMENT_INITIATION_REDIRECT_URL);
         paymentInitiationRequest.setFinancialInstitution(inUseFinancialInstitution.get());
         paymentInitiationRequest.setConsentReference(UUID.randomUUID().toString());
         paymentInitiationRequest.setEndToEndId(UUID.randomUUID().toString());
-        paymentInitiationRequest.setCustomerIp("192.168.0.1");
+        paymentInitiationRequest.setCustomerIp(InetAddresses.fromInteger(random.nextInt()).getHostAddress());
         paymentInitiationRequest.setCustomerAgent("Mozilla");
         paymentInitiationRequest.setProductType("sepa-credit-transfer");
         paymentInitiationRequest.setRemittanceInformationType("unstructured");
         paymentInitiationRequest.setCurrency("EUR");
-        paymentInitiationRequest.setAmount(new Double(50.4));
+        paymentInitiationRequest.setAmount(Double.valueOf(50.4));
         paymentInitiationRequest.setCreditorName("Fake Creditor Name");
         paymentInitiationRequest.setCreditorAccountReference("BE23947805459949");
         paymentInitiationRequest.setCreditorAccountReferenceType("IBAN");
         PaymentInitiationRequest resultingPaymentInitiationRequest = paymentsService.initiatePaymentRequest(generatedCustomerAccessToken, paymentInitiationRequest);
-        LOGGER.warn("#######################################");
+        LOGGER.warn(LOGGER_LINE_SEPARATOR);
         LOGGER.warn("Payment Initiation: End User to be redirected to :\n"+resultingPaymentInitiationRequest.getLinks().getRedirect()+":\n in order to complete/proceed with the payment process.");
-        LOGGER.warn("#######################################");
+        LOGGER.warn(LOGGER_LINE_SEPARATOR);
         LOGGER.info("End : Payment Initiation Request");
     }
 }

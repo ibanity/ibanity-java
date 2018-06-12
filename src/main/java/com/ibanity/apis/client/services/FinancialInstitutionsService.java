@@ -2,7 +2,7 @@ package com.ibanity.apis.client.services;
 
 import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
 import com.ibanity.apis.client.models.FinancialInstitution;
-import com.ibanity.apis.client.paging.PagingSpec;
+import com.ibanity.apis.client.paging.IBanityPagingSpec;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +22,7 @@ public interface FinancialInstitutionsService {
      * @param pagingSpec The paging specification to be used for gathering the financial institutions list
      * @return List of Financial Institutions
      */
-    List<FinancialInstitution> getFinancialInstitutions(PagingSpec pagingSpec);
+    List<FinancialInstitution> getFinancialInstitutions(IBanityPagingSpec pagingSpec);
 
     /**
      * Get the details of a specific Financial Institution

@@ -2,7 +2,7 @@ package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
 import com.ibanity.apis.client.models.FinancialInstitution;
-import com.ibanity.apis.client.paging.PagingSpec;
+import com.ibanity.apis.client.paging.IBanityPagingSpec;
 import com.ibanity.apis.client.services.FinancialInstitutionsService;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryV2;
@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.UUID;
 
+import static com.ibanity.apis.client.services.configuration.IBanityConfiguration.FORWARD_SLASH;
 import static com.ibanity.apis.client.services.configuration.IBanityConfiguration.SANBOX_PREFIX_PATH;
 
 public class FinancialInstitutionsServiceImpl extends AbstractServiceImpl implements FinancialInstitutionsService{
@@ -22,17 +23,17 @@ public class FinancialInstitutionsServiceImpl extends AbstractServiceImpl implem
 
     public FinancialInstitutionsServiceImpl() {
         super();
-        financialInstitutionsRepo = getApiClient("/").getRepositoryForType(FinancialInstitution.class);
-        sandboxFinancialInstitutionsRepo = getApiClient(SANBOX_PREFIX_PATH+"/").getRepositoryForType(FinancialInstitution.class);
+        financialInstitutionsRepo = getApiClient(FORWARD_SLASH).getRepositoryForType(FinancialInstitution.class);
+        sandboxFinancialInstitutionsRepo = getApiClient(SANBOX_PREFIX_PATH + FORWARD_SLASH).getRepositoryForType(FinancialInstitution.class);
     }
 
     @Override
     public ResourceList<FinancialInstitution> getFinancialInstitutions() {
-        return getFinancialInstitutions(new PagingSpec());
+        return getFinancialInstitutions(new IBanityPagingSpec());
     }
 
     @Override
-    public ResourceList<FinancialInstitution> getFinancialInstitutions(PagingSpec pagingSpec) {
+    public ResourceList<FinancialInstitution> getFinancialInstitutions(IBanityPagingSpec pagingSpec) {
         QuerySpec querySpec = new QuerySpec(FinancialInstitution.class);
         querySpec.setPagingSpec(pagingSpec);
         return findAll(querySpec, financialInstitutionsRepo);

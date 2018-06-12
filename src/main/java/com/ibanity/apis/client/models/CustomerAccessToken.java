@@ -1,6 +1,7 @@
 package com.ibanity.apis.client.models;
 
-import com.ibanity.apis.client.paging.PagingBehavior;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ibanity.apis.client.paging.IBanityPagingBehavior;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -8,24 +9,20 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.UUID;
 
-@JsonApiResource(type="customerAccessToken", resourcePath = "customer-access-tokens", pagingBehavior = PagingBehavior.class)
+@JsonApiResource(type="customerAccessToken", resourcePath = "customer-access-tokens", pagingBehavior = IBanityPagingBehavior.class)
 public class CustomerAccessToken extends AbstractModel{
     private String token;
-    private String application_customer_reference;
+
+    @JsonProperty("applicationCustomerReference")
+    private String applicationCustomerReference;
 
     public CustomerAccessToken(UUID id) {
         super(id);
     }
 
-    public CustomerAccessToken(String application_customer_reference) {
-        super();
-        this.application_customer_reference = application_customer_reference;
-    }
-
     public CustomerAccessToken() {
         super();
     }
-
 
     public String getToken() {
         return token;
@@ -35,12 +32,12 @@ public class CustomerAccessToken extends AbstractModel{
         this.token = token;
     }
 
-    public String getApplication_customer_reference() {
-        return application_customer_reference;
+    public String getApplicationCustomerReference() {
+        return applicationCustomerReference;
     }
 
-    public void setApplication_customer_reference(String application_customer_reference) {
-        this.application_customer_reference = application_customer_reference;
+    public void setApplicationCustomerReference(String applicationCustomerReference) {
+        this.applicationCustomerReference = applicationCustomerReference;
     }
 
     @Override
@@ -54,7 +51,7 @@ public class CustomerAccessToken extends AbstractModel{
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
                 .append(getToken(), that.getToken())
-                .append(getApplication_customer_reference(), that.getApplication_customer_reference())
+                .append(getApplicationCustomerReference(), that.getApplicationCustomerReference())
                 .isEquals();
     }
 
@@ -63,7 +60,7 @@ public class CustomerAccessToken extends AbstractModel{
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
                 .append(getToken())
-                .append(getApplication_customer_reference())
+                .append(getApplicationCustomerReference())
                 .toHashCode();
     }
 
@@ -71,7 +68,7 @@ public class CustomerAccessToken extends AbstractModel{
     public String toString() {
         return new ToStringBuilder(this)
                 .append("token", token)
-                .append("application_customer_reference", application_customer_reference)
+                .append("applicationCustomerReference", applicationCustomerReference)
                 .append("id", getId())
                 .toString();
     }

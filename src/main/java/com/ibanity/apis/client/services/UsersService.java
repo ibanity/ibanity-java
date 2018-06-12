@@ -2,7 +2,7 @@ package com.ibanity.apis.client.services;
 
 import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
 import com.ibanity.apis.client.models.sandbox.FinancialInstitutionUser;
-import com.ibanity.apis.client.paging.PagingSpec;
+import com.ibanity.apis.client.paging.IBanityPagingSpec;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,7 +23,7 @@ public interface UsersService {
      * @param pagingSpec The paging specification to be used for tuning the resulting list
      * @return list of Sandbox Financial Institutions Users
      */
-    List<FinancialInstitutionUser> getSandboxFinancialInstitutionUsers(PagingSpec pagingSpec);
+    List<FinancialInstitutionUser> getSandboxFinancialInstitutionUsers(IBanityPagingSpec pagingSpec);
 
     /**
      * Get a specific Sandbox Financial Institutions User

@@ -2,7 +2,7 @@ package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
 import com.ibanity.apis.client.models.sandbox.FinancialInstitutionUser;
-import com.ibanity.apis.client.paging.PagingSpec;
+import com.ibanity.apis.client.paging.IBanityPagingSpec;
 import com.ibanity.apis.client.services.UsersService;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryV2;
@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.UUID;
 
+import static com.ibanity.apis.client.services.configuration.IBanityConfiguration.FORWARD_SLASH;
 import static com.ibanity.apis.client.services.configuration.IBanityConfiguration.SANBOX_PREFIX_PATH;
 
 public class UsersServiceImpl extends AbstractServiceImpl implements UsersService {
@@ -21,16 +22,16 @@ public class UsersServiceImpl extends AbstractServiceImpl implements UsersServic
 
     public UsersServiceImpl() {
         super();
-        sandboxfFinancialInstitutionUserRepo = getApiClient(SANBOX_PREFIX_PATH+"/").getRepositoryForType(FinancialInstitutionUser.class);
+        sandboxfFinancialInstitutionUserRepo = getApiClient(SANBOX_PREFIX_PATH + FORWARD_SLASH).getRepositoryForType(FinancialInstitutionUser.class);
     }
 
     @Override
     public ResourceList<FinancialInstitutionUser> getSandboxFinancialInstitutionUsers() {
-        return getSandboxFinancialInstitutionUsers(new PagingSpec());
+        return getSandboxFinancialInstitutionUsers(new IBanityPagingSpec());
     }
 
     @Override
-    public ResourceList<FinancialInstitutionUser> getSandboxFinancialInstitutionUsers(PagingSpec pagingSpec) {
+    public ResourceList<FinancialInstitutionUser> getSandboxFinancialInstitutionUsers(IBanityPagingSpec pagingSpec) {
         QuerySpec querySpec = new QuerySpec(FinancialInstitutionUser.class);
         querySpec.setPagingSpec(pagingSpec);
         return findAll(querySpec, sandboxfFinancialInstitutionUserRepo);

@@ -18,6 +18,9 @@ public class IBanityHttpUtils {
     private static final String IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_TRUSTMANAGER_PROPERTY_KEY            = IBanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.private.certificate.trustmanager";
     private static final String IBANITY_CLIENT_SSL_PROTOCOL_PROPERTY_KEY                                    = IBanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.protocol";
 
+    private IBanityHttpUtils() {
+    }
+
     public static SSLContext getSSLContext() {
         try {
             Configuration ibanityConfiguration = IBanityConfiguration.getConfiguration();
@@ -32,17 +35,15 @@ public class IBanityHttpUtils {
         }
     }
 
-    public static KeyStore getCertificateKeyStore(){
-        try {
-            Configuration ibanityConfiguration = IBanityConfiguration.getConfiguration();
-            KeyStore ks = KeyStore.getInstance(ibanityConfiguration.getString(IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_STANDARD_PROPERTY_KEY));
-            FileInputStream fis = new FileInputStream(ibanityConfiguration.getString(IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_PATH_PROPERTY_KEY));
-            char[] passwordCharArray = ibanityConfiguration.getString(IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_PRIVATE_KEY_PASSOWRD_PROPERTY_KEY).toCharArray();
+    public static KeyStore getCertificateKeyStore() {
+        try (FileInputStream fis = new FileInputStream(IBanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_PATH_PROPERTY_KEY))) {
+            KeyStore ks = KeyStore.getInstance(IBanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_STANDARD_PROPERTY_KEY));
+            char[] passwordCharArray = IBanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_PRIVATE_KEY_PASSOWRD_PROPERTY_KEY).toCharArray();
             ks.load(fis, passwordCharArray);
             return ks;
         } catch (Exception e) {
             LOGGER.fatal(e);
-            return null;
         }
+        return null;
     }
 }

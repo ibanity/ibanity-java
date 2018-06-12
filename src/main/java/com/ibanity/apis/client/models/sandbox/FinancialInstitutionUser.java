@@ -1,7 +1,7 @@
 package com.ibanity.apis.client.models.sandbox;
 
 import com.ibanity.apis.client.models.AbstractModel;
-import com.ibanity.apis.client.paging.PagingBehavior;
+import com.ibanity.apis.client.paging.IBanityPagingBehavior;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.time.Instant;
 
-@JsonApiResource(type = "financialInstitutionUser", resourcePath = "financial-institution-users", pagingBehavior = PagingBehavior.class)
+@JsonApiResource(type = "financialInstitutionUser", resourcePath = "financial-institution-users", pagingBehavior = IBanityPagingBehavior.class)
 public class FinancialInstitutionUser extends AbstractModel {
 
     Instant createdAt;

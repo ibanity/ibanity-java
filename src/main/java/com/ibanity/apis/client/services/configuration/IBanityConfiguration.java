@@ -18,22 +18,30 @@ import java.util.List;
 
 public class IBanityConfiguration {
 
-    public static final String SANBOX_PREFIX_PATH = "/sandbox";
+    public static final String FORWARD_SLASH = "/";
+    public static final String SANBOX_PREFIX_PATH = FORWARD_SLASH + "sandbox";
     public static final String IBANITY_PROPERTIES_PREFIX = "ibanity.";
 
     private static final String PROPERTIES_FILE = "ibanity.properties";
-    private static Configuration CONFIGURATION = null;
+    private static Configuration configuration = null;
 
     private static final Logger LOGGER = LogManager.getLogger(IBanityConfiguration.class);
 
-    public static Configuration getConfiguration() {
-        if (CONFIGURATION == null) {
-            CONFIGURATION = loadProperties();
-        }
-        return CONFIGURATION;
+    private IBanityConfiguration() {
     }
 
-    public static Configuration loadProperties(){
+    public static Configuration getConfiguration() {
+        if (configuration == null) {
+            try {
+                configuration = loadProperties();
+            } catch (ConfigurationException e) {
+                LOGGER.error(e);
+            }
+        }
+        return configuration;
+    }
+
+    public static Configuration loadProperties() throws ConfigurationException {
         List<FileLocationStrategy> subs = Arrays.asList(
                 new ProvidedURLLocationStrategy(),
                 new FileSystemLocationStrategy(),
@@ -49,7 +57,7 @@ public class IBanityConfiguration {
         }
         catch(ConfigurationException configurationException) {
             LOGGER.fatal(configurationException);
-            throw new RuntimeException("Unable to load IBANITY config", configurationException);
+            throw configurationException;
         }
     }
 }

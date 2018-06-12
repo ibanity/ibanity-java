@@ -1,34 +1,37 @@
 package com.ibanity.apis.client.paging;
 
 import io.crnk.core.queryspec.pagingspec.OffsetLimitPagingSpec;
+import io.crnk.core.queryspec.pagingspec.PagingSpec;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.UUID;
 
-public class PagingSpec extends OffsetLimitPagingSpec implements io.crnk.core.queryspec.pagingspec.PagingSpec {
+public class IBanityPagingSpec extends OffsetLimitPagingSpec implements PagingSpec {
 
     private UUID before = null;
     private UUID after = null;
 
+    public static final Long LIMIT_DEFAULT = 10L;
 
-    public PagingSpec(OffsetLimitPagingSpec offsetLimitPagingSpec) {
+
+    public IBanityPagingSpec(OffsetLimitPagingSpec offsetLimitPagingSpec) {
         super(offsetLimitPagingSpec.getLimit(), offsetLimitPagingSpec.getOffset());
     }
 
-    public PagingSpec() {
+    public IBanityPagingSpec() {
         super();
-        setLimit(10L);
+        setLimit(LIMIT_DEFAULT);
     }
 
-    public PagingSpec(Long limit, UUID before, UUID after) {
+    public IBanityPagingSpec(Long limit, UUID before, UUID after) {
         setLimit(limit);
         this.before = before;
         this.after = after;
     }
 
-    public PagingSpec(Long offset, Long limit) {
+    public IBanityPagingSpec(Long offset, Long limit) {
         super(offset, limit);
     }
 
@@ -61,9 +64,9 @@ public class PagingSpec extends OffsetLimitPagingSpec implements io.crnk.core.qu
     public boolean equals(Object o) {
         if (this == o) return true;
 
-        if (!(o instanceof PagingSpec)) return false;
+        if (!(o instanceof IBanityPagingSpec)) return false;
 
-        PagingSpec that = (PagingSpec) o;
+        IBanityPagingSpec that = (IBanityPagingSpec) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))

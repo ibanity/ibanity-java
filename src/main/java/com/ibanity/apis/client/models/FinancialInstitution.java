@@ -1,6 +1,6 @@
 package com.ibanity.apis.client.models;
 
-import com.ibanity.apis.client.paging.PagingBehavior;
+import com.ibanity.apis.client.paging.IBanityPagingBehavior;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.UUID;
 
-@JsonApiResource(type = FinancialInstitution.RESOURCE_TYPE, resourcePath = "financial-institutions", pagingBehavior = PagingBehavior.class)
+@JsonApiResource(type = FinancialInstitution.RESOURCE_TYPE, resourcePath = "financial-institutions", pagingBehavior = IBanityPagingBehavior.class)
 public class FinancialInstitution extends AbstractModel {
 
     public static final String RESOURCE_TYPE = "financialInstitution";
