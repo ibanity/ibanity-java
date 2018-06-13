@@ -20,6 +20,7 @@ public class FinancialInstitutionTransactionsServiceImpl extends AbstractService
     private static final String SANDBOX_USER_ACCOUNTS_FI_REQUEST_PATH       = SANDBOX_ACCOUNTS_FI_REQUEST_PATH + FORWARD_SLASH + "financial-institution-users" + FORWARD_SLASH + USER_ID_TAG;
     private static final String SANDBOX_ACCOUNTS_TXN_FI_REQUEST_PATH        = SANDBOX_USER_ACCOUNTS_FI_REQUEST_PATH + FORWARD_SLASH + "financial-institution-accounts" + FORWARD_SLASH + ACCOUNT_ID_TAG;
 
+    private static final String ERROR_RESOURCE_NOT_FOUND                    = "Resource with provided IDs not found";
 
     private static final Logger LOGGER = LogManager.getLogger(FinancialInstitutionTransactionsServiceImpl.class);
 
@@ -30,9 +31,8 @@ public class FinancialInstitutionTransactionsServiceImpl extends AbstractService
         try {
             return transactionsRepo.findOne(financialInstitutionTransactionId, querySpec);
         } catch (io.crnk.core.exception.ResourceNotFoundException e) {
-            String errorMessage = "Resource with provided IDs not found";
-            LOGGER.debug(errorMessage);
-            throw new ResourceNotFoundException(errorMessage);
+            LOGGER.debug(ERROR_RESOURCE_NOT_FOUND);
+            throw new ResourceNotFoundException(ERROR_RESOURCE_NOT_FOUND);
         }
     }
 
@@ -43,16 +43,20 @@ public class FinancialInstitutionTransactionsServiceImpl extends AbstractService
         try {
             return transactionsRepo.findAll(querySpec);
         } catch (io.crnk.core.exception.ResourceNotFoundException e) {
-            String errorMessage = "Resource with provided IDs not found";
-            LOGGER.debug(errorMessage);
-            throw new ResourceNotFoundException(errorMessage);
+            LOGGER.debug(ERROR_RESOURCE_NOT_FOUND);
+            throw new ResourceNotFoundException(ERROR_RESOURCE_NOT_FOUND);
         }
 
     }
 
     @Override
-    public FinancialInstitutionTransaction createFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, FinancialInstitutionTransaction financialInstitutionTransaction) {
-        return getTransactionsRepo(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId).create(financialInstitutionTransaction);
+    public FinancialInstitutionTransaction createFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, FinancialInstitutionTransaction financialInstitutionTransaction) throws ResourceNotFoundException {
+        try {
+            return getTransactionsRepo(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId).create(financialInstitutionTransaction);
+        } catch (io.crnk.core.exception.ResourceNotFoundException e) {
+            LOGGER.debug(ERROR_RESOURCE_NOT_FOUND);
+            throw new ResourceNotFoundException(ERROR_RESOURCE_NOT_FOUND);
+        }
     }
 
     @Override
@@ -60,9 +64,8 @@ public class FinancialInstitutionTransactionsServiceImpl extends AbstractService
         try {
             getTransactionsRepo(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId).delete(financialInstitutionTransactionId);
         } catch (io.crnk.core.exception.ResourceNotFoundException e) {
-            String errorMessage = "Resource with provided IDs not found";
-            LOGGER.debug(errorMessage);
-            throw new ResourceNotFoundException(errorMessage);
+            LOGGER.debug(ERROR_RESOURCE_NOT_FOUND);
+            throw new ResourceNotFoundException(ERROR_RESOURCE_NOT_FOUND);
         }
     }
 

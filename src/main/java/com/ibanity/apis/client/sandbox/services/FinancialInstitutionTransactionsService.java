@@ -36,8 +36,9 @@ public interface FinancialInstitutionTransactionsService {
      * @param financialInstitutionAccountId The id of the financial institution account to which the transaction will be linked to
      * @param financialInstitutionTransaction The details of the financial institution transaction
      * @return the created financial institution transaction
+     * @throws ResourceNotFoundException when the provided IDs are not known
      */
-    FinancialInstitutionTransaction createFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, FinancialInstitutionTransaction financialInstitutionTransaction);
+    FinancialInstitutionTransaction createFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, FinancialInstitutionTransaction financialInstitutionTransaction) throws ResourceNotFoundException;
 
 
     /**
