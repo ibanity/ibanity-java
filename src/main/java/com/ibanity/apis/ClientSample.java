@@ -82,7 +82,7 @@ public class ClientSample {
         accountInformationAccessRequest.setConsentReference(UUID.randomUUID().toString());
         accountInformationAccessRequest.setRedirectUri(FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL);
         accountInformationAccessRequest.setFinancialInstitution(inUseFinancialInstitution.get());
-        AccountInformationAccessRequest resultingAccountInformationAccessRequest = accountsService.getAccountsInformationAccessRedirectUrl(generatedCustomerAccessToken, accountInformationAccessRequest);
+        AccountInformationAccessRequest resultingAccountInformationAccessRequest = accountsService.getAccountInformationAccessRequest(generatedCustomerAccessToken, accountInformationAccessRequest);
         resultingAccountInformationAccessRequest.setFinancialInstitution(inUseFinancialInstitution.get());
         LOGGER.info("AccountInformationAccessRequest:"+resultingAccountInformationAccessRequest.toString());
         LOGGER.warn(LOGGER_LINE_SEPARATOR);
