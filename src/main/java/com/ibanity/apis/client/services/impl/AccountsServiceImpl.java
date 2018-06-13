@@ -72,7 +72,7 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
     }
 
     @Override
-    public AccountInformationAccessRequest getAccountsInformationAccessRedirectUrl(CustomerAccessToken customerAccessToken, AccountInformationAccessRequest accountInformationAccessRequest) {
+    public AccountInformationAccessRequest getAccountInformationAccessRequest(CustomerAccessToken customerAccessToken, AccountInformationAccessRequest accountInformationAccessRequest) {
         String correctPath = ACCOUNTS_FI_REQUEST_PATH.replace(FINANCIAL_INSTITUTION_ID_TAG, accountInformationAccessRequest.getFinancialInstitution().getId().toString());
         ResourceRepositoryV2<AccountInformationAccessRequest, UUID> accountInformationAccessRequestRepo = getApiClient(correctPath, customerAccessToken).getRepositoryForType(AccountInformationAccessRequest.class);
         return accountInformationAccessRequestRepo.create(accountInformationAccessRequest);
