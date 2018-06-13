@@ -15,7 +15,7 @@ public interface FinancialInstitutionTransactionsService {
      * @param financialInstitutionAccountId The id of the financial institution account to which the transaction is linked to
      * @param financialInstitutionTransactionId the UUID of the financial institution transaction
      * @return the financial institution transaction
-     * @throws ResourceNotFoundException when the provided ID is not known
+     * @throws ResourceNotFoundException when the provided IDs are not known
      */
     FinancialInstitutionTransaction getFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID financialInstitutionTransactionId) throws ResourceNotFoundException;
 
@@ -25,8 +25,9 @@ public interface FinancialInstitutionTransactionsService {
      * @param financialInstitutionUserId The Id of the financial institution user to which the financial institution account is linked
      * @param financialInstitutionAccountId The id of the financial institution account to which the transactions are linked to
      * @return the list of financial institution transactions
+     * @throws ResourceNotFoundException when the provided IDs are not known
      */
-    List<FinancialInstitutionTransaction> getFinancialInstitutionAccountTransactions(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) ;
+    List<FinancialInstitutionTransaction> getFinancialInstitutionAccountTransactions(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) throws ResourceNotFoundException;
 
     /**
      * Create a new financial institution transaction in the financial institution, linked to the provide sfinancial institution user
@@ -45,7 +46,7 @@ public interface FinancialInstitutionTransactionsService {
      * @param financialInstitutionUserId The Id of the financial institution user for which we want to link a new financial institution account
      * @param financialInstitutionAccountId The id of the financial institution account to which the financial institution transaction will be linked to
      * @param financialInstitutionTransactionId The id of the financial institution transaction to delete
-     * @throws ResourceNotFoundException when the financial institution transaction is unknown
+     * @throws ResourceNotFoundException when the provided IDs are not known
      */
     void deleteFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID financialInstitutionTransactionId) throws ResourceNotFoundException;
 }

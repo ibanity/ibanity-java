@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.services.impl;
 
+import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.PaymentInitiationRequest;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
@@ -18,11 +19,16 @@ public class PaymentsServiceImpl extends AbstractServiceImpl implements Payments
     }
 
     @Override
-    public PaymentInitiationRequest getPaymentInitiationRequest(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID paymentInitiationRequestId) {
+    public PaymentInitiationRequest getPaymentInitiationRequest(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID paymentInitiationRequestId) throws ResourceNotFoundException {
         QuerySpec querySpec = new QuerySpec(PaymentInitiationRequest.class);
         IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
         querySpec.setPagingSpec(pagingSpec);
-        return getRepository(customerAccessToken, financialInstitutionId).findOne(paymentInitiationRequestId, querySpec);
+        try {
+            return getRepository(customerAccessToken, financialInstitutionId).findOne(paymentInitiationRequestId, querySpec);
+        } catch (io.crnk.core.exception.ResourceNotFoundException e) {
+            String errorMessage = "Resource with provided ids not found";
+            throw new ResourceNotFoundException(errorMessage);
+        }
     }
 
     private ResourceRepositoryV2<PaymentInitiationRequest, UUID> getRepository(CustomerAccessToken customerAccessToken, UUID financialInstitutionId){

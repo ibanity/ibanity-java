@@ -30,17 +30,24 @@ public class FinancialInstitutionTransactionsServiceImpl extends AbstractService
         try {
             return transactionsRepo.findOne(financialInstitutionTransactionId, querySpec);
         } catch (io.crnk.core.exception.ResourceNotFoundException e) {
-            String errorMessage = "Resource with ID:"+financialInstitutionTransactionId+": not found";
+            String errorMessage = "Resource with provided IDs not found";
             LOGGER.debug(errorMessage);
             throw new ResourceNotFoundException(errorMessage);
         }
     }
 
     @Override
-    public List<FinancialInstitutionTransaction> getFinancialInstitutionAccountTransactions(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) {
+    public List<FinancialInstitutionTransaction> getFinancialInstitutionAccountTransactions(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) throws ResourceNotFoundException{
         ResourceRepositoryV2<FinancialInstitutionTransaction, UUID> transactionsRepo = getTransactionsRepo(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId);
         QuerySpec querySpec = new QuerySpec(FinancialInstitutionTransaction.class);
-        return transactionsRepo.findAll(querySpec);
+        try {
+            return transactionsRepo.findAll(querySpec);
+        } catch (io.crnk.core.exception.ResourceNotFoundException e) {
+            String errorMessage = "Resource with provided IDs not found";
+            LOGGER.debug(errorMessage);
+            throw new ResourceNotFoundException(errorMessage);
+        }
+
     }
 
     @Override
@@ -53,7 +60,7 @@ public class FinancialInstitutionTransactionsServiceImpl extends AbstractService
         try {
             getTransactionsRepo(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId).delete(financialInstitutionTransactionId);
         } catch (io.crnk.core.exception.ResourceNotFoundException e) {
-            String errorMessage = "Resource with ID:"+financialInstitutionTransactionId+": not found";
+            String errorMessage = "Resource with provided IDs not found";
             LOGGER.debug(errorMessage);
             throw new ResourceNotFoundException(errorMessage);
         }
