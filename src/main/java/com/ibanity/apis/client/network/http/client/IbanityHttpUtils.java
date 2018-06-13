@@ -1,6 +1,7 @@
 package com.ibanity.apis.client.network.http.client;
 
 import com.ibanity.apis.client.services.configuration.IbanityConfiguration;
+import com.ibanity.apis.client.utils.FileUtils;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,6 +18,8 @@ public class IbanityHttpUtils {
     private static final String IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_PRIVATE_KEY_PASSOWRD_PROPERTY_KEY    = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.private.certificate.private_key.password";
     private static final String IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_TRUSTMANAGER_PROPERTY_KEY            = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.private.certificate.trustmanager";
     private static final String IBANITY_CLIENT_SSL_PROTOCOL_PROPERTY_KEY                                    = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.protocol";
+
+    private static FileUtils fileUtils = new FileUtils();
 
     private IbanityHttpUtils() {
     }
@@ -36,7 +39,7 @@ public class IbanityHttpUtils {
     }
 
     public static KeyStore getCertificateKeyStore() {
-        try (FileInputStream fis = new FileInputStream(IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_PATH_PROPERTY_KEY))) {
+        try (FileInputStream fis = (FileInputStream) fileUtils.loadFile(IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_PATH_PROPERTY_KEY))) {
             KeyStore ks = KeyStore.getInstance(IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_STANDARD_PROPERTY_KEY));
             char[] passwordCharArray = IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_PRIVATE_KEY_PASSOWRD_PROPERTY_KEY).toCharArray();
             ks.load(fis, passwordCharArray);

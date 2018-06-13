@@ -3,6 +3,7 @@ package com.ibanity.apis.client.network.http.client;
 import com.ibanity.apis.client.exceptions.InvalidDefaultHttpHeaderForSignatureException;
 import com.ibanity.apis.client.exceptions.SignatureException;
 import com.ibanity.apis.client.services.configuration.IbanityConfiguration;
+import com.ibanity.apis.client.utils.FileUtils;
 import org.apache.commons.codec.digest.MessageDigestAlgorithms;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +25,6 @@ import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.bouncycastle.openssl.jcajce.JcePEMDecryptorProviderBuilder;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.KeyStore;
@@ -60,6 +60,8 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
                                                                                                         + HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR
                                                                                                         + HEADER_NAME_DATE
                                                                                                         ;
+
+    private FileUtils fileUtils = new FileUtils();
 
     @Override
     public void process(HttpRequest httpRequest, HttpContext httpContext) throws HttpException, IOException {
@@ -215,7 +217,7 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
         try (
                 PEMParser pemParser = new PEMParser(
                     new InputStreamReader(
-                            new FileInputStream(
+                            fileUtils.loadFile(
                                     IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SSL_CERTIFICATE_PRIVATE_KEY_PATH_PROPERTY_KEY)
                             )
                     )
