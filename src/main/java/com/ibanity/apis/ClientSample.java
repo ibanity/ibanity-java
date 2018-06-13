@@ -43,12 +43,12 @@ public class ClientSample {
     private TransactionsService transactionsService = new TransactionsServiceImpl();
     private PaymentsService paymentsService = new PaymentsServiceImpl();
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws ResourceNotFoundException {
         ClientSample client  = new ClientSample();
         client.startFlow();
     }
 
-    public void startFlow(){
+    public void startFlow() throws ResourceNotFoundException {
 
         LOGGER.info("Start : List of Financial Institutions: starting with 1 FI");
 
@@ -135,11 +135,11 @@ public class ClientSample {
 
 
         LOGGER.info("Start : Transactions details");
-        accounts.stream().forEach(account -> {
+        for (Account account : accounts){
             LOGGER.info("Transactions Details of Account:"+account.getReference()+":");
-            List<Transaction> transactionsList = transactionsService.getAccountTransactions(generatedCustomerAccessToken, account);
+            List<Transaction> transactionsList = transactionsService.getAccountTransactions(generatedCustomerAccessToken, account.getFinancialInstitution().getId(), account.getId());
             transactionsList.stream().forEach(transaction -> LOGGER.info(transaction.toString()));
-        });
+        }
         LOGGER.info("End : Transactions details");
 
         LOGGER.info("Start : Payment Initiation Request");

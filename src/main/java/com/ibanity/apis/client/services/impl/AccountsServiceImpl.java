@@ -79,15 +79,21 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
     }
 
     @Override
-    public ResourceList<AccountInformationAccessAuthorization> getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, AccountInformationAccessRequest accountInformationAccessRequest) {
-        return getAccountsInformationAccessAuthorizations(customerAccessToken, accountInformationAccessRequest, new IbanityPagingSpec());
+    public ResourceList<AccountInformationAccessAuthorization> getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, UUID financialInstitutionId,  UUID accountInformationAccessRequestId) throws ResourceNotFoundException {
+        return getAccountsInformationAccessAuthorizations(customerAccessToken, financialInstitutionId, accountInformationAccessRequestId, new IbanityPagingSpec());
     }
 
     @Override
-    public ResourceList<AccountInformationAccessAuthorization> getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, AccountInformationAccessRequest accountInformationAccessRequest, IbanityPagingSpec pagingSpec) {
+    public ResourceList<AccountInformationAccessAuthorization> getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, UUID financialInstitutionId,  UUID accountInformationAccessRequestId, IbanityPagingSpec pagingSpec) throws ResourceNotFoundException{
         QuerySpec querySpec = new QuerySpec(AccountInformationAccessAuthorization.class);
         querySpec.setPagingSpec(pagingSpec);
-        return findAll(querySpec, getAccountInformationAccessAuthorizationRepo(customerAccessToken, accountInformationAccessRequest.getFinancialInstitution().getId(), accountInformationAccessRequest.getId()));
+        try {
+            return findAll(querySpec, getAccountInformationAccessAuthorizationRepo(customerAccessToken, financialInstitutionId, accountInformationAccessRequestId));
+        } catch (io.crnk.core.exception.ResourceNotFoundException e) {
+            String errorMessage = "Resources with provided IDs not found";
+            LOGGER.debug(errorMessage);
+            throw new ResourceNotFoundException(errorMessage);
+        }
     }
 
     @Override
