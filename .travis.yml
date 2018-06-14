@@ -13,7 +13,7 @@ before_install:
 install:
   - mvn install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
 script:
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent verify sonar:sonar -Dgpg.skip -DskipTests=true -B -U
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent verify sonar:sonar -Dgpg.skip -B -U
 
 addons:
   sonarcloud:
