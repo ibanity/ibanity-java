@@ -40,9 +40,11 @@ public class FinancialInstitutionUsersServiceTest {
      * Method: getFinancialInstitutionUsers()
      */
     @Test
-    public void testGetFinancialInstitutionUsers() {
+    public void testGetFinancialInstitutionUsers() throws ResourceNotFoundException {
+        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser();
         List<FinancialInstitutionUser> financialInstitutionUsers = financialInstitutionUsersService.getFinancialInstitutionUsers();
         assertTrue(financialInstitutionUsers.size() > 0);
+        financialInstitutionUsersService.deleteFinancialInstitutionUser(financialInstitutionUser.getId());
     }
 
     /**
