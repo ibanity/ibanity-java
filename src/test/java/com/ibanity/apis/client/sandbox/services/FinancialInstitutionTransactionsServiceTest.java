@@ -9,9 +9,9 @@ import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionTransac
 import org.apache.commons.math3.util.Precision;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -20,7 +20,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * FinancialInstitutionTransactionsServiceImpl Tester.
@@ -33,11 +34,11 @@ public class FinancialInstitutionTransactionsServiceTest {
 
     private static final FinancialInstitutionTransactionsService financialInstitutionTransactionsService = new FinancialInstitutionTransactionsServiceImpl();
 
-    @Before
+    @BeforeEach
     public void before() {
     }
 
-    @After
+    @AfterEach
     public void after() {
     }
 
@@ -70,9 +71,9 @@ public class FinancialInstitutionTransactionsServiceTest {
     /**
      * Method: getFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID financialInstitutionTransactionId)
      */
-    @Test (expected = ResourceNotFoundException.class)
+    @Test
     public void testGetFinancialInstitutionTransactionWithWrongIDs() throws Exception {
-        financialInstitutionTransactionsService.getFinancialInstitutionTransaction(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
+        assertThrows(ResourceNotFoundException.class, () -> financialInstitutionTransactionsService.getFinancialInstitutionTransaction(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()));
     }
 
     /**
@@ -103,9 +104,9 @@ public class FinancialInstitutionTransactionsServiceTest {
     /**
      * Method: getFinancialInstitutionAccountTransactions(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId)
      */
-    @Test (expected = ResourceNotFoundException.class)
+    @Test
     public void testGetFinancialInstitutionAccountTransactionsWithWrongIds() throws Exception {
-        financialInstitutionTransactionsService.getFinancialInstitutionAccountTransactions(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
+        assertThrows(ResourceNotFoundException.class, () -> financialInstitutionTransactionsService.getFinancialInstitutionAccountTransactions(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()));
     }
 
     /**
@@ -119,9 +120,9 @@ public class FinancialInstitutionTransactionsServiceTest {
     /**
      * Method: createFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, FinancialInstitutionTransaction financialInstitutionTransaction)
      */
-    @Test (expected = ResourceNotFoundException.class)
+    @Test
     public void testCreateFinancialInstitutionTransactionWithWrongIds() throws Exception {
-        financialInstitutionTransactionsService.createFinancialInstitutionTransaction(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), new FinancialInstitutionTransaction());
+        assertThrows(ResourceNotFoundException.class, () -> financialInstitutionTransactionsService.createFinancialInstitutionTransaction(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), new FinancialInstitutionTransaction()));
     }
 
     /**
@@ -135,9 +136,9 @@ public class FinancialInstitutionTransactionsServiceTest {
     /**
      * Method: deleteFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID financialInstitutionTransactionId)
      */
-    @Test (expected = ResourceNotFoundException.class)
+    @Test
     public void testDeleteFinancialInstitutionTransactionWithWrongIds() throws Exception {
-        financialInstitutionTransactionsService.deleteFinancialInstitutionTransaction(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
+        assertThrows(ResourceNotFoundException.class, () -> financialInstitutionTransactionsService.deleteFinancialInstitutionTransaction(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()));
     }
 
     public static FinancialInstitutionTransaction createFinancialInstitutionTransaction(UUID financialInstitutionUserId, FinancialInstitutionAccount financialInstitutionAccount) throws ResourceNotFoundException {

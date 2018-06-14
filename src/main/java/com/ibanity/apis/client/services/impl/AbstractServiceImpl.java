@@ -9,6 +9,7 @@ import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.network.http.client.IbanityAccessTokenAdapterListener;
 import com.ibanity.apis.client.services.configuration.IbanityConfiguration;
 import io.crnk.client.CrnkClient;
+import io.crnk.client.http.HttpAdapter;
 import io.crnk.client.http.apache.HttpClientAdapter;
 import io.crnk.core.boot.CrnkProperties;
 import io.crnk.core.queryspec.QuerySpec;
@@ -65,12 +66,15 @@ public abstract class AbstractServiceImpl {
         apiClient.getObjectMapper().registerModule(new JavaTimeModule());
         apiClient.getObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
-        HttpClientAdapter adapter = (HttpClientAdapter) apiClient.getHttpAdapter();
-        if (customerAccessToken == null){
-            adapter.addListener(new IbanityAccessTokenAdapterListener());
-        }
-        else {
-            adapter.addListener(new IbanityAccessTokenAdapterListener(customerAccessToken));
+        HttpAdapter httpAdapter = apiClient.getHttpAdapter();
+        if (httpAdapter instanceof HttpClientAdapter ){
+            HttpClientAdapter adapter = (HttpClientAdapter) httpAdapter;
+            if (customerAccessToken == null){
+                adapter.addListener(new IbanityAccessTokenAdapterListener());
+            }
+            else {
+                adapter.addListener(new IbanityAccessTokenAdapterListener(customerAccessToken));
+            }
         }
         return apiClient;
     }

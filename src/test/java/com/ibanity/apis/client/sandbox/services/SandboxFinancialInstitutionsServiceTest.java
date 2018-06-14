@@ -3,14 +3,15 @@ package com.ibanity.apis.client.sandbox.services;
 import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.sandbox.services.impl.SandboxFinancialInstitutionsServiceImpl;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.util.UUID;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * SandboxFinancialInstitutionsServiceImpl Tester.
@@ -27,12 +28,12 @@ public class SandboxFinancialInstitutionsServiceTest {
     private static final String TEST_CASE = SandboxFinancialInstitutionsServiceTest.class.getSimpleName();
     private static String name;
 
-    @Before
-    public void before()  {
+    @BeforeAll
+    public void beforeAll()  {
     }
 
-    @After
-    public void after()  {
+    @AfterAll
+    public void afterAll()  {
     }
 
     /**
@@ -78,11 +79,11 @@ public class SandboxFinancialInstitutionsServiceTest {
     /**
      * Method: deleteFinancialInstitution(UUID financialInstitutionId)
      */
-    @Test (expected = ResourceNotFoundException.class)
+    @Test
     public void testDeleteFinancialInstitution() throws Exception {
         FinancialInstitution newFinancialInstitution = createFinancialInstitution();
         sandboxFinancialInstitutionsService.deleteFinancialInstitution(newFinancialInstitution.getId());
-        sandboxFinancialInstitutionsService.getFinancialInstitution(newFinancialInstitution.getId());
+        assertThrows(ResourceNotFoundException.class, () -> sandboxFinancialInstitutionsService.getFinancialInstitution(newFinancialInstitution.getId()));
     }
 
     /**
@@ -99,8 +100,8 @@ public class SandboxFinancialInstitutionsServiceTest {
     /**
      * Method: getFinancialInstitution(UUID financialInstitutionId)
      */
-    @Test (expected = ResourceNotFoundException.class)
+    @Test
     public void testGetFinancialInstitutionUnknownID() throws Exception {
-        FinancialInstitution getFinancialInstitution = sandboxFinancialInstitutionsService.getFinancialInstitution(UUID.randomUUID());
+        assertThrows( ResourceNotFoundException.class, () -> sandboxFinancialInstitutionsService.getFinancialInstitution(UUID.randomUUID()));
     }
 }

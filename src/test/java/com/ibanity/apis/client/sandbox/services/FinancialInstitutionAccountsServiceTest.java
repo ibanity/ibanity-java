@@ -7,14 +7,15 @@ import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
 import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionAccountsServiceImpl;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.UUID;
 
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * FinancialInstitutionAccountsServiceImpl Tester.
@@ -27,11 +28,11 @@ public class FinancialInstitutionAccountsServiceTest {
 
     private static final FinancialInstitutionAccountsService financialInstitutionAccountsService = new FinancialInstitutionAccountsServiceImpl();
 
-    @Before
+    @BeforeEach
     public void before() {
     }
 
-    @After
+    @AfterEach
     public void after() {
     }
 
@@ -99,11 +100,11 @@ public class FinancialInstitutionAccountsServiceTest {
     /**
      * Method: createFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, FinancialInstitutionAccount financialInstitutionAccount)
      */
-    @Test (expected = ResourceNotFoundException.class)
+    @Test
     public void testCreateFinancialInstitutionAccountWithWrongIDs() throws Exception {
         FinancialInstitution financialInstitution = new FinancialInstitution();
         financialInstitution.setId(UUID.randomUUID());
-        createFinancialInstitutionAccount(financialInstitution, UUID.randomUUID());
+        assertThrows(ResourceNotFoundException.class, () -> createFinancialInstitutionAccount(financialInstitution, UUID.randomUUID()));
     }
 
     /**
@@ -124,9 +125,9 @@ public class FinancialInstitutionAccountsServiceTest {
     /**
      * Method: deleteFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId)
      */
-    @Test (expected = ResourceNotFoundException.class)
+    @Test
     public void testDeleteFinancialInstitutionAccountWithWrongIDs() throws Exception {
-        financialInstitutionAccountsService.deleteFinancialInstitutionAccount(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
+        assertThrows(ResourceNotFoundException.class, () -> financialInstitutionAccountsService.deleteFinancialInstitutionAccount(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()));
     }
 
     public static void deleteFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) throws ResourceNotFoundException {
