@@ -11,11 +11,18 @@ before_install:
     - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
 
 install: mvn install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
-script: mvn clean verify -Dgpg.skip -DskipTests=true -B -U
+script: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent verify sonar:sonar -Dgpg.skip -DskipTests=true -B -U
+
+addons:
+  sonarcloud:
+    organization: "ibanity"
+    token:
+      secure: "p3cPNF6yxrwTvW84Ft87un01rLexvGjd8XU7tqukcuA7OesIGJr3sRJacP3slcv2kMZyJtvxXZaye3eKfyikup48TTi55kCbEdFhHClikW05n5FEfRqM/YKvLsKmgFHeznM1S/UBwQS8+dBuYBcCGoKYXr6ycdI9cH6YWxyDGFKUwIUX0NaNSlXc3SScT+AvDduqq5Ve2OruRpdehLqS05fW9mSDn6BtD4CtRQ66VXvpImYU5MqHiTTgwLTKXNC47WYKBm+TVAg8QIfvtEujNV42BKZF2ep6MCm4AqC+KzeXbZbefn+TJUnNUI1qO2rGcAxlMTNDW49zfFNXq3SZqEGntKjgFYKijOB5GLbR929OUN/UnDTBAeALJhfN/whkPwN1m7Az1yLAMef7QAow0Jt2R0UZ4OKogn5iz/h1L6fO9d11OUKsp3Zcnl+eocAwK3SDu8n4PA7Zp09to9L0wmxO50GTYcHeAw+Do1sXIBFlZtqgMtWEA82vuTdHduufwtifT3+/bIV2pBsP1Sknf3l+yLr7CA8hQXGQH4f9YdFuJHy+sTE3BkYBgZFC4XXehEWfP7d1KPvppQ1PcU3LiScz1esQKLMDqSp7hSzZQVbr/aRcXxiSD3WqsagDH2uJijLmKYwiTbp0tAjjdqRl/1eRcFcnErLGzqS0khIklec="
 
 cache:
   directories:
     - ~/.m2/repository
+    - ~/.sonar/cache
 
 after_success:
   - bash ./travis-ci/deploy.sh
