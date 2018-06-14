@@ -39,12 +39,12 @@ public class ClientSanboxSample {
     private FinancialInstitutionTransactionsService financialInstitutionTransactionsService = new FinancialInstitutionTransactionsServiceImpl();
     private FinancialInstitutionUsersService financialInstitutionUsersService = new FinancialInstitutionUsersServiceImpl();
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws ResourceNotFoundException {
         ClientSanboxSample client  = new ClientSanboxSample();
         client.startFlow();
     }
 
-    public void startFlow(){
+    public void startFlow() throws ResourceNotFoundException {
 
         Instant now = Instant.now();
 
@@ -182,7 +182,7 @@ public class ClientSanboxSample {
 
         final AtomicReference<FinancialInstitutionAccount> inUseFinancialInstitutionAccount = new AtomicReference();
 
-        financialInstitutionAccounts.stream().forEach(financialInstitutionAccount -> {
+        for (FinancialInstitutionAccount financialInstitutionAccount : financialInstitutionAccounts ) {
             for (int index = 0; index < SANDBOX_TRANSACTIONS_T0_CREATE_PER_ACCOUNT ; index++) {
                 FinancialInstitutionTransaction financialInstitutionTransaction = generateNewTransaction(financialInstitutionAccount);
                 FinancialInstitutionTransaction createdFinancialInstitutionTransaction = financialInstitutionTransactionsService.createFinancialInstitutionTransaction(
@@ -194,7 +194,7 @@ public class ClientSanboxSample {
                 LOGGER.info("FinancialInstitutionAccount:"+financialInstitutionAccount.getReference()+":Transaction:"+createdFinancialInstitutionTransaction.getId()+":created");
             }
             inUseFinancialInstitutionAccount.set(financialInstitutionAccount);
-        });
+        }
         LOGGER.info("END : Adding transactions to User's Financial Institutions's account");
 
         FinancialInstitutionTransaction financialInstitutionTransaction = generateNewTransaction(inUseFinancialInstitutionAccount.get());

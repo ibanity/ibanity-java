@@ -1,7 +1,6 @@
 package com.ibanity.apis.client.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,25 +12,15 @@ public abstract class AbstractTransaction extends AbstractModel{
     private Double amount;
     private String currency;
 
-    @JsonProperty("value_date")
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
     private Instant valueDate;
-    @JsonProperty("execution_date")
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
     private Instant executionDate;
 
     private String description;
-
-    @JsonProperty("remittance_information_type")
     private String remittanceInformationType;
-    @JsonProperty("remittance_information")
-
     private String remittanceInformation;
-
-    @JsonProperty("counterpart_name")
     private String counterpartName;
-
-    @JsonProperty("counterpart_reference")
     private String counterpartReference;
 
     public AbstractTransaction() {

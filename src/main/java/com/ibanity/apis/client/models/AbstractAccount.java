@@ -16,7 +16,6 @@ public abstract class AbstractAccount extends AbstractModel{
     private String currency;
     private String description;
     private String reference;
-    @JsonProperty("reference_type")
     private String referenceType;
     private Double currentBalance;
     private Double availableBalance;

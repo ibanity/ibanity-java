@@ -22,6 +22,8 @@ public class FinancialInstitutionAccountsServiceImpl extends AbstractServiceImpl
     private static final String SANDBOX_ACCOUNTS_FI_REQUEST_PATH                = SANBOX_PREFIX_PATH+ FORWARD_SLASH + FINANCIAL_INSTITUTIONS_PATH + FORWARD_SLASH + FINANCIAL_INSTITUTION_ID_TAG;
     private static final String SANDBOX_USER_ACCOUNTS_FI_REQUEST_PATH           = SANDBOX_ACCOUNTS_FI_REQUEST_PATH + FORWARD_SLASH + "financial-institution-users" + FORWARD_SLASH + USER_ID_TAG;
 
+    private static final String ERROR_RESOURCE_NOT_FOUND                        = "Resource with provided IDs not found";
+
     @Override
     public FinancialInstitutionAccount getFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) throws ResourceNotFoundException {
         ResourceRepositoryV2<FinancialInstitutionAccount, UUID> accountsRepo = getAccountsRepository(financialInstitutionId, financialInstitutionUserId);
@@ -36,18 +38,33 @@ public class FinancialInstitutionAccountsServiceImpl extends AbstractServiceImpl
     }
 
     @Override
-    public List<FinancialInstitutionAccount> getFinancialInstitutionUserAccounts(UUID financialInstitutionId, UUID financialInstitutionUserId) {
-        return getAccountsRepository(financialInstitutionId, financialInstitutionUserId).findAll(new QuerySpec(FinancialInstitutionAccount.class));
+    public List<FinancialInstitutionAccount> getFinancialInstitutionUserAccounts(UUID financialInstitutionId, UUID financialInstitutionUserId) throws ResourceNotFoundException{
+        try {
+            return getAccountsRepository(financialInstitutionId, financialInstitutionUserId).findAll(new QuerySpec(FinancialInstitutionAccount.class));
+        } catch (io.crnk.core.exception.ResourceNotFoundException e) {
+            LOGGER.debug(ERROR_RESOURCE_NOT_FOUND);
+            throw new ResourceNotFoundException(ERROR_RESOURCE_NOT_FOUND);
+        }
     }
 
     @Override
-    public FinancialInstitutionAccount createFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, FinancialInstitutionAccount financialInstitutionAccount){
-        return getAccountsRepository(financialInstitutionId, financialInstitutionUserId).create(financialInstitutionAccount);
+    public FinancialInstitutionAccount createFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, FinancialInstitutionAccount financialInstitutionAccount) throws ResourceNotFoundException {
+        try {
+            return getAccountsRepository(financialInstitutionId, financialInstitutionUserId).create(financialInstitutionAccount);
+        } catch (io.crnk.core.exception.ResourceNotFoundException e) {
+            LOGGER.debug(ERROR_RESOURCE_NOT_FOUND);
+            throw new ResourceNotFoundException(ERROR_RESOURCE_NOT_FOUND);
+        }
     }
 
     @Override
-    public void deleteFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) {
-        getAccountsRepository(financialInstitutionId, financialInstitutionUserId).delete(financialInstitutionAccountId);
+    public void deleteFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) throws ResourceNotFoundException {
+        try {
+            getAccountsRepository(financialInstitutionId, financialInstitutionUserId).delete(financialInstitutionAccountId);
+        } catch (io.crnk.core.exception.ResourceNotFoundException e) {
+            LOGGER.debug(ERROR_RESOURCE_NOT_FOUND);
+            throw new ResourceNotFoundException(ERROR_RESOURCE_NOT_FOUND);
+        }
     }
 
     protected ResourceRepositoryV2<FinancialInstitutionAccount, UUID> getAccountsRepository(UUID financialInstitutionId, UUID financialInstitutionUserId){
