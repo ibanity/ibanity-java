@@ -44,6 +44,8 @@ public class SandboxFinancialInstitutionsServiceTest {
         assertTrue(newFinancialInstitution.getId() != null);
         assertTrue(name.equals(newFinancialInstitution.getName()));
         assertTrue(newFinancialInstitution.getSandbox());
+        sandboxFinancialInstitutionsService.deleteFinancialInstitution(newFinancialInstitution.getId());
+
     }
 
     public static FinancialInstitution createFinancialInstitution() {
@@ -70,6 +72,7 @@ public class SandboxFinancialInstitutionsServiceTest {
         assertTrue((newFinancialInstitution.getName()).equals(updatedFinancialInstitution.getName()));
         assertTrue(newFinancialInstitution.getId().equals(updatedFinancialInstitution.getId()));
         assertTrue(newFinancialInstitution.getSandbox().equals(updatedFinancialInstitution.getSandbox()));
+        sandboxFinancialInstitutionsService.deleteFinancialInstitution(updatedFinancialInstitution.getId());
     }
 
     /**
@@ -90,6 +93,7 @@ public class SandboxFinancialInstitutionsServiceTest {
         FinancialInstitution newFinancialInstitution = createFinancialInstitution();
         FinancialInstitution getFinancialInstitution = sandboxFinancialInstitutionsService.getFinancialInstitution(newFinancialInstitution.getId());
         assertTrue(newFinancialInstitution.equals(getFinancialInstitution));
+        sandboxFinancialInstitutionsService.deleteFinancialInstitution(newFinancialInstitution.getId());
     }
 
     /**
