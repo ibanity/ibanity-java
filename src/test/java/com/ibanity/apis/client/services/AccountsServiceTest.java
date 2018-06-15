@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.services;
 
+import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.FinancialInstitution;
@@ -23,15 +24,16 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Actions;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * AccountsServiceImpl Tester.
@@ -44,7 +46,8 @@ public class AccountsServiceTest {
     private static final String FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.accounts.information.access.result.redirect.url");
 
     private static WebDriver driver;
-    private static String baseUrl;
+    private static Actions actions;
+
     private boolean acceptNextAlert = true;
     private static StringBuffer verificationErrors = new StringBuffer();
 
@@ -66,8 +69,8 @@ public class AccountsServiceTest {
 
         options.addArguments("headless");
         driver = new ChromeDriver(options);
-        options.addArguments("window-size=1200x600");
-        baseUrl = "https://www.ibanity.com/";
+        actions = new Actions(driver);
+        options.addArguments("window-size=1280x1024");
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         generatedCustomerAccessToken = CustomerAccessTokensServiceTest.getCustomerAccessToken(UUID.randomUUID().toString());
         financialInstitution = SandboxFinancialInstitutionsServiceTest.createFinancialInstitution();
@@ -145,7 +148,9 @@ public class AccountsServiceTest {
         AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
         assertNotNull(accountInformationAccessRequest.getLinks().getRedirect());
         assertNotNull(URI.create(accountInformationAccessRequest.getLinks().getRedirect()));
-        this.authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
+        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
+        List<Account> accounts = accountsService.getCustomerAccounts(generatedCustomerAccessToken, financialInstitution.getId());
+        assertTrue(accounts.size() > 0);
     }
 
     /**
@@ -183,14 +188,18 @@ public class AccountsServiceTest {
         driver.findElement(By.id("response")).clear();
         driver.findElement(By.id("response")).sendKeys("123456");
         driver.findElement(By.xpath("//button[@type='submit']")).submit();
-        for(FinancialInstitutionAccount financialInstitutionAccount : financialInstitutionAccounts) {
-            WebElement element = driver.findElement(By.xpath("//input[@value='" + financialInstitutionAccount.getReference() + "']"));
-            if (element.isEnabled()) {
-                element.click();
-            }
-        }
-        driver.findElement(By.xpath("//button[@type='submit']")).submit();
-        driver.findElement(By.xpath("//div[@id='app']/div/main/div/div[2]/div/button")).submit();
+
+        List<String> iBanList = financialInstitutionAccounts.stream().map(financialInstitutionAccount -> financialInstitutionAccount.getReference()).collect(Collectors.toList());
+
+        List <WebElement> uiAccountsList = driver.findElements(By.xpath("//input[@type='checkbox']"));
+        uiAccountsList.stream()
+                .filter(webElement -> iBanList.contains(webElement.getAttribute("value")))
+                .forEach(webElement -> actions.moveToElement(webElement).click().build().perform());
+
+        actions.moveToElement(driver.findElement(By.xpath("//button[text()='Select']"))).click().build().perform();
+        List<WebElement> elementsButton = driver.findElements(By.tagName("button"));
+        elementsButton.stream().forEach(webElement -> actions.moveToElement(webElement).click().build().perform());
+        //actions.moveToElement(driver.findElement(By.tagName("button"))).click().build().perform();
     }
 
     private boolean isElementPresent(By by) {
