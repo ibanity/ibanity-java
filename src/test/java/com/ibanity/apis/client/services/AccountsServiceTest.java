@@ -1,9 +1,12 @@
 package com.ibanity.apis.client.services;
 
+import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
 import com.ibanity.apis.client.models.Account;
+import com.ibanity.apis.client.models.AccountInformationAccessAuthorization;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.FinancialInstitution;
+import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
 import com.ibanity.apis.client.sandbox.services.FinancialInstitutionAccountsServiceTest;
@@ -16,16 +19,22 @@ import com.ibanity.apis.client.utils.OSValidator;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoAlertPresentException;
-import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,12 +79,12 @@ public class AccountsServiceTest {
         options.addArguments("headless");
         driver = new ChromeDriver(options);
         actions = new Actions(driver);
-        options.addArguments("window-size=1280x1024");
+        options.addArguments("window-size=1900x1600");
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         generatedCustomerAccessToken = CustomerAccessTokensServiceTest.getCustomerAccessToken(UUID.randomUUID().toString());
         financialInstitution = SandboxFinancialInstitutionsServiceTest.createFinancialInstitution();
         financialInstitutionUser = FinancialInstitutionUsersServiceTest.createFinancialInstitutionUser();
-        for (int index = 0; index < 3 ; index ++){
+        for (int index = 0; index < 3; index++) {
             financialInstitutionAccounts.add(FinancialInstitutionAccountsServiceTest.createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId()));
         }
     }
@@ -87,8 +96,8 @@ public class AccountsServiceTest {
         if (!"".equals(verificationErrorString)) {
             fail(verificationErrorString);
         }
-        for(FinancialInstitutionAccount financialInstitutionAccount : financialInstitutionAccounts){
-            FinancialInstitutionAccountsServiceTest.deleteFinancialInstitutionAccount(financialInstitution.getId(),financialInstitutionUser.getId(), financialInstitutionAccount.getId());
+        for (FinancialInstitutionAccount financialInstitutionAccount : financialInstitutionAccounts) {
+            FinancialInstitutionAccountsServiceTest.deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
         }
         FinancialInstitutionUsersServiceTest.deleteFinancialInstitutionUser(financialInstitutionUser.getId());
         SandboxFinancialInstitutionsServiceTest.deleteFinancialInstitution(financialInstitution.getId());
@@ -99,6 +108,23 @@ public class AccountsServiceTest {
      */
     @Test
     public void testGetCustomerAccount() throws Exception {
+        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
+        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
+        List<Account> accountsList = accountsService.getCustomerAccounts(generatedCustomerAccessToken, financialInstitution.getId());
+        for (Account account : accountsList) {
+            Account accountResult = accountsService.getCustomerAccount(generatedCustomerAccessToken, account.getId(), financialInstitution.getId());
+            assertTrue(account.getReference().equals(accountResult.getReference()));
+            assertTrue(account.getReferenceType().equals(accountResult.getReferenceType()));
+            assertTrue(account.getCurrency().equals(accountResult.getCurrency()));
+            assertTrue(account.getSubType().equals(accountResult.getSubType()));
+            assertTrue(account.getAvailableBalance().equals(accountResult.getAvailableBalance()));
+            assertTrue(account.getCurrentBalance().equals(accountResult.getCurrentBalance()));
+        }
+    }
+
+    @Test
+    public void testGetCustomerAccountWithWrongIDs() throws Exception {
+        assertThrows(ResourceNotFoundException.class, () -> accountsService.getCustomerAccount(generatedCustomerAccessToken, UUID.randomUUID(), UUID.randomUUID()));
     }
 
     /**
@@ -106,6 +132,27 @@ public class AccountsServiceTest {
      */
     @Test
     public void testGetCustomerAccountsCustomerAccessToken() throws Exception {
+        //TODO check why list are not identical
+        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
+        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
+        IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
+        pagingSpec.setLimit(50L);
+        List<Account> accountsList = accountsService.getCustomerAccounts(generatedCustomerAccessToken, pagingSpec);
+        System.out.println("***** FinancialInstitutionAccounts *****");
+        financialInstitutionAccounts.stream().forEach(financialInstitutionAccount -> System.out.println(financialInstitutionAccount.getReference()));
+        System.out.println("***** Accounts *****");
+        accountsList.stream().forEach((account -> System.out.println(account.getReference())));
+        assertTrue(financialInstitutionAccounts.size() == accountsList.size());
+    }
+
+    @Test
+    public void testGetCustomerAccountsCustomerAccessTokenNoAccountsAuthorized() throws Exception {
+        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
+        IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
+        pagingSpec.setLimit(50L);
+        List<Account> accountsList = accountsService.getCustomerAccounts(generatedCustomerAccessToken, pagingSpec);
+        assertTrue(accountsList.isEmpty());
+        assertFalse(financialInstitutionAccounts.size() == accountsList.size());
     }
 
     /**
@@ -113,7 +160,14 @@ public class AccountsServiceTest {
      */
     @Test
     public void testGetCustomerAccountsForCustomerAccessTokenPagingSpec() throws Exception {
-//TODO: Test goes here... 
+        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
+        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
+        IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
+        pagingSpec.setLimit(1L);
+        List<Account> accountsList = accountsService.getCustomerAccounts(generatedCustomerAccessToken, pagingSpec);
+        assertTrue(accountsList.size() == 1);
+        Account account = accountsList.get(0);
+        assertTrue(financialInstitutionAccounts.stream().filter(financialInstitutionAccount -> financialInstitutionAccount.getReference().equals(account.getReference())).collect(Collectors.toList()).size() == 1);
     }
 
     /**
@@ -121,7 +175,16 @@ public class AccountsServiceTest {
      */
     @Test
     public void testGetCustomerAccountsForCustomerAccessTokenFinancialInstitutionId() throws Exception {
-//TODO: Test goes here... 
+        //TODO check why list is not equals
+        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
+        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
+        List<Account> accountsList = accountsService.getCustomerAccounts(generatedCustomerAccessToken, financialInstitution.getId());
+        assertTrue(accountsList.size() == financialInstitutionAccounts.size());
+    }
+
+    @Test
+    public void testGetCustomerAccountsForCustomerAccessTokenUnknownFinancialInstitutionId() throws Exception {
+        assertThrows(ResourceNotFoundException.class, () -> accountsService.getCustomerAccounts(generatedCustomerAccessToken, UUID.randomUUID()));
     }
 
     /**
@@ -129,7 +192,20 @@ public class AccountsServiceTest {
      */
     @Test
     public void testGetCustomerAccountsForCustomerAccessTokenFinancialInstitutionIdPagingSpec() throws Exception {
-//TODO: Test goes here... 
+        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
+        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
+        IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
+        pagingSpec.setLimit(1L);
+        List<Account> accountsList = accountsService.getCustomerAccounts(generatedCustomerAccessToken, financialInstitution.getId(), pagingSpec);
+        Account account = accountsList.get(0);
+        assertTrue(financialInstitutionAccounts.stream().filter(financialInstitutionAccount -> financialInstitutionAccount.getReference().equals(account.getReference())).collect(Collectors.toList()).size() == 1);
+    }
+
+    @Test
+    public void testGetCustomerAccountsForCustomerAccessTokenUnknownFinancialInstitutionIdPagingSpec() throws Exception {
+        IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
+        pagingSpec.setLimit(1L);
+        assertThrows(ResourceNotFoundException.class, () -> accountsService.getCustomerAccounts(generatedCustomerAccessToken, UUID.randomUUID(), pagingSpec));
     }
 
     public static AccountInformationAccessRequest getAccountInformationAccessRequest() {
@@ -158,7 +234,11 @@ public class AccountsServiceTest {
      */
     @Test
     public void testGetAccountsInformationAccessAuthorizationsForCustomerAccessTokenFinancialInstitutionIdAccountInformationAccessRequestId() throws Exception {
-//TODO: Test goes here... 
+        //TODO CHECK WHY FAILING
+        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
+        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
+        List<AccountInformationAccessAuthorization> results = accountsService.getAccountsInformationAccessAuthorizations(generatedCustomerAccessToken, financialInstitution.getId(), accountInformationAccessRequest.getId());
+        results.size();
     }
 
     /**
@@ -166,7 +246,13 @@ public class AccountsServiceTest {
      */
     @Test
     public void testGetAccountsInformationAccessAuthorizationsForCustomerAccessTokenFinancialInstitutionIdAccountInformationAccessRequestIdPagingSpec() throws Exception {
-//TODO: Test goes here... 
+        //TODO check why failing
+        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
+        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
+        IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
+        pagingSpec.setLimit(1L);
+        List<AccountInformationAccessAuthorization> authorisationsList = accountsService.getAccountsInformationAccessAuthorizations(generatedCustomerAccessToken, financialInstitution.getId(), accountInformationAccessRequest.getId(), pagingSpec);
+        assertTrue(authorisationsList.size() == 1);
     }
 
     /**
@@ -174,7 +260,13 @@ public class AccountsServiceTest {
      */
     @Test
     public void testRevokeAccountsAccessAuthorization() throws Exception {
-//TODO: Test goes here... 
+        //TODO Check why failing
+        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
+        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
+        List<AccountInformationAccessAuthorization> authorizationsList = accountsService.getAccountsInformationAccessAuthorizations(generatedCustomerAccessToken, financialInstitution.getId(), accountInformationAccessRequest.getId());
+        accountsService.revokeAccountsAccessAuthorization(generatedCustomerAccessToken, financialInstitution.getId(), authorizationsList.get(0));
+        List<AccountInformationAccessAuthorization> updatedAuthorizationsList = accountsService.getAccountsInformationAccessAuthorizations(generatedCustomerAccessToken, financialInstitution.getId(), accountInformationAccessRequest.getId());
+        assertTrue(authorizationsList.size() == updatedAuthorizationsList.size() + 1);
     }
 
     private void authorizeAccounts(String redirectUrl) {
@@ -191,47 +283,50 @@ public class AccountsServiceTest {
 
         List<String> iBanList = financialInstitutionAccounts.stream().map(financialInstitutionAccount -> financialInstitutionAccount.getReference()).collect(Collectors.toList());
 
-        List <WebElement> uiAccountsList = driver.findElements(By.xpath("//input[@type='checkbox']"));
+        List<WebElement> uiAccountsList = driver.findElements(By.xpath("//input[@type='checkbox']"));
         uiAccountsList.stream()
                 .filter(webElement -> iBanList.contains(webElement.getAttribute("value")))
-                .forEach(webElement -> actions.moveToElement(webElement).click().build().perform());
+                .forEach(webElement -> {
+                    actions.moveToElement(webElement).click().build().perform();
+                    takeScreenshot(webElement);
+                })
+                ;
 
-        actions.moveToElement(driver.findElement(By.xpath("//button[text()='Select']"))).click().build().perform();
-        List<WebElement> elementsButton = driver.findElements(By.tagName("button"));
-        elementsButton.stream().forEach(webElement -> actions.moveToElement(webElement).click().build().perform());
-        //actions.moveToElement(driver.findElement(By.tagName("button"))).click().build().perform();
-    }
+        WebElement webElementSelectButton = driver.findElement(By.xpath("//button[text()='Select' and @type='submit']"));
+        if (webElementSelectButton.isEnabled() && webElementSelectButton.isDisplayed()) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", webElementSelectButton);
+        } else {
+            throw new RuntimeException("Accounts 'Select' button not visible or not displayed");
+        }
 
-    private boolean isElementPresent(By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
+        WebElement acceptAccountsElement = driver.findElement(By.xpath("//button[text()='Accept']"));
+        if (acceptAccountsElement.isEnabled() && acceptAccountsElement.isDisplayed()) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", acceptAccountsElement);
+            WebDriverWait wait = new WebDriverWait(driver, 30);
+            wait.until(ExpectedConditions.urlToBe(FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL));
+        } else {
+            throw new RuntimeException("Accounts selection final 'Accept' button not visible or not displayed");
         }
     }
 
-    private boolean isAlertPresent() {
-        try {
-            driver.switchTo().alert();
-            return true;
-        } catch (NoAlertPresentException e) {
-            return false;
-        }
-    }
+    private void takeScreenshot(WebElement webElement) {
+        TakesScreenshot screenshot = (TakesScreenshot) driver;
 
-    private String closeAlertAndGetItsText() {
+        Point point = webElement.getLocation();
+        int eleWidth = webElement.getSize().getWidth();
+        int eleHeight = webElement.getSize().getHeight();
+
+        File src = screenshot.getScreenshotAs(OutputType.FILE);
         try {
-            Alert alert = driver.switchTo().alert();
-            String alertText = alert.getText();
-            if (acceptNextAlert) {
-                alert.accept();
-            } else {
-                alert.dismiss();
-            }
-            return alertText;
-        } finally {
-            acceptNextAlert = true;
+            BufferedImage fullImg = ImageIO.read(src);
+            ImageIO.write(fullImg, "png", src);
+            org.apache.commons.io.FileUtils.copyFile(src, new File("/Users/daniel.deluca/Downloads/full.png"));
+            BufferedImage eleScreenshot = fullImg.getSubimage(point.getX(), point.getY(),
+                    eleWidth, eleHeight);
+            ImageIO.write(eleScreenshot, "png", src);
+            org.apache.commons.io.FileUtils.copyFile(src, new File("/Users/daniel.deluca/Downloads/"+webElement.getAttribute("value")+".png"));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

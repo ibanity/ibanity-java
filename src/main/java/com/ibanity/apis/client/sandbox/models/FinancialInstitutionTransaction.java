@@ -12,6 +12,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @JsonApiResource(type = "financialInstitutionTransaction", resourcePath = "financial-institution-transactions", pagingBehavior = IbanityPagingBehavior.class)
 public class FinancialInstitutionTransaction extends AbstractTransaction {
@@ -25,6 +26,13 @@ public class FinancialInstitutionTransaction extends AbstractTransaction {
     Instant updatedAt = null;
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
     Instant deletedAt = null;
+
+    public FinancialInstitutionTransaction(UUID id) {
+        super(id);
+    }
+
+    public FinancialInstitutionTransaction() {
+    }
 
     public Instant getCreatedAt() {
         return createdAt;
@@ -56,6 +64,10 @@ public class FinancialInstitutionTransaction extends AbstractTransaction {
 
     public void setFinancialInstitutionAccount(FinancialInstitutionAccount financialInstitutionAccount) {
         this.financialInstitutionAccount = financialInstitutionAccount;
+    }
+
+    public void setFinancialInstitutionAccountId(UUID financialInstitutionAccountId){
+        this.financialInstitutionAccount = new FinancialInstitutionAccount(financialInstitutionAccountId);
     }
 
     @Override
