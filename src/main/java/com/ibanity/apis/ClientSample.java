@@ -52,7 +52,7 @@ public class ClientSample {
 
 
         LOGGER.info("Start : Customer Access Token Request");
-        CustomerAccessToken customerAccessTokenRequest = new CustomerAccessToken(UUID.randomUUID());
+        CustomerAccessToken customerAccessTokenRequest = new CustomerAccessToken();
         customerAccessTokenRequest.setApplicationCustomerReference("application_customer_reference");
         CustomerAccessToken generatedCustomerAccessToken = customerAccessTokensService.createCustomerAccessToken(customerAccessTokenRequest);
         LOGGER.info(generatedCustomerAccessToken);

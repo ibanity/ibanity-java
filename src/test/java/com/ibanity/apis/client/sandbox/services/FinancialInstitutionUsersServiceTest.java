@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.sandbox.services;
 
+import com.ibanity.apis.client.AbstractServiceTest;
 import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
@@ -8,7 +9,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version 1.0
  * @since <pre>Jun 13, 2018</pre>
  */
-public class FinancialInstitutionUsersServiceTest {
+public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
 
     private static final FinancialInstitutionUsersService financialInstitutionUsersService = new FinancialInstitutionUsersServiceImpl();
 
@@ -126,18 +126,4 @@ public class FinancialInstitutionUsersServiceTest {
     public void testDeleteUnkownFinancialInstitutionUser() throws Exception {
         assertThrows(ResourceNotFoundException.class, () -> financialInstitutionUsersService.deleteFinancialInstitutionUser(UUID.randomUUID()));
     }
-
-    public static FinancialInstitutionUser createFinancialInstitutionUser() {
-        Instant now = Instant.now();
-        FinancialInstitutionUser financialInstitutionUser = new FinancialInstitutionUser();
-        financialInstitutionUser.setFirstName("FirstName-"+now);
-        financialInstitutionUser.setLastName("LastName-"+now);
-        financialInstitutionUser.setLogin("Login-"+now);
-        financialInstitutionUser.setPassword("Password-"+now);
-        return financialInstitutionUsersService.createFinancialInstitutionUser(financialInstitutionUser);
-    }
-
-    public static void deleteFinancialInstitutionUser(UUID financialInstitutionUserID) throws ResourceNotFoundException {
-        financialInstitutionUsersService.deleteFinancialInstitutionUser(financialInstitutionUserID);
-    }
-} 
+}

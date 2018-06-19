@@ -1,13 +1,12 @@
 package com.ibanity.apis.client.sandbox.services;
 
+import com.ibanity.apis.client.AbstractServiceTest;
 import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
 import com.ibanity.apis.client.models.FinancialInstitution;
-import com.ibanity.apis.client.sandbox.services.impl.SandboxFinancialInstitutionsServiceImpl;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.time.Instant;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -20,20 +19,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @version 1.0
  * @since <pre>Jun 13, 2018</pre>
  */
-public class SandboxFinancialInstitutionsServiceTest {
-
-    private static final SandboxFinancialInstitutionsService sandboxFinancialInstitutionsService = new SandboxFinancialInstitutionsServiceImpl();
-    private static Instant now;
-
-    private static final String TEST_CASE = SandboxFinancialInstitutionsServiceTest.class.getSimpleName();
-    private static String name;
+public class SandboxFinancialInstitutionsServiceTest extends AbstractServiceTest {
 
     @BeforeAll
-    public void beforeAll()  {
+    public static void beforeAll()  {
     }
 
     @AfterAll
-    public void afterAll()  {
+    public static void afterAll()  {
     }
 
     /**
@@ -47,19 +40,6 @@ public class SandboxFinancialInstitutionsServiceTest {
         assertTrue(newFinancialInstitution.getSandbox());
         sandboxFinancialInstitutionsService.deleteFinancialInstitution(newFinancialInstitution.getId());
 
-    }
-
-    public static FinancialInstitution createFinancialInstitution() {
-        now = Instant.now();
-        name = TEST_CASE + "-" + now.toString();
-        FinancialInstitution newFinancialInstitution = new FinancialInstitution();
-        newFinancialInstitution.setSandbox(Boolean.TRUE);
-        newFinancialInstitution.setName(name);
-        return sandboxFinancialInstitutionsService.createFinancialInstitution(newFinancialInstitution);
-    }
-
-    public static void deleteFinancialInstitution(UUID financialInstitutionId) throws ResourceNotFoundException {
-        sandboxFinancialInstitutionsService.deleteFinancialInstitution(financialInstitutionId);
     }
 
     /**

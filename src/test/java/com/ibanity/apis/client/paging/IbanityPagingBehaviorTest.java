@@ -20,8 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class IbanityPagingBehaviorTest {
 
-    IbanityPagingSpec iBanityPagingSpec;
-    IbanityPagingBehavior iBanityPagingBehavior;
+    private static IbanityPagingSpec iBanityPagingSpec;
+    private static IbanityPagingBehavior iBanityPagingBehavior;
 
     private static final String AFTER = "after";
     private static final String BEFORE = "before";
@@ -29,14 +29,14 @@ public class IbanityPagingBehaviorTest {
     private static final String LIMIT_VALUE = "10";
 
     @BeforeAll
-    public void beforeAll() throws Exception {
+    public static void beforeAll() throws Exception {
         iBanityPagingBehavior = new IbanityPagingBehavior();
         iBanityPagingSpec = new IbanityPagingSpec();
         iBanityPagingSpec.setLimit(Long.valueOf(LIMIT_VALUE));
     }
 
     @AfterAll
-    public void afterAll() throws Exception {
+    public static void afterAll() throws Exception {
     }
 
     /**

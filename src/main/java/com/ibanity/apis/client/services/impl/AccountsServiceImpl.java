@@ -1,6 +1,5 @@
 package com.ibanity.apis.client.services.impl;
 
-import com.ibanity.apis.client.exceptions.IbanityException;
 import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.AccountInformationAccessAuthorization;
@@ -71,7 +70,7 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
         querySpec.setPagingSpec(pagingSpec);
         try {
             return findAll(querySpec, accountsFinancialInstitutionRepo);
-        } catch (IbanityException e) {
+        } catch (Exception e) {
             String errorMessage = "Resources with provided ID not found";
             LOGGER.debug(errorMessage);
             throw new ResourceNotFoundException(errorMessage, e);

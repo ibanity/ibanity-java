@@ -15,15 +15,11 @@ import io.crnk.core.boot.CrnkProperties;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryV2;
 import io.crnk.core.resource.list.ResourceList;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.UUID;
 
 public abstract class AbstractServiceImpl {
-    private static final Logger LOGGER = LogManager.getLogger(AbstractServiceImpl.class);
-
     private static final String IBANITY_API_ENDPOINT = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "api.endpoint");
 
     private static HashMap<String,CrnkClient> apiClients = new HashMap<>();
@@ -54,7 +50,6 @@ public abstract class AbstractServiceImpl {
         try {
             return repository.findAll(querySpec);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
             throw new IbanityException(e.getMessage(), e);
         }
     }

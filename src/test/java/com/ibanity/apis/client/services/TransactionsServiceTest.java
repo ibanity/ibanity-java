@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.services;
 
+import com.ibanity.apis.client.AbstractServiceTest;
 import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.Transaction;
@@ -9,8 +10,8 @@ import com.ibanity.apis.client.sandbox.models.FinancialInstitutionTransaction;
 import com.ibanity.apis.client.sandbox.services.FinancialInstitutionTransactionsServiceTest;
 import com.ibanity.apis.client.services.impl.AccountsServiceImpl;
 import com.ibanity.apis.client.services.impl.TransactionsServiceImpl;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -27,41 +28,42 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @version 1.0
  * @since <pre>Jun 19, 2018</pre>
  */
-public class TransactionsServiceTest {
+public class TransactionsServiceTest extends AbstractServiceTest {
 
-    private static final TransactionsService transactionsService = new TransactionsServiceImpl();
-    private static final AccountsService accountsService = new AccountsServiceImpl();
+    private final TransactionsService transactionsService = new TransactionsServiceImpl();
+    private final AccountsService accountsService = new AccountsServiceImpl();
 
-    private static List<FinancialInstitutionTransaction> financialInstitutionTransactions = new ArrayList<>();
+    private List<FinancialInstitutionTransaction> financialInstitutionTransactions = new ArrayList<>();
 
 
-    @BeforeAll
-    public static void beforeAll() throws Exception {
-        AccountsServiceTest.beforeAll();
-        for (FinancialInstitutionAccount financialInstitutionAccount : AccountsServiceTest.financialInstitutionAccounts){
+    @BeforeEach
+    public void beforeEach() throws Exception {
+        initSelenium();
+        initPublicAPIEnvironment();
+        for (FinancialInstitutionAccount financialInstitutionAccount : financialInstitutionAccounts){
             for (int index = 0; index < 5; index++) {
                 financialInstitutionTransactions.add(
                         FinancialInstitutionTransactionsServiceTest.createFinancialInstitutionTransaction(
-                                AccountsServiceTest.financialInstitutionUser.getId()
+                                financialInstitutionUser.getId()
                                 ,financialInstitutionAccount
                         )
                 );
             }
         }
-
     }
 
-    @AfterAll
-    public static void afterAll() throws Exception {
+    @AfterEach
+    public void afterEach() throws Exception {
         for (FinancialInstitutionTransaction financialInstitutionTransaction : financialInstitutionTransactions) {
             FinancialInstitutionTransactionsServiceTest.deleteFinancialInstitutionTransaction(
-                    AccountsServiceTest.financialInstitution.getId()
-                    , AccountsServiceTest.financialInstitutionUser.getId()
+                    financialInstitution.getId()
+                    , financialInstitutionUser.getId()
                     , financialInstitutionTransaction.getFinancialInstitutionAccount().getId()
                     , financialInstitutionTransaction.getId()
             );
         }
-        AccountsServiceTest.afterAll();
+        exitSelenium();
+        cleanPublicAPIEnvironment();
     }
 
     /**
@@ -69,10 +71,10 @@ public class TransactionsServiceTest {
      */
     @Test
     public void testGetAccountTransactionsForCustomerAccessTokenFinancialInstitutionIdAccountId() throws Exception {
-        for (Account account : accountsService.getCustomerAccounts(AccountsServiceTest.generatedCustomerAccessToken, AccountsServiceTest.financialInstitution.getId())){
+        for (Account account : accountsService.getCustomerAccounts(generatedCustomerAccessToken, financialInstitution.getId())){
             List<Transaction> transactionsList = transactionsService.getAccountTransactions(
-                    AccountsServiceTest.generatedCustomerAccessToken
-                    , AccountsServiceTest.financialInstitution.getId()
+                    generatedCustomerAccessToken
+                    , financialInstitution.getId()
                     , account.getId()
             );
             assertTrue(transactionsList.size() == financialInstitutionTransactions.size());
@@ -81,9 +83,9 @@ public class TransactionsServiceTest {
 
     @Test
     public void testGetAccountTransactionsForCustomerAccessTokenAndWrongFinancialInstitutionIdAccountId() throws Exception {
-        for (Account account : accountsService.getCustomerAccounts(AccountsServiceTest.generatedCustomerAccessToken, AccountsServiceTest.financialInstitution.getId())){
+        for (Account account : accountsService.getCustomerAccounts(generatedCustomerAccessToken, financialInstitution.getId())){
             assertThrows(ResourceNotFoundException.class, () -> transactionsService.getAccountTransactions(
-                    AccountsServiceTest.generatedCustomerAccessToken
+                    generatedCustomerAccessToken
                     , UUID.randomUUID()
                     , UUID.randomUUID()
             ));
@@ -97,10 +99,10 @@ public class TransactionsServiceTest {
     public void testGetAccountTransactionsForCustomerAccessTokenFinancialInstitutionIdAccountIdPagingSpec() throws Exception {
         IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
         pagingSpec.setLimit(1L);
-        for (Account account : accountsService.getCustomerAccounts(AccountsServiceTest.generatedCustomerAccessToken, AccountsServiceTest.financialInstitution.getId())){
+        for (Account account : accountsService.getCustomerAccounts(generatedCustomerAccessToken, financialInstitution.getId())){
             List<Transaction> transactionsList = transactionsService.getAccountTransactions(
-                    AccountsServiceTest.generatedCustomerAccessToken
-                    , AccountsServiceTest.financialInstitution.getId()
+                    generatedCustomerAccessToken
+                    , financialInstitution.getId()
                     , account.getId()
                     , pagingSpec
             );
@@ -113,14 +115,14 @@ public class TransactionsServiceTest {
      */
     @Test
     public void testGetAccountTransaction() throws Exception {
-        for (Account account : accountsService.getCustomerAccounts(AccountsServiceTest.generatedCustomerAccessToken, AccountsServiceTest.financialInstitution.getId())){
+        for (Account account : accountsService.getCustomerAccounts(generatedCustomerAccessToken, financialInstitution.getId())){
             List<Transaction> transactionsList = transactionsService.getAccountTransactions(
-                    AccountsServiceTest.generatedCustomerAccessToken
-                    , AccountsServiceTest.financialInstitution.getId()
+                    generatedCustomerAccessToken
+                    , financialInstitution.getId()
                     , account.getId()
             );
             for (Transaction transaction : transactionsList){
-                Transaction transactionReceived = transactionsService.getAccountTransaction(AccountsServiceTest.generatedCustomerAccessToken, AccountsServiceTest.financialInstitution.getId(), transaction.getAccount().getId(), transaction.getId());
+                Transaction transactionReceived = transactionsService.getAccountTransaction(generatedCustomerAccessToken, financialInstitution.getId(), transaction.getAccount().getId(), transaction.getId());
                 assertTrue(transactionReceived.getAccount().equals(transaction.getAccount()));
                 assertTrue(transactionReceived.getAmount().equals(transaction.getAmount()));
                 assertTrue(transactionReceived.getCounterpartName().equals(transaction.getCounterpartName()));
@@ -137,14 +139,14 @@ public class TransactionsServiceTest {
     }
     @Test
     public void testGetAccountTransactionWithWrongId() throws Exception {
-        for (Account account : accountsService.getCustomerAccounts(AccountsServiceTest.generatedCustomerAccessToken, AccountsServiceTest.financialInstitution.getId())){
+        for (Account account : accountsService.getCustomerAccounts(generatedCustomerAccessToken, financialInstitution.getId())){
             List<Transaction> transactionsList = transactionsService.getAccountTransactions(
-                    AccountsServiceTest.generatedCustomerAccessToken
-                    , AccountsServiceTest.financialInstitution.getId()
+                    generatedCustomerAccessToken
+                    , financialInstitution.getId()
                     , account.getId()
             );
             for (Transaction transaction : transactionsList){
-                assertThrows(ResourceNotFoundException.class, () -> transactionsService.getAccountTransaction(AccountsServiceTest.generatedCustomerAccessToken, AccountsServiceTest.financialInstitution.getId(), transaction.getAccount().getId(), UUID.randomUUID()));
+                assertThrows(ResourceNotFoundException.class, () -> transactionsService.getAccountTransaction(generatedCustomerAccessToken, financialInstitution.getId(), transaction.getAccount().getId(), UUID.randomUUID()));
             }
         }
     }
