@@ -82,12 +82,37 @@ public class TransactionsServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    public void testGetAccountTransactionsForCustomerAccessTokenFinancialInstitutionIdAccountIdDefaultPagingSpec() throws Exception {
+        for (Account account : accountsService.getCustomerAccounts(generatedCustomerAccessToken, financialInstitution.getId())){
+            List<Transaction> transactionsList = transactionsService.getAccountTransactions(
+                    generatedCustomerAccessToken
+                    , financialInstitution.getId()
+                    , account.getId()
+                    , new IbanityPagingSpec()
+            );
+            assertTrue(transactionsList.size() == financialInstitutionTransactions.size());
+        }
+    }
+
+    @Test
     public void testGetAccountTransactionsForCustomerAccessTokenAndWrongFinancialInstitutionIdAccountId() throws Exception {
         for (Account account : accountsService.getCustomerAccounts(generatedCustomerAccessToken, financialInstitution.getId())){
             assertThrows(ResourceNotFoundException.class, () -> transactionsService.getAccountTransactions(
                     generatedCustomerAccessToken
                     , UUID.randomUUID()
                     , UUID.randomUUID()
+            ));
+        }
+    }
+
+    @Test
+    public void testGetAccountTransactionsForCustomerAccessTokenAndWrongFinancialInstitutionIdAccountIdPaginSpec() throws Exception {
+        for (Account account : accountsService.getCustomerAccounts(generatedCustomerAccessToken, financialInstitution.getId())){
+            assertThrows(ResourceNotFoundException.class, () -> transactionsService.getAccountTransactions(
+                    generatedCustomerAccessToken
+                    , UUID.randomUUID()
+                    , UUID.randomUUID()
+                    , new IbanityPagingSpec()
             ));
         }
     }
@@ -139,15 +164,6 @@ public class TransactionsServiceTest extends AbstractServiceTest {
     }
     @Test
     public void testGetAccountTransactionWithWrongId() throws Exception {
-        for (Account account : accountsService.getCustomerAccounts(generatedCustomerAccessToken, financialInstitution.getId())){
-            List<Transaction> transactionsList = transactionsService.getAccountTransactions(
-                    generatedCustomerAccessToken
-                    , financialInstitution.getId()
-                    , account.getId()
-            );
-            for (Transaction transaction : transactionsList){
-                assertThrows(ResourceNotFoundException.class, () -> transactionsService.getAccountTransaction(generatedCustomerAccessToken, financialInstitution.getId(), transaction.getAccount().getId(), UUID.randomUUID()));
-            }
-        }
+        assertThrows(ResourceNotFoundException.class, () -> transactionsService.getAccountTransaction(generatedCustomerAccessToken, UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()));
     }
 }

@@ -75,6 +75,14 @@ public class AccountsServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    public void testGetCustomerAccountsCustomerAccessTokenDefaultPagingSpec() throws Exception {
+        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
+        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
+        List<Account> accountsList = accountsService.getCustomerAccounts(generatedCustomerAccessToken);
+        assertTrue(financialInstitutionAccounts.size() == accountsList.size());
+    }
+
+    @Test
     public void testGetCustomerAccountsCustomerAccessTokenNoAccountsAuthorized() throws Exception {
         IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
         pagingSpec.setLimit(50L);

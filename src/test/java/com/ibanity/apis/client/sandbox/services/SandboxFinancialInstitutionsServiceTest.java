@@ -66,6 +66,11 @@ public class SandboxFinancialInstitutionsServiceTest extends AbstractServiceTest
         assertThrows(ResourceNotFoundException.class, () -> sandboxFinancialInstitutionsService.getFinancialInstitution(newFinancialInstitution.getId()));
     }
 
+    @Test
+    public void testDeleteFinancialInstitutionWithWrongId() throws Exception {
+        assertThrows(ResourceNotFoundException.class, () -> sandboxFinancialInstitutionsService.deleteFinancialInstitution(UUID.randomUUID()));
+    }
+
     /**
      * Method: getFinancialInstitution(UUID financialInstitutionId)
      */
