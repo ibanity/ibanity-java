@@ -51,6 +51,11 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
         deleteFinancialInstitution(financialInstitution.getId());
     }
 
+    @Test
+    public void testGetFinancialInstitutionAccountWithWrongIDs() throws Exception {
+        assertThrows(ResourceNotFoundException.class, () -> financialInstitutionAccountsService.getFinancialInstitutionAccount(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()));
+    }
+
     /**
      * Method: getFinancialInstitutionUserAccounts(UUID financialInstitutionId, UUID financialInstitutionUserId)
      */
@@ -62,12 +67,17 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
         FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId());
 
         List<FinancialInstitutionAccount> financialInstitutionAccounts = financialInstitutionAccountsService.getFinancialInstitutionUserAccounts(financialInstitution.getId(), financialInstitutionUser.getId());
-        
+
         assertTrue(financialInstitutionAccounts.size() > 0);
 
         financialInstitutionAccountsService.deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
         deleteFinancialInstitutionUser(financialInstitutionUser.getId());
         deleteFinancialInstitution(financialInstitution.getId());
+    }
+    @Test
+
+    public void testGetFinancialInstitutionUserAccountsWithWrongIDs() throws Exception {
+        assertThrows(ResourceNotFoundException.class, () -> financialInstitutionAccountsService.getFinancialInstitutionUserAccounts(UUID.randomUUID(), UUID.randomUUID()));
     }
 
     /**
