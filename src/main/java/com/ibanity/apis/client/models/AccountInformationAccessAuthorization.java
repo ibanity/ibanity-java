@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.time.Instant;
 import java.util.UUID;
 
-@JsonApiResource(type = "account-information-access-authorizations", pagingBehavior = IbanityPagingBehavior.class)
+@JsonApiResource(type = "account-information-access-authorizations", resourcePath = "authorizations", pagingBehavior = IbanityPagingBehavior.class)
 public class AccountInformationAccessAuthorization extends AbstractModel{
     private String accountReference;
     private Instant revokedAt;

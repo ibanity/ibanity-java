@@ -70,6 +70,10 @@ public class AccountInformationAccessRequest extends AbstractModel{
         this.financialInstitution = financialInstitution;
     }
 
+    public void setFinancialInstitutionId(UUID financialInstitutionId){
+        this.financialInstitution = new FinancialInstitution(financialInstitutionId);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

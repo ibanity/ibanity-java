@@ -1,15 +1,15 @@
 package com.ibanity.apis.client.paging;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * IBanityPagingBehavior Tester.
@@ -20,23 +20,23 @@ import static org.junit.Assert.assertTrue;
  */
 public class IbanityPagingBehaviorTest {
 
-    IbanityPagingSpec iBanityPagingSpec;
-    IbanityPagingBehavior iBanityPagingBehavior;
+    private static IbanityPagingSpec iBanityPagingSpec;
+    private static IbanityPagingBehavior iBanityPagingBehavior;
 
     private static final String AFTER = "after";
     private static final String BEFORE = "before";
     private static final String LIMIT = "limit";
     private static final String LIMIT_VALUE = "10";
 
-    @Before
-    public void before() throws Exception {
+    @BeforeAll
+    public static void beforeAll() throws Exception {
         iBanityPagingBehavior = new IbanityPagingBehavior();
         iBanityPagingSpec = new IbanityPagingSpec();
         iBanityPagingSpec.setLimit(Long.valueOf(LIMIT_VALUE));
     }
 
-    @After
-    public void after() throws Exception {
+    @AfterAll
+    public static void afterAll() throws Exception {
     }
 
     /**

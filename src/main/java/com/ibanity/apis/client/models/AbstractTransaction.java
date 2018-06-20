@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.time.Instant;
+import java.util.UUID;
 
 public abstract class AbstractTransaction extends AbstractModel{
 
@@ -24,6 +25,10 @@ public abstract class AbstractTransaction extends AbstractModel{
     private String counterpartReference;
 
     public AbstractTransaction() {
+    }
+
+    public AbstractTransaction(UUID id) {
+        super(id);
     }
 
     public Double getAmount() {

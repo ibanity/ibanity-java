@@ -58,17 +58,23 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
     }
 
     @Override
-    public ResourceList<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, UUID financialInstitutionId) {
+    public ResourceList<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, UUID financialInstitutionId) throws ResourceNotFoundException {
         return getCustomerAccounts(customerAccessToken, financialInstitutionId, new IbanityPagingSpec());
     }
 
     @Override
-    public ResourceList<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, IbanityPagingSpec pagingSpec) {
+    public ResourceList<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, IbanityPagingSpec pagingSpec) throws ResourceNotFoundException {
         String correctPath = ACCOUNTS_FI_REQUEST_PATH.replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString());
         ResourceRepositoryV2<Account, UUID> accountsFinancialInstitutionRepo = getApiClient(correctPath, customerAccessToken).getRepositoryForType(Account.class);
         QuerySpec querySpec = new QuerySpec(Account.class);
         querySpec.setPagingSpec(pagingSpec);
-        return findAll(querySpec, accountsFinancialInstitutionRepo);
+        try {
+            return findAll(querySpec, accountsFinancialInstitutionRepo);
+        } catch (Exception e) {
+            String errorMessage = "Resources with provided ID not found";
+            LOGGER.debug(errorMessage);
+            throw new ResourceNotFoundException(errorMessage, e);
+        }
     }
 
     @Override
@@ -92,7 +98,7 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
         } catch (io.crnk.core.exception.ResourceNotFoundException e) {
             String errorMessage = "Resources with provided IDs not found";
             LOGGER.debug(errorMessage);
-            throw new ResourceNotFoundException(errorMessage);
+            throw new ResourceNotFoundException(errorMessage, e);
         }
     }
 

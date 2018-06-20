@@ -37,8 +37,8 @@ public class ClientSample {
 
     private static final String LOGGER_LINE_SEPARATOR = "#######################################";
 
-    private FinancialInstitutionsService financialInstitutionsService = new FinancialInstitutionsServiceImpl();
     private CustomerAccessTokensService customerAccessTokensService = new CustomerAccessTokensServiceImpl();
+    private FinancialInstitutionsService financialInstitutionsService = new FinancialInstitutionsServiceImpl();
     private AccountsService accountsService = new AccountsServiceImpl();
     private TransactionsService transactionsService = new TransactionsServiceImpl();
     private PaymentsService paymentsService = new PaymentsServiceImpl();
@@ -49,6 +49,14 @@ public class ClientSample {
     }
 
     public void startFlow() throws ResourceNotFoundException {
+
+
+        LOGGER.info("Start : Customer Access Token Request");
+        CustomerAccessToken customerAccessTokenRequest = new CustomerAccessToken();
+        customerAccessTokenRequest.setApplicationCustomerReference("application_customer_reference");
+        CustomerAccessToken generatedCustomerAccessToken = customerAccessTokensService.createCustomerAccessToken(customerAccessTokenRequest);
+        LOGGER.info(generatedCustomerAccessToken);
+        LOGGER.info("End : Customer Access Token Request");
 
         LOGGER.info("Start : List of Financial Institutions: starting with 1 FI");
 
@@ -68,14 +76,6 @@ public class ClientSample {
             LOGGER.info(financialInstitution.toString());}
         );
         LOGGER.info("END : List of Financial Institutions: after:");
-
-
-        LOGGER.info("Start : Customer Access Token Request");
-        CustomerAccessToken customerAccessTokenRequest = new CustomerAccessToken(UUID.randomUUID());
-        customerAccessTokenRequest.setApplicationCustomerReference("application_customer_reference");
-        CustomerAccessToken generatedCustomerAccessToken = customerAccessTokensService.createCustomerAccessToken(customerAccessTokenRequest);
-        LOGGER.info(generatedCustomerAccessToken);
-        LOGGER.info("End : Customer Access Token Request");
 
         LOGGER.info("Start : Accounts Information Access Request");
         AccountInformationAccessRequest accountInformationAccessRequest = new AccountInformationAccessRequest();

@@ -1,20 +1,19 @@
 package com.ibanity.apis.client.sandbox.services;
 
+import com.ibanity.apis.client.AbstractServiceTest;
 import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
-import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionAccountsServiceImpl;
-import org.iban4j.CountryCode;
-import org.iban4j.Iban;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.UUID;
 
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * FinancialInstitutionAccountsServiceImpl Tester.
@@ -23,15 +22,13 @@ import static junit.framework.TestCase.assertTrue;
  * @version 1.0
  * @since <pre>Jun 13, 2018</pre>
  */
-public class FinancialInstitutionAccountsServiceTest {
+public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest {
 
-    private static final FinancialInstitutionAccountsService financialInstitutionAccountsService = new FinancialInstitutionAccountsServiceImpl();
-
-    @Before
+    @BeforeEach
     public void before() {
     }
 
-    @After
+    @AfterEach
     public void after() {
     }
 
@@ -40,8 +37,8 @@ public class FinancialInstitutionAccountsServiceTest {
      */
     @Test
     public void testGetFinancialInstitutionAccount() throws Exception {
-        FinancialInstitution financialInstitution = SandboxFinancialInstitutionsServiceTest.createFinancialInstitution();
-        FinancialInstitutionUser financialInstitutionUser = FinancialInstitutionUsersServiceTest.createFinancialInstitutionUser();
+        FinancialInstitution financialInstitution = createFinancialInstitution();
+        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser();
 
         FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId());
 
@@ -50,8 +47,8 @@ public class FinancialInstitutionAccountsServiceTest {
         assertTrue(financialInstitutionAccountGet.equals(financialInstitutionAccount));
 
         financialInstitutionAccountsService.deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
-        FinancialInstitutionUsersServiceTest.deleteFinancialInstitutionUser(financialInstitutionUser.getId());
-        SandboxFinancialInstitutionsServiceTest.deleteFinancialInstitution(financialInstitution.getId());
+        deleteFinancialInstitutionUser(financialInstitutionUser.getId());
+        deleteFinancialInstitution(financialInstitution.getId());
     }
 
     /**
@@ -59,8 +56,8 @@ public class FinancialInstitutionAccountsServiceTest {
      */
     @Test
     public void testGetFinancialInstitutionUserAccounts() throws Exception {
-        FinancialInstitution financialInstitution = SandboxFinancialInstitutionsServiceTest.createFinancialInstitution();
-        FinancialInstitutionUser financialInstitutionUser = FinancialInstitutionUsersServiceTest.createFinancialInstitutionUser();
+        FinancialInstitution financialInstitution = createFinancialInstitution();
+        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser();
 
         FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId());
 
@@ -69,8 +66,8 @@ public class FinancialInstitutionAccountsServiceTest {
         assertTrue(financialInstitutionAccounts.size() > 0);
 
         financialInstitutionAccountsService.deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
-        FinancialInstitutionUsersServiceTest.deleteFinancialInstitutionUser(financialInstitutionUser.getId());
-        SandboxFinancialInstitutionsServiceTest.deleteFinancialInstitution(financialInstitution.getId());
+        deleteFinancialInstitutionUser(financialInstitutionUser.getId());
+        deleteFinancialInstitution(financialInstitution.getId());
     }
 
     /**
@@ -78,8 +75,8 @@ public class FinancialInstitutionAccountsServiceTest {
      */
     @Test
     public void testCreateFinancialInstitutionAccount() throws Exception {
-        FinancialInstitution financialInstitution = SandboxFinancialInstitutionsServiceTest.createFinancialInstitution();
-        FinancialInstitutionUser financialInstitutionUser = FinancialInstitutionUsersServiceTest.createFinancialInstitutionUser();
+        FinancialInstitution financialInstitution = createFinancialInstitution();
+        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser();
 
         FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId());
         FinancialInstitutionAccount financialInstitutionGet = financialInstitutionAccountsService.getFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
@@ -92,18 +89,18 @@ public class FinancialInstitutionAccountsServiceTest {
         assertTrue(financialInstitutionAccount.getFinancialInstitution().getId().equals(financialInstitution.getId()));
 
         financialInstitutionAccountsService.deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
-        FinancialInstitutionUsersServiceTest.deleteFinancialInstitutionUser(financialInstitutionUser.getId());
-        SandboxFinancialInstitutionsServiceTest.deleteFinancialInstitution(financialInstitution.getId());
+        deleteFinancialInstitutionUser(financialInstitutionUser.getId());
+        deleteFinancialInstitution(financialInstitution.getId());
     }
 
     /**
      * Method: createFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, FinancialInstitutionAccount financialInstitutionAccount)
      */
-    @Test (expected = ResourceNotFoundException.class)
+    @Test
     public void testCreateFinancialInstitutionAccountWithWrongIDs() throws Exception {
         FinancialInstitution financialInstitution = new FinancialInstitution();
         financialInstitution.setId(UUID.randomUUID());
-        createFinancialInstitutionAccount(financialInstitution, UUID.randomUUID());
+        assertThrows(ResourceNotFoundException.class, () -> createFinancialInstitutionAccount(financialInstitution, UUID.randomUUID()));
     }
 
     /**
@@ -111,36 +108,21 @@ public class FinancialInstitutionAccountsServiceTest {
      */
     @Test
     public void testDeleteFinancialInstitutionAccount() throws Exception {
-        FinancialInstitution financialInstitution = SandboxFinancialInstitutionsServiceTest.createFinancialInstitution();
-        FinancialInstitutionUser financialInstitutionUser = FinancialInstitutionUsersServiceTest.createFinancialInstitutionUser();
+        FinancialInstitution financialInstitution = createFinancialInstitution();
+        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser();
 
         FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId());
 
         financialInstitutionAccountsService.deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
-        FinancialInstitutionUsersServiceTest.deleteFinancialInstitutionUser(financialInstitutionUser.getId());
-        SandboxFinancialInstitutionsServiceTest.deleteFinancialInstitution(financialInstitution.getId());
+        deleteFinancialInstitutionUser(financialInstitutionUser.getId());
+        deleteFinancialInstitution(financialInstitution.getId());
     }
 
     /**
      * Method: deleteFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId)
      */
-    @Test (expected = ResourceNotFoundException.class)
+    @Test
     public void testDeleteFinancialInstitutionAccountWithWrongIDs() throws Exception {
-        financialInstitutionAccountsService.deleteFinancialInstitutionAccount(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
+        assertThrows(ResourceNotFoundException.class, () -> financialInstitutionAccountsService.deleteFinancialInstitutionAccount(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()));
     }
-
-    public static void deleteFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) throws ResourceNotFoundException {
-        financialInstitutionAccountsService.deleteFinancialInstitutionAccount(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId);
-    }
-
-    public static FinancialInstitutionAccount createFinancialInstitutionAccount(FinancialInstitution financialInstitution, UUID financialInstitutionUser) throws ResourceNotFoundException {
-        FinancialInstitutionAccount financialInstitutionAccount = new FinancialInstitutionAccount();
-        financialInstitutionAccount.setSubType("checking");
-        financialInstitutionAccount.setReference(Iban.random(CountryCode.BE).toString());
-        financialInstitutionAccount.setReferenceType("IBAN");
-        financialInstitutionAccount.setDescription("Checking Account");
-        financialInstitutionAccount.setCurrency("EUR");
-        financialInstitutionAccount.setFinancialInstitution(financialInstitution);
-        return financialInstitutionAccountsService.createFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser, financialInstitutionAccount);
-    }
-} 
+}

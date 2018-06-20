@@ -32,12 +32,20 @@ public abstract class AbstractAccount extends AbstractModel{
         this.financialInstitution = new FinancialInstitution(financialInstitutionId);
     }
 
+    public AbstractAccount(UUID id) {
+        super(id);
+    }
+
     public FinancialInstitution getFinancialInstitution() {
         return financialInstitution;
     }
 
     public void setFinancialInstitution(FinancialInstitution financialInstitution) {
         this.financialInstitution = financialInstitution;
+    }
+
+    public void setFinancialInstitutionId(UUID financialInstitutionId){
+        this.financialInstitution = new FinancialInstitution(financialInstitutionId);
     }
 
     public String getSubType() {

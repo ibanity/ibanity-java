@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.sandbox.services;
 
+import com.ibanity.apis.client.AbstractServiceTest;
 import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
@@ -9,9 +10,9 @@ import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionTransac
 import org.apache.commons.math3.util.Precision;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -20,7 +21,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * FinancialInstitutionTransactionsServiceImpl Tester.
@@ -29,15 +31,15 @@ import static org.junit.Assert.assertTrue;
  * @version 1.0
  * @since <pre>Jun 13, 2018</pre>
  */
-public class FinancialInstitutionTransactionsServiceTest {
+public class FinancialInstitutionTransactionsServiceTest extends AbstractServiceTest {
 
     private static final FinancialInstitutionTransactionsService financialInstitutionTransactionsService = new FinancialInstitutionTransactionsServiceImpl();
 
-    @Before
+    @BeforeEach
     public void before() {
     }
 
-    @After
+    @AfterEach
     public void after() {
     }
 
@@ -46,9 +48,9 @@ public class FinancialInstitutionTransactionsServiceTest {
      */
     @Test
     public void testGetFinancialInstitutionTransaction() throws Exception {
-        FinancialInstitution financialInstitution = SandboxFinancialInstitutionsServiceTest.createFinancialInstitution();
-        FinancialInstitutionUser financialInstitutionUser = FinancialInstitutionUsersServiceTest.createFinancialInstitutionUser();
-        FinancialInstitutionAccount financialInstitutionAccount = FinancialInstitutionAccountsServiceTest.createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId());
+        FinancialInstitution financialInstitution = createFinancialInstitution();
+        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser();
+        FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId());
         FinancialInstitutionTransaction financialInstitutionTransaction = createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount);
         FinancialInstitutionTransaction financialInstitutionTransactionGet = financialInstitutionTransactionsService.getFinancialInstitutionTransaction(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId(), financialInstitutionTransaction.getId());
         assertTrue(financialInstitutionTransactionGet.getCounterpartName().equals(financialInstitutionTransaction.getCounterpartName()));
@@ -61,18 +63,18 @@ public class FinancialInstitutionTransactionsServiceTest {
         assertTrue(financialInstitutionTransactionGet.getExecutionDate().equals(financialInstitutionTransaction.getExecutionDate()));
         assertTrue(financialInstitutionTransactionGet.getValueDate().equals(financialInstitutionTransaction.getValueDate()));
 
-        financialInstitutionTransactionsService.deleteFinancialInstitutionTransaction(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId(),financialInstitutionTransaction.getId());
-        FinancialInstitutionAccountsServiceTest.deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
-        FinancialInstitutionUsersServiceTest.deleteFinancialInstitutionUser(financialInstitutionUser.getId());
-        SandboxFinancialInstitutionsServiceTest.deleteFinancialInstitution(financialInstitution.getId());
+        deleteFinancialInstitutionTransaction(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId(),financialInstitutionTransaction.getId());
+        deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
+        deleteFinancialInstitutionUser(financialInstitutionUser.getId());
+        deleteFinancialInstitution(financialInstitution.getId());
     }
 
     /**
      * Method: getFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID financialInstitutionTransactionId)
      */
-    @Test (expected = ResourceNotFoundException.class)
+    @Test
     public void testGetFinancialInstitutionTransactionWithWrongIDs() throws Exception {
-        financialInstitutionTransactionsService.getFinancialInstitutionTransaction(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
+        assertThrows(ResourceNotFoundException.class, () -> financialInstitutionTransactionsService.getFinancialInstitutionTransaction(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()));
     }
 
     /**
@@ -81,9 +83,9 @@ public class FinancialInstitutionTransactionsServiceTest {
     @Test
     public void testGetFinancialInstitutionAccountTransactions() throws Exception {
         List<FinancialInstitutionTransaction> financialInstitutionTransactions = new ArrayList<>();
-        FinancialInstitution financialInstitution = SandboxFinancialInstitutionsServiceTest.createFinancialInstitution();
-        FinancialInstitutionUser financialInstitutionUser = FinancialInstitutionUsersServiceTest.createFinancialInstitutionUser();
-        FinancialInstitutionAccount financialInstitutionAccount = FinancialInstitutionAccountsServiceTest.createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId());
+        FinancialInstitution financialInstitution = createFinancialInstitution();
+        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser();
+        FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId());
         financialInstitutionTransactions.add(createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount));
         financialInstitutionTransactions.add(createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount));
         financialInstitutionTransactions.add(createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount));
@@ -92,20 +94,20 @@ public class FinancialInstitutionTransactionsServiceTest {
         assertTrue (financialInstitutionTransactionsList.containsAll(financialInstitutionTransactions));
 
         for (FinancialInstitutionTransaction financialInstitutionTransaction: financialInstitutionTransactions){
-            financialInstitutionTransactionsService.deleteFinancialInstitutionTransaction(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId(),financialInstitutionTransaction.getId());
+            deleteFinancialInstitutionTransaction(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId(),financialInstitutionTransaction.getId());
         }
-        FinancialInstitutionAccountsServiceTest.deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
-        FinancialInstitutionUsersServiceTest.deleteFinancialInstitutionUser(financialInstitutionUser.getId());
-        SandboxFinancialInstitutionsServiceTest.deleteFinancialInstitution(financialInstitution.getId());
+        deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
+        deleteFinancialInstitutionUser(financialInstitutionUser.getId());
+        deleteFinancialInstitution(financialInstitution.getId());
     }
 
 
     /**
      * Method: getFinancialInstitutionAccountTransactions(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId)
      */
-    @Test (expected = ResourceNotFoundException.class)
+    @Test
     public void testGetFinancialInstitutionAccountTransactionsWithWrongIds() throws Exception {
-        financialInstitutionTransactionsService.getFinancialInstitutionAccountTransactions(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
+        assertThrows(ResourceNotFoundException.class, () -> financialInstitutionTransactionsService.getFinancialInstitutionAccountTransactions(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()));
     }
 
     /**
@@ -119,9 +121,9 @@ public class FinancialInstitutionTransactionsServiceTest {
     /**
      * Method: createFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, FinancialInstitutionTransaction financialInstitutionTransaction)
      */
-    @Test (expected = ResourceNotFoundException.class)
+    @Test
     public void testCreateFinancialInstitutionTransactionWithWrongIds() throws Exception {
-        financialInstitutionTransactionsService.createFinancialInstitutionTransaction(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), new FinancialInstitutionTransaction());
+        assertThrows(ResourceNotFoundException.class, () -> financialInstitutionTransactionsService.createFinancialInstitutionTransaction(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), new FinancialInstitutionTransaction()));
     }
 
     /**
@@ -135,9 +137,13 @@ public class FinancialInstitutionTransactionsServiceTest {
     /**
      * Method: deleteFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID financialInstitutionTransactionId)
      */
-    @Test (expected = ResourceNotFoundException.class)
+    @Test
     public void testDeleteFinancialInstitutionTransactionWithWrongIds() throws Exception {
-        financialInstitutionTransactionsService.deleteFinancialInstitutionTransaction(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
+        assertThrows(ResourceNotFoundException.class, () -> deleteFinancialInstitutionTransaction(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()));
+    }
+
+    public static void deleteFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID financialInstitutionTransactionId) throws ResourceNotFoundException {
+        financialInstitutionTransactionsService.deleteFinancialInstitutionTransaction(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, financialInstitutionTransactionId);
     }
 
     public static FinancialInstitutionTransaction createFinancialInstitutionTransaction(UUID financialInstitutionUserId, FinancialInstitutionAccount financialInstitutionAccount) throws ResourceNotFoundException {

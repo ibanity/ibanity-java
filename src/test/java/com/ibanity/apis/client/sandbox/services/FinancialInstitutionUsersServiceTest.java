@@ -1,21 +1,19 @@
 package com.ibanity.apis.client.sandbox.services;
 
+import com.ibanity.apis.client.AbstractServiceTest;
 import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
 import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionUsersServiceImpl;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * FinancialInstitutionUsersServiceImpl Tester.
@@ -24,15 +22,15 @@ import static org.junit.Assert.assertNull;
  * @version 1.0
  * @since <pre>Jun 13, 2018</pre>
  */
-public class FinancialInstitutionUsersServiceTest {
+public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
 
     private static final FinancialInstitutionUsersService financialInstitutionUsersService = new FinancialInstitutionUsersServiceImpl();
 
-    @Before
+    @BeforeEach
     public void before() {
     }
 
-    @After
+    @AfterEach
     public void after() {
     }
 
@@ -80,9 +78,9 @@ public class FinancialInstitutionUsersServiceTest {
     /**
      * Method: getFinancialInstitutionUser(UUID financialInstitutionUserId)
      */
-    @Test (expected = ResourceNotFoundException.class)
+    @Test
     public void testGetFinancialInstitutionUserUnknown() throws ResourceNotFoundException {
-        FinancialInstitutionUser financialInstitutionUserGet = financialInstitutionUsersService.getFinancialInstitutionUser(UUID.randomUUID());
+        assertThrows(ResourceNotFoundException.class, () -> financialInstitutionUsersService.getFinancialInstitutionUser(UUID.randomUUID()));
     }
 
     /**
@@ -124,22 +122,8 @@ public class FinancialInstitutionUsersServiceTest {
     /**
      * Method: deleteFinancialInstitutionUser(UUID financialInstitutionUserId)
      */
-    @Test (expected = ResourceNotFoundException.class)
+    @Test
     public void testDeleteUnkownFinancialInstitutionUser() throws Exception {
-        financialInstitutionUsersService.deleteFinancialInstitutionUser(UUID.randomUUID());
+        assertThrows(ResourceNotFoundException.class, () -> financialInstitutionUsersService.deleteFinancialInstitutionUser(UUID.randomUUID()));
     }
-
-    public static FinancialInstitutionUser createFinancialInstitutionUser() {
-        Instant now = Instant.now();
-        FinancialInstitutionUser financialInstitutionUser = new FinancialInstitutionUser();
-        financialInstitutionUser.setFirstName("FirstName-"+now);
-        financialInstitutionUser.setLastName("LastName-"+now);
-        financialInstitutionUser.setLogin("Login-"+now);
-        financialInstitutionUser.setPassword("Password-"+now);
-        return financialInstitutionUsersService.createFinancialInstitutionUser(financialInstitutionUser);
-    }
-
-    public static void deleteFinancialInstitutionUser(UUID financialInstitutionUserID) throws ResourceNotFoundException {
-        financialInstitutionUsersService.deleteFinancialInstitutionUser(financialInstitutionUserID);
-    }
-} 
+}
