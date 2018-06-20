@@ -19,8 +19,6 @@ before_script:
 install:
   - mvn install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
 script:
-  - xvfb-run --server-args="-screen 0 1024x768x24"
-  - sleep 3
   - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
 
 addons:
