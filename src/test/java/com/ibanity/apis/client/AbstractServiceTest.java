@@ -42,6 +42,7 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractServiceTest {
     protected static final String FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.accounts.information.access.result.redirect.url");
+    protected static final String FAKE_TPP_PAYMENT_INITIATION_REDIRECT_URL = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.payments.initiation.result.redirect.url");
     private static final String TEST_CASE = AbstractServiceTest.class.getSimpleName();
 
     protected Instant now;
