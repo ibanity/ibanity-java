@@ -91,7 +91,6 @@
         <junit-platform-surefire-provider.version>1.2.0</junit-platform-surefire-provider.version>
         <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
         <jacoco-maven-plugin.version>0.8.1</jacoco-maven-plugin.version>
-        <sonar-maven-plugin.version>3.4.0.905</sonar-maven-plugin.version>
         <selenium-java.version>3.0.0</selenium-java.version>
     </properties>
 
@@ -260,19 +259,6 @@
                         <phase>verify</phase>
                         <goals>
                             <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>${sonar-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sonar</goal>
                         </goals>
                     </execution>
                 </executions>
