@@ -19,6 +19,7 @@ before_script:
 install:
   - mvn install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
 script:
+  - sonar-scanner
   - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
 
 addons:
