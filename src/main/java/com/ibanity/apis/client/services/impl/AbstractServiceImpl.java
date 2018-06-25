@@ -6,7 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ibanity.apis.client.exceptions.IbanityException;
 import com.ibanity.apis.client.models.AbstractModel;
 import com.ibanity.apis.client.models.CustomerAccessToken;
-import com.ibanity.apis.client.network.http.client.IbanityAccessTokenAdapterListener;
+import com.ibanity.apis.client.network.http.client.IbanityHttpAdapterListener;
 import com.ibanity.apis.client.services.configuration.IbanityConfiguration;
 import io.crnk.client.CrnkClient;
 import io.crnk.client.http.HttpAdapter;
@@ -16,13 +16,10 @@ import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryV2;
 import io.crnk.core.resource.list.ResourceList;
 
-import java.util.HashMap;
 import java.util.UUID;
 
 public abstract class AbstractServiceImpl {
     private static final String IBANITY_API_ENDPOINT = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "api.endpoint");
-
-    private static HashMap<String,CrnkClient> apiClients = new HashMap<>();
 
     protected static final String FINANCIAL_INSTITUTIONS_PATH               = "financial-institutions";
     protected static final String FINANCIAL_INSTITUTION_ID_TAG              = "<FI_ID>";
@@ -35,15 +32,11 @@ public abstract class AbstractServiceImpl {
     }
 
     protected synchronized CrnkClient getApiClient(String path){
-        CrnkClient apiClient = null;
-        if (apiClients.containsKey(path)) {
-            apiClient = apiClients.get(path);
-        }
-        else {
-            apiClient = getApiClient(path, null);
-            apiClients.put(path, apiClient);
-        }
-        return apiClient;
+        return getApiClient(path, null,null);
+    }
+
+    protected synchronized CrnkClient getApiClient(String path, UUID idempotency){
+        return getApiClient(path, null, idempotency);
     }
 
     protected <T extends AbstractModel> ResourceList<T> findAll(QuerySpec querySpec, ResourceRepositoryV2<T, UUID> repository) {
@@ -55,6 +48,10 @@ public abstract class AbstractServiceImpl {
     }
 
     protected CrnkClient getApiClient(String path, CustomerAccessToken customerAccessToken){
+        return getApiClient(path, customerAccessToken, null);
+    }
+
+    protected CrnkClient getApiClient(String path, CustomerAccessToken customerAccessToken, UUID idempotency){
         System.setProperty(CrnkProperties.RESOURCE_SEARCH_PACKAGE, "com.ibanity.apis");
         CrnkClient apiClient = new CrnkClient(IBANITY_API_ENDPOINT + path, CrnkClient.ClientType.OBJECT_LINKS);
         apiClient.getObjectMapper().registerModule(new Jdk8Module());
@@ -64,12 +61,7 @@ public abstract class AbstractServiceImpl {
         HttpAdapter httpAdapter = apiClient.getHttpAdapter();
         if (httpAdapter instanceof HttpClientAdapter ){
             HttpClientAdapter adapter = (HttpClientAdapter) httpAdapter;
-            if (customerAccessToken == null){
-                adapter.addListener(new IbanityAccessTokenAdapterListener());
-            }
-            else {
-                adapter.addListener(new IbanityAccessTokenAdapterListener(customerAccessToken));
-            }
+            adapter.addListener(new IbanityHttpAdapterListener(customerAccessToken, idempotency));
         }
         return apiClient;
     }

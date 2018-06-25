@@ -41,11 +41,27 @@ public interface FinancialInstitutionUsersService {
     FinancialInstitutionUser createFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser);
 
     /**
+     * Create a new financial institution user
+     * @param financialInstitutionUser the details of the financial institution user
+     * @param idempotency to prevent the same request from being performed more than once
+     * @return the newly created financial institution user details
+     */
+    FinancialInstitutionUser createFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser, UUID idempotency);
+
+    /**
      * Update an existing financial institution user
      * @param financialInstitutionUser to details of the financial institution user to be updated
      * @return the updated version
      */
     FinancialInstitutionUser updateFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser);
+
+    /**
+     * Update an existing financial institution user
+     * @param financialInstitutionUser to details of the financial institution user to be updated
+     * @param idempotency to prevent the same request from being performed more than once
+     * @return the updated version
+     */
+    FinancialInstitutionUser updateFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser, UUID idempotency);
 
     /**
      * Delete a financial institution user

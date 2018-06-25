@@ -45,7 +45,6 @@ class PaymentsServiceTest extends AbstractServiceTest {
         paymentInitiationRequest.setCreditorAccountReference("BE23947805459949");
         paymentInitiationRequest.setCreditorAccountReferenceType("IBAN");
         return paymentsService.initiatePaymentRequest(generatedCustomerAccessToken, paymentInitiationRequest);
-
     }
 
     @Test

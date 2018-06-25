@@ -37,10 +37,10 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
      */
     @Test
     public void testGetFinancialInstitutionAccount() throws Exception {
-        FinancialInstitution financialInstitution = createFinancialInstitution();
-        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser();
+        FinancialInstitution financialInstitution = createFinancialInstitution(null);
+        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(null);
 
-        FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId());
+        FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId(), null);
 
         FinancialInstitutionAccount financialInstitutionAccountGet = financialInstitutionAccountsService.getFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
 
@@ -61,10 +61,10 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
      */
     @Test
     public void testGetFinancialInstitutionUserAccounts() throws Exception {
-        FinancialInstitution financialInstitution = createFinancialInstitution();
-        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser();
+        FinancialInstitution financialInstitution = createFinancialInstitution(null);
+        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(null);
 
-        FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId());
+        FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId(), null);
 
         List<FinancialInstitutionAccount> financialInstitutionAccounts = financialInstitutionAccountsService.getFinancialInstitutionUserAccounts(financialInstitution.getId(), financialInstitutionUser.getId());
 
@@ -74,8 +74,8 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
         deleteFinancialInstitutionUser(financialInstitutionUser.getId());
         deleteFinancialInstitution(financialInstitution.getId());
     }
-    @Test
 
+    @Test
     public void testGetFinancialInstitutionUserAccountsWithWrongIDs() throws Exception {
         assertThrows(ResourceNotFoundException.class, () -> financialInstitutionAccountsService.getFinancialInstitutionUserAccounts(UUID.randomUUID(), UUID.randomUUID()));
     }
@@ -85,10 +85,19 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
      */
     @Test
     public void testCreateFinancialInstitutionAccount() throws Exception {
-        FinancialInstitution financialInstitution = createFinancialInstitution();
-        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser();
+        createFinancialInstitutionAccount(null);
+    }
 
-        FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId());
+    @Test
+    public void testCreateFinancialInstitutionAccountIdempotency() throws Exception {
+        createFinancialInstitutionAccount(UUID.randomUUID());
+    }
+
+    private void createFinancialInstitutionAccount(UUID idempotency) throws Exception {
+        FinancialInstitution financialInstitution = createFinancialInstitution(idempotency);
+        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(idempotency);
+
+        FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId(), idempotency);
         FinancialInstitutionAccount financialInstitutionGet = financialInstitutionAccountsService.getFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
 
         assertTrue(financialInstitutionAccount.getCurrency().equals(financialInstitutionGet.getCurrency()));
@@ -101,6 +110,7 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
         financialInstitutionAccountsService.deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
         deleteFinancialInstitutionUser(financialInstitutionUser.getId());
         deleteFinancialInstitution(financialInstitution.getId());
+
     }
 
     /**
@@ -110,7 +120,7 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
     public void testCreateFinancialInstitutionAccountWithWrongIDs() throws Exception {
         FinancialInstitution financialInstitution = new FinancialInstitution();
         financialInstitution.setId(UUID.randomUUID());
-        assertThrows(ResourceNotFoundException.class, () -> createFinancialInstitutionAccount(financialInstitution, UUID.randomUUID()));
+        assertThrows(ResourceNotFoundException.class, () -> createFinancialInstitutionAccount(financialInstitution, UUID.randomUUID(), null));
     }
 
     /**
@@ -118,10 +128,10 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
      */
     @Test
     public void testDeleteFinancialInstitutionAccount() throws Exception {
-        FinancialInstitution financialInstitution = createFinancialInstitution();
-        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser();
+        FinancialInstitution financialInstitution = createFinancialInstitution(null);
+        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(null);
 
-        FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId());
+        FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId(), null);
 
         financialInstitutionAccountsService.deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
         deleteFinancialInstitutionUser(financialInstitutionUser.getId());

@@ -15,7 +15,7 @@ public class PaymentsServiceImpl extends AbstractServiceImpl implements Payments
 
     @Override
     public PaymentInitiationRequest initiatePaymentRequest(CustomerAccessToken customerAccessToken, PaymentInitiationRequest paymentInitiationRequest) {
-        return getRepository(customerAccessToken, paymentInitiationRequest.getFinancialInstitution().getId()).create(paymentInitiationRequest);
+        return getRepository(customerAccessToken, paymentInitiationRequest.getFinancialInstitution().getId(), null).create(paymentInitiationRequest);
     }
 
     @Override
@@ -24,15 +24,15 @@ public class PaymentsServiceImpl extends AbstractServiceImpl implements Payments
         IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
         querySpec.setPagingSpec(pagingSpec);
         try {
-            return getRepository(customerAccessToken, financialInstitutionId).findOne(paymentInitiationRequestId, querySpec);
+            return getRepository(customerAccessToken, financialInstitutionId, null).findOne(paymentInitiationRequestId, querySpec);
         } catch (io.crnk.core.exception.ResourceNotFoundException e) {
             String errorMessage = "Resource with provided ids not found";
             throw new ResourceNotFoundException(errorMessage);
         }
     }
 
-    private ResourceRepositoryV2<PaymentInitiationRequest, UUID> getRepository(CustomerAccessToken customerAccessToken, UUID financialInstitutionId){
+    private ResourceRepositoryV2<PaymentInitiationRequest, UUID> getRepository(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID idempotency){
         String correctPath = PAYMENT_INITIATION_REQUESTS_PATH.replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString());
-        return getApiClient(correctPath, customerAccessToken).getRepositoryForType(PaymentInitiationRequest.class);
+        return getApiClient(correctPath, customerAccessToken, idempotency).getRepositoryForType(PaymentInitiationRequest.class);
     }
 }

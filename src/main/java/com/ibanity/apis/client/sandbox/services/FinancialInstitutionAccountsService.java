@@ -38,6 +38,17 @@ public interface FinancialInstitutionAccountsService {
     FinancialInstitutionAccount createFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, FinancialInstitutionAccount financialInstitutionAccount) throws ResourceNotFoundException;
 
     /**
+     * Create a new financial institution account in the financial institution, linked to the provide financial institution user
+     * @param financialInstitutionId The Id Sandbox Financial Institution in which we want to create a new financial institution account linked to the provide financialInstitutionUserId
+     * @param financialInstitutionUserId The Id of the financial institution user for which we want to link a new financial institution account
+     * @param financialInstitutionAccount the financial institution account to be created
+     * @param idempotency to prevent the same request from being performed more than once
+     * @return the created version of the sandbox Account
+     * @throws ResourceNotFoundException when a provided ID is not known
+     */
+    FinancialInstitutionAccount createFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, FinancialInstitutionAccount financialInstitutionAccount, UUID idempotency) throws ResourceNotFoundException;
+
+    /**
      * Delete the financial institution account
      * @param financialInstitutionId The Id financial institution in which we want to create a new financial institution account linked to the provide financialInstitutionUserId
      * @param financialInstitutionUserId The Id of the financial institution user for which we want to delete the financial institution account

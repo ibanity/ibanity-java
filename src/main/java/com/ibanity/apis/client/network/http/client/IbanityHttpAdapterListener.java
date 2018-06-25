@@ -9,29 +9,35 @@ import org.apache.http.message.BasicHeader;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 
-public class IbanityAccessTokenAdapterListener implements HttpClientAdapterListener {
+public class IbanityHttpAdapterListener implements HttpClientAdapterListener {
 
     CustomerAccessToken customerAccessToken = null;
-    public IbanityAccessTokenAdapterListener() {
-    }
+    UUID idempotency                        = null;
 
-    public IbanityAccessTokenAdapterListener(CustomerAccessToken customerAccessToken) {
+    private static final String IDEMPOTENCY_KEY = "Ibanity-Idempotency-Key";
+
+    public IbanityHttpAdapterListener(CustomerAccessToken customerAccessToken, UUID idempotency) {
         this.customerAccessToken = customerAccessToken;
+        this.idempotency = idempotency;
     }
 
     @Override
     public void onBuild(HttpClientBuilder httpClientBuilder) {
         httpClientBuilder.setSSLContext(IbanityHttpUtils.getSSLContext());
         httpClientBuilder.addInterceptorLast(new IbanitySignatureInterceptor());
-        if (customerAccessToken != null){
-            httpClientBuilder.setDefaultHeaders(getAuthorizationtHttpRequestHeaders(customerAccessToken));
-        }
+        httpClientBuilder.setDefaultHeaders(getAuthorizationtHttpRequestHeaders());
     }
 
-    private Collection<Header> getAuthorizationtHttpRequestHeaders(CustomerAccessToken customerAccessToken){
+    private Collection<Header> getAuthorizationtHttpRequestHeaders(){
         Collection<Header> authorizationHttpRequestHeaders = new ArrayList();
-        authorizationHttpRequestHeaders.add(new BasicHeader(HttpHeaders.AUTHORIZATION, "Bearer "+customerAccessToken.getToken()));
+        if (customerAccessToken != null) {
+            authorizationHttpRequestHeaders.add(new BasicHeader(HttpHeaders.AUTHORIZATION, "Bearer " + customerAccessToken.getToken()));
+        }
+        if (idempotency != null){
+            authorizationHttpRequestHeaders.add(new BasicHeader(IDEMPOTENCY_KEY, idempotency.toString()));
+        }
         return authorizationHttpRequestHeaders;
     }
 }

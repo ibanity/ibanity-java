@@ -30,7 +30,7 @@ public class FinancialInstitutionsServiceTest extends AbstractServiceTest {
 
     @BeforeEach
     public void before() {
-        financialInstitution = createFinancialInstitution();
+        financialInstitution = createFinancialInstitution(null);
     }
 
     @AfterEach
@@ -56,7 +56,7 @@ public class FinancialInstitutionsServiceTest extends AbstractServiceTest {
         ibanityPagingSpec.setLimit(3L);
         List<FinancialInstitution> createdFinancialInstitutionsList = new ArrayList<>();
         for (int index = 0; index < 5; index++){
-            createdFinancialInstitutionsList.add(createFinancialInstitution());
+            createdFinancialInstitutionsList.add(createFinancialInstitution(null));
         }
 
         List<FinancialInstitution> financialInstitutionsList = financialInstitutionsService.getFinancialInstitutions(ibanityPagingSpec);

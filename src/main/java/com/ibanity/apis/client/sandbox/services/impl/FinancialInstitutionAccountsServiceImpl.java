@@ -26,7 +26,7 @@ public class FinancialInstitutionAccountsServiceImpl extends AbstractServiceImpl
 
     @Override
     public FinancialInstitutionAccount getFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) throws ResourceNotFoundException {
-        ResourceRepositoryV2<FinancialInstitutionAccount, UUID> accountsRepo = getAccountsRepository(financialInstitutionId, financialInstitutionUserId);
+        ResourceRepositoryV2<FinancialInstitutionAccount, UUID> accountsRepo = getAccountsRepository(financialInstitutionId, financialInstitutionUserId, null);
         QuerySpec querySpec = new QuerySpec(FinancialInstitutionAccount.class);
         try {
             return accountsRepo.findOne(financialInstitutionAccountId, querySpec);
@@ -40,7 +40,7 @@ public class FinancialInstitutionAccountsServiceImpl extends AbstractServiceImpl
     @Override
     public List<FinancialInstitutionAccount> getFinancialInstitutionUserAccounts(UUID financialInstitutionId, UUID financialInstitutionUserId) throws ResourceNotFoundException{
         try {
-            return getAccountsRepository(financialInstitutionId, financialInstitutionUserId).findAll(new QuerySpec(FinancialInstitutionAccount.class));
+            return getAccountsRepository(financialInstitutionId, financialInstitutionUserId, null).findAll(new QuerySpec(FinancialInstitutionAccount.class));
         } catch (io.crnk.core.exception.ResourceNotFoundException e) {
             LOGGER.debug(ERROR_RESOURCE_NOT_FOUND);
             throw new ResourceNotFoundException(ERROR_RESOURCE_NOT_FOUND);
@@ -49,8 +49,12 @@ public class FinancialInstitutionAccountsServiceImpl extends AbstractServiceImpl
 
     @Override
     public FinancialInstitutionAccount createFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, FinancialInstitutionAccount financialInstitutionAccount) throws ResourceNotFoundException {
+        return create(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccount, null);
+    }
+
+    private FinancialInstitutionAccount create(UUID financialInstitutionId, UUID financialInstitutionUserId, FinancialInstitutionAccount financialInstitutionAccount, UUID idempotency) throws ResourceNotFoundException {
         try {
-            return getAccountsRepository(financialInstitutionId, financialInstitutionUserId).create(financialInstitutionAccount);
+            return getAccountsRepository(financialInstitutionId, financialInstitutionUserId, idempotency).create(financialInstitutionAccount);
         } catch (io.crnk.core.exception.ResourceNotFoundException e) {
             LOGGER.debug(ERROR_RESOURCE_NOT_FOUND);
             throw new ResourceNotFoundException(ERROR_RESOURCE_NOT_FOUND);
@@ -58,20 +62,25 @@ public class FinancialInstitutionAccountsServiceImpl extends AbstractServiceImpl
     }
 
     @Override
+    public FinancialInstitutionAccount createFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, FinancialInstitutionAccount financialInstitutionAccount, UUID idempotency) throws ResourceNotFoundException {
+        return create(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccount, idempotency);
+    }
+
+    @Override
     public void deleteFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) throws ResourceNotFoundException {
         try {
-            getAccountsRepository(financialInstitutionId, financialInstitutionUserId).delete(financialInstitutionAccountId);
+            getAccountsRepository(financialInstitutionId, financialInstitutionUserId, null).delete(financialInstitutionAccountId);
         } catch (io.crnk.core.exception.ResourceNotFoundException e) {
             LOGGER.debug(ERROR_RESOURCE_NOT_FOUND);
             throw new ResourceNotFoundException(ERROR_RESOURCE_NOT_FOUND);
         }
     }
 
-    protected ResourceRepositoryV2<FinancialInstitutionAccount, UUID> getAccountsRepository(UUID financialInstitutionId, UUID financialInstitutionUserId){
+    protected ResourceRepositoryV2<FinancialInstitutionAccount, UUID> getAccountsRepository(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID idempotency){
         String correctPath = SANDBOX_USER_ACCOUNTS_FI_REQUEST_PATH
                 .replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString())
                 .replace(USER_ID_TAG, financialInstitutionUserId.toString())
                 ;
-        return getApiClient(correctPath, null).getRepositoryForType(FinancialInstitutionAccount.class);
+        return getApiClient(correctPath, null, idempotency).getRepositoryForType(FinancialInstitutionAccount.class);
     }
 }

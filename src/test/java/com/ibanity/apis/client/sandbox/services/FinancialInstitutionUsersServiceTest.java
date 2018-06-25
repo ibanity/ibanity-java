@@ -39,7 +39,7 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
      */
     @Test
     public void testGetFinancialInstitutionUsers() throws ResourceNotFoundException {
-        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser();
+        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(null);
         List<FinancialInstitutionUser> financialInstitutionUsers = financialInstitutionUsersService.getFinancialInstitutionUsers();
         assertTrue(financialInstitutionUsers.size() > 0);
         financialInstitutionUsersService.deleteFinancialInstitutionUser(financialInstitutionUser.getId());
@@ -52,7 +52,7 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
     public void testGetFinancialInstitutionUsersPagingSpec() throws ResourceNotFoundException {
         List<FinancialInstitutionUser> financialInstitutionUsers =  new ArrayList<>();
         for( int index = 0; index < 3; index ++){
-            financialInstitutionUsers.add(createFinancialInstitutionUser());
+            financialInstitutionUsers.add(createFinancialInstitutionUser(null));
         }
 
         IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
@@ -69,7 +69,11 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
      */
     @Test
     public void testGetFinancialInstitutionUser() throws ResourceNotFoundException {
-        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser();
+        getFinancialInstutionUser(null);
+    }
+
+    private void getFinancialInstutionUser(UUID indempotency) throws ResourceNotFoundException{
+        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(indempotency);
         FinancialInstitutionUser financialInstitutionUserGet = financialInstitutionUsersService.getFinancialInstitutionUser(financialInstitutionUser.getId());
         financialInstitutionUsersService.deleteFinancialInstitutionUser(financialInstitutionUserGet.getId());
         assertTrue(financialInstitutionUserGet.equals(financialInstitutionUser));
@@ -88,7 +92,12 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
      */
     @Test
     public void testCreateFinancialInstitutionUser() throws Exception {
-        testGetFinancialInstitutionUser();
+        getFinancialInstutionUser(null);
+    }
+
+    @Test
+    public void testCreateFinancialInstitutionUserIdenmpotency() throws Exception {
+        getFinancialInstutionUser(UUID.randomUUID());
     }
 
     /**
@@ -96,9 +105,18 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
      */
     @Test
     public void testUpdateFinancialInstitutionUser() throws ResourceNotFoundException {
-        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser();
+        updateFinancialInstitutionUser(null);
+    }
+
+    @Test
+    public void testUpdateFinancialInstitutionUserIndempotency() throws ResourceNotFoundException {
+        updateFinancialInstitutionUser(UUID.randomUUID());
+    }
+
+    private void updateFinancialInstitutionUser(UUID idempotency) throws ResourceNotFoundException{
+        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(idempotency);
         financialInstitutionUser.setPassword("Password");
-        FinancialInstitutionUser updatedFinancialInstitutionUser = financialInstitutionUsersService.updateFinancialInstitutionUser(financialInstitutionUser);
+        FinancialInstitutionUser updatedFinancialInstitutionUser = financialInstitutionUsersService.updateFinancialInstitutionUser(financialInstitutionUser, idempotency);
         assertTrue(updatedFinancialInstitutionUser.getPassword().equals(financialInstitutionUser.getPassword()));
         assertTrue(updatedFinancialInstitutionUser.getFirstName().equals(financialInstitutionUser.getFirstName()));
         assertTrue(updatedFinancialInstitutionUser.getLastName().equals(financialInstitutionUser.getLastName()));
@@ -115,7 +133,7 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
      */
     @Test
     public void testDeleteFinancialInstitutionUser() throws Exception {
-        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser();
+        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(null);
         financialInstitutionUsersService.deleteFinancialInstitutionUser(financialInstitutionUser.getId());
     }
 

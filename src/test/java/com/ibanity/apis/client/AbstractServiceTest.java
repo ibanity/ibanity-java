@@ -96,10 +96,10 @@ public abstract class AbstractServiceTest {
 
     protected void initPublicAPIEnvironment() throws Exception {
         generatedCustomerAccessToken = getCustomerAccessToken(UUID.randomUUID().toString());
-        financialInstitution = createFinancialInstitution();
-        financialInstitutionUser = createFinancialInstitutionUser();
+        financialInstitution = createFinancialInstitution(null);
+        financialInstitutionUser = createFinancialInstitutionUser(null);
         for (int index = 0; index < 5; index++) {
-            financialInstitutionAccounts.add(createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId()));
+            financialInstitutionAccounts.add(createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId(), null));
         }
     }
 
@@ -111,23 +111,31 @@ public abstract class AbstractServiceTest {
         deleteFinancialInstitutionUser(financialInstitutionUser.getId());
     }
 
-    public FinancialInstitution createFinancialInstitution() {
+    public FinancialInstitution createFinancialInstitution(UUID idempotency) {
         now = Instant.now();
         name = TEST_CASE + "-" + now.toString();
         FinancialInstitution newFinancialInstitution = new FinancialInstitution();
         newFinancialInstitution.setSandbox(Boolean.TRUE);
         newFinancialInstitution.setName(name);
-        return sandboxFinancialInstitutionsService.createFinancialInstitution(newFinancialInstitution);
+        if (idempotency != null) {
+            return sandboxFinancialInstitutionsService.createFinancialInstitution(newFinancialInstitution, idempotency);
+        } else {
+            return sandboxFinancialInstitutionsService.createFinancialInstitution(newFinancialInstitution);
+        }
     }
 
-    protected FinancialInstitutionUser createFinancialInstitutionUser() {
+    protected FinancialInstitutionUser createFinancialInstitutionUser(UUID idempotency) {
         Instant now = Instant.now();
         FinancialInstitutionUser financialInstitutionUser = new FinancialInstitutionUser();
         financialInstitutionUser.setFirstName("FirstName-"+now);
         financialInstitutionUser.setLastName("LastName-"+now);
         financialInstitutionUser.setLogin("Login-"+now);
         financialInstitutionUser.setPassword("Password-"+now);
-        return financialInstitutionUsersService.createFinancialInstitutionUser(financialInstitutionUser);
+        if (idempotency == null) {
+            return financialInstitutionUsersService.createFinancialInstitutionUser(financialInstitutionUser);
+        } else {
+            return financialInstitutionUsersService.createFinancialInstitutionUser(financialInstitutionUser, idempotency);
+        }
     }
 
 
@@ -144,7 +152,7 @@ public abstract class AbstractServiceTest {
     }
 
 
-    protected FinancialInstitutionAccount createFinancialInstitutionAccount(FinancialInstitution financialInstitution, UUID financialInstitutionUser) throws ResourceNotFoundException {
+    protected FinancialInstitutionAccount createFinancialInstitutionAccount(FinancialInstitution financialInstitution, UUID financialInstitutionUser, UUID idempotency) throws ResourceNotFoundException {
         FinancialInstitutionAccount financialInstitutionAccount = new FinancialInstitutionAccount();
         financialInstitutionAccount.setSubType("checking");
         financialInstitutionAccount.setReference(Iban.random(CountryCode.BE).toString());
@@ -152,7 +160,11 @@ public abstract class AbstractServiceTest {
         financialInstitutionAccount.setDescription("Checking Account");
         financialInstitutionAccount.setCurrency("EUR");
         financialInstitutionAccount.setFinancialInstitution(financialInstitution);
-        return financialInstitutionAccountsService.createFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser, financialInstitutionAccount);
+        if (idempotency == null) {
+            return financialInstitutionAccountsService.createFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser, financialInstitutionAccount);
+        } else {
+            return financialInstitutionAccountsService.createFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser, financialInstitutionAccount, idempotency);
+        }
     }
 
     protected void deleteFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) throws ResourceNotFoundException {
@@ -176,7 +188,6 @@ public abstract class AbstractServiceTest {
         customerAccessTokenRequest.setApplicationCustomerReference(applicationCustomerReference);
         return customerAccessTokensService.createCustomerAccessToken(customerAccessTokenRequest);
     }
-
 
     protected void authorizeAccounts(String redirectUrl) {
         if (driver == null) {

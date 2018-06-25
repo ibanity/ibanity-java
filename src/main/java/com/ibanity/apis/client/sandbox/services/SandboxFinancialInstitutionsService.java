@@ -19,11 +19,27 @@ public interface SandboxFinancialInstitutionsService extends FinancialInstitutio
     FinancialInstitution createFinancialInstitution(FinancialInstitution financialInstitution);
 
     /**
+     * Create a new financial institution
+     * @param financialInstitution the details of the financial institution
+     * @param idempotency to prevent the same request from being performed more than once
+     * @return the newly created financial institution details
+     */
+    FinancialInstitution createFinancialInstitution(FinancialInstitution financialInstitution, UUID idempotency);
+
+    /**
      * Update an existing financial institution
      * @param financialInstitution to details of the financial institution to be updated
      * @return the updated version
      */
     FinancialInstitution updateFinancialInstitution(FinancialInstitution financialInstitution);
+
+    /**
+     * Update an existing financial institution
+     * @param financialInstitution to details of the financial institution to be updated
+     * @param idempotency to prevent the same request from being performed more than once
+     * @return the updated version
+     */
+    FinancialInstitution updateFinancialInstitution(FinancialInstitution financialInstitution, UUID idempotency);
 
     /**
      * Delete an financial institution
