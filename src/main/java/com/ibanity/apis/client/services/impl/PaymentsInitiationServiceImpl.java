@@ -4,13 +4,13 @@ import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.PaymentInitiationRequest;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
-import com.ibanity.apis.client.services.PaymentsService;
+import com.ibanity.apis.client.services.PaymentsInitiationService;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryV2;
 
 import java.util.UUID;
 
-public class PaymentsServiceImpl extends AbstractServiceImpl implements PaymentsService {
+public class PaymentsInitiationServiceImpl extends AbstractServiceImpl implements PaymentsInitiationService {
     private static final String PAYMENT_INITIATION_REQUESTS_PATH = "/customer/financial-institutions/"+FINANCIAL_INSTITUTION_ID_TAG;
 
     @Override

@@ -4,7 +4,7 @@ import com.google.common.net.InetAddresses;
 import com.ibanity.apis.client.AbstractServiceTest;
 import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
 import com.ibanity.apis.client.models.PaymentInitiationRequest;
-import com.ibanity.apis.client.services.impl.PaymentsServiceImpl;
+import com.ibanity.apis.client.services.impl.PaymentsInitiationServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PaymentsServiceTest extends AbstractServiceTest {
-    private PaymentsService paymentsService = new PaymentsServiceImpl();
+    private PaymentsInitiationService paymentsService = new PaymentsInitiationServiceImpl();
     Random random = new Random();
 
     @BeforeEach

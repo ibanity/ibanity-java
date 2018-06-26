@@ -116,7 +116,12 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
     private void updateFinancialInstitutionUser(UUID idempotency) throws ResourceNotFoundException{
         FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(idempotency);
         financialInstitutionUser.setPassword("Password");
-        FinancialInstitutionUser updatedFinancialInstitutionUser = financialInstitutionUsersService.updateFinancialInstitutionUser(financialInstitutionUser, idempotency);
+        FinancialInstitutionUser updatedFinancialInstitutionUser = null;
+        if (idempotency == null) {
+            updatedFinancialInstitutionUser = financialInstitutionUsersService.updateFinancialInstitutionUser(financialInstitutionUser);
+        } else {
+            updatedFinancialInstitutionUser = financialInstitutionUsersService.updateFinancialInstitutionUser(financialInstitutionUser, idempotency);
+        }
         assertTrue(updatedFinancialInstitutionUser.getPassword().equals(financialInstitutionUser.getPassword()));
         assertTrue(updatedFinancialInstitutionUser.getFirstName().equals(financialInstitutionUser.getFirstName()));
         assertTrue(updatedFinancialInstitutionUser.getLastName().equals(financialInstitutionUser.getLastName()));

@@ -3,7 +3,6 @@ package com.ibanity.apis.client.services.impl;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.ibanity.apis.client.exceptions.IbanityException;
 import com.ibanity.apis.client.models.AbstractModel;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.network.http.client.IbanityHttpAdapterListener;
@@ -15,10 +14,13 @@ import io.crnk.core.boot.CrnkProperties;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryV2;
 import io.crnk.core.resource.list.ResourceList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.UUID;
 
 public abstract class AbstractServiceImpl {
+    private static final Logger LOGGER = LogManager.getLogger(AbstractServiceImpl.class);
     private static final String IBANITY_API_ENDPOINT = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "api.endpoint");
 
     protected static final String FINANCIAL_INSTITUTIONS_PATH               = "financial-institutions";
@@ -35,16 +37,8 @@ public abstract class AbstractServiceImpl {
         return getApiClient(path, null,null);
     }
 
-    protected synchronized CrnkClient getApiClient(String path, UUID idempotency){
-        return getApiClient(path, null, idempotency);
-    }
-
     protected <T extends AbstractModel> ResourceList<T> findAll(QuerySpec querySpec, ResourceRepositoryV2<T, UUID> repository) {
-        try {
-            return repository.findAll(querySpec);
-        } catch (Exception e) {
-            throw new IbanityException(e.getMessage(), e);
-        }
+        return repository.findAll(querySpec);
     }
 
     protected CrnkClient getApiClient(String path, CustomerAccessToken customerAccessToken){

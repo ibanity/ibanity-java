@@ -46,6 +46,7 @@ public class TransactionsServiceTest extends AbstractServiceTest {
                         FinancialInstitutionTransactionsServiceTest.createFinancialInstitutionTransaction(
                                 financialInstitutionUser.getId()
                                 ,financialInstitutionAccount
+                                , null
                         )
                 );
             }
@@ -107,14 +108,12 @@ public class TransactionsServiceTest extends AbstractServiceTest {
 
     @Test
     public void testGetAccountTransactionsForCustomerAccessTokenAndWrongFinancialInstitutionIdAccountIdPaginSpec() throws Exception {
-        for (Account account : accountsService.getCustomerAccounts(generatedCustomerAccessToken, financialInstitution.getId())){
-            assertThrows(ResourceNotFoundException.class, () -> transactionsService.getAccountTransactions(
-                    generatedCustomerAccessToken
-                    , UUID.randomUUID()
-                    , UUID.randomUUID()
-                    , new IbanityPagingSpec()
-            ));
-        }
+        assertThrows(ResourceNotFoundException.class, () -> transactionsService.getAccountTransactions(
+                generatedCustomerAccessToken
+                , UUID.randomUUID()
+                , UUID.randomUUID()
+                , new IbanityPagingSpec()
+        ));
     }
 
     /**
