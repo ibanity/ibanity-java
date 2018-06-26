@@ -10,18 +10,18 @@ import java.time.Instant;
 
 public abstract class AbstractTimestamps extends AbstractModel {
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
-    Instant createdAt = null;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
-    Instant updatedAt = null;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
-    Instant deletedAt = null;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
+    private Instant createdAt = null;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
+    private Instant updatedAt = null;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
+    private Instant deletedAt = null;
 
     public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(final Instant createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -29,7 +29,7 @@ public abstract class AbstractTimestamps extends AbstractModel {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Instant updatedAt) {
+    public void setUpdatedAt(final Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -37,15 +37,19 @@ public abstract class AbstractTimestamps extends AbstractModel {
         return deletedAt;
     }
 
-    public void setDeletedAt(Instant deletedAt) {
+    public void setDeletedAt(final Instant deletedAt) {
         this.deletedAt = deletedAt;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
 
-        if (!(o instanceof AbstractTimestamps)) return false;
+        if (!(o instanceof AbstractTimestamps)) {
+            return false;
+        }
 
         AbstractTimestamps that = (AbstractTimestamps) o;
 

@@ -30,19 +30,19 @@ public abstract class AbstractServiceImpl {
     public AbstractServiceImpl() {
     }
 
-    protected synchronized CrnkClient getApiClient(String path){
-        return getApiClient(path, null,null);
+    protected synchronized CrnkClient getApiClient(final String path) {
+        return getApiClient(path, null, null);
     }
 
-    protected <T extends AbstractModel> ResourceList<T> findAll(QuerySpec querySpec, ResourceRepositoryV2<T, UUID> repository) {
+    protected <T extends AbstractModel> ResourceList<T> findAll(final QuerySpec querySpec, final ResourceRepositoryV2<T, UUID> repository) {
         return repository.findAll(querySpec);
     }
 
-    protected CrnkClient getApiClient(String path, CustomerAccessToken customerAccessToken){
+    protected CrnkClient getApiClient(final String path, final CustomerAccessToken customerAccessToken) {
         return getApiClient(path, customerAccessToken, null);
     }
 
-    protected CrnkClient getApiClient(String path, CustomerAccessToken customerAccessToken, UUID idempotency){
+    protected CrnkClient getApiClient(final String path, final CustomerAccessToken customerAccessToken, final UUID idempotency) {
         System.setProperty(CrnkProperties.RESOURCE_SEARCH_PACKAGE, "com.ibanity.apis");
         CrnkClient apiClient = new CrnkClient(IBANITY_API_ENDPOINT + path, CrnkClient.ClientType.OBJECT_LINKS);
         apiClient.getObjectMapper().registerModule(new Jdk8Module());
@@ -50,7 +50,7 @@ public abstract class AbstractServiceImpl {
         apiClient.getObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
         HttpAdapter httpAdapter = apiClient.getHttpAdapter();
-        if (httpAdapter instanceof HttpClientAdapter ){
+        if (httpAdapter instanceof HttpClientAdapter) {
             HttpClientAdapter adapter = (HttpClientAdapter) httpAdapter;
             adapter.addListener(new IbanityHttpAdapterListener(customerAccessToken, idempotency));
         }

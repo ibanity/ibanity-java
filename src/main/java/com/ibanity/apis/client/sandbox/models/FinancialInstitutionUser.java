@@ -9,12 +9,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @JsonApiResource(type = "financialInstitutionUser", resourcePath = "financial-institution-users", pagingBehavior = IbanityPagingBehavior.class)
 public class FinancialInstitutionUser extends AbstractTimestamps {
 
-    String password;
-    String firstName;
-    String lastName;
-    String login;
+    private String password;
+    private String firstName;
+    private String lastName;
+    private String login;
 
-    public FinancialInstitutionUser(String password, String firstName, String lastName, String login) {
+    public FinancialInstitutionUser(final String password, final String firstName, final String lastName, final String login) {
         super();
         this.password = password;
         this.firstName = firstName;
@@ -31,7 +31,7 @@ public class FinancialInstitutionUser extends AbstractTimestamps {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(final String password) {
         this.password = password;
     }
 
@@ -39,7 +39,7 @@ public class FinancialInstitutionUser extends AbstractTimestamps {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    public void setFirstName(final String firstName) {
         this.firstName = firstName;
     }
 
@@ -47,7 +47,7 @@ public class FinancialInstitutionUser extends AbstractTimestamps {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
+    public void setLastName(final String lastName) {
         this.lastName = lastName;
     }
 
@@ -55,15 +55,19 @@ public class FinancialInstitutionUser extends AbstractTimestamps {
         return login;
     }
 
-    public void setLogin(String login) {
+    public void setLogin(final String login) {
         this.login = login;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
 
-        if (!(o instanceof FinancialInstitutionUser)) return false;
+        if (!(o instanceof FinancialInstitutionUser)) {
+            return false;
+        }
 
         FinancialInstitutionUser that = (FinancialInstitutionUser) o;
 

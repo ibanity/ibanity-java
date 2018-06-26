@@ -5,15 +5,15 @@ public class InvalidDefaultHttpHeaderForSignatureException extends Exception {
         super();
     }
 
-    public InvalidDefaultHttpHeaderForSignatureException(String message) {
+    public InvalidDefaultHttpHeaderForSignatureException(final String message) {
         super(message);
     }
 
-    public InvalidDefaultHttpHeaderForSignatureException(String message, Throwable cause) {
+    public InvalidDefaultHttpHeaderForSignatureException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public InvalidDefaultHttpHeaderForSignatureException(Throwable cause) {
+    public InvalidDefaultHttpHeaderForSignatureException(final Throwable cause) {
         super(cause);
     }
 }

@@ -47,7 +47,7 @@ public class IbanityPagingBehavior extends OffsetLimitPagingBehavior implements 
         IbanityPagingSpec result = createDefaultPagingSpec();
 
         for (Map.Entry<String, Set<String>> param : parameters.entrySet()) {
-            switch(StringUtils.lowerCase(param.getKey())) {
+            switch (StringUtils.lowerCase(param.getKey())) {
                 case LIMIT_PARAMETER :
                     Long limit = getLongValue(param.getKey(), param.getValue());
                     if (limit != null && limit > MAX_PAGE_LIMIT) {
@@ -86,8 +86,7 @@ public class IbanityPagingBehavior extends OffsetLimitPagingBehavior implements 
         if (offsetLimitPagingSpec instanceof IbanityPagingSpec) {
             IbanityPagingSpec pagingSpec = (IbanityPagingSpec) offsetLimitPagingSpec;
             return pagingSpec.getAfter() !=  null || pagingSpec.getBefore() !=  null || pagingSpec.getLimit() != null;
-        }
-        else {
+        } else {
             return offsetLimitPagingSpec.getLimit() != null;
 
         }

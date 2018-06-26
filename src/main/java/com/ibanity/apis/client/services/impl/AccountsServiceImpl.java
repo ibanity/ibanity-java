@@ -22,7 +22,7 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
     private static final Logger LOGGER = LogManager.getLogger(AccountsServiceImpl.class);
 
     private static final String ACCOUNTS_REQUEST_PATH                           = FORWARD_SLASH + "customer";
-    private static final String ACCOUNTS_FI_REQUEST_PATH                        = ACCOUNTS_REQUEST_PATH + FORWARD_SLASH +FINANCIAL_INSTITUTIONS_PATH + FORWARD_SLASH + FINANCIAL_INSTITUTION_ID_TAG;
+    private static final String ACCOUNTS_FI_REQUEST_PATH                        = ACCOUNTS_REQUEST_PATH + FORWARD_SLASH + FINANCIAL_INSTITUTIONS_PATH + FORWARD_SLASH + FINANCIAL_INSTITUTION_ID_TAG;
     private static final String ACCOUNT_INFORMATION_ACCESS_REQUEST_PATH         = ACCOUNTS_FI_REQUEST_PATH + FORWARD_SLASH + "account-information-access-requests" + FORWARD_SLASH + ACCOUNT_INFORMATION_ACCESS_REQUEST_ID_TAG;
 
     public AccountsServiceImpl() {
@@ -30,7 +30,7 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
     }
 
     @Override
-    public Account getCustomerAccount(CustomerAccessToken customerAccessToken, UUID accountId, UUID financialInstitutionId) throws ResourceNotFoundException {
+    public Account getCustomerAccount(final CustomerAccessToken customerAccessToken, final UUID accountId, final UUID financialInstitutionId) throws ResourceNotFoundException {
         String correctPath = ACCOUNTS_FI_REQUEST_PATH.replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString());
 
         ResourceRepositoryV2<Account, UUID> accountRepo = getApiClient(correctPath, customerAccessToken).getRepositoryForType(Account.class);
@@ -38,19 +38,19 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
         try {
             return accountRepo.findOne(accountId, querySpec);
         } catch (io.crnk.core.exception.ResourceNotFoundException e) {
-            String errorMessage = "Resource with ID:"+accountId+": not found";
+            String errorMessage = "Resource with ID:" + accountId + ": not found";
             LOGGER.debug(errorMessage);
             throw new ResourceNotFoundException(errorMessage);
         }
     }
 
     @Override
-    public ResourceList<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken) {
+    public ResourceList<Account> getCustomerAccounts(final CustomerAccessToken customerAccessToken) {
         return getCustomerAccounts(customerAccessToken, new IbanityPagingSpec());
     }
 
     @Override
-    public ResourceList<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, IbanityPagingSpec pagingSpec) {
+    public ResourceList<Account> getCustomerAccounts(final CustomerAccessToken customerAccessToken, final IbanityPagingSpec pagingSpec) {
         ResourceRepositoryV2<Account, UUID> accountsRepo = getApiClient(ACCOUNTS_REQUEST_PATH, customerAccessToken).getRepositoryForType(Account.class);
         QuerySpec querySpec = new QuerySpec(Account.class);
         querySpec.setPagingSpec(pagingSpec);
@@ -58,12 +58,12 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
     }
 
     @Override
-    public ResourceList<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, UUID financialInstitutionId) throws ResourceNotFoundException {
+    public ResourceList<Account> getCustomerAccounts(final CustomerAccessToken customerAccessToken, final UUID financialInstitutionId) throws ResourceNotFoundException {
         return getCustomerAccounts(customerAccessToken, financialInstitutionId, new IbanityPagingSpec());
     }
 
     @Override
-    public ResourceList<Account> getCustomerAccounts(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, IbanityPagingSpec pagingSpec) throws ResourceNotFoundException {
+    public ResourceList<Account> getCustomerAccounts(final CustomerAccessToken customerAccessToken, final UUID financialInstitutionId, final IbanityPagingSpec pagingSpec) throws ResourceNotFoundException {
         String correctPath = ACCOUNTS_FI_REQUEST_PATH.replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString());
         ResourceRepositoryV2<Account, UUID> accountsFinancialInstitutionRepo = getApiClient(correctPath, customerAccessToken).getRepositoryForType(Account.class);
         QuerySpec querySpec = new QuerySpec(Account.class);
@@ -78,19 +78,19 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
     }
 
     @Override
-    public AccountInformationAccessRequest getAccountInformationAccessRequest(CustomerAccessToken customerAccessToken, AccountInformationAccessRequest accountInformationAccessRequest) {
+    public AccountInformationAccessRequest getAccountInformationAccessRequest(final CustomerAccessToken customerAccessToken, final AccountInformationAccessRequest accountInformationAccessRequest) {
         String correctPath = ACCOUNTS_FI_REQUEST_PATH.replace(FINANCIAL_INSTITUTION_ID_TAG, accountInformationAccessRequest.getFinancialInstitution().getId().toString());
         ResourceRepositoryV2<AccountInformationAccessRequest, UUID> accountInformationAccessRequestRepo = getApiClient(correctPath, customerAccessToken).getRepositoryForType(AccountInformationAccessRequest.class);
         return accountInformationAccessRequestRepo.create(accountInformationAccessRequest);
     }
 
     @Override
-    public ResourceList<AccountInformationAccessAuthorization> getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, UUID financialInstitutionId,  UUID accountInformationAccessRequestId) throws ResourceNotFoundException {
+    public ResourceList<AccountInformationAccessAuthorization> getAccountsInformationAccessAuthorizations(final CustomerAccessToken customerAccessToken, final UUID financialInstitutionId, final UUID accountInformationAccessRequestId) throws ResourceNotFoundException {
         return getAccountsInformationAccessAuthorizations(customerAccessToken, financialInstitutionId, accountInformationAccessRequestId, new IbanityPagingSpec());
     }
 
     @Override
-    public ResourceList<AccountInformationAccessAuthorization> getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, UUID financialInstitutionId,  UUID accountInformationAccessRequestId, IbanityPagingSpec pagingSpec) throws ResourceNotFoundException{
+    public ResourceList<AccountInformationAccessAuthorization> getAccountsInformationAccessAuthorizations(final CustomerAccessToken customerAccessToken, final UUID financialInstitutionId, final UUID accountInformationAccessRequestId, final IbanityPagingSpec pagingSpec) throws ResourceNotFoundException {
         QuerySpec querySpec = new QuerySpec(AccountInformationAccessAuthorization.class);
         querySpec.setPagingSpec(pagingSpec);
         try {
@@ -103,11 +103,11 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
     }
 
     @Override
-    public void revokeAccountsAccessAuthorization(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, AccountInformationAccessAuthorization accountInformationAccessAuthorization) {
+    public void revokeAccountsAccessAuthorization(final CustomerAccessToken customerAccessToken, final UUID financialInstitutionId, final AccountInformationAccessAuthorization accountInformationAccessAuthorization) {
         getAccountInformationAccessAuthorizationRepo(customerAccessToken, financialInstitutionId, accountInformationAccessAuthorization.getAccountInformationAccessRequest().getId()).delete(accountInformationAccessAuthorization.getId());
     }
 
-    private ResourceRepositoryV2<AccountInformationAccessAuthorization, UUID> getAccountInformationAccessAuthorizationRepo(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountInformationAccessRequestId) {
+    private ResourceRepositoryV2<AccountInformationAccessAuthorization, UUID> getAccountInformationAccessAuthorizationRepo(final CustomerAccessToken customerAccessToken, final UUID financialInstitutionId, final UUID accountInformationAccessRequestId) {
         String correctPath = ACCOUNT_INFORMATION_ACCESS_REQUEST_PATH
                 .replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString())
                 .replace(ACCOUNT_INFORMATION_ACCESS_REQUEST_ID_TAG, accountInformationAccessRequestId.toString());

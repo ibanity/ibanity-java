@@ -22,12 +22,12 @@ public class TransactionsServiceImpl extends AbstractServiceImpl implements Tran
     }
 
     @Override
-    public ResourceList<Transaction> getAccountTransactions(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountId) throws ResourceNotFoundException {
+    public ResourceList<Transaction> getAccountTransactions(final CustomerAccessToken customerAccessToken, final UUID financialInstitutionId, final UUID accountId) throws ResourceNotFoundException {
         return getAccountTransactions(customerAccessToken, financialInstitutionId, accountId, new IbanityPagingSpec());
     }
 
     @Override
-    public ResourceList<Transaction> getAccountTransactions(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountId, IbanityPagingSpec pagingSpec) throws ResourceNotFoundException {
+    public ResourceList<Transaction> getAccountTransactions(final CustomerAccessToken customerAccessToken, final UUID financialInstitutionId, final UUID accountId, final IbanityPagingSpec pagingSpec) throws ResourceNotFoundException {
         QuerySpec querySpec = new QuerySpec(Transaction.class);
         querySpec.setPagingSpec(pagingSpec);
         try {
@@ -39,7 +39,7 @@ public class TransactionsServiceImpl extends AbstractServiceImpl implements Tran
     }
 
     @Override
-    public Transaction getAccountTransaction(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountId, UUID transactionId) throws ResourceNotFoundException {
+    public Transaction getAccountTransaction(final CustomerAccessToken customerAccessToken, final UUID financialInstitutionId, final UUID accountId, final UUID transactionId) throws ResourceNotFoundException {
         try {
             return getRepository(customerAccessToken, financialInstitutionId, accountId).findOne(transactionId, new QuerySpec(Transaction.class));
         } catch (io.crnk.core.exception.ResourceNotFoundException e) {
@@ -48,7 +48,7 @@ public class TransactionsServiceImpl extends AbstractServiceImpl implements Tran
         }
     }
 
-    private ResourceRepositoryV2<Transaction, UUID> getRepository(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountId){
+    private ResourceRepositoryV2<Transaction, UUID> getRepository(final CustomerAccessToken customerAccessToken, final UUID financialInstitutionId, final UUID accountId) {
         String correctPath = TRANSACTIONS_REQUEST_PATH
                 .replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString())
                 .replace(ACCOUNT_ID_TAG, accountId.toString());

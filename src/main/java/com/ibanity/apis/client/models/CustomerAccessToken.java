@@ -9,14 +9,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.UUID;
 
-@JsonApiResource(type="customerAccessToken", resourcePath = "customer-access-tokens", pagingBehavior = IbanityPagingBehavior.class)
-public class CustomerAccessToken extends AbstractModel{
+@JsonApiResource(type = "customerAccessToken", resourcePath = "customer-access-tokens", pagingBehavior = IbanityPagingBehavior.class)
+public class CustomerAccessToken extends AbstractModel {
     private String token;
 
     @JsonProperty("applicationCustomerReference")
     private String applicationCustomerReference;
 
-    public CustomerAccessToken(UUID id) {
+    public CustomerAccessToken(final UUID id) {
         super(id);
     }
 
@@ -28,7 +28,7 @@ public class CustomerAccessToken extends AbstractModel{
         return token;
     }
 
-    public void setToken(String token) {
+    public void setToken(final String token) {
         this.token = token;
     }
 
@@ -36,15 +36,19 @@ public class CustomerAccessToken extends AbstractModel{
         return applicationCustomerReference;
     }
 
-    public void setApplicationCustomerReference(String applicationCustomerReference) {
+    public void setApplicationCustomerReference(final String applicationCustomerReference) {
         this.applicationCustomerReference = applicationCustomerReference;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
 
-        if (!(o instanceof CustomerAccessToken)) return false;
+        if (!(o instanceof CustomerAccessToken)) {
+            return false;
+        }
 
         CustomerAccessToken that = (CustomerAccessToken) o;
 

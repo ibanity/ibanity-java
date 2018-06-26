@@ -9,10 +9,10 @@ import java.util.UUID;
 
 public abstract class AbstractModel {
     @JsonApiId
-    protected UUID id;
+    private UUID id;
 
 
-    public AbstractModel(UUID id) {
+    public AbstractModel(final UUID id) {
         this.id = id;
     }
 
@@ -23,15 +23,19 @@ public abstract class AbstractModel {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(final UUID id) {
         this.id = id;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
 
-        if (!(o instanceof AbstractModel)) return false;
+        if (!(o instanceof AbstractModel)) {
+            return false;
+        }
 
         AbstractModel that = (AbstractModel) o;
 

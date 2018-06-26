@@ -12,7 +12,7 @@ public class Account extends AbstractAccount {
         super();
     }
 
-    public Account(UUID id, UUID financialInstitutionId) {
+    public Account(final UUID id, final UUID financialInstitutionId) {
         super(id, financialInstitutionId);
     }
 }

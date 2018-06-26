@@ -14,25 +14,25 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.UUID;
 
 @JsonApiResource(type = "accountInformationAccessRequest", resourcePath = "account-information-access-requests", pagingBehavior = IbanityPagingBehavior.class)
-public class AccountInformationAccessRequest extends AbstractModel{
+public class AccountInformationAccessRequest extends AbstractModel {
     private String redirectUri;
     private String consentReference;
     @JsonApiLinksInformation
     private AccountInformationAccessLinks links;
 
-    @JsonApiRelation(lookUp= LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL,serialize= SerializeType.ONLY_ID)
+    @JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.ONLY_ID)
     private FinancialInstitution financialInstitution = null;
 
     public AccountInformationAccessRequest() {
         super();
     }
 
-    public AccountInformationAccessRequest(UUID id) {
+    public AccountInformationAccessRequest(final UUID id) {
         super(id);
         this.links = new AccountInformationAccessLinks();
     }
 
-    public AccountInformationAccessRequest(UUID id, UUID financialInstitutionId) {
+    public AccountInformationAccessRequest(final UUID id, final UUID financialInstitutionId) {
         super(id);
         this.financialInstitution = new FinancialInstitution(financialInstitutionId);
         this.links = new AccountInformationAccessLinks();
@@ -42,7 +42,7 @@ public class AccountInformationAccessRequest extends AbstractModel{
         return redirectUri;
     }
 
-    public void setRedirectUri(String redirectUri) {
+    public void setRedirectUri(final String redirectUri) {
         this.redirectUri = redirectUri;
     }
 
@@ -50,7 +50,7 @@ public class AccountInformationAccessRequest extends AbstractModel{
         return consentReference;
     }
 
-    public void setConsentReference(String consentReference) {
+    public void setConsentReference(final String consentReference) {
         this.consentReference = consentReference;
     }
 
@@ -58,7 +58,7 @@ public class AccountInformationAccessRequest extends AbstractModel{
         return links;
     }
 
-    public void setLinks(AccountInformationAccessLinks links) {
+    public void setLinks(final AccountInformationAccessLinks links) {
         this.links = links;
     }
 
@@ -66,19 +66,23 @@ public class AccountInformationAccessRequest extends AbstractModel{
         return financialInstitution;
     }
 
-    public void setFinancialInstitution(FinancialInstitution financialInstitution) {
+    public void setFinancialInstitution(final FinancialInstitution financialInstitution) {
         this.financialInstitution = financialInstitution;
     }
 
-    public void setFinancialInstitutionId(UUID financialInstitutionId){
+    public void setFinancialInstitutionId(final UUID financialInstitutionId) {
         this.financialInstitution = new FinancialInstitution(financialInstitutionId);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
 
-        if (!(o instanceof AccountInformationAccessRequest)) return false;
+        if (!(o instanceof AccountInformationAccessRequest)) {
+            return false;
+        }
 
         AccountInformationAccessRequest that = (AccountInformationAccessRequest) o;
 

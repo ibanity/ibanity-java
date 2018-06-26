@@ -11,7 +11,7 @@ import javax.net.ssl.SSLContext;
 import java.io.FileInputStream;
 import java.security.KeyStore;
 
-public class IbanityHttpUtils {
+public final class IbanityHttpUtils {
     private static final Logger LOGGER = LogManager.getLogger(IbanityHttpUtils.class);
     private static final String IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_STANDARD_PROPERTY_KEY                = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.private.certificate.standard";
     private static final String IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_PATH_PROPERTY_KEY                    = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.private.certificate.path";

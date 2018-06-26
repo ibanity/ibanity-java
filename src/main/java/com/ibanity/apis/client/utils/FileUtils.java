@@ -5,20 +5,19 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 
 public class FileUtils {
-    public InputStream loadFile(String path) {
+    public InputStream loadFile(final String path) {
         try {
             return new FileInputStream(getFile(path));
         } catch (Exception e) {
-            throw new IllegalArgumentException("Resource Path not found:"+path+":", e);
+            throw new IllegalArgumentException("Resource Path not found:" + path + ":", e);
         }
     }
 
-    public File getFile(String path){
+    public File getFile(final String path) {
         File file  = new File(path);
         if (file.isFile()) {
             return file;
-        }
-        else {
+        } else {
             ClassLoader classLoader = getClass().getClassLoader();
             file = new File(classLoader.getResource(path).getFile());
         }

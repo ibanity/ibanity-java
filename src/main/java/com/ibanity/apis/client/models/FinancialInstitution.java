@@ -15,11 +15,11 @@ public class FinancialInstitution extends AbstractModel {
     private Boolean sandbox;
     private String name;
 
-    public FinancialInstitution(UUID id) {
+    public FinancialInstitution(final UUID id) {
         super(id);
     }
 
-    public FinancialInstitution(UUID id, Boolean sandbox, String name) {
+    public FinancialInstitution(final UUID id, final Boolean sandbox, final String name) {
         super(id);
         this.sandbox = sandbox;
         this.name = name;
@@ -33,7 +33,7 @@ public class FinancialInstitution extends AbstractModel {
         return sandbox;
     }
 
-    public void setSandbox(Boolean sandbox) {
+    public void setSandbox(final Boolean sandbox) {
         this.sandbox = sandbox;
     }
 
@@ -41,15 +41,19 @@ public class FinancialInstitution extends AbstractModel {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
 
-        if (!(o instanceof FinancialInstitution)) return false;
+        if (!(o instanceof FinancialInstitution)) {
+            return false;
+        }
 
         FinancialInstitution that = (FinancialInstitution) o;
 

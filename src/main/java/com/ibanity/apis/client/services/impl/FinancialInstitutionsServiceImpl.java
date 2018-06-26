@@ -14,7 +14,7 @@ import java.util.UUID;
 
 import static com.ibanity.apis.client.services.configuration.IbanityConfiguration.FORWARD_SLASH;
 
-public class FinancialInstitutionsServiceImpl extends AbstractServiceImpl implements FinancialInstitutionsService{
+public class FinancialInstitutionsServiceImpl extends AbstractServiceImpl implements FinancialInstitutionsService {
     private static final Logger LOGGER = LogManager.getLogger(FinancialInstitutionsServiceImpl.class);
 
     private final ResourceRepositoryV2<FinancialInstitution, UUID> financialInstitutionsRepo;
@@ -30,18 +30,18 @@ public class FinancialInstitutionsServiceImpl extends AbstractServiceImpl implem
     }
 
     @Override
-    public ResourceList<FinancialInstitution> getFinancialInstitutions(IbanityPagingSpec pagingSpec) {
+    public ResourceList<FinancialInstitution> getFinancialInstitutions(final IbanityPagingSpec pagingSpec) {
         QuerySpec querySpec = new QuerySpec(FinancialInstitution.class);
         querySpec.setPagingSpec(pagingSpec);
         return findAll(querySpec, financialInstitutionsRepo);
     }
 
     @Override
-    public FinancialInstitution getFinancialInstitution(UUID financialInstitutionId) throws ResourceNotFoundException {
+    public FinancialInstitution getFinancialInstitution(final UUID financialInstitutionId) throws ResourceNotFoundException {
         try {
             return financialInstitutionsRepo.findOne(financialInstitutionId, new QuerySpec(FinancialInstitution.class));
         } catch (io.crnk.core.exception.ResourceNotFoundException e) {
-            String errorMessage = "Resource with ID:"+financialInstitutionId+": not found";
+            String errorMessage = "Resource with ID:" + financialInstitutionId + ": not found";
             LOGGER.debug(errorMessage);
             throw new ResourceNotFoundException(errorMessage);
         }

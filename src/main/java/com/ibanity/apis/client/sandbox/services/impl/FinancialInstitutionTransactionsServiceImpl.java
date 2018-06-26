@@ -25,7 +25,7 @@ public class FinancialInstitutionTransactionsServiceImpl extends AbstractService
     private static final Logger LOGGER = LogManager.getLogger(FinancialInstitutionTransactionsServiceImpl.class);
 
     @Override
-    public FinancialInstitutionTransaction getFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID financialInstitutionTransactionId) throws ResourceNotFoundException {
+    public FinancialInstitutionTransaction getFinancialInstitutionTransaction(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID financialInstitutionAccountId, final UUID financialInstitutionTransactionId) throws ResourceNotFoundException {
         ResourceRepositoryV2<FinancialInstitutionTransaction, UUID> transactionsRepo = getTransactionsRepo(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, null);
         QuerySpec querySpec = new QuerySpec(FinancialInstitutionTransaction.class);
         try {
@@ -37,7 +37,7 @@ public class FinancialInstitutionTransactionsServiceImpl extends AbstractService
     }
 
     @Override
-    public List<FinancialInstitutionTransaction> getFinancialInstitutionAccountTransactions(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) throws ResourceNotFoundException{
+    public List<FinancialInstitutionTransaction> getFinancialInstitutionAccountTransactions(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID financialInstitutionAccountId) throws ResourceNotFoundException {
         ResourceRepositoryV2<FinancialInstitutionTransaction, UUID> transactionsRepo = getTransactionsRepo(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, null);
         QuerySpec querySpec = new QuerySpec(FinancialInstitutionTransaction.class);
         try {
@@ -50,12 +50,12 @@ public class FinancialInstitutionTransactionsServiceImpl extends AbstractService
     }
 
     @Override
-    public FinancialInstitutionTransaction createFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, FinancialInstitutionTransaction financialInstitutionTransaction) throws ResourceNotFoundException {
+    public FinancialInstitutionTransaction createFinancialInstitutionTransaction(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID financialInstitutionAccountId, final FinancialInstitutionTransaction financialInstitutionTransaction) throws ResourceNotFoundException {
         return create(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, financialInstitutionTransaction, null);
     }
 
 
-    private FinancialInstitutionTransaction create(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, FinancialInstitutionTransaction financialInstitutionTransaction, UUID idempotency) throws ResourceNotFoundException {
+    private FinancialInstitutionTransaction create(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID financialInstitutionAccountId, final FinancialInstitutionTransaction financialInstitutionTransaction, final UUID idempotency) throws ResourceNotFoundException {
         try {
             return getTransactionsRepo(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, idempotency).create(financialInstitutionTransaction);
         } catch (io.crnk.core.exception.ResourceNotFoundException e) {
@@ -65,12 +65,12 @@ public class FinancialInstitutionTransactionsServiceImpl extends AbstractService
     }
 
     @Override
-    public FinancialInstitutionTransaction createFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, FinancialInstitutionTransaction financialInstitutionTransaction, UUID idempotency) throws ResourceNotFoundException {
+    public FinancialInstitutionTransaction createFinancialInstitutionTransaction(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID financialInstitutionAccountId, final FinancialInstitutionTransaction financialInstitutionTransaction, final UUID idempotency) throws ResourceNotFoundException {
         return create(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, financialInstitutionTransaction, idempotency);
     }
 
     @Override
-    public void deleteFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID financialInstitutionTransactionId) throws ResourceNotFoundException {
+    public void deleteFinancialInstitutionTransaction(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID financialInstitutionAccountId, final UUID financialInstitutionTransactionId) throws ResourceNotFoundException {
         try {
             getTransactionsRepo(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, null).delete(financialInstitutionTransactionId);
         } catch (io.crnk.core.exception.ResourceNotFoundException e) {
@@ -79,12 +79,11 @@ public class FinancialInstitutionTransactionsServiceImpl extends AbstractService
         }
     }
 
-    protected ResourceRepositoryV2<FinancialInstitutionTransaction, UUID> getTransactionsRepo(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID idempotency){
+    protected ResourceRepositoryV2<FinancialInstitutionTransaction, UUID> getTransactionsRepo(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID financialInstitutionAccountId, final UUID idempotency) {
         String correctPath = SANDBOX_ACCOUNTS_TXN_FI_REQUEST_PATH
                 .replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString())
                 .replace(USER_ID_TAG, financialInstitutionUserId.toString())
-                .replace(ACCOUNT_ID_TAG, financialInstitutionAccountId.toString())
-                ;
+                .replace(ACCOUNT_ID_TAG, financialInstitutionAccountId.toString());
         return getApiClient(correctPath, null, idempotency).getRepositoryForType(FinancialInstitutionTransaction.class);
     }
 }

@@ -17,17 +17,17 @@ import java.util.UUID;
 @JsonApiResource(type = "financialInstitutionTransaction", resourcePath = "financial-institution-transactions", pagingBehavior = IbanityPagingBehavior.class)
 public class FinancialInstitutionTransaction extends AbstractTransaction {
 
-    @JsonApiRelation(lookUp= LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL,serialize= SerializeType.ONLY_ID)
+    @JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.ONLY_ID)
     private FinancialInstitutionAccount financialInstitutionAccount;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
-    Instant createdAt = null;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
-    Instant updatedAt = null;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
-    Instant deletedAt = null;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
+    private Instant createdAt = null;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
+    private Instant updatedAt = null;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
+    private Instant deletedAt = null;
 
-    public FinancialInstitutionTransaction(UUID id) {
+    public FinancialInstitutionTransaction(final UUID id) {
         super(id);
     }
 
@@ -38,7 +38,7 @@ public class FinancialInstitutionTransaction extends AbstractTransaction {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(final Instant createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -46,7 +46,7 @@ public class FinancialInstitutionTransaction extends AbstractTransaction {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Instant updatedAt) {
+    public void setUpdatedAt(final Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -54,7 +54,7 @@ public class FinancialInstitutionTransaction extends AbstractTransaction {
         return deletedAt;
     }
 
-    public void setDeletedAt(Instant deletedAt) {
+    public void setDeletedAt(final Instant deletedAt) {
         this.deletedAt = deletedAt;
     }
 
@@ -62,19 +62,23 @@ public class FinancialInstitutionTransaction extends AbstractTransaction {
         return financialInstitutionAccount;
     }
 
-    public void setFinancialInstitutionAccount(FinancialInstitutionAccount financialInstitutionAccount) {
+    public void setFinancialInstitutionAccount(final FinancialInstitutionAccount financialInstitutionAccount) {
         this.financialInstitutionAccount = financialInstitutionAccount;
     }
 
-    public void setFinancialInstitutionAccountId(UUID financialInstitutionAccountId){
+    public void setFinancialInstitutionAccountId(final UUID financialInstitutionAccountId) {
         this.financialInstitutionAccount = new FinancialInstitutionAccount(financialInstitutionAccountId);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
 
-        if (!(o instanceof FinancialInstitutionTransaction)) return false;
+        if (!(o instanceof FinancialInstitutionTransaction)) {
+            return false;
+        }
 
         FinancialInstitutionTransaction that = (FinancialInstitutionTransaction) o;
 

@@ -8,14 +8,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.time.Instant;
 import java.util.UUID;
 
-public abstract class AbstractTransaction extends AbstractModel{
+public abstract class AbstractTransaction extends AbstractModel {
 
     private Double amount;
     private String currency;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
     private Instant valueDate;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
     private Instant executionDate;
 
     private String description;
@@ -27,7 +27,7 @@ public abstract class AbstractTransaction extends AbstractModel{
     public AbstractTransaction() {
     }
 
-    public AbstractTransaction(UUID id) {
+    public AbstractTransaction(final UUID id) {
         super(id);
     }
 
@@ -35,7 +35,7 @@ public abstract class AbstractTransaction extends AbstractModel{
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(final Double amount) {
         this.amount = amount;
     }
 
@@ -43,7 +43,7 @@ public abstract class AbstractTransaction extends AbstractModel{
         return currency;
     }
 
-    public void setCurrency(String currency) {
+    public void setCurrency(final String currency) {
         this.currency = currency;
     }
 
@@ -51,7 +51,7 @@ public abstract class AbstractTransaction extends AbstractModel{
         return valueDate;
     }
 
-    public void setValueDate(Instant valueDate) {
+    public void setValueDate(final Instant valueDate) {
         this.valueDate = valueDate;
     }
 
@@ -59,7 +59,7 @@ public abstract class AbstractTransaction extends AbstractModel{
         return executionDate;
     }
 
-    public void setExecutionDate(Instant executionDate) {
+    public void setExecutionDate(final Instant executionDate) {
         this.executionDate = executionDate;
     }
 
@@ -67,7 +67,7 @@ public abstract class AbstractTransaction extends AbstractModel{
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -75,7 +75,7 @@ public abstract class AbstractTransaction extends AbstractModel{
         return remittanceInformationType;
     }
 
-    public void setRemittanceInformationType(String remittanceInformationType) {
+    public void setRemittanceInformationType(final String remittanceInformationType) {
         this.remittanceInformationType = remittanceInformationType;
     }
 
@@ -83,7 +83,7 @@ public abstract class AbstractTransaction extends AbstractModel{
         return remittanceInformation;
     }
 
-    public void setRemittanceInformation(String remittanceInformation) {
+    public void setRemittanceInformation(final String remittanceInformation) {
         this.remittanceInformation = remittanceInformation;
     }
 
@@ -91,7 +91,7 @@ public abstract class AbstractTransaction extends AbstractModel{
         return counterpartName;
     }
 
-    public void setCounterpartName(String counterpartName) {
+    public void setCounterpartName(final String counterpartName) {
         this.counterpartName = counterpartName;
     }
 
@@ -99,15 +99,19 @@ public abstract class AbstractTransaction extends AbstractModel{
         return counterpartReference;
     }
 
-    public void setCounterpartReference(String counterpartReference) {
+    public void setCounterpartReference(final String counterpartReference) {
         this.counterpartReference = counterpartReference;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
 
-        if (!(o instanceof AbstractTransaction)) return false;
+        if (!(o instanceof AbstractTransaction)) {
+            return false;
+        }
 
         AbstractTransaction that = (AbstractTransaction) o;
 

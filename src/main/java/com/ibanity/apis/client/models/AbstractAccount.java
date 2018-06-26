@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.UUID;
 
-public abstract class AbstractAccount extends AbstractModel{
+public abstract class AbstractAccount extends AbstractModel {
     @JsonProperty("subtype")
     private String subType;
     private String currency;
@@ -20,19 +20,19 @@ public abstract class AbstractAccount extends AbstractModel{
     private Double currentBalance;
     private Double availableBalance;
 
-    @JsonApiRelation(lookUp=LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL,serialize=SerializeType.ONLY_ID)
+    @JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.ONLY_ID)
     private FinancialInstitution financialInstitution;
 
     public AbstractAccount() {
         this.financialInstitution = new FinancialInstitution();
     }
 
-    public AbstractAccount(UUID id, UUID financialInstitutionId) {
+    public AbstractAccount(final UUID id, final UUID financialInstitutionId) {
         super(id);
         this.financialInstitution = new FinancialInstitution(financialInstitutionId);
     }
 
-    public AbstractAccount(UUID id) {
+    public AbstractAccount(final UUID id) {
         super(id);
     }
 
@@ -40,11 +40,11 @@ public abstract class AbstractAccount extends AbstractModel{
         return financialInstitution;
     }
 
-    public void setFinancialInstitution(FinancialInstitution financialInstitution) {
+    public void setFinancialInstitution(final FinancialInstitution financialInstitution) {
         this.financialInstitution = financialInstitution;
     }
 
-    public void setFinancialInstitutionId(UUID financialInstitutionId){
+    public void setFinancialInstitutionId(final UUID financialInstitutionId) {
         this.financialInstitution = new FinancialInstitution(financialInstitutionId);
     }
 
@@ -52,7 +52,7 @@ public abstract class AbstractAccount extends AbstractModel{
         return subType;
     }
 
-    public void setSubType(String subType) {
+    public void setSubType(final String subType) {
         this.subType = subType;
     }
 
@@ -60,7 +60,7 @@ public abstract class AbstractAccount extends AbstractModel{
         return currency;
     }
 
-    public void setCurrency(String currency) {
+    public void setCurrency(final String currency) {
         this.currency = currency;
     }
 
@@ -68,7 +68,7 @@ public abstract class AbstractAccount extends AbstractModel{
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -76,7 +76,7 @@ public abstract class AbstractAccount extends AbstractModel{
         return reference;
     }
 
-    public void setReference(String reference) {
+    public void setReference(final String reference) {
         this.reference = reference;
     }
 
@@ -84,7 +84,7 @@ public abstract class AbstractAccount extends AbstractModel{
         return referenceType;
     }
 
-    public void setReferenceType(String referenceType) {
+    public void setReferenceType(final String referenceType) {
         this.referenceType = referenceType;
     }
 
@@ -92,7 +92,7 @@ public abstract class AbstractAccount extends AbstractModel{
         return currentBalance;
     }
 
-    public void setCurrentBalance(Double currentBalance) {
+    public void setCurrentBalance(final Double currentBalance) {
         this.currentBalance = currentBalance;
     }
 
@@ -100,15 +100,19 @@ public abstract class AbstractAccount extends AbstractModel{
         return availableBalance;
     }
 
-    public void setAvailableBalance(Double availableBalance) {
+    public void setAvailableBalance(final Double availableBalance) {
         this.availableBalance = availableBalance;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
 
-        if (!(o instanceof AbstractAccount)) return false;
+        if (!(o instanceof AbstractAccount)) {
+            return false;
+        }
 
         AbstractAccount that = (AbstractAccount) o;
 

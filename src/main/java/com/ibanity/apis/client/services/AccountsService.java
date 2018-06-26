@@ -83,7 +83,7 @@ public interface AccountsService {
      * @return the list of authorizations details
      * @throws ResourceNotFoundException when the provided ID is not known
      */
-    List<AccountInformationAccessAuthorization> getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, UUID financialInstitutionId,  UUID accountInformationAccessRequestId) throws ResourceNotFoundException ;
+    List<AccountInformationAccessAuthorization> getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, UUID financialInstitutionId,  UUID accountInformationAccessRequestId) throws ResourceNotFoundException;
 
     /**
      * Get the list of Account Access Authorizations

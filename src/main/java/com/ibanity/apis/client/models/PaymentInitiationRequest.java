@@ -14,8 +14,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.UUID;
 
 
-@JsonApiResource(type= "paymentInitiationRequest", resourcePath = "payment-initiation-requests", pagingBehavior = IbanityPagingBehavior.class)
-public class PaymentInitiationRequest extends AbstractModel{
+@JsonApiResource(type = "paymentInitiationRequest", resourcePath = "payment-initiation-requests", pagingBehavior = IbanityPagingBehavior.class)
+public class PaymentInitiationRequest extends AbstractModel {
     private String consentReference;
     private String endToEndId;
     private String productType;
@@ -40,7 +40,7 @@ public class PaymentInitiationRequest extends AbstractModel{
     @JsonApiLinksInformation
     private PaymentAccessLinks links;
 
-    @JsonApiRelation(lookUp= LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL,serialize= SerializeType.ONLY_ID)
+    @JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.ONLY_ID)
     private FinancialInstitution financialInstitution = null;
 
     public PaymentInitiationRequest() {
@@ -48,12 +48,12 @@ public class PaymentInitiationRequest extends AbstractModel{
         this.financialInstitution = new FinancialInstitution();
     }
 
-    public PaymentInitiationRequest(UUID id, UUID financialInstitutionId) {
+    public PaymentInitiationRequest(final UUID id, final UUID financialInstitutionId) {
         super(id);
         this.financialInstitution = new FinancialInstitution(financialInstitutionId);
     }
 
-    public void setFinancialInstitutionId(UUID financialInstitutionId){
+    public void setFinancialInstitutionId(final UUID financialInstitutionId) {
         this.financialInstitution = new FinancialInstitution(financialInstitutionId);
     }
 
@@ -61,7 +61,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         return consentReference;
     }
 
-    public void setConsentReference(String consentReference) {
+    public void setConsentReference(final String consentReference) {
         this.consentReference = consentReference;
     }
 
@@ -69,7 +69,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         return endToEndId;
     }
 
-    public void setEndToEndId(String endToEndId) {
+    public void setEndToEndId(final String endToEndId) {
         this.endToEndId = endToEndId;
     }
 
@@ -77,7 +77,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         return productType;
     }
 
-    public void setProductType(String productType) {
+    public void setProductType(final String productType) {
         this.productType = productType;
     }
 
@@ -85,7 +85,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         return remittanceInformationType;
     }
 
-    public void setRemittanceInformationType(String remittanceInformationType) {
+    public void setRemittanceInformationType(final String remittanceInformationType) {
         this.remittanceInformationType = remittanceInformationType;
     }
 
@@ -93,7 +93,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         return remittanceInformation;
     }
 
-    public void setRemittanceInformation(String remittanceInformation) {
+    public void setRemittanceInformation(final String remittanceInformation) {
         this.remittanceInformation = remittanceInformation;
     }
 
@@ -101,7 +101,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         return currency;
     }
 
-    public void setCurrency(String currency) {
+    public void setCurrency(final String currency) {
         this.currency = currency;
     }
 
@@ -109,7 +109,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(final Double amount) {
         this.amount = amount;
     }
 
@@ -117,7 +117,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         return debtorName;
     }
 
-    public void setDebtorName(String debtorName) {
+    public void setDebtorName(final String debtorName) {
         this.debtorName = debtorName;
     }
 
@@ -125,7 +125,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         return debtorAccountReference;
     }
 
-    public void setDebtorAccountReference(String debtorAccountReference) {
+    public void setDebtorAccountReference(final String debtorAccountReference) {
         this.debtorAccountReference = debtorAccountReference;
     }
 
@@ -133,7 +133,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         return debtorAccountReferenceType;
     }
 
-    public void setDebtorAccountReferenceType(String debtorAccountReferenceType) {
+    public void setDebtorAccountReferenceType(final String debtorAccountReferenceType) {
         this.debtorAccountReferenceType = debtorAccountReferenceType;
     }
 
@@ -141,7 +141,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         return creditorName;
     }
 
-    public void setCreditorName(String creditorName) {
+    public void setCreditorName(final String creditorName) {
         this.creditorName = creditorName;
     }
 
@@ -149,7 +149,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         return creditorAccountReference;
     }
 
-    public void setCreditorAccountReference(String creditorAccountReference) {
+    public void setCreditorAccountReference(final String creditorAccountReference) {
         this.creditorAccountReference = creditorAccountReference;
     }
 
@@ -157,7 +157,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         return creditorAccountReferenceType;
     }
 
-    public void setCreditorAccountReferenceType(String creditorAccountReferenceType) {
+    public void setCreditorAccountReferenceType(final String creditorAccountReferenceType) {
         this.creditorAccountReferenceType = creditorAccountReferenceType;
     }
 
@@ -165,7 +165,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         return creditorAgent;
     }
 
-    public void setCreditorAgent(String creditorAgent) {
+    public void setCreditorAgent(final String creditorAgent) {
         this.creditorAgent = creditorAgent;
     }
 
@@ -173,7 +173,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         return creditorAgentType;
     }
 
-    public void setCreditorAgentType(String creditorAgentType) {
+    public void setCreditorAgentType(final String creditorAgentType) {
         this.creditorAgentType = creditorAgentType;
     }
 
@@ -181,7 +181,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(final String status) {
         this.status = status;
     }
 
@@ -189,7 +189,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         return financialInstitution;
     }
 
-    public void setFinancialInstitution(FinancialInstitution financialInstitution) {
+    public void setFinancialInstitution(final FinancialInstitution financialInstitution) {
         this.financialInstitution = financialInstitution;
     }
 
@@ -197,7 +197,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         return links;
     }
 
-    public void setLinks(PaymentAccessLinks links) {
+    public void setLinks(final PaymentAccessLinks links) {
         this.links = links;
     }
 
@@ -205,7 +205,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         return redirectUri;
     }
 
-    public void setRedirectUri(String redirectUri) {
+    public void setRedirectUri(final String redirectUri) {
         this.redirectUri = redirectUri;
     }
 
@@ -213,7 +213,7 @@ public class PaymentInitiationRequest extends AbstractModel{
         return customerIp;
     }
 
-    public void setCustomerIp(String customerIp) {
+    public void setCustomerIp(final String customerIp) {
         this.customerIp = customerIp;
     }
 
@@ -221,16 +221,20 @@ public class PaymentInitiationRequest extends AbstractModel{
         return customerAgent;
     }
 
-    public void setCustomerAgent(String customerAgent) {
+    public void setCustomerAgent(final String customerAgent) {
         this.customerAgent = customerAgent;
     }
 
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
 
-        if (!(o instanceof PaymentInitiationRequest)) return false;
+        if (!(o instanceof PaymentInitiationRequest)) {
+            return false;
+        }
 
         PaymentInitiationRequest that = (PaymentInitiationRequest) o;
 

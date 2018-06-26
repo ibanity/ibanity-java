@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @JsonApiResource(type = "transaction", resourcePath = "transactions", pagingBehavior = IbanityPagingBehavior.class)
 public class Transaction extends AbstractTransaction {
 
-    @JsonApiRelation(lookUp= LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL,serialize= SerializeType.ONLY_ID)
+    @JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.ONLY_ID)
     private Account account;
 
     public Transaction() {
@@ -23,15 +23,19 @@ public class Transaction extends AbstractTransaction {
         return account;
     }
 
-    public void setAccount(Account account) {
+    public void setAccount(final Account account) {
         this.account = account;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
 
-        if (!(o instanceof Transaction)) return false;
+        if (!(o instanceof Transaction)) {
+            return false;
+        }
 
         Transaction that = (Transaction) o;
 

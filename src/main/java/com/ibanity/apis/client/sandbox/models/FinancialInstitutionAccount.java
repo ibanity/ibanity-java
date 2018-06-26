@@ -14,14 +14,14 @@ import java.util.UUID;
 @JsonApiResource(type = "financialInstitutionAccount", resourcePath = "financial-institution-accounts", pagingBehavior = IbanityPagingBehavior.class)
 public class FinancialInstitutionAccount extends AbstractAccount {
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
-    Instant createdAt = null;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
-    Instant updatedAt = null;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ",timezone = "UTC")
-    Instant deletedAt = null;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
+    private Instant createdAt = null;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
+    private Instant updatedAt = null;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
+    private Instant deletedAt = null;
 
-    public FinancialInstitutionAccount(UUID id) {
+    public FinancialInstitutionAccount(final UUID id) {
         super(id);
     }
 
@@ -32,7 +32,7 @@ public class FinancialInstitutionAccount extends AbstractAccount {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(final Instant createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -40,7 +40,7 @@ public class FinancialInstitutionAccount extends AbstractAccount {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Instant updatedAt) {
+    public void setUpdatedAt(final Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -48,7 +48,7 @@ public class FinancialInstitutionAccount extends AbstractAccount {
         return deletedAt;
     }
 
-    public void setDeletedAt(Instant deletedAt) {
+    public void setDeletedAt(final Instant deletedAt) {
         this.deletedAt = deletedAt;
     }
 
@@ -63,10 +63,14 @@ public class FinancialInstitutionAccount extends AbstractAccount {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
 
-        if (!(o instanceof FinancialInstitutionAccount)) return false;
+        if (!(o instanceof FinancialInstitutionAccount)) {
+            return false;
+        }
 
         FinancialInstitutionAccount that = (FinancialInstitutionAccount) o;
 

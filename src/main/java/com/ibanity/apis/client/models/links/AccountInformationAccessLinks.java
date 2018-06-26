@@ -11,7 +11,7 @@ public class AccountInformationAccessLinks implements MetaInformation {
         return redirect;
     }
 
-    public void setRedirect(String redirect) {
+    public void setRedirect(final String redirect) {
         this.redirect = redirect;
     }
 

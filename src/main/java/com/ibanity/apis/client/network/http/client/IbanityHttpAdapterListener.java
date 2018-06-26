@@ -13,29 +13,29 @@ import java.util.UUID;
 
 public class IbanityHttpAdapterListener implements HttpClientAdapterListener {
 
-    CustomerAccessToken customerAccessToken = null;
-    UUID idempotency                        = null;
+    private CustomerAccessToken customerAccessToken = null;
+    private UUID idempotency                        = null;
 
     private static final String IDEMPOTENCY_KEY = "Ibanity-Idempotency-Key";
 
-    public IbanityHttpAdapterListener(CustomerAccessToken customerAccessToken, UUID idempotency) {
+    public IbanityHttpAdapterListener(final CustomerAccessToken customerAccessToken, final UUID idempotency) {
         this.customerAccessToken = customerAccessToken;
         this.idempotency = idempotency;
     }
 
     @Override
-    public void onBuild(HttpClientBuilder httpClientBuilder) {
+    public void onBuild(final HttpClientBuilder httpClientBuilder) {
         httpClientBuilder.setSSLContext(IbanityHttpUtils.getSSLContext());
         httpClientBuilder.addInterceptorLast(new IbanitySignatureInterceptor());
         httpClientBuilder.setDefaultHeaders(getAuthorizationtHttpRequestHeaders());
     }
 
-    private Collection<Header> getAuthorizationtHttpRequestHeaders(){
+    private Collection<Header> getAuthorizationtHttpRequestHeaders() {
         Collection<Header> authorizationHttpRequestHeaders = new ArrayList();
         if (customerAccessToken != null) {
             authorizationHttpRequestHeaders.add(new BasicHeader(HttpHeaders.AUTHORIZATION, "Bearer " + customerAccessToken.getToken()));
         }
-        if (idempotency != null){
+        if (idempotency != null) {
             authorizationHttpRequestHeaders.add(new BasicHeader(IDEMPOTENCY_KEY, idempotency.toString()));
         }
         return authorizationHttpRequestHeaders;

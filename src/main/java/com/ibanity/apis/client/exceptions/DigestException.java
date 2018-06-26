@@ -5,15 +5,15 @@ public class DigestException extends Exception {
         super();
     }
 
-    public DigestException(String message) {
+    public DigestException(final String message) {
         super(message);
     }
 
-    public DigestException(String message, Throwable cause) {
+    public DigestException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public DigestException(Throwable cause) {
+    public DigestException(final Throwable cause) {
         super(cause);
     }
 }

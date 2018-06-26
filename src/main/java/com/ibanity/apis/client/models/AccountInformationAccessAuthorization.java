@@ -14,7 +14,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @JsonApiResource(type = "account-information-access-authorizations", resourcePath = "authorizations", pagingBehavior = IbanityPagingBehavior.class)
-public class AccountInformationAccessAuthorization extends AbstractModel{
+public class AccountInformationAccessAuthorization extends AbstractModel {
     private String accountReference;
     private Instant revokedAt;
 
@@ -25,14 +25,14 @@ public class AccountInformationAccessAuthorization extends AbstractModel{
         super();
     }
 
-    public AccountInformationAccessAuthorization(UUID id, String accountReference, Instant revokedAt, AccountInformationAccessRequest accountInformationAccessRequest) {
+    public AccountInformationAccessAuthorization(final UUID id, final String accountReference, final Instant revokedAt, final AccountInformationAccessRequest accountInformationAccessRequest) {
         super(id);
         this.accountReference = accountReference;
         this.revokedAt = revokedAt;
         setAccountInformationAccessRequest(accountInformationAccessRequest);
     }
 
-    public AccountInformationAccessAuthorization(UUID id, AccountInformationAccessRequest accountInformationAccessRequest) {
+    public AccountInformationAccessAuthorization(final UUID id, final AccountInformationAccessRequest accountInformationAccessRequest) {
         super(id);
         setAccountInformationAccessRequest(accountInformationAccessRequest);
     }
@@ -41,7 +41,7 @@ public class AccountInformationAccessAuthorization extends AbstractModel{
         return accountInformationAccessRequest;
     }
 
-    public void setAccountInformationAccessRequest(AccountInformationAccessRequest accountInformationAccessRequest) {
+    public void setAccountInformationAccessRequest(final AccountInformationAccessRequest accountInformationAccessRequest) {
         this.accountInformationAccessRequest = accountInformationAccessRequest;
     }
 
@@ -49,7 +49,7 @@ public class AccountInformationAccessAuthorization extends AbstractModel{
         return accountReference;
     }
 
-    public void setAccountReference(String accountReference) {
+    public void setAccountReference(final String accountReference) {
         this.accountReference = accountReference;
     }
 
@@ -57,15 +57,19 @@ public class AccountInformationAccessAuthorization extends AbstractModel{
         return revokedAt;
     }
 
-    public void setRevokedAt(Instant revokedAt) {
+    public void setRevokedAt(final Instant revokedAt) {
         this.revokedAt = revokedAt;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
 
-        if (!(o instanceof AccountInformationAccessAuthorization)) return false;
+        if (!(o instanceof AccountInformationAccessAuthorization)) {
+            return false;
+        }
 
         AccountInformationAccessAuthorization that = (AccountInformationAccessAuthorization) o;
 

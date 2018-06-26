@@ -5,15 +5,15 @@ public class SignatureException extends Exception {
         super();
     }
 
-    public SignatureException(String message) {
+    public SignatureException(final String message) {
         super(message);
     }
 
-    public SignatureException(String message, Throwable cause) {
+    public SignatureException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public SignatureException(Throwable cause) {
+    public SignatureException(final Throwable cause) {
         super(cause);
     }
 }

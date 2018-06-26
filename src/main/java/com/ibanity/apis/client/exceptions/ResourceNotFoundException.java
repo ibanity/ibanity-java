@@ -5,15 +5,15 @@ public class ResourceNotFoundException extends Exception {
         super();
     }
 
-    public ResourceNotFoundException(String message) {
+    public ResourceNotFoundException(final String message) {
         super(message);
     }
 
-    public ResourceNotFoundException(String message, Throwable cause) {
+    public ResourceNotFoundException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public ResourceNotFoundException(Throwable cause) {
+    public ResourceNotFoundException(final Throwable cause) {
         super(cause);
     }
 }

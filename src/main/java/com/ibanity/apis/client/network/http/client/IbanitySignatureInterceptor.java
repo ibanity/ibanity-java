@@ -58,28 +58,27 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
                                                                                                         + HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR
                                                                                                         + HEADER_NAME_REQUEST_TARGET
                                                                                                         + HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR
-                                                                                                        + HEADER_NAME_DATE
-                                                                                                        ;
+                                                                                                        + HEADER_NAME_DATE;
 
     private FileUtils fileUtils = new FileUtils();
 
     @Override
-    public void process(HttpRequest httpRequest, HttpContext httpContext) throws HttpException, IOException {
+    public void process(final HttpRequest httpRequest, final HttpContext httpContext) throws HttpException, IOException {
         try {
             byte[] body = "".getBytes();
             HttpRequestWrapper requestWrapper = (HttpRequestWrapper) httpRequest;
             if (requestWrapper.getOriginal() instanceof HttpEntityEnclosingRequestBase) {
-                body = IOUtils.toByteArray(((HttpEntityEnclosingRequestBase)requestWrapper.getOriginal()).getEntity().getContent()) ;
+                body = IOUtils.toByteArray(((HttpEntityEnclosingRequestBase) requestWrapper.getOriginal()).getEntity().getContent());
             }
             setDefaultHttpHeaderValues(httpRequest, body);
             setSignatureHeader(httpRequest);
 
         } catch (Exception e) {
-            throw new IOException(e.getMessage(),e);
+            throw new IOException(e.getMessage(), e);
         }
     }
 
-    private void setDefaultHttpHeaderValues(HttpRequest httpRequest, byte[] body) throws com.ibanity.apis.client.exceptions.DigestException, InvalidDefaultHttpHeaderForSignatureException {
+    private void setDefaultHttpHeaderValues(final HttpRequest httpRequest, final byte[] body) throws com.ibanity.apis.client.exceptions.DigestException, InvalidDefaultHttpHeaderForSignatureException {
         for (String headerName : DEFAULT_SIGNATURE_HEADERS_NAME.split(HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR)) {
             switch (StringUtils.lowerCase(headerName)) {
                 case HEADER_NAME_DIGEST:
@@ -98,30 +97,30 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
         }
     }
 
-    private void setDateHeader(HttpRequest httpRequest) {
+    private void setDateHeader(final HttpRequest httpRequest) {
         httpRequest.addHeader(HEADER_NAME_DATE, Instant.now().toString());
     }
 
-    private String getRequestTargetHeaderValue(HttpRequestWrapper requestWrapper){
+    private String getRequestTargetHeaderValue(final HttpRequestWrapper requestWrapper) {
         return  StringUtils.lowerCase(requestWrapper.getRequestLine().getMethod())
                 + HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR
                 + requestWrapper.getRequestLine().getUri();
 
     }
 
-    private void setDigestHeader(HttpRequest httpRequest, byte[] body) throws com.ibanity.apis.client.exceptions.DigestException {
+    private void setDigestHeader(final HttpRequest httpRequest, final byte[] body) throws com.ibanity.apis.client.exceptions.DigestException {
         String digestValue;
         try {
             digestValue = Base64.getUrlEncoder().encodeToString(MessageDigest.getInstance(DIGEST_ALGORITHM).digest(body));
-            httpRequest.addHeader(HEADER_NAME_DIGEST, DIGEST_ALGORITHM+"="+digestValue);
+            httpRequest.addHeader(HEADER_NAME_DIGEST, DIGEST_ALGORITHM + "=" + digestValue);
         } catch (NoSuchAlgorithmException e) {
-            String errorMessage = "Signature Problem:"+DIGEST_ALGORITHM+":is not available";
+            String errorMessage = "Signature Problem:" + DIGEST_ALGORITHM + ":is not available";
             LOGGER.fatal(errorMessage, e);
             throw new com.ibanity.apis.client.exceptions.DigestException(errorMessage, e);
         }
     }
 
-    private void setSignatureHeader(HttpRequest httpRequest) throws com.ibanity.apis.client.exceptions.SignatureException {
+    private void setSignatureHeader(final HttpRequest httpRequest) throws com.ibanity.apis.client.exceptions.SignatureException {
         HttpRequestWrapper requestWrapper = (HttpRequestWrapper) httpRequest;
         StringBuilder signatureHeaderValueBuilder = new StringBuilder();
         signatureHeaderValueBuilder
@@ -146,28 +145,27 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
                 .append(generateSignature(requestWrapper, signatureHeaders))
                 .append("\"");
 
-        requestWrapper.setHeader("signature",signatureHeaderValueBuilder.toString());
-        LOGGER.debug("Signature Header value:"+signatureHeaderValueBuilder.toString()+":");
+        requestWrapper.setHeader("signature", signatureHeaderValueBuilder.toString());
+        LOGGER.debug("Signature Header value:" + signatureHeaderValueBuilder.toString() + ":");
     }
 
-    private String generateSignatureString(HttpRequestWrapper requestWrapper, String signatureHeaders) {
+    private String generateSignatureString(final HttpRequestWrapper requestWrapper, final String signatureHeaders) {
         StringBuilder signature = new StringBuilder();
         Stream.of(StringUtils.split(signatureHeaders, HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR))
                 .forEach(headerName -> {
-                    if (! StringUtils.equalsIgnoreCase(headerName, HEADER_NAME_REQUEST_TARGET)) {
+                    if (!StringUtils.equalsIgnoreCase(headerName, HEADER_NAME_REQUEST_TARGET)) {
                         Header header = requestWrapper.getFirstHeader(headerName);
                         signature.append(StringUtils.lowerCase(header.getName())).append(": ").append(header.getValue()).append("\n");
-                    }
-                    else {
+                    } else {
                         signature.append(StringUtils.lowerCase(headerName)).append(": ").append(getRequestTargetHeaderValue(requestWrapper)).append("\n");
                     }
                 });
         signature.deleteCharAt(signature.lastIndexOf("\n"));
-        LOGGER.debug("generateSignatureString:\n"+signature.toString()+"\n:");
+        LOGGER.debug("generateSignatureString:\n" + signature.toString() + "\n:");
         return signature.toString();
     }
-     
-    private String generateSignature(HttpRequestWrapper requestWrapper, String signatureHeaders) throws com.ibanity.apis.client.exceptions.SignatureException {
+
+    private String generateSignature(final HttpRequestWrapper requestWrapper, final String signatureHeaders) throws com.ibanity.apis.client.exceptions.SignatureException {
         try {
             String signatureString = generateSignatureString(requestWrapper, signatureHeaders);
             Signature signature = Signature.getInstance(getSignatureAlgorithm(false));
@@ -185,7 +183,7 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
         }
     }
 
-    private String getSignatureAlgorithm(boolean forAlgorithmHeader) throws com.ibanity.apis.client.exceptions.SignatureException {
+    private String getSignatureAlgorithm(final boolean forAlgorithmHeader) throws com.ibanity.apis.client.exceptions.SignatureException {
         KeyStore ks = IbanityHttpUtils.getCertificateKeyStore();
         String signatureAlgorithm;
         try {
@@ -205,7 +203,7 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
                     signatureAlgorithm = "rsa-sha512";
                     break;
                 default:
-                    throw new SignatureException("Unkown Signature Algorithm Property Value:"+signatureAlgorithm+":");
+                    throw new SignatureException("Unkown Signature Algorithm Property Value:" + signatureAlgorithm + ":");
             }
         }
         return signatureAlgorithm;
@@ -234,7 +232,7 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
         }
     }
 
-    private String getSignatureHeaders(HttpRequestWrapper requestWrapper) {
+    private String getSignatureHeaders(final HttpRequestWrapper requestWrapper) {
         StringBuilder headersValue = new StringBuilder();
 
         headersValue.append(DEFAULT_SIGNATURE_HEADERS_NAME);
@@ -244,7 +242,7 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
         // Adding Ibanity specific headers if present
         Stream.of(requestWrapper.getAllHeaders()).filter(header -> StringUtils.startsWithIgnoreCase(header.getName(), IBANITY_HEADER_NAME_PREFIX)).forEach(header -> headersValue.append(HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR).append(header.getName()));
 
-        LOGGER.debug("getSignatureHeaders value:"+headersValue+":");
+        LOGGER.debug("getSignatureHeaders value:" + headersValue + ":");
         return headersValue.toString();
     }
 }

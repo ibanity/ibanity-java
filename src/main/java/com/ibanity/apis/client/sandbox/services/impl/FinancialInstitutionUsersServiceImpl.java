@@ -30,55 +30,55 @@ public class FinancialInstitutionUsersServiceImpl extends AbstractServiceImpl im
     }
 
     @Override
-    public ResourceList<FinancialInstitutionUser> getFinancialInstitutionUsers(IbanityPagingSpec pagingSpec) {
+    public ResourceList<FinancialInstitutionUser> getFinancialInstitutionUsers(final IbanityPagingSpec pagingSpec) {
         QuerySpec querySpec = new QuerySpec(FinancialInstitutionUser.class);
         querySpec.setPagingSpec(pagingSpec);
         return findAll(querySpec, getFinancialInstitutionUsersRepo(null));
     }
 
     @Override
-    public FinancialInstitutionUser getFinancialInstitutionUser(UUID financialInstitutionUserId)  throws ResourceNotFoundException {
+    public FinancialInstitutionUser getFinancialInstitutionUser(final UUID financialInstitutionUserId)  throws ResourceNotFoundException {
         try {
             return getFinancialInstitutionUsersRepo(null).findOne(financialInstitutionUserId, new QuerySpec(FinancialInstitutionUser.class));
         } catch (io.crnk.core.exception.ResourceNotFoundException e) {
-            String errorMessage = "Resource with ID:"+financialInstitutionUserId+": not found";
+            String errorMessage = "Resource with ID:" + financialInstitutionUserId + ": not found";
             LOGGER.debug(errorMessage);
             throw new ResourceNotFoundException(errorMessage);
         }
     }
 
     @Override
-    public FinancialInstitutionUser createFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser) {
+    public FinancialInstitutionUser createFinancialInstitutionUser(final FinancialInstitutionUser financialInstitutionUser) {
         return getFinancialInstitutionUsersRepo(null).create(financialInstitutionUser);
     }
 
     @Override
-    public FinancialInstitutionUser createFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser, UUID idempotency) {
+    public FinancialInstitutionUser createFinancialInstitutionUser(final FinancialInstitutionUser financialInstitutionUser, final UUID idempotency) {
         return getFinancialInstitutionUsersRepo(idempotency).create(financialInstitutionUser);
     }
 
     @Override
-    public FinancialInstitutionUser updateFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser) {
+    public FinancialInstitutionUser updateFinancialInstitutionUser(final FinancialInstitutionUser financialInstitutionUser) {
         return getFinancialInstitutionUsersRepo(null).save(financialInstitutionUser);
     }
 
     @Override
-    public FinancialInstitutionUser updateFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser, UUID idempotency) {
+    public FinancialInstitutionUser updateFinancialInstitutionUser(final FinancialInstitutionUser financialInstitutionUser, final UUID idempotency) {
         return getFinancialInstitutionUsersRepo(idempotency).save(financialInstitutionUser);
     }
 
     @Override
-    public void deleteFinancialInstitutionUser(UUID financialInstitutionUserId) throws ResourceNotFoundException {
+    public void deleteFinancialInstitutionUser(final UUID financialInstitutionUserId) throws ResourceNotFoundException {
         try {
             getFinancialInstitutionUsersRepo(null).delete(financialInstitutionUserId);
         } catch (io.crnk.core.exception.ResourceNotFoundException e) {
-            String errorMessage = "Resource with ID:"+financialInstitutionUserId+": not found";
+            String errorMessage = "Resource with ID:" + financialInstitutionUserId + ": not found";
             LOGGER.debug(errorMessage);
             throw new ResourceNotFoundException(errorMessage);
         }
     }
 
-    protected ResourceRepositoryV2<FinancialInstitutionUser, UUID> getFinancialInstitutionUsersRepo(UUID idempotency){
+    protected ResourceRepositoryV2<FinancialInstitutionUser, UUID> getFinancialInstitutionUsersRepo(final UUID idempotency) {
         return getApiClient(SANBOX_PREFIX_PATH + FORWARD_SLASH, null, idempotency).getRepositoryForType(FinancialInstitutionUser.class);
     }
 }
