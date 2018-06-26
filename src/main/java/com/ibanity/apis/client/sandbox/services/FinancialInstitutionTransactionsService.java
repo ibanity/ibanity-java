@@ -40,6 +40,17 @@ public interface FinancialInstitutionTransactionsService {
      */
     FinancialInstitutionTransaction createFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, FinancialInstitutionTransaction financialInstitutionTransaction) throws ResourceNotFoundException;
 
+    /**
+     * Create a new financial institution transaction in the financial institution, linked to the provide sfinancial institution user
+     * @param financialInstitutionId The Id of the financial institution in which we want to create a new account linked to the provide financialInstitutionUserId
+     * @param financialInstitutionUserId The Id of the financial institution user for which we want to link a new financial institution account
+     * @param financialInstitutionAccountId The id of the financial institution account to which the transaction will be linked to
+     * @param financialInstitutionTransaction The details of the financial institution transaction
+     * @param idempotency to prevent the same request from being performed more than once
+     * @return the created financial institution transaction
+     * @throws ResourceNotFoundException when the provided IDs are not known
+     */
+    FinancialInstitutionTransaction createFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, FinancialInstitutionTransaction financialInstitutionTransaction, UUID idempotency) throws ResourceNotFoundException;
 
     /**
      * Delete a financial institution transaction

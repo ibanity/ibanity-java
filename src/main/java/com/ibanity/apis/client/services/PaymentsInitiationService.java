@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * Service for Payments related APIs
  */
-public interface PaymentsService {
+public interface PaymentsInitiationService {
     /**
      * Initiate/create a payment request towards the provided financial institution
      * @param paymentInitiationRequest the payment request that will be submitted to the financial institution

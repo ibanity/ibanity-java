@@ -26,7 +26,7 @@ public class FinancialInstitutionTransactionsServiceImpl extends AbstractService
 
     @Override
     public FinancialInstitutionTransaction getFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID financialInstitutionTransactionId) throws ResourceNotFoundException {
-        ResourceRepositoryV2<FinancialInstitutionTransaction, UUID> transactionsRepo = getTransactionsRepo(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId);
+        ResourceRepositoryV2<FinancialInstitutionTransaction, UUID> transactionsRepo = getTransactionsRepo(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, null);
         QuerySpec querySpec = new QuerySpec(FinancialInstitutionTransaction.class);
         try {
             return transactionsRepo.findOne(financialInstitutionTransactionId, querySpec);
@@ -38,7 +38,7 @@ public class FinancialInstitutionTransactionsServiceImpl extends AbstractService
 
     @Override
     public List<FinancialInstitutionTransaction> getFinancialInstitutionAccountTransactions(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) throws ResourceNotFoundException{
-        ResourceRepositoryV2<FinancialInstitutionTransaction, UUID> transactionsRepo = getTransactionsRepo(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId);
+        ResourceRepositoryV2<FinancialInstitutionTransaction, UUID> transactionsRepo = getTransactionsRepo(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, null);
         QuerySpec querySpec = new QuerySpec(FinancialInstitutionTransaction.class);
         try {
             return transactionsRepo.findAll(querySpec);
@@ -51,8 +51,13 @@ public class FinancialInstitutionTransactionsServiceImpl extends AbstractService
 
     @Override
     public FinancialInstitutionTransaction createFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, FinancialInstitutionTransaction financialInstitutionTransaction) throws ResourceNotFoundException {
+        return create(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, financialInstitutionTransaction, null);
+    }
+
+
+    private FinancialInstitutionTransaction create(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, FinancialInstitutionTransaction financialInstitutionTransaction, UUID idempotency) throws ResourceNotFoundException {
         try {
-            return getTransactionsRepo(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId).create(financialInstitutionTransaction);
+            return getTransactionsRepo(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, idempotency).create(financialInstitutionTransaction);
         } catch (io.crnk.core.exception.ResourceNotFoundException e) {
             LOGGER.debug(ERROR_RESOURCE_NOT_FOUND);
             throw new ResourceNotFoundException(ERROR_RESOURCE_NOT_FOUND);
@@ -60,21 +65,26 @@ public class FinancialInstitutionTransactionsServiceImpl extends AbstractService
     }
 
     @Override
+    public FinancialInstitutionTransaction createFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, FinancialInstitutionTransaction financialInstitutionTransaction, UUID idempotency) throws ResourceNotFoundException {
+        return create(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, financialInstitutionTransaction, idempotency);
+    }
+
+    @Override
     public void deleteFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID financialInstitutionTransactionId) throws ResourceNotFoundException {
         try {
-            getTransactionsRepo(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId).delete(financialInstitutionTransactionId);
+            getTransactionsRepo(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, null).delete(financialInstitutionTransactionId);
         } catch (io.crnk.core.exception.ResourceNotFoundException e) {
             LOGGER.debug(ERROR_RESOURCE_NOT_FOUND);
             throw new ResourceNotFoundException(ERROR_RESOURCE_NOT_FOUND);
         }
     }
 
-    protected ResourceRepositoryV2<FinancialInstitutionTransaction, UUID> getTransactionsRepo(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId){
+    protected ResourceRepositoryV2<FinancialInstitutionTransaction, UUID> getTransactionsRepo(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID idempotency){
         String correctPath = SANDBOX_ACCOUNTS_TXN_FI_REQUEST_PATH
                 .replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString())
                 .replace(USER_ID_TAG, financialInstitutionUserId.toString())
                 .replace(ACCOUNT_ID_TAG, financialInstitutionAccountId.toString())
                 ;
-        return getApiClient(correctPath, null).getRepositoryForType(FinancialInstitutionTransaction.class);
+        return getApiClient(correctPath, null, idempotency).getRepositoryForType(FinancialInstitutionTransaction.class);
     }
 }

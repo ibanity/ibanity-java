@@ -12,13 +12,13 @@ import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.services.AccountsService;
 import com.ibanity.apis.client.services.CustomerAccessTokensService;
 import com.ibanity.apis.client.services.FinancialInstitutionsService;
-import com.ibanity.apis.client.services.PaymentsService;
+import com.ibanity.apis.client.services.PaymentsInitiationService;
 import com.ibanity.apis.client.services.TransactionsService;
 import com.ibanity.apis.client.services.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.services.impl.AccountsServiceImpl;
 import com.ibanity.apis.client.services.impl.CustomerAccessTokensServiceImpl;
 import com.ibanity.apis.client.services.impl.FinancialInstitutionsServiceImpl;
-import com.ibanity.apis.client.services.impl.PaymentsServiceImpl;
+import com.ibanity.apis.client.services.impl.PaymentsInitiationServiceImpl;
 import com.ibanity.apis.client.services.impl.TransactionsServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,7 +41,7 @@ public class ClientSample {
     private FinancialInstitutionsService financialInstitutionsService = new FinancialInstitutionsServiceImpl();
     private AccountsService accountsService = new AccountsServiceImpl();
     private TransactionsService transactionsService = new TransactionsServiceImpl();
-    private PaymentsService paymentsService = new PaymentsServiceImpl();
+    private PaymentsInitiationService paymentsService = new PaymentsInitiationServiceImpl();
 
     public static void main(String[] args) throws ResourceNotFoundException {
         ClientSample client  = new ClientSample();

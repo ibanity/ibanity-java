@@ -48,10 +48,14 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
      */
     @Test
     public void testGetFinancialInstitutionTransaction() throws Exception {
-        FinancialInstitution financialInstitution = createFinancialInstitution();
-        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser();
-        FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId());
-        FinancialInstitutionTransaction financialInstitutionTransaction = createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount);
+        getFinancialInstitutionTransaction(null);
+    }
+
+    private void getFinancialInstitutionTransaction(UUID idempotency) throws Exception {
+        FinancialInstitution financialInstitution = createFinancialInstitution(idempotency);
+        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(idempotency);
+        FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId(), idempotency);
+        FinancialInstitutionTransaction financialInstitutionTransaction = createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount, idempotency);
         FinancialInstitutionTransaction financialInstitutionTransactionGet = financialInstitutionTransactionsService.getFinancialInstitutionTransaction(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId(), financialInstitutionTransaction.getId());
         assertTrue(financialInstitutionTransactionGet.getCounterpartName().equals(financialInstitutionTransaction.getCounterpartName()));
         assertTrue(financialInstitutionTransactionGet.getCounterpartReference().equals(financialInstitutionTransaction.getCounterpartReference()));
@@ -67,6 +71,7 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
         deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
         deleteFinancialInstitutionUser(financialInstitutionUser.getId());
         deleteFinancialInstitution(financialInstitution.getId());
+
     }
 
     /**
@@ -83,12 +88,12 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
     @Test
     public void testGetFinancialInstitutionAccountTransactions() throws Exception {
         List<FinancialInstitutionTransaction> financialInstitutionTransactions = new ArrayList<>();
-        FinancialInstitution financialInstitution = createFinancialInstitution();
-        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser();
-        FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId());
-        financialInstitutionTransactions.add(createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount));
-        financialInstitutionTransactions.add(createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount));
-        financialInstitutionTransactions.add(createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount));
+        FinancialInstitution financialInstitution = createFinancialInstitution(null);
+        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(null);
+        FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId(), null);
+        financialInstitutionTransactions.add(createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount, null));
+        financialInstitutionTransactions.add(createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount, null));
+        financialInstitutionTransactions.add(createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount, null));
 
         List<FinancialInstitutionTransaction> financialInstitutionTransactionsList = financialInstitutionTransactionsService.getFinancialInstitutionAccountTransactions(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
         assertTrue (financialInstitutionTransactionsList.containsAll(financialInstitutionTransactions));
@@ -115,7 +120,12 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
      */
     @Test
     public void testCreateFinancialInstitutionTransaction() throws Exception {
-        testGetFinancialInstitutionTransaction();
+        getFinancialInstitutionTransaction(null);
+    }
+
+    @Test
+    public void testCreateFinancialInstitutionTransactionIdempotency() throws Exception {
+        getFinancialInstitutionTransaction(UUID.randomUUID());
     }
 
     /**
@@ -146,7 +156,7 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
         financialInstitutionTransactionsService.deleteFinancialInstitutionTransaction(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, financialInstitutionTransactionId);
     }
 
-    public static FinancialInstitutionTransaction createFinancialInstitutionTransaction(UUID financialInstitutionUserId, FinancialInstitutionAccount financialInstitutionAccount) throws ResourceNotFoundException {
+    public static FinancialInstitutionTransaction createFinancialInstitutionTransaction(UUID financialInstitutionUserId, FinancialInstitutionAccount financialInstitutionAccount, UUID idempotency) throws ResourceNotFoundException {
         Instant now = Instant.now();
         Random random = new Random();
 
@@ -163,12 +173,22 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
         financialInstitutionTransaction.setRemittanceInformation("Aspernatur et quibusdam.");
         financialInstitutionTransaction.setRemittanceInformationType("unstructured");
         financialInstitutionTransaction.setValueDate(valueDate);
-        return financialInstitutionTransactionsService.createFinancialInstitutionTransaction(
-                financialInstitutionAccount.getFinancialInstitution().getId()
-                , financialInstitutionUserId
-                , financialInstitutionAccount.getId()
-                , financialInstitutionTransaction
-        );
+        if (idempotency == null) {
+            return financialInstitutionTransactionsService.createFinancialInstitutionTransaction(
+                    financialInstitutionAccount.getFinancialInstitution().getId()
+                    , financialInstitutionUserId
+                    , financialInstitutionAccount.getId()
+                    , financialInstitutionTransaction
+            );
+        } else {
+            return financialInstitutionTransactionsService.createFinancialInstitutionTransaction(
+                    financialInstitutionAccount.getFinancialInstitution().getId()
+                    , financialInstitutionUserId
+                    , financialInstitutionAccount.getId()
+                    , financialInstitutionTransaction
+                    , idempotency
+            );
+        }
     }
 
 } 

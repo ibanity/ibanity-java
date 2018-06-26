@@ -39,4 +39,4 @@ public class CustomerAccessTokensServiceTest extends AbstractServiceTest {
         assertTrue(customerAccessToken.getToken().length() > 20);
         assertNotNull(customerAccessToken.getId());
     }
-} 
+}

@@ -34,22 +34,40 @@ public class SandboxFinancialInstitutionsServiceTest extends AbstractServiceTest
      */
     @Test
     public void testCreateFinancialInstitution() throws Exception {
-        FinancialInstitution newFinancialInstitution = createFinancialInstitution();
+        FinancialInstitution newFinancialInstitution = createFinancialInstitution(null);
         assertTrue(newFinancialInstitution.getId() != null);
         assertTrue(name.equals(newFinancialInstitution.getName()));
         assertTrue(newFinancialInstitution.getSandbox());
         sandboxFinancialInstitutionsService.deleteFinancialInstitution(newFinancialInstitution.getId());
-
     }
 
+    @Test
+    public void testCreateFinancialInstitutionIdempotency() throws Exception {
+        FinancialInstitution newFinancialInstitution = createFinancialInstitution(UUID.randomUUID());
+        assertTrue(newFinancialInstitution.getId() != null);
+        assertTrue(name.equals(newFinancialInstitution.getName()));
+        assertTrue(newFinancialInstitution.getSandbox());
+        sandboxFinancialInstitutionsService.deleteFinancialInstitution(newFinancialInstitution.getId());
+    }
     /**
      * Method: updateFinancialInstitution(FinancialInstitution financialInstitution)
      */
     @Test
     public void testUpdateFinancialInstitution() throws Exception {
-        FinancialInstitution newFinancialInstitution = createFinancialInstitution();
+        FinancialInstitution newFinancialInstitution = createFinancialInstitution(null);
         newFinancialInstitution.setName(newFinancialInstitution.getName()+"-UPDATED");
         FinancialInstitution updatedFinancialInstitution = sandboxFinancialInstitutionsService.updateFinancialInstitution(newFinancialInstitution);
+        assertTrue((newFinancialInstitution.getName()).equals(updatedFinancialInstitution.getName()));
+        assertTrue(newFinancialInstitution.getId().equals(updatedFinancialInstitution.getId()));
+        assertTrue(newFinancialInstitution.getSandbox().equals(updatedFinancialInstitution.getSandbox()));
+        sandboxFinancialInstitutionsService.deleteFinancialInstitution(updatedFinancialInstitution.getId());
+    }
+
+    @Test
+    public void testUpdateFinancialInstitutionIdempotency() throws Exception {
+        FinancialInstitution newFinancialInstitution = createFinancialInstitution(null);
+        newFinancialInstitution.setName(newFinancialInstitution.getName()+"-UPDATED");
+        FinancialInstitution updatedFinancialInstitution = sandboxFinancialInstitutionsService.updateFinancialInstitution(newFinancialInstitution, UUID.randomUUID());
         assertTrue((newFinancialInstitution.getName()).equals(updatedFinancialInstitution.getName()));
         assertTrue(newFinancialInstitution.getId().equals(updatedFinancialInstitution.getId()));
         assertTrue(newFinancialInstitution.getSandbox().equals(updatedFinancialInstitution.getSandbox()));
@@ -61,7 +79,7 @@ public class SandboxFinancialInstitutionsServiceTest extends AbstractServiceTest
      */
     @Test
     public void testDeleteFinancialInstitution() throws Exception {
-        FinancialInstitution newFinancialInstitution = createFinancialInstitution();
+        FinancialInstitution newFinancialInstitution = createFinancialInstitution(null);
         sandboxFinancialInstitutionsService.deleteFinancialInstitution(newFinancialInstitution.getId());
         assertThrows(ResourceNotFoundException.class, () -> sandboxFinancialInstitutionsService.getFinancialInstitution(newFinancialInstitution.getId()));
     }
@@ -76,7 +94,7 @@ public class SandboxFinancialInstitutionsServiceTest extends AbstractServiceTest
      */
     @Test
     public void testGetFinancialInstitution() throws Exception {
-        FinancialInstitution newFinancialInstitution = createFinancialInstitution();
+        FinancialInstitution newFinancialInstitution = createFinancialInstitution(null);
         FinancialInstitution getFinancialInstitution = sandboxFinancialInstitutionsService.getFinancialInstitution(newFinancialInstitution.getId());
         assertTrue(newFinancialInstitution.equals(getFinancialInstitution));
         sandboxFinancialInstitutionsService.deleteFinancialInstitution(newFinancialInstitution.getId());
