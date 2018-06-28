@@ -1,7 +1,8 @@
 package com.ibanity.apis.client.exceptions;
 
-public class IbanityException extends RuntimeException {
+import io.crnk.core.exception.CrnkException;
 
+public class IbanityException extends CrnkException {
     public IbanityException(final String message) {
         super(message);
     }

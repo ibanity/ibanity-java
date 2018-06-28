@@ -1,21 +1,21 @@
 package com.ibanity.apis.client.sandbox.services.impl;
 
-import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
+import com.ibanity.apis.client.configuration.IbanityConfiguration;
+import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
 import com.ibanity.apis.client.sandbox.services.FinancialInstitutionUsersService;
 import com.ibanity.apis.client.services.impl.AbstractServiceImpl;
 import com.ibanity.apis.client.services.impl.FinancialInstitutionsServiceImpl;
+import io.crnk.core.exception.CrnkMappableException;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryV2;
 import io.crnk.core.resource.list.ResourceList;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.UUID;
-
-import static com.ibanity.apis.client.services.configuration.IbanityConfiguration.FORWARD_SLASH;
-import static com.ibanity.apis.client.services.configuration.IbanityConfiguration.SANBOX_PREFIX_PATH;
 
 public class FinancialInstitutionUsersServiceImpl extends AbstractServiceImpl implements FinancialInstitutionUsersService {
     private static final Logger LOGGER = LogManager.getLogger(FinancialInstitutionsServiceImpl.class);
@@ -37,13 +37,12 @@ public class FinancialInstitutionUsersServiceImpl extends AbstractServiceImpl im
     }
 
     @Override
-    public FinancialInstitutionUser getFinancialInstitutionUser(final UUID financialInstitutionUserId)  throws ResourceNotFoundException {
+    public FinancialInstitutionUser getFinancialInstitutionUser(final UUID financialInstitutionUserId)  throws ApiErrorsException {
         try {
             return getFinancialInstitutionUsersRepo(null).findOne(financialInstitutionUserId, new QuerySpec(FinancialInstitutionUser.class));
-        } catch (io.crnk.core.exception.ResourceNotFoundException e) {
-            String errorMessage = "Resource with ID:" + financialInstitutionUserId + ": not found";
-            LOGGER.debug(errorMessage);
-            throw new ResourceNotFoundException(errorMessage);
+        } catch (CrnkMappableException e) {
+            LOGGER.debug(e.getErrorData().toString());
+            throw new ApiErrorsException(e.getHttpStatus(), e.getErrorData(), e);
         }
     }
 
@@ -68,17 +67,22 @@ public class FinancialInstitutionUsersServiceImpl extends AbstractServiceImpl im
     }
 
     @Override
-    public void deleteFinancialInstitutionUser(final UUID financialInstitutionUserId) throws ResourceNotFoundException {
+    public void deleteFinancialInstitutionUser(final UUID financialInstitutionUserId) throws ApiErrorsException {
         try {
             getFinancialInstitutionUsersRepo(null).delete(financialInstitutionUserId);
-        } catch (io.crnk.core.exception.ResourceNotFoundException e) {
-            String errorMessage = "Resource with ID:" + financialInstitutionUserId + ": not found";
-            LOGGER.debug(errorMessage);
-            throw new ResourceNotFoundException(errorMessage);
+        } catch (CrnkMappableException e) {
+            LOGGER.debug(e.getErrorData().toString());
+            throw new ApiErrorsException(e.getHttpStatus(), e.getErrorData(), e);
         }
     }
 
     protected ResourceRepositoryV2<FinancialInstitutionUser, UUID> getFinancialInstitutionUsersRepo(final UUID idempotency) {
-        return getApiClient(SANBOX_PREFIX_PATH + FORWARD_SLASH, null, idempotency).getRepositoryForType(FinancialInstitutionUser.class);
+        String finalPath = StringUtils.removeEnd(
+                IbanityConfiguration.getApiIUrls().getSandbox().getFinancialInstitutionUsers()
+                        .replace(FinancialInstitutionUser.RESOURCE_PATH, "")
+                        .replace(FinancialInstitutionUser.API_URL_TAG_ID, "")
+                ,"//");
+
+        return getApiClient(finalPath, null, idempotency).getRepositoryForType(FinancialInstitutionUser.class);
     }
 }

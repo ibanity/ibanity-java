@@ -1,6 +1,7 @@
 package com.ibanity.apis.client;
 
-import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
+import com.ibanity.apis.client.configuration.IbanityConfiguration;
+import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.FinancialInstitution;
@@ -14,7 +15,6 @@ import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionUsersSe
 import com.ibanity.apis.client.sandbox.services.impl.SandboxFinancialInstitutionsServiceImpl;
 import com.ibanity.apis.client.services.AccountsService;
 import com.ibanity.apis.client.services.CustomerAccessTokensService;
-import com.ibanity.apis.client.services.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.services.impl.AccountsServiceImpl;
 import com.ibanity.apis.client.services.impl.CustomerAccessTokensServiceImpl;
 import com.ibanity.apis.client.utils.FileUtils;
@@ -41,9 +41,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public abstract class AbstractServiceTest {
-    protected static final String FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.accounts.information.access.result.redirect.url");
-    protected static final String FAKE_TPP_PAYMENT_INITIATION_REDIRECT_URL = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.payments.initiation.result.redirect.url");
-    private static final String TEST_CASE = AbstractServiceTest.class.getSimpleName();
+    protected static final String FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL  = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.accounts.information.access.result.redirect.url");
+    protected static final String FAKE_TPP_PAYMENT_INITIATION_REDIRECT_URL          = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.payments.initiation.result.redirect.url");
+    private static final String TEST_CASE                                           = AbstractServiceTest.class.getSimpleName();
+
+    protected static final String ERROR_DATA_CODE_RESOURCE_NOT_FOUND                = "resourceNotFound";
+    protected static final String ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND              = "The requested resource was not found.";
+    protected static final String ERROR_DATA_META_RESOURCE_KEY                      = "resource";
 
     protected Instant now;
 
@@ -147,12 +151,12 @@ public abstract class AbstractServiceTest {
         deleteFinancialInstitution(financialInstitution.getId());
     }
 
-    protected void deleteFinancialInstitutionUser(UUID financialInstitutionUserID) throws ResourceNotFoundException {
+    protected void deleteFinancialInstitutionUser(UUID financialInstitutionUserID) throws ApiErrorsException {
         financialInstitutionUsersService.deleteFinancialInstitutionUser(financialInstitutionUserID);
     }
 
 
-    protected FinancialInstitutionAccount createFinancialInstitutionAccount(FinancialInstitution financialInstitution, UUID financialInstitutionUser, UUID idempotency) throws ResourceNotFoundException {
+    protected FinancialInstitutionAccount createFinancialInstitutionAccount(FinancialInstitution financialInstitution, UUID financialInstitutionUser, UUID idempotency) throws ApiErrorsException {
         FinancialInstitutionAccount financialInstitutionAccount = new FinancialInstitutionAccount();
         financialInstitutionAccount.setSubType("checking");
         financialInstitutionAccount.setReference(Iban.random(CountryCode.BE).toString());
@@ -167,7 +171,7 @@ public abstract class AbstractServiceTest {
         }
     }
 
-    protected void deleteFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) throws ResourceNotFoundException {
+    protected void deleteFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) throws ApiErrorsException {
         financialInstitutionAccountsService.deleteFinancialInstitutionAccount(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId);
     }
 
@@ -179,7 +183,7 @@ public abstract class AbstractServiceTest {
         return accountsService.getAccountInformationAccessRequest(generatedCustomerAccessToken, accountInformationAccessRequest);
     }
 
-    protected void deleteFinancialInstitution(UUID financialInstitutionId) throws ResourceNotFoundException {
+    protected void deleteFinancialInstitution(UUID financialInstitutionId) throws ApiErrorsException {
         sandboxFinancialInstitutionsService.deleteFinancialInstitution(financialInstitutionId);
     }
 

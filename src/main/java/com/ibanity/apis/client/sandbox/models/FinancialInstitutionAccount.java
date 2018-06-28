@@ -1,8 +1,9 @@
 package com.ibanity.apis.client.sandbox.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.models.AbstractAccount;
 import com.ibanity.apis.client.paging.IbanityPagingBehavior;
+import com.ibanity.apis.client.sandbox.annotations.InstantFormatAnnotation;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -11,14 +12,21 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.time.Instant;
 import java.util.UUID;
 
-@JsonApiResource(type = "financialInstitutionAccount", resourcePath = "financial-institution-accounts", pagingBehavior = IbanityPagingBehavior.class)
+import static com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount.RESOURCE_PATH;
+import static com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount.RESOURCE_TYPE;
+
+@JsonApiResource(type = RESOURCE_TYPE, resourcePath = RESOURCE_PATH, pagingBehavior = IbanityPagingBehavior.class)
 public class FinancialInstitutionAccount extends AbstractAccount {
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
+    public static final String RESOURCE_TYPE    = "financialInstitutionAccount";
+    public static final String RESOURCE_PATH    = "financial-institution-accounts";
+    public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
+
+    @InstantFormatAnnotation
     private Instant createdAt = null;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
+    @InstantFormatAnnotation
     private Instant updatedAt = null;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
+    @InstantFormatAnnotation
     private Instant deletedAt = null;
 
     public FinancialInstitutionAccount(final UUID id) {

@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.models;
 
+import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.models.links.PaymentAccessLinks;
 import com.ibanity.apis.client.paging.IbanityPagingBehavior;
 import io.crnk.core.resource.annotations.JsonApiLinksInformation;
@@ -13,9 +14,17 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.UUID;
 
+import static com.ibanity.apis.client.models.PaymentInitiationRequest.RESOURCE_PATH;
+import static com.ibanity.apis.client.models.PaymentInitiationRequest.RESOURCE_TYPE;
 
-@JsonApiResource(type = "paymentInitiationRequest", resourcePath = "payment-initiation-requests", pagingBehavior = IbanityPagingBehavior.class)
+
+@JsonApiResource(type = RESOURCE_TYPE, resourcePath = RESOURCE_PATH, pagingBehavior = IbanityPagingBehavior.class)
 public class PaymentInitiationRequest extends AbstractModel {
+
+    public static final String RESOURCE_TYPE    = "paymentInitiationRequest";
+    public static final String RESOURCE_PATH    = "payment-initiation-requests";
+    public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
+
     private String consentReference;
     private String endToEndId;
     private String productType;

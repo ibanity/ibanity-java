@@ -1,10 +1,11 @@
 package com.ibanity.apis.client.sandbox.services;
 
 import com.ibanity.apis.client.AbstractServiceTest;
-import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
+import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
+import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -53,7 +53,14 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
 
     @Test
     public void testGetFinancialInstitutionAccountWithWrongIDs() throws Exception {
-        assertThrows(ResourceNotFoundException.class, () -> financialInstitutionAccountsService.getFinancialInstitutionAccount(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()));
+        try {
+            financialInstitutionAccountsService.getFinancialInstitutionAccount(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
+        } catch (ApiErrorsException ibanityException) {
+            assertTrue(ibanityException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals("financialInstitution")).count() == 1);
+        }
     }
 
     /**
@@ -77,7 +84,14 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
 
     @Test
     public void testGetFinancialInstitutionUserAccountsWithWrongIDs() throws Exception {
-        assertThrows(ResourceNotFoundException.class, () -> financialInstitutionAccountsService.getFinancialInstitutionUserAccounts(UUID.randomUUID(), UUID.randomUUID()));
+        try {
+            financialInstitutionAccountsService.getFinancialInstitutionUserAccounts(UUID.randomUUID(), UUID.randomUUID());
+        } catch (ApiErrorsException ibanityException) {
+            assertTrue(ibanityException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals("financialInstitution")).count() == 1);
+        }
     }
 
     /**
@@ -120,7 +134,14 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
     public void testCreateFinancialInstitutionAccountWithWrongIDs() throws Exception {
         FinancialInstitution financialInstitution = new FinancialInstitution();
         financialInstitution.setId(UUID.randomUUID());
-        assertThrows(ResourceNotFoundException.class, () -> createFinancialInstitutionAccount(financialInstitution, UUID.randomUUID(), null));
+        try {
+            createFinancialInstitutionAccount(financialInstitution, UUID.randomUUID(), null);
+        } catch (ApiErrorsException ibanityException) {
+            assertTrue(ibanityException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals("financialInstitution")).count() == 1);
+        }
     }
 
     /**
@@ -143,6 +164,13 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
      */
     @Test
     public void testDeleteFinancialInstitutionAccountWithWrongIDs() throws Exception {
-        assertThrows(ResourceNotFoundException.class, () -> financialInstitutionAccountsService.deleteFinancialInstitutionAccount(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()));
+        try {
+            financialInstitutionAccountsService.deleteFinancialInstitutionAccount(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
+        } catch (ApiErrorsException ibanityException) {
+            assertTrue(ibanityException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals("financialInstitution")).count() == 1);
+        }
     }
 }

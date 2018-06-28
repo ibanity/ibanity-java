@@ -1,7 +1,7 @@
 package com.ibanity.apis.client.services;
 
 import com.ibanity.apis.client.AbstractServiceTest;
-import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
+import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.Transaction;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
@@ -10,6 +10,7 @@ import com.ibanity.apis.client.sandbox.models.FinancialInstitutionTransaction;
 import com.ibanity.apis.client.sandbox.services.FinancialInstitutionTransactionsServiceTest;
 import com.ibanity.apis.client.services.impl.AccountsServiceImpl;
 import com.ibanity.apis.client.services.impl.TransactionsServiceImpl;
+import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -98,7 +99,7 @@ public class TransactionsServiceTest extends AbstractServiceTest {
     @Test
     public void testGetAccountTransactionsForCustomerAccessTokenAndWrongFinancialInstitutionIdAccountId() throws Exception {
         for (Account account : accountsService.getCustomerAccounts(generatedCustomerAccessToken, financialInstitution.getId())){
-            assertThrows(ResourceNotFoundException.class, () -> transactionsService.getAccountTransactions(
+            assertThrows(ApiErrorsException.class, () -> transactionsService.getAccountTransactions(
                     generatedCustomerAccessToken
                     , UUID.randomUUID()
                     , UUID.randomUUID()
@@ -108,7 +109,7 @@ public class TransactionsServiceTest extends AbstractServiceTest {
 
     @Test
     public void testGetAccountTransactionsForCustomerAccessTokenAndWrongFinancialInstitutionIdAccountIdPaginSpec() throws Exception {
-        assertThrows(ResourceNotFoundException.class, () -> transactionsService.getAccountTransactions(
+        assertThrows(ApiErrorsException.class, () -> transactionsService.getAccountTransactions(
                 generatedCustomerAccessToken
                 , UUID.randomUUID()
                 , UUID.randomUUID()
@@ -163,6 +164,13 @@ public class TransactionsServiceTest extends AbstractServiceTest {
     }
     @Test
     public void testGetAccountTransactionWithWrongId() throws Exception {
-        assertThrows(ResourceNotFoundException.class, () -> transactionsService.getAccountTransaction(generatedCustomerAccessToken, UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()));
+        try {
+            transactionsService.getAccountTransaction(generatedCustomerAccessToken, UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
+        } catch (ApiErrorsException ibanityException) {
+            assertTrue(ibanityException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals("financialInstitution")).count() == 1);
+        }
     }
 }

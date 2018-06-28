@@ -1,6 +1,6 @@
 package com.ibanity.apis.client.sandbox.services;
 
-import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
+import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.services.FinancialInstitutionsService;
 
@@ -16,5 +16,5 @@ public interface SandboxFinancialInstitutionsService extends FinancialInstitutio
 
     FinancialInstitution updateFinancialInstitution(FinancialInstitution financialInstitution, UUID idempotency);
 
-    void deleteFinancialInstitution(UUID financialInstitutionId) throws ResourceNotFoundException;
+    void deleteFinancialInstitution(UUID financialInstitutionId) throws ApiErrorsException;
 }

@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.models;
 
+import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.paging.IbanityPagingBehavior;
 import io.crnk.core.resource.annotations.JsonApiRelation;
 import io.crnk.core.resource.annotations.JsonApiResource;
@@ -13,8 +14,16 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.time.Instant;
 import java.util.UUID;
 
-@JsonApiResource(type = "account-information-access-authorizations", resourcePath = "authorizations", pagingBehavior = IbanityPagingBehavior.class)
+import static com.ibanity.apis.client.models.AccountInformationAccessAuthorization.RESOURCE_PATH;
+import static com.ibanity.apis.client.models.AccountInformationAccessAuthorization.RESOURCE_TYPE;
+
+@JsonApiResource(type = RESOURCE_TYPE, resourcePath = RESOURCE_PATH, pagingBehavior = IbanityPagingBehavior.class)
 public class AccountInformationAccessAuthorization extends AbstractModel {
+
+    public static final String RESOURCE_TYPE    = "account-information-access-authorizations";
+    public static final String RESOURCE_PATH    = "authorizations";
+    public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
+
     private String accountReference;
     private Instant revokedAt;
 

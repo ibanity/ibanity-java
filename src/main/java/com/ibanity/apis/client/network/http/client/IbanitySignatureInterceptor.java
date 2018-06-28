@@ -1,8 +1,8 @@
 package com.ibanity.apis.client.network.http.client;
 
+import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.exceptions.InvalidDefaultHttpHeaderForSignatureException;
 import com.ibanity.apis.client.exceptions.SignatureException;
-import com.ibanity.apis.client.services.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.utils.FileUtils;
 import org.apache.commons.codec.digest.MessageDigestAlgorithms;
 import org.apache.commons.io.IOUtils;

@@ -1,10 +1,11 @@
 package com.ibanity.apis.client.services;
 
 import com.ibanity.apis.client.AbstractServiceTest;
-import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
+import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
+import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,7 +59,7 @@ public class AccountsServiceTest extends AbstractServiceTest {
 
     @Test
     public void testGetCustomerAccountWithWrongIDs() throws Exception {
-        assertThrows(ResourceNotFoundException.class, () -> accountsService.getCustomerAccount(generatedCustomerAccessToken, UUID.randomUUID(), UUID.randomUUID()));
+        assertThrows(ApiErrorsException.class, () -> accountsService.getCustomerAccount(generatedCustomerAccessToken, UUID.randomUUID(), UUID.randomUUID()));
     }
 
     /**
@@ -119,7 +120,14 @@ public class AccountsServiceTest extends AbstractServiceTest {
 
     @Test
     public void testGetCustomerAccountsForCustomerAccessTokenUnknownFinancialInstitutionId() throws Exception {
-        assertThrows(ResourceNotFoundException.class, () -> accountsService.getCustomerAccounts(generatedCustomerAccessToken, UUID.randomUUID()));
+        try {
+            accountsService.getCustomerAccounts(generatedCustomerAccessToken, UUID.randomUUID());
+        } catch (ApiErrorsException ibanityException) {
+            assertTrue(ibanityException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals("financialInstitution")).count() == 1);
+        }
     }
 
     /**
@@ -137,10 +145,17 @@ public class AccountsServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void testGetCustomerAccountsForCustomerAccessTokenUnknownFinancialInstitutionIdPagingSpec() throws Exception {
+    public void testGetCustomerAccountsForCustomerAccessTokenUnknownFinancialInstitutionIdPagingSpecErrorsContent() throws Exception {
         IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
         pagingSpec.setLimit(1L);
-        assertThrows(ResourceNotFoundException.class, () -> accountsService.getCustomerAccounts(generatedCustomerAccessToken, UUID.randomUUID(), pagingSpec));
+        try {
+            accountsService.getCustomerAccounts(generatedCustomerAccessToken, UUID.randomUUID(), pagingSpec);
+        } catch (ApiErrorsException ibanityException) {
+            assertTrue(ibanityException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals("financialInstitution")).count() == 1);
+        }
     }
 
     /**
@@ -155,44 +170,4 @@ public class AccountsServiceTest extends AbstractServiceTest {
         List<Account> accounts = accountsService.getCustomerAccounts(generatedCustomerAccessToken, financialInstitution.getId());
         assertTrue(accounts.size() > 0);
     }
-
-    /**
-     * Method: getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountInformationAccessRequestId)
-     * **** IMPORTANT ****: Functionality not yet implemented by Ibanity Core, uncomment when implemented
-     */
-//    @Test
-//    public void testGetAccountsInformationAccessAuthorizationsForCustomerAccessTokenFinancialInstitutionIdAccountInformationAccessRequestId() throws Exception {
-//        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
-//        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
-//        List<AccountInformationAccessAuthorization> results = accountsService.getAccountsInformationAccessAuthorizations(generatedCustomerAccessToken, financialInstitution.getId(), accountInformationAccessRequest.getId());
-//        assertTrue(results.size() > 0);
-//    }
-
-    /**
-     * Method: getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountInformationAccessRequestId, IbanityPagingSpec pagingSpec)
-     * **** IMPORTANT ****: Functionality not yet implemented by Ibanity Core, uncomment when implemented
-     */
-//    @Test
-//    public void testGetAccountsInformationAccessAuthorizationsForCustomerAccessTokenFinancialInstitutionIdAccountInformationAccessRequestIdPagingSpec() throws Exception {
-//        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
-//        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
-//        IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
-//        pagingSpec.setLimit(1L);
-//        List<AccountInformationAccessAuthorization> authorisationsList = accountsService.getAccountsInformationAccessAuthorizations(generatedCustomerAccessToken, financialInstitution.getId(), accountInformationAccessRequest.getId(), pagingSpec);
-//        assertTrue(authorisationsList.size() == 1);
-//    }
-
-    /**
-     * Method: revokeAccountsAccessAuthorization(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, AccountInformationAccessAuthorization accountInformationAccessAuthorization)
-     * **** IMPORTANT ****: Functionality not yet implemented by Ibanity Core, uncomment when implemented
-     */
-//    @Test
-//    public void testRevokeAccountsAccessAuthorization() throws Exception {
-//        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
-//        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
-//        List<AccountInformationAccessAuthorization> authorizationsList = accountsService.getAccountsInformationAccessAuthorizations(generatedCustomerAccessToken, financialInstitution.getId(), accountInformationAccessRequest.getId());
-//        accountsService.revokeAccountsAccessAuthorization(generatedCustomerAccessToken, financialInstitution.getId(), authorizationsList.get(0));
-//        List<AccountInformationAccessAuthorization> updatedAuthorizationsList = accountsService.getAccountsInformationAccessAuthorizations(generatedCustomerAccessToken, financialInstitution.getId(), accountInformationAccessRequest.getId());
-//        assertTrue(authorizationsList.size() == updatedAuthorizationsList.size() + 1);
-//    }
 }

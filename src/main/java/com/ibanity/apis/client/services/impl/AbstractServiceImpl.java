@@ -3,14 +3,15 @@ package com.ibanity.apis.client.services.impl;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.ibanity.apis.client.mappers.IbanityExceptionMapper;
 import com.ibanity.apis.client.models.AbstractModel;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.network.http.client.IbanityHttpAdapterListener;
-import com.ibanity.apis.client.services.configuration.IbanityConfiguration;
 import io.crnk.client.CrnkClient;
 import io.crnk.client.http.HttpAdapter;
 import io.crnk.client.http.apache.HttpClientAdapter;
 import io.crnk.core.boot.CrnkProperties;
+import io.crnk.core.module.SimpleModule;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryV2;
 import io.crnk.core.resource.list.ResourceList;
@@ -18,8 +19,6 @@ import io.crnk.core.resource.list.ResourceList;
 import java.util.UUID;
 
 public abstract class AbstractServiceImpl {
-    private static final String IBANITY_API_ENDPOINT = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "api.endpoint");
-
     protected static final String FINANCIAL_INSTITUTIONS_PATH               = "financial-institutions";
     protected static final String FINANCIAL_INSTITUTION_ID_TAG              = "<FI_ID>";
     protected static final String ACCOUNT_ID_TAG                            = "<ACCOUNT_ID>";
@@ -44,10 +43,13 @@ public abstract class AbstractServiceImpl {
 
     protected CrnkClient getApiClient(final String path, final CustomerAccessToken customerAccessToken, final UUID idempotency) {
         System.setProperty(CrnkProperties.RESOURCE_SEARCH_PACKAGE, "com.ibanity.apis");
-        CrnkClient apiClient = new CrnkClient(IBANITY_API_ENDPOINT + path, CrnkClient.ClientType.OBJECT_LINKS);
+        CrnkClient apiClient = new CrnkClient(path, CrnkClient.ClientType.OBJECT_LINKS);
         apiClient.getObjectMapper().registerModule(new Jdk8Module());
         apiClient.getObjectMapper().registerModule(new JavaTimeModule());
         apiClient.getObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        SimpleModule simpleModule = new SimpleModule("ErrorResponse");
+        simpleModule.addExceptionMapper(new IbanityExceptionMapper());
+        apiClient.addModule(simpleModule);
 
         HttpAdapter httpAdapter = apiClient.getHttpAdapter();
         if (httpAdapter instanceof HttpClientAdapter) {

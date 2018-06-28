@@ -2,9 +2,10 @@ package com.ibanity.apis.client.services;
 
 import com.google.common.net.InetAddresses;
 import com.ibanity.apis.client.AbstractServiceTest;
-import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
+import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.models.PaymentInitiationRequest;
 import com.ibanity.apis.client.services.impl.PaymentsInitiationServiceImpl;
+import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Random;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PaymentsServiceTest extends AbstractServiceTest {
@@ -63,11 +63,25 @@ class PaymentsServiceTest extends AbstractServiceTest {
     // Uncomment when PL-452 has been fixed
 //    @Test
 //    void getPaymentInitiationRequestWithWrongPaymentRequestID() throws Exception {
-//        assertThrows(ResourceNotFoundException.class, () -> paymentsService.getPaymentInitiationRequest(generatedCustomerAccessToken,financialInstitution.getId(),UUID.randomUUID()));
+//        try {
+//            paymentsService.getPaymentInitiationRequest(generatedCustomerAccessToken,financialInstitution.getId(),UUID.randomUUID());
+//        } catch (IbanityException ibanityException) {
+//            assertTrue(ibanityException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
+//            assertTrue(ibanityException.getMessage().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND));
+//            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
+//            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals("financialInstitution")).count() == 1);
+//        }
 //    }
 
     @Test
-    void getPaymentInitiationRequestWithWrongFIID() throws Exception {
-        assertThrows(ResourceNotFoundException.class, () -> paymentsService.getPaymentInitiationRequest(generatedCustomerAccessToken,UUID.randomUUID(),UUID.randomUUID()));
+    void getPaymentInitiationRequestWithWrongFinancialInstitionId() throws Exception {
+        try {
+            paymentsService.getPaymentInitiationRequest(generatedCustomerAccessToken,UUID.randomUUID(),UUID.randomUUID());
+        } catch (ApiErrorsException ibanityException) {
+            assertTrue(ibanityException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals("financialInstitution")).count() == 1);
+        }
     }
 }

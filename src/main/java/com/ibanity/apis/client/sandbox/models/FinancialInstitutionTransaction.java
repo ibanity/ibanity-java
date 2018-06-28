@@ -1,8 +1,9 @@
 package com.ibanity.apis.client.sandbox.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.models.AbstractTransaction;
 import com.ibanity.apis.client.paging.IbanityPagingBehavior;
+import com.ibanity.apis.client.sandbox.annotations.InstantFormatAnnotation;
 import io.crnk.core.resource.annotations.JsonApiRelation;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import io.crnk.core.resource.annotations.LookupIncludeBehavior;
@@ -14,17 +15,24 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.time.Instant;
 import java.util.UUID;
 
-@JsonApiResource(type = "financialInstitutionTransaction", resourcePath = "financial-institution-transactions", pagingBehavior = IbanityPagingBehavior.class)
+import static com.ibanity.apis.client.sandbox.models.FinancialInstitutionTransaction.RESOURCE_PATH;
+import static com.ibanity.apis.client.sandbox.models.FinancialInstitutionTransaction.RESOURCE_TYPE;
+
+@JsonApiResource(type = RESOURCE_TYPE, resourcePath = RESOURCE_PATH, pagingBehavior = IbanityPagingBehavior.class)
 public class FinancialInstitutionTransaction extends AbstractTransaction {
+
+    public static final String RESOURCE_TYPE    = "financialInstitutionTransaction";
+    public static final String RESOURCE_PATH    = "financial-institution-transactions";
+    public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
 
     @JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.ONLY_ID)
     private FinancialInstitutionAccount financialInstitutionAccount;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
+    @InstantFormatAnnotation
     private Instant createdAt = null;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
+    @InstantFormatAnnotation
     private Instant updatedAt = null;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
+    @InstantFormatAnnotation
     private Instant deletedAt = null;
 
     public FinancialInstitutionTransaction(final UUID id) {

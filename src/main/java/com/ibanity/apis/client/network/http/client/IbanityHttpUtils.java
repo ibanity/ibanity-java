@@ -1,6 +1,6 @@
 package com.ibanity.apis.client.network.http.client;
 
-import com.ibanity.apis.client.services.configuration.IbanityConfiguration;
+import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.utils.FileUtils;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.logging.log4j.LogManager;

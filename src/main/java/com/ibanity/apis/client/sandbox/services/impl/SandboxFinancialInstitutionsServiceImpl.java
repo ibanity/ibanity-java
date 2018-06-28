@@ -1,17 +1,17 @@
 package com.ibanity.apis.client.sandbox.services.impl;
 
-import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
+import com.ibanity.apis.client.configuration.IbanityConfiguration;
+import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.sandbox.services.SandboxFinancialInstitutionsService;
 import com.ibanity.apis.client.services.impl.FinancialInstitutionsServiceImpl;
+import io.crnk.core.exception.CrnkMappableException;
 import io.crnk.core.repository.ResourceRepositoryV2;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.UUID;
-
-import static com.ibanity.apis.client.services.configuration.IbanityConfiguration.FORWARD_SLASH;
-import static com.ibanity.apis.client.services.configuration.IbanityConfiguration.SANBOX_PREFIX_PATH;
 
 public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutionsServiceImpl implements SandboxFinancialInstitutionsService {
     private static final Logger LOGGER = LogManager.getLogger(SandboxFinancialInstitutionsServiceImpl.class);
@@ -43,16 +43,21 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
     }
 
     @Override
-    public void deleteFinancialInstitution(final UUID financialInstitutionId) throws ResourceNotFoundException {
+    public void deleteFinancialInstitution(final UUID financialInstitutionId) throws ApiErrorsException {
         try {
             getFinancialInstitutionsRepo(null).delete(financialInstitutionId);
-        } catch (io.crnk.core.exception.ResourceNotFoundException e) {
-            String errorMessage = "Resource with ID:" + financialInstitutionId + ": not found";
-            LOGGER.debug(errorMessage);
-            throw new ResourceNotFoundException(errorMessage);
+        } catch (CrnkMappableException e) {
+            LOGGER.debug(e.getErrorData().toString());
+            throw new ApiErrorsException(e.getHttpStatus(), e.getErrorData(), e);
         }
     }
     protected ResourceRepositoryV2<FinancialInstitution, UUID> getFinancialInstitutionsRepo(final UUID idempotency) {
-        return getApiClient(SANBOX_PREFIX_PATH + FORWARD_SLASH, null, idempotency).getRepositoryForType(FinancialInstitution.class);
+        String finalPath = StringUtils.removeEnd(
+                IbanityConfiguration.getApiIUrls().getSandbox().getFinancialInstitutions()
+                .replace(FinancialInstitution.RESOURCE_PATH, "")
+                .replace(FinancialInstitution.API_URL_TAG_ID, "")
+                ,"//");
+
+        return getApiClient(finalPath, null, idempotency).getRepositoryForType(FinancialInstitution.class);
     }
 }

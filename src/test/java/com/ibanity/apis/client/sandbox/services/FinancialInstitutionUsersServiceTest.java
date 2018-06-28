@@ -1,10 +1,11 @@
 package com.ibanity.apis.client.sandbox.services;
 
 import com.ibanity.apis.client.AbstractServiceTest;
-import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
+import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
 import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionUsersServiceImpl;
+import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,7 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
      * Method: getFinancialInstitutionUsers()
      */
     @Test
-    public void testGetFinancialInstitutionUsers() throws ResourceNotFoundException {
+    public void testGetFinancialInstitutionUsers() throws ApiErrorsException {
         FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(null);
         List<FinancialInstitutionUser> financialInstitutionUsers = financialInstitutionUsersService.getFinancialInstitutionUsers();
         assertTrue(financialInstitutionUsers.size() > 0);
@@ -49,7 +50,7 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
      * Method: getFinancialInstitutionUsers(IbanityPagingSpec pagingSpec)
      */
     @Test
-    public void testGetFinancialInstitutionUsersPagingSpec() throws ResourceNotFoundException {
+    public void testGetFinancialInstitutionUsersPagingSpec() throws ApiErrorsException {
         List<FinancialInstitutionUser> financialInstitutionUsers =  new ArrayList<>();
         for( int index = 0; index < 3; index ++){
             financialInstitutionUsers.add(createFinancialInstitutionUser(null));
@@ -68,11 +69,11 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
      * Method: getFinancialInstitutionUser(UUID financialInstitutionUserId)
      */
     @Test
-    public void testGetFinancialInstitutionUser() throws ResourceNotFoundException {
+    public void testGetFinancialInstitutionUser() throws ApiErrorsException {
         getFinancialInstutionUser(null);
     }
 
-    private void getFinancialInstutionUser(UUID indempotency) throws ResourceNotFoundException{
+    private void getFinancialInstutionUser(UUID indempotency) throws ApiErrorsException {
         FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(indempotency);
         FinancialInstitutionUser financialInstitutionUserGet = financialInstitutionUsersService.getFinancialInstitutionUser(financialInstitutionUser.getId());
         financialInstitutionUsersService.deleteFinancialInstitutionUser(financialInstitutionUserGet.getId());
@@ -83,8 +84,8 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
      * Method: getFinancialInstitutionUser(UUID financialInstitutionUserId)
      */
     @Test
-    public void testGetFinancialInstitutionUserUnknown() throws ResourceNotFoundException {
-        assertThrows(ResourceNotFoundException.class, () -> financialInstitutionUsersService.getFinancialInstitutionUser(UUID.randomUUID()));
+    public void testGetFinancialInstitutionUserUnknown() throws ApiErrorsException {
+        assertThrows(ApiErrorsException.class, () -> financialInstitutionUsersService.getFinancialInstitutionUser(UUID.randomUUID()));
     }
 
     /**
@@ -104,16 +105,16 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
      * Method: updateFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser)
      */
     @Test
-    public void testUpdateFinancialInstitutionUser() throws ResourceNotFoundException {
+    public void testUpdateFinancialInstitutionUser() throws ApiErrorsException {
         updateFinancialInstitutionUser(null);
     }
 
     @Test
-    public void testUpdateFinancialInstitutionUserIndempotency() throws ResourceNotFoundException {
+    public void testUpdateFinancialInstitutionUserIndempotency() throws ApiErrorsException {
         updateFinancialInstitutionUser(UUID.randomUUID());
     }
 
-    private void updateFinancialInstitutionUser(UUID idempotency) throws ResourceNotFoundException{
+    private void updateFinancialInstitutionUser(UUID idempotency) throws ApiErrorsException {
         FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(idempotency);
         financialInstitutionUser.setPassword("Password");
         FinancialInstitutionUser updatedFinancialInstitutionUser = null;
@@ -146,7 +147,14 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
      * Method: deleteFinancialInstitutionUser(UUID financialInstitutionUserId)
      */
     @Test
-    public void testDeleteUnkownFinancialInstitutionUser() throws Exception {
-        assertThrows(ResourceNotFoundException.class, () -> financialInstitutionUsersService.deleteFinancialInstitutionUser(UUID.randomUUID()));
+    public void testDeleteUnknownFinancialInstitutionUser() throws Exception {
+        try {
+            financialInstitutionUsersService.deleteFinancialInstitutionUser(UUID.randomUUID());
+        } catch (ApiErrorsException ibanityException) {
+            assertTrue(ibanityException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals("financialInstitutionUser")).count() == 1);
+        }
     }
 }

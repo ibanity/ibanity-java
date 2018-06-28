@@ -1,7 +1,7 @@
 package com.ibanity.apis.client.sandbox.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ibanity.apis.client.models.AbstractModel;
+import com.ibanity.apis.client.sandbox.annotations.InstantFormatAnnotation;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -10,11 +10,11 @@ import java.time.Instant;
 
 public abstract class AbstractTimestamps extends AbstractModel {
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
+    @InstantFormatAnnotation
     private Instant createdAt = null;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
+    @InstantFormatAnnotation
     private Instant updatedAt = null;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
+    @InstantFormatAnnotation
     private Instant deletedAt = null;
 
     public Instant getCreatedAt() {
