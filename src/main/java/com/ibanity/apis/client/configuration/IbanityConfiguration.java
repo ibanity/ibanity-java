@@ -47,8 +47,8 @@ public final class IbanityConfiguration {
         return configuration;
     }
 
-    public static ApiIUrls getApiIUrls(){
-        if (apiIUrls == null){
+    public static ApiIUrls getApiIUrls() {
+        if (apiIUrls == null) {
             apiIUrls = loadApiUrls();
         }
         return apiIUrls;

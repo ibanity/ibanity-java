@@ -1,43 +1,44 @@
 package com.ibanity.apis.client.services.impl;
 
+import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.exceptions.ApiErrorsException;
-import com.ibanity.apis.client.models.CustomerAccessToken;
+import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.PaymentInitiationRequest;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.services.PaymentsInitiationService;
-import io.crnk.core.exception.CrnkMappableException;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryV2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.UUID;
 
 public class PaymentsInitiationServiceImpl extends AbstractServiceImpl implements PaymentsInitiationService {
-    private static final Logger LOGGER = LogManager.getLogger(PaymentsInitiationServiceImpl.class);
-
-    private static final String PAYMENT_INITIATION_REQUESTS_PATH = "/customer/financial-institutions/" + FINANCIAL_INSTITUTION_ID_TAG;
 
     @Override
-    public PaymentInitiationRequest initiatePaymentRequest(final CustomerAccessToken customerAccessToken, final PaymentInitiationRequest paymentInitiationRequest) {
-        return getRepository(customerAccessToken, paymentInitiationRequest.getFinancialInstitution().getId(), null).create(paymentInitiationRequest);
+    public PaymentInitiationRequest createForFinanciaInstitution(final String customerAccessToken, final PaymentInitiationRequest paymentInitiationRequest) {
+        return createForFinanciaInstitution(customerAccessToken, paymentInitiationRequest, null);
     }
 
     @Override
-    public PaymentInitiationRequest getPaymentInitiationRequest(final CustomerAccessToken customerAccessToken, final UUID financialInstitutionId, final UUID paymentInitiationRequestId) throws ApiErrorsException {
+    public PaymentInitiationRequest createForFinanciaInstitution(final String customerAccessToken, final PaymentInitiationRequest paymentInitiationRequest, final UUID idempotencyKey) {
+        return getPaymentInitiationRequestsRepo(customerAccessToken, paymentInitiationRequest.getFinancialInstitution().getId(), idempotencyKey).create(paymentInitiationRequest);
+    }
+
+    @Override
+    public PaymentInitiationRequest find(final String customerAccessToken, final UUID financialInstitutionId, final UUID paymentInitiationRequestId) throws ApiErrorsException {
         QuerySpec querySpec = new QuerySpec(PaymentInitiationRequest.class);
         IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
         querySpec.setPagingSpec(pagingSpec);
-        try {
-            return getRepository(customerAccessToken, financialInstitutionId, null).findOne(paymentInitiationRequestId, querySpec);
-        } catch (CrnkMappableException e) {
-            LOGGER.debug(e.getErrorData().toString());
-            throw new ApiErrorsException(e.getHttpStatus(), e.getErrorData(), e);
-        }
+        return getPaymentInitiationRequestsRepo(customerAccessToken, financialInstitutionId, null).findOne(paymentInitiationRequestId, querySpec);
     }
 
-    private ResourceRepositoryV2<PaymentInitiationRequest, UUID> getRepository(final CustomerAccessToken customerAccessToken, final UUID financialInstitutionId, final UUID idempotency) {
-        String correctPath = PAYMENT_INITIATION_REQUESTS_PATH.replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString());
-        return getApiClient(correctPath, customerAccessToken, idempotency).getRepositoryForType(PaymentInitiationRequest.class);
+    protected ResourceRepositoryV2<PaymentInitiationRequest, UUID> getPaymentInitiationRequestsRepo(final String customerAccessToken, final UUID financialInstitutionId, final UUID idempotencyKey) {
+        String finalPath = StringUtils.removeEnd(
+                IbanityConfiguration.getApiIUrls().getCustomer().getFinancialInstitution().getPaymentInitiationRequests()
+                        .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
+                        .replace(PaymentInitiationRequest.RESOURCE_PATH, "")
+                        .replace(PaymentInitiationRequest.API_URL_TAG_ID, ""), "//");
+
+        return getApiClient(finalPath, customerAccessToken, idempotencyKey).getRepositoryForType(PaymentInitiationRequest.class);
     }
 }

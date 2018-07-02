@@ -13,7 +13,7 @@ public class ApiIUrls implements LinksInformation {
         return sandbox;
     }
 
-    public void setSandbox(Sandbox sandbox) {
+    public void setSandbox(final Sandbox sandbox) {
         this.sandbox = sandbox;
     }
 
@@ -21,7 +21,7 @@ public class ApiIUrls implements LinksInformation {
         return customer;
     }
 
-    public void setCustomer(Customer customer) {
+    public void setCustomer(final Customer customer) {
         this.customer = customer;
     }
 
@@ -29,7 +29,7 @@ public class ApiIUrls implements LinksInformation {
         return financialInstitutions;
     }
 
-    public void setFinancialInstitutions(String financialInstitutions) {
+    public void setFinancialInstitutions(final String financialInstitutions) {
         this.financialInstitutions = financialInstitutions;
     }
 
@@ -37,7 +37,7 @@ public class ApiIUrls implements LinksInformation {
         return customerAccessTokens;
     }
 
-    public void setCustomerAccessTokens(String customerAccessTokens) {
+    public void setCustomerAccessTokens(final String customerAccessTokens) {
         this.customerAccessTokens = customerAccessTokens;
     }
 
@@ -50,7 +50,7 @@ public class ApiIUrls implements LinksInformation {
             return financialInstitutions;
         }
 
-        public void setFinancialInstitutions(String financialInstitutions) {
+        public void setFinancialInstitutions(final String financialInstitutions) {
             this.financialInstitutions = financialInstitutions;
         }
 
@@ -58,7 +58,7 @@ public class ApiIUrls implements LinksInformation {
             return financialInstitutionUsers;
         }
 
-        public void setFinancialInstitutionUsers(String financialInstitutionUsers) {
+        public void setFinancialInstitutionUsers(final String financialInstitutionUsers) {
             this.financialInstitutionUsers = financialInstitutionUsers;
         }
 
@@ -66,7 +66,7 @@ public class ApiIUrls implements LinksInformation {
             return financialInstitution;
         }
 
-        public void setFinancialInstitution(FinancialInstitution financialInstitution) {
+        public void setFinancialInstitution(final FinancialInstitution financialInstitution) {
             this.financialInstitution = financialInstitution;
         }
 
@@ -78,7 +78,7 @@ public class ApiIUrls implements LinksInformation {
                 return financialInstitutionAccounts;
             }
 
-            public void setFinancialInstitutionAccounts(String financialInstitutionAccounts) {
+            public void setFinancialInstitutionAccounts(final String financialInstitutionAccounts) {
                 this.financialInstitutionAccounts = financialInstitutionAccounts;
             }
 
@@ -86,7 +86,7 @@ public class ApiIUrls implements LinksInformation {
                 return financialInstitutionAccount;
             }
 
-            public void setFinancialInstitutionAccount(FinancialInstitutionAccount financialInstitutionAccount) {
+            public void setFinancialInstitutionAccount(final FinancialInstitutionAccount financialInstitutionAccount) {
                 this.financialInstitutionAccount = financialInstitutionAccount;
             }
 
@@ -97,7 +97,7 @@ public class ApiIUrls implements LinksInformation {
                     return financialInstitutionTransactions;
                 }
 
-                public void setFinancialInstitutionTransactions(String financialInstitutionTransactions) {
+                public void setFinancialInstitutionTransactions(final String financialInstitutionTransactions) {
                     this.financialInstitutionTransactions = financialInstitutionTransactions;
                 }
             }
@@ -109,7 +109,7 @@ public class ApiIUrls implements LinksInformation {
         private String accounts;
         private FinancialInstitution financialInstitution;
 
-        public Customer(String financialInstitutions, String accounts) {
+        public Customer(final String financialInstitutions, final String accounts) {
             this.financialInstitutions = financialInstitutions;
             this.accounts = accounts;
         }
@@ -121,7 +121,7 @@ public class ApiIUrls implements LinksInformation {
             return financialInstitutions;
         }
 
-        public void setFinancialInstitutions(String financialInstitutions) {
+        public void setFinancialInstitutions(final String financialInstitutions) {
             this.financialInstitutions = financialInstitutions;
         }
 
@@ -129,7 +129,7 @@ public class ApiIUrls implements LinksInformation {
             return accounts;
         }
 
-        public void setAccounts(String accounts) {
+        public void setAccounts(final String accounts) {
             this.accounts = accounts;
         }
 
@@ -137,7 +137,7 @@ public class ApiIUrls implements LinksInformation {
             return financialInstitution;
         }
 
-        public void setFinancialInstitution(FinancialInstitution financialInstitution) {
+        public void setFinancialInstitution(final FinancialInstitution financialInstitution) {
             this.financialInstitution = financialInstitution;
         }
 
@@ -151,7 +151,7 @@ public class ApiIUrls implements LinksInformation {
                 return transactions;
             }
 
-            public void setTransactions(String transactions) {
+            public void setTransactions(final String transactions) {
                 this.transactions = transactions;
             }
 
@@ -159,7 +159,7 @@ public class ApiIUrls implements LinksInformation {
                 return paymentInitiationRequests;
             }
 
-            public void setPaymentInitiationRequests(String paymentInitiationRequests) {
+            public void setPaymentInitiationRequests(final String paymentInitiationRequests) {
                 this.paymentInitiationRequests = paymentInitiationRequests;
             }
 
@@ -167,7 +167,7 @@ public class ApiIUrls implements LinksInformation {
                 return accounts;
             }
 
-            public void setAccounts(String accounts) {
+            public void setAccounts(final String accounts) {
                 this.accounts = accounts;
             }
 
@@ -175,7 +175,7 @@ public class ApiIUrls implements LinksInformation {
                 return accountInformationAccessRequests;
             }
 
-            public void setAccountInformationAccessRequests(String accountInformationAccessRequests) {
+            public void setAccountInformationAccessRequests(final String accountInformationAccessRequests) {
                 this.accountInformationAccessRequests = accountInformationAccessRequests;
             }
         }

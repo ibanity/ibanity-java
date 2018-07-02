@@ -2,6 +2,7 @@ package com.ibanity.apis.client.services;
 
 import com.ibanity.apis.client.AbstractServiceTest;
 import com.ibanity.apis.client.exceptions.ApiErrorsException;
+import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.services.impl.FinancialInstitutionsServiceImpl;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * FinancialInstitutionsServiceImpl Tester.
@@ -29,45 +31,51 @@ public class FinancialInstitutionsServiceTest extends AbstractServiceTest {
 
     @BeforeEach
     public void before() throws Exception{
+        initSelenium();
         initPublicAPIEnvironment();
     }
 
     @AfterEach
     public void after() throws Exception {
+        exitSelenium();
         cleanPublicAPIEnvironment();
     }
 
     /**
-     * Method: getFinancialInstitutions()
+     * Method: list()
      */
     @Test
     public void testGetFinancialInstitutions() {
-        List<FinancialInstitution> financialInstitutionsList = financialInstitutionsService.getFinancialInstitutions();
+        List<FinancialInstitution> financialInstitutionsList = financialInstitutionsService.list();
         assertTrue(financialInstitutionsList.size() > 0);
     }
 
     /**
-     * Method: getFinancialInstitutions(CustomerAccessToken customerAccessToke)
+     * Method: list(CustomerAccessToken customerAccessToke)
      */
     @Test
     public void testGetFinancialInstitutionsCustomerAccessToken() {
-        List<FinancialInstitution> financialInstitutionsList = financialInstitutionsService.getFinancialInstitutions(generatedCustomerAccessToken);
+        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
+        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
+        List<FinancialInstitution> financialInstitutionsList = financialInstitutionsService.list(generatedCustomerAccessToken.getToken());
         assertTrue(financialInstitutionsList.size() > 0);
     }
 
     /**
-     * Method: getFinancialInstitutions(CustomerAccessToken, IbanityPagingSpec)
+     * Method: list(CustomerAccessToken, IbanityPagingSpec)
      */
     @Test
     public void testGetFinancialInstitutionsCustomerAccessTokenIbanityPagingSpec() {
+        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
+        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
         IbanityPagingSpec ibanityPagingSpec = new IbanityPagingSpec();
         ibanityPagingSpec.setLimit(1L);
-        List<FinancialInstitution> financialInstitutionsList = financialInstitutionsService.getFinancialInstitutions(generatedCustomerAccessToken, ibanityPagingSpec);
+        List<FinancialInstitution> financialInstitutionsList = financialInstitutionsService.list(generatedCustomerAccessToken.getToken(), ibanityPagingSpec);
         assertTrue(financialInstitutionsList.size() == 1);
     }
 
     /**
-     * Method: getFinancialInstitutions(IbanityPagingSpec pagingSpec)
+     * Method: list(IbanityPagingSpec pagingSpec)
      */
     @Test
     public void testGetFinancialInstitutionsPagingSpec() throws Exception {
@@ -78,7 +86,7 @@ public class FinancialInstitutionsServiceTest extends AbstractServiceTest {
             createdFinancialInstitutionsList.add(createFinancialInstitution(null));
         }
 
-        List<FinancialInstitution> financialInstitutionsList = financialInstitutionsService.getFinancialInstitutions(ibanityPagingSpec);
+        List<FinancialInstitution> financialInstitutionsList = financialInstitutionsService.list(ibanityPagingSpec);
         assertTrue(financialInstitutionsList.size() == 3);
 
         for (FinancialInstitution financialInstitution : createdFinancialInstitutionsList){
@@ -91,7 +99,8 @@ public class FinancialInstitutionsServiceTest extends AbstractServiceTest {
      */
     @Test
     public void testGetFinancialInstitution() throws Exception {
-        financialInstitutionsService.getFinancialInstitution(financialInstitution.getId());
+        FinancialInstitution financialInstitutionReceived = financialInstitutionsService.find(financialInstitution.getId());
+        assertTrue(financialInstitutionReceived.getId().equals(financialInstitution.getId()));
     }
 
     /**
@@ -100,12 +109,13 @@ public class FinancialInstitutionsServiceTest extends AbstractServiceTest {
     @Test
     public void testGetFinancialInstitutionWrongId() throws Exception {
         try {
-            financialInstitutionsService.getFinancialInstitution(UUID.randomUUID());
-        } catch (ApiErrorsException ibanityException) {
-            assertTrue(ibanityException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
-            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
-            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
-            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals("financialInstitution")).count() == 1);
+            financialInstitutionsService.find(UUID.randomUUID());
+            fail("Should raise ApiErrorsException");
+        } catch (ApiErrorsException apiErrorsException) {
+            assertTrue(apiErrorsException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
+            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count() == 1);
         }
     }
 }

@@ -2,7 +2,11 @@ package com.ibanity.apis.client.services;
 
 import com.ibanity.apis.client.models.CustomerAccessToken;
 
+import java.util.UUID;
+
 public interface CustomerAccessTokensService {
 
-    CustomerAccessToken createCustomerAccessToken(CustomerAccessToken customerAccessToken);
+    CustomerAccessToken create(String applicationCustomerReference);
+
+    CustomerAccessToken create(String applicationCustomerReference, final UUID idempotencyKey);
 }

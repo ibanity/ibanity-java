@@ -5,7 +5,6 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ibanity.apis.client.mappers.IbanityExceptionMapper;
 import com.ibanity.apis.client.models.AbstractModel;
-import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.network.http.client.IbanityHttpAdapterListener;
 import io.crnk.client.CrnkClient;
 import io.crnk.client.http.HttpAdapter;
@@ -19,13 +18,6 @@ import io.crnk.core.resource.list.ResourceList;
 import java.util.UUID;
 
 public abstract class AbstractServiceImpl {
-    protected static final String FINANCIAL_INSTITUTIONS_PATH               = "financial-institutions";
-    protected static final String FINANCIAL_INSTITUTION_ID_TAG              = "<FI_ID>";
-    protected static final String ACCOUNT_ID_TAG                            = "<ACCOUNT_ID>";
-    protected static final String USER_ID_TAG                               = "<USER_ID>";
-    protected static final String ACCOUNT_INFORMATION_ACCESS_REQUEST_ID_TAG = "<ACCOUNT_INFORMATION_ACCESS_REQUEST_ID>";
-
-
     public AbstractServiceImpl() {
     }
 
@@ -37,11 +29,11 @@ public abstract class AbstractServiceImpl {
         return repository.findAll(querySpec);
     }
 
-    protected CrnkClient getApiClient(final String path, final CustomerAccessToken customerAccessToken) {
+    protected CrnkClient getApiClient(final String path, final String customerAccessToken) {
         return getApiClient(path, customerAccessToken, null);
     }
 
-    protected CrnkClient getApiClient(final String path, final CustomerAccessToken customerAccessToken, final UUID idempotency) {
+    protected CrnkClient getApiClient(final String path, final String customerAccessToken, final UUID idempotencyKey) {
         System.setProperty(CrnkProperties.RESOURCE_SEARCH_PACKAGE, "com.ibanity.apis");
         CrnkClient apiClient = new CrnkClient(path, CrnkClient.ClientType.OBJECT_LINKS);
         apiClient.getObjectMapper().registerModule(new Jdk8Module());
@@ -54,7 +46,7 @@ public abstract class AbstractServiceImpl {
         HttpAdapter httpAdapter = apiClient.getHttpAdapter();
         if (httpAdapter instanceof HttpClientAdapter) {
             HttpClientAdapter adapter = (HttpClientAdapter) httpAdapter;
-            adapter.addListener(new IbanityHttpAdapterListener(customerAccessToken, idempotency));
+            adapter.addListener(new IbanityHttpAdapterListener(customerAccessToken, idempotencyKey));
         }
         return apiClient;
     }

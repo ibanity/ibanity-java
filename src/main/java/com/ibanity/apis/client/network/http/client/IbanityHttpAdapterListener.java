@@ -1,6 +1,5 @@
 package com.ibanity.apis.client.network.http.client;
 
-import com.ibanity.apis.client.models.CustomerAccessToken;
 import io.crnk.client.http.apache.HttpClientAdapterListener;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
@@ -13,14 +12,14 @@ import java.util.UUID;
 
 public class IbanityHttpAdapterListener implements HttpClientAdapterListener {
 
-    private CustomerAccessToken customerAccessToken = null;
-    private UUID idempotency                        = null;
+    private String customerAccessToken = null;
+    private UUID idempotencyKey = null;
 
     private static final String IDEMPOTENCY_KEY = "Ibanity-Idempotency-Key";
 
-    public IbanityHttpAdapterListener(final CustomerAccessToken customerAccessToken, final UUID idempotency) {
+    public IbanityHttpAdapterListener(final String customerAccessToken, final UUID idempotencyKey) {
         this.customerAccessToken = customerAccessToken;
-        this.idempotency = idempotency;
+        this.idempotencyKey = this.idempotencyKey;
     }
 
     @Override
@@ -33,10 +32,10 @@ public class IbanityHttpAdapterListener implements HttpClientAdapterListener {
     private Collection<Header> getAuthorizationtHttpRequestHeaders() {
         Collection<Header> authorizationHttpRequestHeaders = new ArrayList();
         if (customerAccessToken != null) {
-            authorizationHttpRequestHeaders.add(new BasicHeader(HttpHeaders.AUTHORIZATION, "Bearer " + customerAccessToken.getToken()));
+            authorizationHttpRequestHeaders.add(new BasicHeader(HttpHeaders.AUTHORIZATION, "Bearer " + customerAccessToken));
         }
-        if (idempotency != null) {
-            authorizationHttpRequestHeaders.add(new BasicHeader(IDEMPOTENCY_KEY, idempotency.toString()));
+        if (idempotencyKey != null) {
+            authorizationHttpRequestHeaders.add(new BasicHeader(IDEMPOTENCY_KEY, idempotencyKey.toString()));
         }
         return authorizationHttpRequestHeaders;
     }

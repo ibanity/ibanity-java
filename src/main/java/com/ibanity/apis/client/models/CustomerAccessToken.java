@@ -1,7 +1,6 @@
 package com.ibanity.apis.client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.paging.IbanityPagingBehavior;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -18,7 +17,6 @@ public class CustomerAccessToken extends AbstractModel {
 
     public static final String RESOURCE_TYPE    = "customerAccessToken";
     public static final String RESOURCE_PATH    = "customer-access-tokens";
-    public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
 
     private String token;
 
@@ -31,6 +29,10 @@ public class CustomerAccessToken extends AbstractModel {
 
     public CustomerAccessToken() {
         super();
+    }
+
+    public CustomerAccessToken(final String token) {
+        this.token = token;
     }
 
     public String getToken() {

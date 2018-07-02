@@ -9,19 +9,19 @@ import java.util.UUID;
 
 public interface FinancialInstitutionUsersService {
 
-    List<FinancialInstitutionUser> getFinancialInstitutionUsers();
+    List<FinancialInstitutionUser> list();
 
-    List<FinancialInstitutionUser> getFinancialInstitutionUsers(IbanityPagingSpec pagingSpec);
+    List<FinancialInstitutionUser> list(IbanityPagingSpec pagingSpec);
 
-    FinancialInstitutionUser getFinancialInstitutionUser(UUID financialInstitutionUserId) throws ApiErrorsException;
+    FinancialInstitutionUser find(UUID financialInstitutionUserId) throws ApiErrorsException;
 
-    FinancialInstitutionUser createFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser);
+    FinancialInstitutionUser create(String login, String password, String lastName, String firstName);
 
-    FinancialInstitutionUser createFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser, UUID idempotency);
+    FinancialInstitutionUser create(String login, String password, String lastName, String firstName, UUID idempotencyKey);
 
-    FinancialInstitutionUser updateFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser);
+    FinancialInstitutionUser update(FinancialInstitutionUser financialInstitutionUser);
 
-    FinancialInstitutionUser updateFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser, UUID idempotency);
+    FinancialInstitutionUser update(FinancialInstitutionUser financialInstitutionUser, UUID idempotencyKey);
 
-    void deleteFinancialInstitutionUser(UUID financialInstitutionUserId) throws ApiErrorsException;
+    void delete(UUID financialInstitutionUserId) throws ApiErrorsException;
 }

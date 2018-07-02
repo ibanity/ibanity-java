@@ -13,8 +13,10 @@ import com.ibanity.apis.client.sandbox.services.SandboxFinancialInstitutionsServ
 import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionAccountsServiceImpl;
 import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionUsersServiceImpl;
 import com.ibanity.apis.client.sandbox.services.impl.SandboxFinancialInstitutionsServiceImpl;
+import com.ibanity.apis.client.services.AccountInformationAccessRequestsService;
 import com.ibanity.apis.client.services.AccountsService;
 import com.ibanity.apis.client.services.CustomerAccessTokensService;
+import com.ibanity.apis.client.services.impl.AccountInformationAccessRequestsServiceImpl;
 import com.ibanity.apis.client.services.impl.AccountsServiceImpl;
 import com.ibanity.apis.client.services.impl.CustomerAccessTokensServiceImpl;
 import com.ibanity.apis.client.utils.FileUtils;
@@ -60,6 +62,7 @@ public abstract class AbstractServiceTest {
 
     protected StringBuffer verificationErrors = new StringBuffer();
 
+    protected AccountInformationAccessRequestsService accountInformationAccessRequestsService = new AccountInformationAccessRequestsServiceImpl();
     protected AccountsService accountsService = new AccountsServiceImpl();
     protected FinancialInstitutionAccountsService financialInstitutionAccountsService = new FinancialInstitutionAccountsServiceImpl();
     protected FinancialInstitutionUsersService financialInstitutionUsersService = new FinancialInstitutionUsersServiceImpl();
@@ -115,30 +118,27 @@ public abstract class AbstractServiceTest {
         deleteFinancialInstitutionUser(financialInstitutionUser.getId());
     }
 
-    public FinancialInstitution createFinancialInstitution(UUID idempotency) {
+    public FinancialInstitution createFinancialInstitution(UUID idempotencyKey) {
         now = Instant.now();
         name = TEST_CASE + "-" + now.toString();
-        FinancialInstitution newFinancialInstitution = new FinancialInstitution();
-        newFinancialInstitution.setSandbox(Boolean.TRUE);
-        newFinancialInstitution.setName(name);
-        if (idempotency != null) {
-            return sandboxFinancialInstitutionsService.createFinancialInstitution(newFinancialInstitution, idempotency);
+        if (idempotencyKey != null) {
+            return sandboxFinancialInstitutionsService.create(name, idempotencyKey);
         } else {
-            return sandboxFinancialInstitutionsService.createFinancialInstitution(newFinancialInstitution);
+            return sandboxFinancialInstitutionsService.create(name);
         }
     }
 
-    protected FinancialInstitutionUser createFinancialInstitutionUser(UUID idempotency) {
+    protected FinancialInstitutionUser createFinancialInstitutionUser(UUID idempotencyKey) {
         Instant now = Instant.now();
         FinancialInstitutionUser financialInstitutionUser = new FinancialInstitutionUser();
         financialInstitutionUser.setFirstName("FirstName-"+now);
         financialInstitutionUser.setLastName("LastName-"+now);
         financialInstitutionUser.setLogin("Login-"+now);
         financialInstitutionUser.setPassword("Password-"+now);
-        if (idempotency == null) {
-            return financialInstitutionUsersService.createFinancialInstitutionUser(financialInstitutionUser);
+        if (idempotencyKey == null) {
+            return financialInstitutionUsersService.create(financialInstitutionUser.getLogin(), financialInstitutionUser.getPassword(), financialInstitutionUser.getLastName(), financialInstitutionUser.getFirstName());
         } else {
-            return financialInstitutionUsersService.createFinancialInstitutionUser(financialInstitutionUser, idempotency);
+            return financialInstitutionUsersService.create(financialInstitutionUser.getLogin(), financialInstitutionUser.getPassword(), financialInstitutionUser.getLastName(), financialInstitutionUser.getFirstName(), idempotencyKey);
         }
     }
 
@@ -152,11 +152,11 @@ public abstract class AbstractServiceTest {
     }
 
     protected void deleteFinancialInstitutionUser(UUID financialInstitutionUserID) throws ApiErrorsException {
-        financialInstitutionUsersService.deleteFinancialInstitutionUser(financialInstitutionUserID);
+        financialInstitutionUsersService.delete(financialInstitutionUserID);
     }
 
 
-    protected FinancialInstitutionAccount createFinancialInstitutionAccount(FinancialInstitution financialInstitution, UUID financialInstitutionUser, UUID idempotency) throws ApiErrorsException {
+    protected FinancialInstitutionAccount createFinancialInstitutionAccount(FinancialInstitution financialInstitution, UUID financialInstitutionUser, UUID idempotencyKey) throws ApiErrorsException {
         FinancialInstitutionAccount financialInstitutionAccount = new FinancialInstitutionAccount();
         financialInstitutionAccount.setSubType("checking");
         financialInstitutionAccount.setReference(Iban.random(CountryCode.BE).toString());
@@ -164,23 +164,19 @@ public abstract class AbstractServiceTest {
         financialInstitutionAccount.setDescription("Checking Account");
         financialInstitutionAccount.setCurrency("EUR");
         financialInstitutionAccount.setFinancialInstitution(financialInstitution);
-        if (idempotency == null) {
-            return financialInstitutionAccountsService.createFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser, financialInstitutionAccount);
+        if (idempotencyKey == null) {
+            return financialInstitutionAccountsService.create(financialInstitution.getId(), financialInstitutionUser, financialInstitutionAccount);
         } else {
-            return financialInstitutionAccountsService.createFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser, financialInstitutionAccount, idempotency);
+            return financialInstitutionAccountsService.create(financialInstitution.getId(), financialInstitutionUser, financialInstitutionAccount, idempotencyKey);
         }
     }
 
     protected void deleteFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) throws ApiErrorsException {
-        financialInstitutionAccountsService.deleteFinancialInstitutionAccount(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId);
+        financialInstitutionAccountsService.delete(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId);
     }
 
     protected AccountInformationAccessRequest getAccountInformationAccessRequest() {
-        AccountInformationAccessRequest accountInformationAccessRequest = new AccountInformationAccessRequest();
-        accountInformationAccessRequest.setConsentReference(UUID.randomUUID().toString());
-        accountInformationAccessRequest.setRedirectUri(FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL);
-        accountInformationAccessRequest.setFinancialInstitution(financialInstitution);
-        return accountsService.getAccountInformationAccessRequest(generatedCustomerAccessToken, accountInformationAccessRequest);
+        return accountInformationAccessRequestsService.createForFinancialInstitution(generatedCustomerAccessToken.getToken(), financialInstitution.getId(), FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL, UUID.randomUUID().toString());
     }
 
     protected void deleteFinancialInstitution(UUID financialInstitutionId) throws ApiErrorsException {
@@ -188,9 +184,7 @@ public abstract class AbstractServiceTest {
     }
 
     protected CustomerAccessToken getCustomerAccessToken(String applicationCustomerReference){
-        CustomerAccessToken customerAccessTokenRequest = new CustomerAccessToken();
-        customerAccessTokenRequest.setApplicationCustomerReference(applicationCustomerReference);
-        return customerAccessTokensService.createCustomerAccessToken(customerAccessTokenRequest);
+        return customerAccessTokensService.create(applicationCustomerReference);
     }
 
     protected void authorizeAccounts(String redirectUrl) {

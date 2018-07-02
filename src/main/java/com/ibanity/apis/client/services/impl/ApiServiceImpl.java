@@ -21,16 +21,16 @@ public class ApiServiceImpl extends AbstractServiceImpl implements ApiService {
     @Override
     public ApiIUrls getApiUrls() {
         CrnkClient apiClient = getApiClient(IBANITY_API_ENDPOINT);
-        HttpAdapterRequest httpAdapterRequest = apiClient.getHttpAdapter().newRequest( apiClient.getServiceUrlProvider().getUrl(), HttpMethod.GET, "");
+        HttpAdapterRequest httpAdapterRequest = apiClient.getHttpAdapter().newRequest(apiClient.getServiceUrlProvider().getUrl(), HttpMethod.GET, "");
         JsonLinksInformation jsonLinksInformation = null;
         try {
             HttpAdapterResponse httpAdapterResponse = httpAdapterRequest.execute();
-            if (!httpAdapterResponse.isSuccessful()){
+            if (!httpAdapterResponse.isSuccessful()) {
                 throw new IbanityException("Impossible to get Ibanity list of APIs' URLs");
             }
             String body = httpAdapterResponse.body();
             ObjectMapper objectMapper = apiClient.getObjectMapper();
-            Document document = (Document)objectMapper.readValue(body, Document.class);
+            Document document = (Document) objectMapper.readValue(body, Document.class);
             if (document.getLinks() != null) {
                 jsonLinksInformation = new JsonLinksInformation(document.getLinks(), objectMapper);
             }

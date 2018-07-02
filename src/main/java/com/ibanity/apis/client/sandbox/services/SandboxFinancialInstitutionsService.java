@@ -8,13 +8,13 @@ import java.util.UUID;
 
 public interface SandboxFinancialInstitutionsService extends FinancialInstitutionsService {
 
-    FinancialInstitution createFinancialInstitution(FinancialInstitution financialInstitution);
+    FinancialInstitution create(String name);
 
-    FinancialInstitution createFinancialInstitution(FinancialInstitution financialInstitution, UUID idempotency);
+    FinancialInstitution create(String name, UUID idempotencyKey);
 
     FinancialInstitution updateFinancialInstitution(FinancialInstitution financialInstitution);
 
-    FinancialInstitution updateFinancialInstitution(FinancialInstitution financialInstitution, UUID idempotency);
+    FinancialInstitution updateFinancialInstitution(FinancialInstitution financialInstitution, UUID idempotencyKey);
 
     void deleteFinancialInstitution(UUID financialInstitutionId) throws ApiErrorsException;
 }

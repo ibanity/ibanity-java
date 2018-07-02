@@ -41,9 +41,9 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
     @Test
     public void testGetFinancialInstitutionUsers() throws ApiErrorsException {
         FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(null);
-        List<FinancialInstitutionUser> financialInstitutionUsers = financialInstitutionUsersService.getFinancialInstitutionUsers();
+        List<FinancialInstitutionUser> financialInstitutionUsers = financialInstitutionUsersService.list();
         assertTrue(financialInstitutionUsers.size() > 0);
-        financialInstitutionUsersService.deleteFinancialInstitutionUser(financialInstitutionUser.getId());
+        financialInstitutionUsersService.delete(financialInstitutionUser.getId());
     }
 
     /**
@@ -58,10 +58,10 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
 
         IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
         pagingSpec.setLimit(3L);
-        List<FinancialInstitutionUser> financialInstitutionUsersList = financialInstitutionUsersService.getFinancialInstitutionUsers(pagingSpec);
+        List<FinancialInstitutionUser> financialInstitutionUsersList = financialInstitutionUsersService.list(pagingSpec);
         assertTrue(financialInstitutionUsersList.size() == 3);
         for (FinancialInstitutionUser financialInstitutionUser :  financialInstitutionUsers){
-            financialInstitutionUsersService.deleteFinancialInstitutionUser(financialInstitutionUser.getId());
+            financialInstitutionUsersService.delete(financialInstitutionUser.getId());
         }
     }
 
@@ -75,8 +75,8 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
 
     private void getFinancialInstutionUser(UUID indempotency) throws ApiErrorsException {
         FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(indempotency);
-        FinancialInstitutionUser financialInstitutionUserGet = financialInstitutionUsersService.getFinancialInstitutionUser(financialInstitutionUser.getId());
-        financialInstitutionUsersService.deleteFinancialInstitutionUser(financialInstitutionUserGet.getId());
+        FinancialInstitutionUser financialInstitutionUserGet = financialInstitutionUsersService.find(financialInstitutionUser.getId());
+        financialInstitutionUsersService.delete(financialInstitutionUserGet.getId());
         assertTrue(financialInstitutionUserGet.equals(financialInstitutionUser));
     }
 
@@ -85,7 +85,15 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
      */
     @Test
     public void testGetFinancialInstitutionUserUnknown() throws ApiErrorsException {
-        assertThrows(ApiErrorsException.class, () -> financialInstitutionUsersService.getFinancialInstitutionUser(UUID.randomUUID()));
+        try {
+            financialInstitutionUsersService.find(UUID.randomUUID());
+            fail("Should raise ApiErrorsException");
+        } catch (ApiErrorsException apiErrorsException) {
+            assertTrue(apiErrorsException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
+            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitutionUser.RESOURCE_TYPE)).count() == 1);
+        }
     }
 
     /**
@@ -114,14 +122,14 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
         updateFinancialInstitutionUser(UUID.randomUUID());
     }
 
-    private void updateFinancialInstitutionUser(UUID idempotency) throws ApiErrorsException {
-        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(idempotency);
+    private void updateFinancialInstitutionUser(UUID idempotencyKey) throws ApiErrorsException {
+        FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(idempotencyKey);
         financialInstitutionUser.setPassword("Password");
         FinancialInstitutionUser updatedFinancialInstitutionUser = null;
-        if (idempotency == null) {
-            updatedFinancialInstitutionUser = financialInstitutionUsersService.updateFinancialInstitutionUser(financialInstitutionUser);
+        if (idempotencyKey == null) {
+            updatedFinancialInstitutionUser = financialInstitutionUsersService.update(financialInstitutionUser);
         } else {
-            updatedFinancialInstitutionUser = financialInstitutionUsersService.updateFinancialInstitutionUser(financialInstitutionUser, idempotency);
+            updatedFinancialInstitutionUser = financialInstitutionUsersService.update(financialInstitutionUser, idempotencyKey);
         }
         assertTrue(updatedFinancialInstitutionUser.getPassword().equals(financialInstitutionUser.getPassword()));
         assertTrue(updatedFinancialInstitutionUser.getFirstName().equals(financialInstitutionUser.getFirstName()));
@@ -131,7 +139,7 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
         assertFalse(updatedFinancialInstitutionUser.getUpdatedAt().equals(financialInstitutionUser.getUpdatedAt()));
         assertTrue(updatedFinancialInstitutionUser.getUpdatedAt().isAfter(financialInstitutionUser.getUpdatedAt()));
         assertNull(updatedFinancialInstitutionUser.getDeletedAt());
-        financialInstitutionUsersService.deleteFinancialInstitutionUser(financialInstitutionUser.getId());
+        financialInstitutionUsersService.delete(financialInstitutionUser.getId());
     }
 
     /**
@@ -140,7 +148,7 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
     @Test
     public void testDeleteFinancialInstitutionUser() throws Exception {
         FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(null);
-        financialInstitutionUsersService.deleteFinancialInstitutionUser(financialInstitutionUser.getId());
+        financialInstitutionUsersService.delete(financialInstitutionUser.getId());
     }
 
     /**
@@ -149,12 +157,13 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
     @Test
     public void testDeleteUnknownFinancialInstitutionUser() throws Exception {
         try {
-            financialInstitutionUsersService.deleteFinancialInstitutionUser(UUID.randomUUID());
-        } catch (ApiErrorsException ibanityException) {
-            assertTrue(ibanityException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
-            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
-            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
-            assertTrue(ibanityException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals("financialInstitutionUser")).count() == 1);
+            financialInstitutionUsersService.delete(UUID.randomUUID());
+            fail("Should raise ApiErrorsException");
+        } catch (ApiErrorsException apiErrorsException) {
+            assertTrue(apiErrorsException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
+            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
+            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitutionUser.RESOURCE_TYPE)).count() == 1);
         }
     }
 }
