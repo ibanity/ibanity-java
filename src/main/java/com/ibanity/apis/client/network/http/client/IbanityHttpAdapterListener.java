@@ -19,7 +19,7 @@ public class IbanityHttpAdapterListener implements HttpClientAdapterListener {
 
     public IbanityHttpAdapterListener(final String customerAccessToken, final UUID idempotencyKey) {
         this.customerAccessToken = customerAccessToken;
-        this.idempotencyKey = this.idempotencyKey;
+        this.idempotencyKey = idempotencyKey;
     }
 
     @Override

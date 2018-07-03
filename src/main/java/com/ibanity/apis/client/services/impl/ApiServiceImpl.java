@@ -26,17 +26,18 @@ public class ApiServiceImpl extends AbstractServiceImpl implements ApiService {
         try {
             HttpAdapterResponse httpAdapterResponse = httpAdapterRequest.execute();
             if (!httpAdapterResponse.isSuccessful()) {
-                throw new IbanityException("Impossible to get Ibanity list of APIs' URLs");
+                throw new IbanityException("Impossible to get Ibanity list of APIs' URLs:" + httpAdapterResponse.body() + ":");
             }
             String body = httpAdapterResponse.body();
             ObjectMapper objectMapper = apiClient.getObjectMapper();
             Document document = (Document) objectMapper.readValue(body, Document.class);
             if (document.getLinks() != null) {
-                jsonLinksInformation = new JsonLinksInformation(document.getLinks(), objectMapper);
+                return new JsonLinksInformation(document.getLinks(), objectMapper).as(ApiIUrls.class);
+            } else {
+                throw new IbanityException("Impossible to get Ibanity list of APIs' URLs: no links in the response.");
             }
         } catch (IOException e) {
             throw new IbanityException(e.getMessage(), e);
         }
-        return  jsonLinksInformation.as(ApiIUrls.class);
     }
 }
