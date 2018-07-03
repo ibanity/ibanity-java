@@ -2,6 +2,7 @@ package com.ibanity.apis.client;
 
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.exceptions.ApiErrorsException;
+import com.ibanity.apis.client.exceptions.IbanityException;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.FinancialInstitution;
@@ -20,86 +21,59 @@ import com.ibanity.apis.client.services.impl.AccountInformationAccessRequestsSer
 import com.ibanity.apis.client.services.impl.AccountsServiceImpl;
 import com.ibanity.apis.client.services.impl.CustomerAccessTokensServiceImpl;
 import com.ibanity.apis.client.utils.FileUtils;
-import com.ibanity.apis.client.utils.OSValidator;
+import com.spotify.docker.client.DefaultDockerClient;
+import com.spotify.docker.client.DockerClient;
+import com.spotify.docker.client.messages.ContainerConfig;
+import com.spotify.docker.client.messages.ContainerCreation;
+import com.spotify.docker.client.messages.ContainerInfo;
+import com.spotify.docker.client.messages.HostConfig;
+import org.apache.commons.lang3.StringUtils;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public abstract class AbstractServiceTest {
     protected static final String FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL  = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.accounts.information.access.result.redirect.url");
     protected static final String FAKE_TPP_PAYMENT_INITIATION_REDIRECT_URL          = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.payments.initiation.result.redirect.url");
+
+    private static final String IBANITY_CLIENT_SSL_CA_CERTIFICATE_PATH_PROPERTY_KEY         = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.ca.certificate.path";
+    private static final String IBANITY_CLIENT_SANDBOX_AUTHORIZATION_HOSTNAME_PROPERTY_KEY  = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.sandbox.authorization.hostname";
+
+    private static final String IBANITY_SANDBOX_AUTHORIZATION_CLI_DOCKER_IMAGE      = "ibanity/sandbox-authorization-cli:latest";
+
     private static final String TEST_CASE                                           = AbstractServiceTest.class.getSimpleName();
 
     protected static final String ERROR_DATA_CODE_RESOURCE_NOT_FOUND                = "resourceNotFound";
     protected static final String ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND              = "The requested resource was not found.";
     protected static final String ERROR_DATA_META_RESOURCE_KEY                      = "resource";
 
+    private static final String DOCKER_SANDBOX_AUTHORIZATION_CLI_POSITIVE_ANSWER    = "Your authorization has been submitted";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractServiceTest.class);
+
     protected Instant now;
 
     protected String name;
 
-
-    protected WebDriver driver;
-    protected Actions actions;
-    protected JavascriptExecutor javascriptExecutor;
-
-    protected StringBuffer verificationErrors = new StringBuffer();
-
-    protected AccountInformationAccessRequestsService accountInformationAccessRequestsService = new AccountInformationAccessRequestsServiceImpl();
-    protected AccountsService accountsService = new AccountsServiceImpl();
-    protected FinancialInstitutionAccountsService financialInstitutionAccountsService = new FinancialInstitutionAccountsServiceImpl();
-    protected FinancialInstitutionUsersService financialInstitutionUsersService = new FinancialInstitutionUsersServiceImpl();
-    protected SandboxFinancialInstitutionsService sandboxFinancialInstitutionsService = new SandboxFinancialInstitutionsServiceImpl();
-    protected CustomerAccessTokensService customerAccessTokensService = new CustomerAccessTokensServiceImpl();
+    protected AccountInformationAccessRequestsService accountInformationAccessRequestsService   = new AccountInformationAccessRequestsServiceImpl();
+    protected AccountsService accountsService                                                   = new AccountsServiceImpl();
+    protected FinancialInstitutionAccountsService financialInstitutionAccountsService           = new FinancialInstitutionAccountsServiceImpl();
+    protected FinancialInstitutionUsersService financialInstitutionUsersService                 = new FinancialInstitutionUsersServiceImpl();
+    protected SandboxFinancialInstitutionsService sandboxFinancialInstitutionsService           = new SandboxFinancialInstitutionsServiceImpl();
+    protected CustomerAccessTokensService customerAccessTokensService                           = new CustomerAccessTokensServiceImpl();
 
     protected CustomerAccessToken generatedCustomerAccessToken;
 
     protected FinancialInstitution financialInstitution;
     protected FinancialInstitutionUser financialInstitutionUser;
     protected List<FinancialInstitutionAccount> financialInstitutionAccounts = new ArrayList<>();
-
-    protected ExpectedCondition<Boolean> expectationPageCompleted = driver -> ((JavascriptExecutor) driver).executeScript("return document.readyState").toString().equals("complete");
-
-
-    protected void initSelenium() {
-        FileUtils fileUtils = new FileUtils();
-        String driverFilePath = fileUtils.getFile("chromedriver." + OSValidator.getSystemOperatingSystem()).getAbsolutePath();
-        File driverFile = new File(driverFilePath);
-        driverFile.setExecutable(true);
-        System.setProperty("webdriver.chrome.driver", driverFilePath);
-
-        ChromeOptions options = new ChromeOptions();
-
-        options.addArguments("headless");
-        driver = new ChromeDriver(options);
-        actions = new Actions(driver);
-        options.addArguments("window-size=1900x1600");
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-        driver.manage().window().maximize();
-        javascriptExecutor = (JavascriptExecutor) driver;
-    }
-
-    protected void exitSelenium() {
-        driver.quit();
-        driver = null;
-    }
 
     protected void initPublicAPIEnvironment() throws Exception {
         generatedCustomerAccessToken = getCustomerAccessToken(UUID.randomUUID().toString());
@@ -188,65 +162,89 @@ public abstract class AbstractServiceTest {
     }
 
     protected void authorizeAccounts(String redirectUrl) {
-        if (driver == null) {
-            initSelenium();
-        }
-        driver.get(redirectUrl);
-        WebDriverWait wait = new WebDriverWait(driver, 30);
-        wait.until(expectationPageCompleted);
-        List<WebElement> webElements = driver.findElements(By.id("login"));
-        // Checking with the authentication was already done or not.
-        if (webElements.size() == 1){
-            // Doing the authentication
-            WebElement webElement = webElements.get(0);
-            webElement.click();
-            webElement.clear();
-            webElement.sendKeys(financialInstitutionUser.getLogin());
-            webElement = driver.findElements(By.id("password")).get(0);
-            webElement.clear();
-            webElement.sendKeys(financialInstitutionUser.getPassword());
-            driver.findElement(By.xpath("//button[@type='submit']")).submit();
-            wait = new WebDriverWait(driver, 30);
-            wait.until(expectationPageCompleted);
-            driver.findElement(By.id("response")).clear();
-            driver.findElement(By.id("response")).sendKeys("123456");
-            driver.findElement(By.xpath("//button[@type='submit']")).submit();
 
-            wait = new WebDriverWait(driver, 30);
-            wait.until(expectationPageCompleted);
+        String iBanList = financialInstitutionAccounts.stream().map(financialInstitutionAccount -> financialInstitutionAccount.getReference()).collect(Collectors.joining(","));
+        String sslCAFilePath = null;
+        String sandboxAuthorizationHostname = null;
+
+        if (IbanityConfiguration.getConfiguration().containsKey(IBANITY_CLIENT_SSL_CA_CERTIFICATE_PATH_PROPERTY_KEY)) {
+            FileUtils filesUtils = new FileUtils();
+            sslCAFilePath = filesUtils.getFile(IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SSL_CA_CERTIFICATE_PATH_PROPERTY_KEY)).getPath();
         }
 
-        List<String> iBanList = financialInstitutionAccounts.stream().map(financialInstitutionAccount -> financialInstitutionAccount.getReference()).collect(Collectors.toList());
-
-        List<WebElement> uiAccountsList = driver.findElements(By.xpath("//input[@type='checkbox']"));
-        uiAccountsList.stream()
-                .filter(webElement -> iBanList.contains(webElement.getAttribute("value")))
-                .forEach(webElement -> {
-                    javascriptExecutor.executeScript("arguments[0].scrollIntoView();", webElement);
-                    actions.moveToElement(webElement).click().build().perform();
-                })
-        ;
-
-        WebElement webElementSelectButton = driver.findElement(By.xpath("//button[text()='Select' and @type='submit']"));
-        if (webElementSelectButton.isEnabled() && webElementSelectButton.isDisplayed()) {
-            javascriptExecutor.executeScript("arguments[0].scrollIntoView();", webElementSelectButton);
-            javascriptExecutor.executeScript("arguments[0].click();", webElementSelectButton);
-        } else {
-            throw new RuntimeException("Accounts 'Select' button not visible or not displayed");
+        if (IbanityConfiguration.getConfiguration().containsKey(IBANITY_CLIENT_SANDBOX_AUTHORIZATION_HOSTNAME_PROPERTY_KEY)) {
+            sandboxAuthorizationHostname = IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SANDBOX_AUTHORIZATION_HOSTNAME_PROPERTY_KEY);
         }
 
-        wait = new WebDriverWait(driver, 30);
-        wait.until(expectationPageCompleted);
+        try {
+            // Create a client based on DOCKER_HOST and DOCKER_CERT_PATH env vars
+            final DockerClient docker = DefaultDockerClient.fromEnv().build();
 
-        WebElement acceptAccountsElement = driver.findElement(By.xpath("//button[text()='Accept']"));
-        if (acceptAccountsElement.isEnabled() && acceptAccountsElement.isDisplayed()) {
-            javascriptExecutor.executeScript("arguments[0].scrollIntoView();", acceptAccountsElement);
-            javascriptExecutor.executeScript("arguments[0].click();", acceptAccountsElement);
-            wait = new WebDriverWait(driver, 30);
-            wait.until(ExpectedConditions.urlToBe(FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL));
-        } else {
-            throw new RuntimeException("Accounts selection final 'Accept' button not visible or not displayed");
+            docker.pull(IBANITY_SANDBOX_AUTHORIZATION_CLI_DOCKER_IMAGE);
+            List<String> cmdParameters = new ArrayList<>();
+
+            cmdParameters.add("account-information-access");
+
+            cmdParameters.add("-l");
+            cmdParameters.add(financialInstitutionUser.getLogin());
+
+            cmdParameters.add("-p");
+            cmdParameters.add(financialInstitutionUser.getPassword());
+
+            cmdParameters.add("-f");
+            cmdParameters.add(financialInstitution.getId().toString());
+
+            cmdParameters.add("-a");
+            cmdParameters.add(iBanList);
+
+            cmdParameters.add("-r");
+            cmdParameters.add(redirectUrl);
+
+            if (sslCAFilePath != null){
+                cmdParameters.add("-s");
+                cmdParameters.add(sslCAFilePath);
+            }
+
+            if (sandboxAuthorizationHostname != null) {
+                cmdParameters.add("-o");
+                cmdParameters.add(sandboxAuthorizationHostname);
+            }
+
+            final ContainerConfig containerConfig = ContainerConfig.builder()
+                    .image(IBANITY_SANDBOX_AUTHORIZATION_CLI_DOCKER_IMAGE)
+                    .hostConfig(HostConfig.builder().build())
+                    .cmd(cmdParameters.toArray(new String[cmdParameters.size()]))
+                    .build();
+
+            final ContainerCreation creation = docker.createContainer(containerConfig);
+            final String id = creation.id();
+
+            docker.startContainer(id);
+
+            ContainerInfo containerInfo = docker.inspectContainer(id);
+
+            int loop = 10000;
+            while (containerInfo.state().running() && loop > 0){
+                containerInfo = docker.inspectContainer(id);
+                loop --;
+            }
+
+            String logs = docker.logs(id, DockerClient.LogsParam.stdout(), DockerClient.LogsParam.stderr()).readFully();
+            if (!logs.isEmpty() && !StringUtils.contains(logs, DOCKER_SANDBOX_AUTHORIZATION_CLI_POSITIVE_ANSWER)) {
+                throw new IbanityException("Impossible to authorize accounts through docker image:"+logs+":");
+            }
+
+            if (containerInfo.state().running()) {
+                docker.stopContainer(id,4);
+            }
+            docker.removeContainer(id);
+            docker.close();
+        } catch (IbanityException ibanityException) {
+            LOGGER.error("IbanityException",ibanityException);
+            throw ibanityException;
+        } catch (Exception e) {
+            LOGGER.error("Exception",e);
+            throw new IbanityException("Error during account authorization process",e);
         }
     }
-
 }

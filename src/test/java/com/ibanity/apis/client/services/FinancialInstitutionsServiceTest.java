@@ -31,13 +31,11 @@ public class FinancialInstitutionsServiceTest extends AbstractServiceTest {
 
     @BeforeEach
     public void before() throws Exception{
-        initSelenium();
         initPublicAPIEnvironment();
     }
 
     @AfterEach
     public void after() throws Exception {
-        exitSelenium();
         cleanPublicAPIEnvironment();
     }
 

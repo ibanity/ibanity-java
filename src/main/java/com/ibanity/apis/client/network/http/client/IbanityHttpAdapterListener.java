@@ -15,8 +15,6 @@ public class IbanityHttpAdapterListener implements HttpClientAdapterListener {
     private String customerAccessToken = null;
     private UUID idempotencyKey = null;
 
-    private static final String IDEMPOTENCY_KEY = "Ibanity-Idempotency-Key";
-
     public IbanityHttpAdapterListener(final String customerAccessToken, final UUID idempotencyKey) {
         this.customerAccessToken = customerAccessToken;
         this.idempotencyKey = idempotencyKey;
@@ -25,6 +23,7 @@ public class IbanityHttpAdapterListener implements HttpClientAdapterListener {
     @Override
     public void onBuild(final HttpClientBuilder httpClientBuilder) {
         httpClientBuilder.setSSLContext(IbanityHttpUtils.getSSLContext());
+        httpClientBuilder.addInterceptorLast(new IndempotencyInterceptor(idempotencyKey));
         httpClientBuilder.addInterceptorLast(new IbanitySignatureInterceptor());
         httpClientBuilder.setDefaultHeaders(getAuthorizationtHttpRequestHeaders());
     }
@@ -33,9 +32,6 @@ public class IbanityHttpAdapterListener implements HttpClientAdapterListener {
         Collection<Header> authorizationHttpRequestHeaders = new ArrayList();
         if (customerAccessToken != null) {
             authorizationHttpRequestHeaders.add(new BasicHeader(HttpHeaders.AUTHORIZATION, "Bearer " + customerAccessToken));
-        }
-        if (idempotencyKey != null) {
-            authorizationHttpRequestHeaders.add(new BasicHeader(IDEMPOTENCY_KEY, idempotencyKey.toString()));
         }
         return authorizationHttpRequestHeaders;
     }

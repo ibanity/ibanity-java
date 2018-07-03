@@ -28,13 +28,11 @@ public class AccountsServiceTest extends AbstractServiceTest {
 
     @BeforeEach
     public void beforeEach() throws Exception {
-        initSelenium();
         initPublicAPIEnvironment();
     }
 
     @AfterEach
     public void afterEach() throws Exception {
-        exitSelenium();
         cleanPublicAPIEnvironment();
     }
 
@@ -46,6 +44,9 @@ public class AccountsServiceTest extends AbstractServiceTest {
         AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
         authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
         List<Account> accountsList = accountsService.list(generatedCustomerAccessToken.getToken(), financialInstitution.getId());
+        if (accountsList.size() == 0){
+            fail("authorized accounts list size is 0");
+        }
         for (Account account : accountsList) {
             Account accountResult = accountsService.find(generatedCustomerAccessToken.getToken(), account.getId(), financialInstitution.getId());
             assertTrue(account.getReference().equals(accountResult.getReference()));

@@ -24,6 +24,10 @@ class ApiServiceTest extends AbstractServiceTest {
 
     private static ApiIUrls apiUrls;
 
+    public static final String FORWARD_SLASH        = "/";
+    public static final String SANBOX_PREFIX_PATH   = FORWARD_SLASH + "sandbox";
+    public static final String CUSTOMER_PREFIX_PATH = FORWARD_SLASH + "customer";
+
     @BeforeAll
     static void beforeAll(){
         apiUrls = IbanityConfiguration.getApiIUrls();
@@ -44,7 +48,7 @@ class ApiServiceTest extends AbstractServiceTest {
 
     @Test
     void testValidateSandboxFinancialInstitutionsApiUrl() {
-        assertTrue(apiUrls.getSandbox().getFinancialInstitutions().contains(IbanityConfiguration.SANBOX_PREFIX_PATH));
+        assertTrue(apiUrls.getSandbox().getFinancialInstitutions().contains(SANBOX_PREFIX_PATH));
         assertTrue(apiUrls.getSandbox().getFinancialInstitutions().contains(FinancialInstitution.class.getAnnotation(JsonApiResource.class).resourcePath()));
         assertTrue(apiUrls.getSandbox().getFinancialInstitutions().contains(FinancialInstitution.class.getAnnotation(JsonApiResource.class).type() + URL_PARAMETER_ID_POSTFIX));
         assertTrue(apiUrls.getSandbox().getFinancialInstitutions().contains(IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY)));
@@ -53,7 +57,7 @@ class ApiServiceTest extends AbstractServiceTest {
     @Test
     void testValidateSandboxFinancialInstitutionUsersApiUrl() {
         // FinancialInstitutionUsers
-        assertTrue(apiUrls.getSandbox().getFinancialInstitutionUsers().contains(IbanityConfiguration.SANBOX_PREFIX_PATH));
+        assertTrue(apiUrls.getSandbox().getFinancialInstitutionUsers().contains(SANBOX_PREFIX_PATH));
         assertTrue(apiUrls.getSandbox().getFinancialInstitutionUsers().contains(FinancialInstitutionUser.class.getAnnotation(JsonApiResource.class).resourcePath()));
         assertTrue(apiUrls.getSandbox().getFinancialInstitutionUsers().contains(FinancialInstitutionUser.class.getAnnotation(JsonApiResource.class).type() + URL_PARAMETER_ID_POSTFIX));
         assertTrue(apiUrls.getSandbox().getFinancialInstitutionUsers().contains(IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY)));
@@ -62,7 +66,7 @@ class ApiServiceTest extends AbstractServiceTest {
 
     @Test
     void testValidateSandboxFinancialInstitutionFinancialInstitutionUserFinancialInstitutionAccountApiUrl() {
-        assertTrue(apiUrls.getSandbox().getFinancialInstitution().getFinancialInstitutionAccounts().contains(IbanityConfiguration.SANBOX_PREFIX_PATH));
+        assertTrue(apiUrls.getSandbox().getFinancialInstitution().getFinancialInstitutionAccounts().contains(SANBOX_PREFIX_PATH));
         assertTrue(apiUrls.getSandbox().getFinancialInstitution().getFinancialInstitutionAccounts().contains(FinancialInstitution.class.getAnnotation(JsonApiResource.class).resourcePath()));
         assertTrue(apiUrls.getSandbox().getFinancialInstitution().getFinancialInstitutionAccounts().contains(FinancialInstitution.class.getAnnotation(JsonApiResource.class).type() + URL_PARAMETER_ID_POSTFIX));
         assertTrue(apiUrls.getSandbox().getFinancialInstitution().getFinancialInstitutionAccounts().contains(FinancialInstitutionUser.class.getAnnotation(JsonApiResource.class).resourcePath()));
@@ -75,7 +79,7 @@ class ApiServiceTest extends AbstractServiceTest {
     @Test
     void testValidateSandboxFinancialInstitutionFinancialInstitutionUserFinancialInstitutionAccountFinancialInstitutionTransactionApiUrl() {
         // FinancialInstitutionTransactions
-        assertTrue(apiUrls.getSandbox().getFinancialInstitution().getFinancialInstitutionAccount().getFinancialInstitutionTransactions().contains(IbanityConfiguration.SANBOX_PREFIX_PATH));
+        assertTrue(apiUrls.getSandbox().getFinancialInstitution().getFinancialInstitutionAccount().getFinancialInstitutionTransactions().contains(SANBOX_PREFIX_PATH));
         assertTrue(apiUrls.getSandbox().getFinancialInstitution().getFinancialInstitutionAccount().getFinancialInstitutionTransactions().contains(FinancialInstitution.class.getAnnotation(JsonApiResource.class).resourcePath()));
         assertTrue(apiUrls.getSandbox().getFinancialInstitution().getFinancialInstitutionAccount().getFinancialInstitutionTransactions().contains(FinancialInstitution.class.getAnnotation(JsonApiResource.class).type() + URL_PARAMETER_ID_POSTFIX));
         assertTrue(apiUrls.getSandbox().getFinancialInstitution().getFinancialInstitutionAccount().getFinancialInstitutionTransactions().contains(FinancialInstitutionUser.class.getAnnotation(JsonApiResource.class).resourcePath()));
@@ -89,7 +93,7 @@ class ApiServiceTest extends AbstractServiceTest {
 
     @Test
     void testValidateCustomerFinancialInstitutionsApiUrl() {
-        assertTrue(apiUrls.getCustomer().getFinancialInstitutions().contains(IbanityConfiguration.CUSTOMER_PREFIX_PATH));
+        assertTrue(apiUrls.getCustomer().getFinancialInstitutions().contains(CUSTOMER_PREFIX_PATH));
         assertTrue(apiUrls.getCustomer().getFinancialInstitutions().contains(FinancialInstitution.class.getAnnotation(JsonApiResource.class).resourcePath()));
         assertFalse(apiUrls.getCustomer().getFinancialInstitutions().contains(FinancialInstitution.class.getAnnotation(JsonApiResource.class).type() + URL_PARAMETER_ID_POSTFIX));
         assertTrue(apiUrls.getCustomer().getFinancialInstitutions().contains(IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY)));
@@ -98,7 +102,7 @@ class ApiServiceTest extends AbstractServiceTest {
     @Test
     void testValidateCustomerAccountsApiUrl() {
         // Accounts
-        assertTrue(apiUrls.getCustomer().getAccounts().contains(IbanityConfiguration.CUSTOMER_PREFIX_PATH));
+        assertTrue(apiUrls.getCustomer().getAccounts().contains(CUSTOMER_PREFIX_PATH));
         assertTrue(apiUrls.getCustomer().getAccounts().contains(Account.class.getAnnotation(JsonApiResource.class).resourcePath()));
         assertFalse(apiUrls.getCustomer().getAccounts().contains(Account.class.getAnnotation(JsonApiResource.class).type() + URL_PARAMETER_ID_POSTFIX));
         assertTrue(apiUrls.getCustomer().getAccounts().contains(IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY)));
@@ -106,7 +110,7 @@ class ApiServiceTest extends AbstractServiceTest {
 
     @Test
     void testValidateFinancialInstitutionInformationAccessRequestsApiUrl() {
-        assertTrue(apiUrls.getCustomer().getFinancialInstitution().getAccountInformationAccessRequests().contains(IbanityConfiguration.CUSTOMER_PREFIX_PATH));
+        assertTrue(apiUrls.getCustomer().getFinancialInstitution().getAccountInformationAccessRequests().contains(CUSTOMER_PREFIX_PATH));
         assertTrue(apiUrls.getCustomer().getFinancialInstitution().getAccountInformationAccessRequests().contains(FinancialInstitution.class.getAnnotation(JsonApiResource.class).resourcePath()));
         assertTrue(apiUrls.getCustomer().getFinancialInstitution().getAccountInformationAccessRequests().contains(FinancialInstitution.class.getAnnotation(JsonApiResource.class).type() + URL_PARAMETER_ID_POSTFIX));
         assertTrue(apiUrls.getCustomer().getFinancialInstitution().getAccountInformationAccessRequests().contains(AccountInformationAccessRequest.class.getAnnotation(JsonApiResource.class).resourcePath()));
@@ -116,7 +120,7 @@ class ApiServiceTest extends AbstractServiceTest {
 
     @Test
     void testValidateFinancialInstitutionPaymentInitiationRequestsApiUrl() {
-        assertTrue(apiUrls.getCustomer().getFinancialInstitution().getPaymentInitiationRequests().contains(IbanityConfiguration.CUSTOMER_PREFIX_PATH));
+        assertTrue(apiUrls.getCustomer().getFinancialInstitution().getPaymentInitiationRequests().contains(CUSTOMER_PREFIX_PATH));
         assertTrue(apiUrls.getCustomer().getFinancialInstitution().getPaymentInitiationRequests().contains(FinancialInstitution.class.getAnnotation(JsonApiResource.class).resourcePath()));
         assertTrue(apiUrls.getCustomer().getFinancialInstitution().getPaymentInitiationRequests().contains(FinancialInstitution.class.getAnnotation(JsonApiResource.class).type() + URL_PARAMETER_ID_POSTFIX));
         assertTrue(apiUrls.getCustomer().getFinancialInstitution().getPaymentInitiationRequests().contains(PaymentInitiationRequest.class.getAnnotation(JsonApiResource.class).resourcePath()));
@@ -126,7 +130,7 @@ class ApiServiceTest extends AbstractServiceTest {
 
     @Test
     void testValidateFinancialInstitutionAccountsApiUrl() {
-        assertTrue(apiUrls.getCustomer().getFinancialInstitution().getAccounts().contains(IbanityConfiguration.CUSTOMER_PREFIX_PATH));
+        assertTrue(apiUrls.getCustomer().getFinancialInstitution().getAccounts().contains(CUSTOMER_PREFIX_PATH));
         assertTrue(apiUrls.getCustomer().getFinancialInstitution().getAccounts().contains(FinancialInstitution.class.getAnnotation(JsonApiResource.class).resourcePath()));
         assertTrue(apiUrls.getCustomer().getFinancialInstitution().getAccounts().contains(FinancialInstitution.class.getAnnotation(JsonApiResource.class).type() + URL_PARAMETER_ID_POSTFIX));
         assertTrue(apiUrls.getCustomer().getFinancialInstitution().getAccounts().contains(Account.class.getAnnotation(JsonApiResource.class).resourcePath()));
@@ -136,7 +140,7 @@ class ApiServiceTest extends AbstractServiceTest {
 
     @Test
     void testValidateFinancialInstitutionAccountsTransactionApiUrl() {
-        assertTrue(apiUrls.getCustomer().getFinancialInstitution().getTransactions().contains(IbanityConfiguration.CUSTOMER_PREFIX_PATH));
+        assertTrue(apiUrls.getCustomer().getFinancialInstitution().getTransactions().contains(CUSTOMER_PREFIX_PATH));
         assertTrue(apiUrls.getCustomer().getFinancialInstitution().getTransactions().contains(FinancialInstitution.class.getAnnotation(JsonApiResource.class).resourcePath()));
         assertTrue(apiUrls.getCustomer().getFinancialInstitution().getTransactions().contains(FinancialInstitution.class.getAnnotation(JsonApiResource.class).type()+URL_PARAMETER_ID_POSTFIX));
         assertTrue(apiUrls.getCustomer().getFinancialInstitution().getTransactions().contains(Account.class.getAnnotation(JsonApiResource.class).resourcePath()));

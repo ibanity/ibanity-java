@@ -9,9 +9,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static junit.framework.TestCase.assertNull;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * FileUtils Tester.

@@ -19,9 +19,6 @@ import java.util.List;
 
 public final class IbanityConfiguration {
 
-    public static final String FORWARD_SLASH                        = "/";
-    public static final String SANBOX_PREFIX_PATH                   = FORWARD_SLASH + "sandbox";
-    public static final String CUSTOMER_PREFIX_PATH                 = FORWARD_SLASH + "customer";
     public static final String IBANITY_PROPERTIES_PREFIX            = "ibanity.";
     public static final String IBANITY_API_ENDPOINT_PROPERTY_KEY    = IBANITY_PROPERTIES_PREFIX + "api.endpoint";
     public static final String URL_PARAMETER_ID_POSTFIX             = "Id";

@@ -40,7 +40,6 @@ public class TransactionsServiceTest extends AbstractServiceTest {
 
     @BeforeEach
     public void beforeEach() throws Exception {
-        initSelenium();
         initPublicAPIEnvironment();
         for (FinancialInstitutionAccount financialInstitutionAccount : financialInstitutionAccounts){
             for (int index = 0; index < 5; index++) {
@@ -65,7 +64,6 @@ public class TransactionsServiceTest extends AbstractServiceTest {
                     , financialInstitutionTransaction.getId()
             );
         }
-        exitSelenium();
         cleanPublicAPIEnvironment();
     }
 
