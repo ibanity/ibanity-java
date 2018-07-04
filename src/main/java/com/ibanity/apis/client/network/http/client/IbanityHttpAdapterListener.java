@@ -23,7 +23,7 @@ public class IbanityHttpAdapterListener implements HttpClientAdapterListener {
     @Override
     public void onBuild(final HttpClientBuilder httpClientBuilder) {
         httpClientBuilder.setSSLContext(IbanityHttpUtils.getSSLContext());
-        httpClientBuilder.addInterceptorLast(new IndempotencyInterceptor(idempotencyKey));
+        httpClientBuilder.addInterceptorLast(new IdempotencyInterceptor(idempotencyKey));
         httpClientBuilder.addInterceptorLast(new IbanitySignatureInterceptor());
         httpClientBuilder.setDefaultHeaders(getAuthorizationtHttpRequestHeaders());
     }

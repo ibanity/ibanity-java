@@ -240,7 +240,7 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
         Stream.of(requestWrapper.getAllHeaders()).filter(header -> StringUtils.equalsIgnoreCase(header.getName(), HttpHeaders.AUTHORIZATION)).findFirst().ifPresent(header -> headersValue.append(HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR).append(StringUtils.lowerCase(header.getName())));
 
         // Adding Ibanity specific headers if present
-        Stream.of(requestWrapper.getAllHeaders()).filter(header -> StringUtils.startsWithIgnoreCase(header.getName(), IBANITY_HEADER_NAME_PREFIX)).forEach(header -> headersValue.append(HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR).append(header.getName()));
+        Stream.of(requestWrapper.getAllHeaders()).filter(header -> StringUtils.startsWithIgnoreCase(header.getName(), IBANITY_HEADER_NAME_PREFIX)).forEach(header -> headersValue.append(HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR).append(StringUtils.lowerCase(header.getName())));
 
         LOGGER.debug("getSignatureHeaders value:" + headersValue + ":");
         return headersValue.toString();

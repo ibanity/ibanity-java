@@ -8,13 +8,13 @@ import org.apache.http.protocol.HttpContext;
 import java.io.IOException;
 import java.util.UUID;
 
-public class IndempotencyInterceptor implements HttpRequestInterceptor {
+public class IdempotencyInterceptor implements HttpRequestInterceptor {
 
     private UUID idempotencyKey;
 
     private static final String IDEMPOTENCY_HTTP_HEADER_KEY = "Ibanity-Idempotency-Key";
 
-    public IndempotencyInterceptor(final UUID idempotencyKey) {
+    public IdempotencyInterceptor(final UUID idempotencyKey) {
         this.idempotencyKey = idempotencyKey;
     }
 

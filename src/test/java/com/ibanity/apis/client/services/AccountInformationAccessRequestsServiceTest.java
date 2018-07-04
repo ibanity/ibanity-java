@@ -34,6 +34,13 @@ class AccountInformationAccessRequestsServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    void testCreateForFinancialInstitutionWithIdempotency() {
+        AccountInformationAccessRequest accountInformationAccessRequest = accountInformationAccessRequestsService.createForFinancialInstitution(generatedCustomerAccessToken.getToken(), financialInstitution.getId(), FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL, UUID.randomUUID().toString(), UUID.randomUUID());
+        assertNotNull(accountInformationAccessRequest.getLinks().getRedirect());
+        assertNotNull(URI.create(accountInformationAccessRequest.getLinks().getRedirect()));
+    }
+
+    @Test
     void testCreateForUnknownFinancialInstitution() {
         FinancialInstitution unknownFinancialInstitution = new FinancialInstitution();
         unknownFinancialInstitution.setId(UUID.randomUUID());

@@ -39,4 +39,13 @@ public class CustomerAccessTokensServiceTest extends AbstractServiceTest {
         assertTrue(customerAccessToken.getToken().length() > 20);
         assertNotNull(customerAccessToken.getId());
     }
+
+    @Test
+    public void testCreateCustomerAccessTokenWithIdempotency() throws Exception {
+        UUID applicationCustomerReference = UUID.randomUUID();
+        CustomerAccessToken customerAccessToken = customerAccessTokensService.create(applicationCustomerReference.toString(), UUID.randomUUID());
+        assertNotNull(customerAccessToken.getToken());
+        assertTrue(customerAccessToken.getToken().length() > 20);
+        assertNotNull(customerAccessToken.getId());
+    }
 }
