@@ -22,7 +22,6 @@ public class ApiServiceImpl extends AbstractServiceImpl implements ApiService {
     public ApiIUrls getApiUrls() {
         CrnkClient apiClient = getApiClient(IBANITY_API_ENDPOINT);
         HttpAdapterRequest httpAdapterRequest = apiClient.getHttpAdapter().newRequest(apiClient.getServiceUrlProvider().getUrl(), HttpMethod.GET, "");
-        JsonLinksInformation jsonLinksInformation = null;
         try {
             HttpAdapterResponse httpAdapterResponse = httpAdapterRequest.execute();
             if (!httpAdapterResponse.isSuccessful()) {
