@@ -20,13 +20,12 @@ More details about CRNK can be found here: [http://www.crnk.io](http://www.crnk.
 ## Requirements
 * Java 8 (or above)
 * Maven (for compilation)
-## Demo Client
-* A sample Java Client Class (**ClientSample.java**) using the various services is available for you as demo.
-    * Make sure the ibanity.properties file is configured correctly
-    * run the demo client and follow the instruction
-        * Note: In the execution of the Java Client, don't forget to use the generated URLs in your browser when requested.
-    ```
-    mvn clean compile exec:exec
-    ```
 
-* A sample Java Client Class (**ClientSanboxSample.java**) to show how to create Sandbox Accounts/Transactions that can be queried by the (**ClientSample.java**)
+## Non Production Environment Tests
+In order to run the tests within a local or non production environment, you need to add the following properties in the ibanity.properties file:
+
+  * **ibanity.client.ssl.ca.certificates.folder=**(Full path of the folder containing the root_ca.crt and XXX_domain_ca.crt CA Certificates (XXX being the environment name) of the self signed certificates)
+  * **ibanity.client.docker.extrahost.callback.name=**(callback hostname)
+  * **ibanity.client.docker.extrahost.callback.ip=**(Docker environment IP address)
+  * **ibanity.client.docker.extrahost.sandbox.authorization.name=**(sandbox-authorization hostname)
+  * **ibanity.client.docker.extrahost.sandbox.authorization.ip=**(Docker environment IP address)

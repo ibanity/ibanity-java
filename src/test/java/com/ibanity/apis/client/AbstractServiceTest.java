@@ -27,6 +27,7 @@ import com.spotify.docker.client.messages.ContainerConfig;
 import com.spotify.docker.client.messages.ContainerCreation;
 import com.spotify.docker.client.messages.ContainerInfo;
 import com.spotify.docker.client.messages.HostConfig;
+import com.spotify.docker.client.messages.PortBinding;
 import org.apache.commons.lang3.StringUtils;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
@@ -35,18 +36,25 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 public abstract class AbstractServiceTest {
-    protected static final String FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL  = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.accounts.information.access.result.redirect.url");
-    protected static final String FAKE_TPP_PAYMENT_INITIATION_REDIRECT_URL          = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.payments.initiation.result.redirect.url");
+    protected static final String FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL      = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.accounts.information.access.result.redirect.url");
+    protected static final String FAKE_TPP_PAYMENT_INITIATION_REDIRECT_URL              = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.payments.initiation.result.redirect.url");
 
-    private static final String IBANITY_CLIENT_SSL_CA_CERTIFICATE_PATH_PROPERTY_KEY         = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.ca.certificate.path";
-    private static final String IBANITY_CLIENT_SANDBOX_AUTHORIZATION_HOSTNAME_PROPERTY_KEY  = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.sandbox.authorization.hostname";
+    private static final String IBANITY_CLIENT_SSL_CA_CERTIFICATES_FOLDER_PROPERTY_KEY = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.ca.certificates.folder";
+
+    private static final String IBANITY_CLIENT_DOCKER_EXTRAHOST_CALLBACK_NAME_PROPERTY_KEY                  = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.docker.extrahost.callback.name";
+    private static final String IBANITY_CLIENT_DOCKER_EXTRAHOST_CALLBACK_IP_PROPERTY_KEY                    = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.docker.extrahost.callback.ip";
+    private static final String IBANITY_CLIENT_DOCKER_EXTRAHOST_SANDBOX_AUTHORIZATION_NAME_PROPERTY_KEY     = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.docker.extrahost.sandbox.authorization.name";
+    private static final String IBANITY_CLIENT_DOCKER_EXTRAHOST_SANDBOX_AUTHORIZATION_IP_PROPERTY_KEY       = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.docker.extrahost.sandbox.authorization.ip";
 
     private static final String IBANITY_SANDBOX_AUTHORIZATION_CLI_DOCKER_IMAGE      = "ibanity/sandbox-authorization-cli:latest";
+    private static final String IBANITY_SANDBOX_AUTHORIZATION_CLI_DOCKER_VOLUME     = "/usr/local/share/ca-certificates";
 
     private static final String TEST_CASE                                           = AbstractServiceTest.class.getSimpleName();
 
@@ -92,7 +100,7 @@ public abstract class AbstractServiceTest {
         deleteFinancialInstitutionUser(financialInstitutionUser.getId());
     }
 
-    public FinancialInstitution createFinancialInstitution(UUID idempotencyKey) {
+    public FinancialInstitution createFinancialInstitution(final UUID idempotencyKey) {
         now = Instant.now();
         name = TEST_CASE + "-" + now.toString();
         if (idempotencyKey != null) {
@@ -102,7 +110,7 @@ public abstract class AbstractServiceTest {
         }
     }
 
-    protected FinancialInstitutionUser createFinancialInstitutionUser(UUID idempotencyKey) {
+    protected FinancialInstitutionUser createFinancialInstitutionUser(final UUID idempotencyKey) {
         Instant now = Instant.now();
         FinancialInstitutionUser financialInstitutionUser = new FinancialInstitutionUser();
         financialInstitutionUser.setFirstName("FirstName-"+now);
@@ -125,12 +133,12 @@ public abstract class AbstractServiceTest {
         deleteFinancialInstitution(financialInstitution.getId());
     }
 
-    protected void deleteFinancialInstitutionUser(UUID financialInstitutionUserID) throws ApiErrorsException {
+    protected void deleteFinancialInstitutionUser(final UUID financialInstitutionUserID) throws ApiErrorsException {
         financialInstitutionUsersService.delete(financialInstitutionUserID);
     }
 
 
-    protected FinancialInstitutionAccount createFinancialInstitutionAccount(FinancialInstitution financialInstitution, UUID financialInstitutionUser, UUID idempotencyKey) throws ApiErrorsException {
+    protected FinancialInstitutionAccount createFinancialInstitutionAccount(final FinancialInstitution financialInstitution, final UUID financialInstitutionUser, final UUID idempotencyKey) throws ApiErrorsException {
         FinancialInstitutionAccount financialInstitutionAccount = new FinancialInstitutionAccount();
         financialInstitutionAccount.setSubType("checking");
         financialInstitutionAccount.setReference(Iban.random(CountryCode.BE).toString());
@@ -145,7 +153,7 @@ public abstract class AbstractServiceTest {
         }
     }
 
-    protected void deleteFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) throws ApiErrorsException {
+    protected void deleteFinancialInstitutionAccount(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID financialInstitutionAccountId) throws ApiErrorsException {
         financialInstitutionAccountsService.delete(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId);
     }
 
@@ -153,27 +161,27 @@ public abstract class AbstractServiceTest {
         return accountInformationAccessRequestsService.createForFinancialInstitution(generatedCustomerAccessToken.getToken(), financialInstitution.getId(), FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL, UUID.randomUUID().toString());
     }
 
-    protected void deleteFinancialInstitution(UUID financialInstitutionId) throws ApiErrorsException {
+    protected void deleteFinancialInstitution(final UUID financialInstitutionId) throws ApiErrorsException {
         sandboxFinancialInstitutionsService.deleteFinancialInstitution(financialInstitutionId);
     }
 
-    protected CustomerAccessToken getCustomerAccessToken(String applicationCustomerReference){
+    protected CustomerAccessToken getCustomerAccessToken(final String applicationCustomerReference){
         return customerAccessTokensService.create(applicationCustomerReference);
     }
 
-    protected void authorizeAccounts(String redirectUrl) {
+    protected void authorizeAccounts(final String redirectUrl) {
 
         String iBanList = financialInstitutionAccounts.stream().map(financialInstitutionAccount -> financialInstitutionAccount.getReference()).collect(Collectors.joining(","));
-        String sslCAFilePath = null;
+        String sslCAFilesPath = null;
         String sandboxAuthorizationHostname = null;
 
-        if (IbanityConfiguration.getConfiguration().containsKey(IBANITY_CLIENT_SSL_CA_CERTIFICATE_PATH_PROPERTY_KEY)) {
+        if (IbanityConfiguration.getConfiguration().containsKey(IBANITY_CLIENT_SSL_CA_CERTIFICATES_FOLDER_PROPERTY_KEY)) {
             FileUtils filesUtils = new FileUtils();
-            sslCAFilePath = filesUtils.getFile(IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SSL_CA_CERTIFICATE_PATH_PROPERTY_KEY)).getPath();
+            sslCAFilesPath = filesUtils.getFile(IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SSL_CA_CERTIFICATES_FOLDER_PROPERTY_KEY)).getPath();
         }
 
-        if (IbanityConfiguration.getConfiguration().containsKey(IBANITY_CLIENT_SANDBOX_AUTHORIZATION_HOSTNAME_PROPERTY_KEY)) {
-            sandboxAuthorizationHostname = IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SANDBOX_AUTHORIZATION_HOSTNAME_PROPERTY_KEY);
+        if (IbanityConfiguration.getConfiguration().containsKey(IBANITY_CLIENT_DOCKER_EXTRAHOST_SANDBOX_AUTHORIZATION_NAME_PROPERTY_KEY)) {
+            sandboxAuthorizationHostname = IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_DOCKER_EXTRAHOST_SANDBOX_AUTHORIZATION_NAME_PROPERTY_KEY);
         }
 
         try {
@@ -181,6 +189,30 @@ public abstract class AbstractServiceTest {
             final DockerClient docker = DefaultDockerClient.fromEnv().build();
 
             docker.pull(IBANITY_SANDBOX_AUTHORIZATION_CLI_DOCKER_IMAGE);
+
+            // Bind container ports to host ports
+            final String[] ports = {"80", "22", "443"};
+            final Map<String, List<PortBinding>> portBindings = new HashMap<>();
+            for (String port : ports) {
+                List<PortBinding> hostPorts = new ArrayList<>();
+                hostPorts.add(PortBinding.of(IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_DOCKER_EXTRAHOST_CALLBACK_IP_PROPERTY_KEY), port));
+                portBindings.put(port, hostPorts);
+            }
+
+            HostConfig hostConfig;
+            if (IbanityConfiguration.getConfiguration().containsKey(IBANITY_CLIENT_DOCKER_EXTRAHOST_CALLBACK_NAME_PROPERTY_KEY)
+                    && IbanityConfiguration.getConfiguration().containsKey(IBANITY_CLIENT_DOCKER_EXTRAHOST_SANDBOX_AUTHORIZATION_NAME_PROPERTY_KEY)
+                    && IbanityConfiguration.getConfiguration().containsKey(IBANITY_CLIENT_SSL_CA_CERTIFICATES_FOLDER_PROPERTY_KEY)) {
+                hostConfig = HostConfig.builder()
+                        .appendBinds(sslCAFilesPath + ":" + IBANITY_SANDBOX_AUTHORIZATION_CLI_DOCKER_VOLUME)
+                        .extraHosts(
+                                IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_DOCKER_EXTRAHOST_CALLBACK_NAME_PROPERTY_KEY) + ":" + IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_DOCKER_EXTRAHOST_CALLBACK_IP_PROPERTY_KEY)
+                                , IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_DOCKER_EXTRAHOST_SANDBOX_AUTHORIZATION_NAME_PROPERTY_KEY) + ":" + IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_DOCKER_EXTRAHOST_SANDBOX_AUTHORIZATION_IP_PROPERTY_KEY))
+                        .portBindings(portBindings).build();
+            } else {
+                hostConfig = HostConfig.builder().build();
+            }
+
             List<String> cmdParameters = new ArrayList<>();
 
             cmdParameters.add("account-information-access");
@@ -200,19 +232,14 @@ public abstract class AbstractServiceTest {
             cmdParameters.add("-r");
             cmdParameters.add(redirectUrl);
 
-            if (sslCAFilePath != null){
-                cmdParameters.add("-s");
-                cmdParameters.add(sslCAFilePath);
-            }
-
             if (sandboxAuthorizationHostname != null) {
                 cmdParameters.add("-o");
                 cmdParameters.add(sandboxAuthorizationHostname);
             }
 
             final ContainerConfig containerConfig = ContainerConfig.builder()
+                    .hostConfig(hostConfig)
                     .image(IBANITY_SANDBOX_AUTHORIZATION_CLI_DOCKER_IMAGE)
-                    .hostConfig(HostConfig.builder().build())
                     .cmd(cmdParameters.toArray(new String[cmdParameters.size()]))
                     .build();
 
@@ -231,7 +258,7 @@ public abstract class AbstractServiceTest {
 
             String logs = docker.logs(id, DockerClient.LogsParam.stdout(), DockerClient.LogsParam.stderr()).readFully();
             if (!logs.isEmpty() && !StringUtils.contains(logs, DOCKER_SANDBOX_AUTHORIZATION_CLI_POSITIVE_ANSWER)) {
-                throw new IbanityException("Impossible to authorize accounts through docker image:"+logs+":");
+                throw new IbanityException("Impossible to authorize accounts through docker image:" + logs + ":");
             }
 
             if (containerInfo.state().running()) {

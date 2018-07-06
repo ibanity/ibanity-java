@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ibanity.apis.client.configuration.ApiIUrls;
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.exceptions.IbanityException;
+import com.ibanity.apis.client.network.http.client.IbanityHttpAdapterListener;
 import com.ibanity.apis.client.services.ApiService;
 import io.crnk.client.CrnkClient;
 import io.crnk.client.http.HttpAdapterRequest;
 import io.crnk.client.http.HttpAdapterResponse;
+import io.crnk.client.http.apache.HttpClientAdapter;
 import io.crnk.client.response.JsonLinksInformation;
 import io.crnk.core.engine.document.Document;
 import io.crnk.core.engine.http.HttpMethod;
@@ -21,7 +23,9 @@ public class ApiServiceImpl extends AbstractServiceImpl implements ApiService {
     @Override
     public ApiIUrls getApiUrls() {
         CrnkClient apiClient = getApiClient(IBANITY_API_ENDPOINT);
+        ((HttpClientAdapter) apiClient.getHttpAdapter()).addListener(new IbanityHttpAdapterListener(null, null));
         HttpAdapterRequest httpAdapterRequest = apiClient.getHttpAdapter().newRequest(apiClient.getServiceUrlProvider().getUrl(), HttpMethod.GET, "");
+
         try {
             HttpAdapterResponse httpAdapterResponse = httpAdapterRequest.execute();
             if (!httpAdapterResponse.isSuccessful()) {
