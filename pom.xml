@@ -91,7 +91,6 @@
         <junit-platform-surefire-provider.version>1.2.0</junit-platform-surefire-provider.version>
         <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
         <jacoco-maven-plugin.version>0.8.1</jacoco-maven-plugin.version>
-        <selenium-java.version>3.0.0</selenium-java.version>
         <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
         <docker-client.version>8.11.7</docker-client.version>
 
