@@ -43,9 +43,6 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
     private static final Logger LOGGER = LogManager.getLogger(IbanitySignatureInterceptor.class);
 
     private static final String DIGEST_ALGORITHM                                                    = MessageDigestAlgorithms.SHA_256;
-    private static final String IBANITY_CLIENT_SSL_CERTIFICATE_ID_PROPERTY_KEY                      = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.certificate.id";
-    private static final String IBANITY_CLIENT_SSL_CERTIFICATE_PRIVATE_KEY_PATH_PROPERTY_KEY        = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.private.certificate.private_key.path";
-    private static final String IBANITY_CLIENT_SSL_CERTIFICATE_PRIVATE_KEY_PASSWORD_PROPERTY_KEY    = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.private.certificate.private_key.password";
     private static final String IBANITY_HEADER_NAME_PREFIX                                          = "ibanity-";
     private static final String HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR                             = " ";
     private static final String HEADER_NAME_DIGEST                                                  = "digest";
@@ -125,7 +122,7 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
         StringBuilder signatureHeaderValueBuilder = new StringBuilder();
         signatureHeaderValueBuilder
                 .append("keyId=\"")
-                .append(IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SSL_CERTIFICATE_ID_PROPERTY_KEY))
+                .append(IbanityConfiguration.getConfiguration().getString(IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_ID_PROPERTY_KEY))
                 .append("\"");
         signatureHeaderValueBuilder
                 .append(HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR)
@@ -184,7 +181,7 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
     }
 
     private String getSignatureAlgorithm(final boolean forAlgorithmHeader) throws com.ibanity.apis.client.exceptions.SignatureException {
-        KeyStore ks = IbanityHttpUtils.getCertificateKeyStore();
+        KeyStore ks = IbanityHttpUtils.getCertificateKeyStore(new IbanityClientSecuritySignaturePropertiesKeys());
         String signatureAlgorithm;
         try {
             X509Certificate certificate = (X509Certificate) ks.getCertificateChain("application certificate")[0];
@@ -216,14 +213,14 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
                 PEMParser pemParser = new PEMParser(
                     new InputStreamReader(
                             fileUtils.loadFile(
-                                    IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SSL_CERTIFICATE_PRIVATE_KEY_PATH_PROPERTY_KEY)
+                                    IbanityConfiguration.getConfiguration().getString(IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_PRIVATE_KEY_PATH_PROPERTY_KEY)
                             )
                     )
                 )
             ) {
             PEMEncryptedKeyPair encryptedKeyPair = (PEMEncryptedKeyPair) pemParser.readObject();
             PEMDecryptorProvider decryptorProvider = new JcePEMDecryptorProviderBuilder().build(
-                    IbanityConfiguration.getConfiguration().getString(IBANITY_CLIENT_SSL_CERTIFICATE_PRIVATE_KEY_PASSWORD_PROPERTY_KEY).toCharArray()
+                    IbanityConfiguration.getConfiguration().getString(IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_PRIVATE_KEY_PASSWORD_PROPERTY_KEY).toCharArray()
             );
             PEMKeyPair pemKeyPair = encryptedKeyPair.decryptKeyPair(decryptorProvider);
 
