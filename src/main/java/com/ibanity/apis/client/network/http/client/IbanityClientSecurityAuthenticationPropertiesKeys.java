@@ -2,7 +2,7 @@ package com.ibanity.apis.client.network.http.client;
 
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
 
-public class IbanityClientSecurityAuthenticationPropertiesKeys implements IbanityClientSecurityPropertiesKeys {
+public class IbanityClientSecurityAuthenticationPropertiesKeys extends IbanityClientSecurityPropertiesKeys {
     private static final String IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_PATH_PROPERTY_KEY                 = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.authentication.certificate.path";
     private static final String IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_PRIVATE_KEY_PASSWORD_PROPERTY_KEY = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.authentication.certificate.private_key.password";
 

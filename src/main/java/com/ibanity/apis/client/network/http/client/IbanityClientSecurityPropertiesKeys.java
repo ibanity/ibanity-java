@@ -2,17 +2,17 @@ package com.ibanity.apis.client.network.http.client;
 
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
 
-public interface IbanityClientSecurityPropertiesKeys {
+public abstract class IbanityClientSecurityPropertiesKeys {
 
-    String IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_STANDARD_PROPERTY_KEY = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.certificate.standard";
-    String IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_TRUSTMANAGER_PROPERTY_KEY = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.certificate.trustmanager";
-    String IBANITY_CLIENT_SSL_PROTOCOL_PROPERTY_KEY = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.protocol";
+    public static final String IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_STANDARD_PROPERTY_KEY = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.certificate.standard";
+    public static final String IBANITY_CLIENT_SSL_PRIVATE_CERTIFICATE_TRUSTMANAGER_PROPERTY_KEY = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.certificate.trustmanager";
+    public static final String IBANITY_CLIENT_SSL_PROTOCOL_PROPERTY_KEY = IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "client.ssl.protocol";
 
-    String getIbanityClientSslPrivateCertificatePathPropertyKey();
+    public abstract String getIbanityClientSslPrivateCertificatePathPropertyKey();
 
-    String getIbanityClientSslPrivateCertificateIdPropertyKey();
+    public abstract String getIbanityClientSslPrivateCertificateIdPropertyKey();
 
-    String getIbanityClientSslPrivateCertificatePrivateKeyPathPropertyKey();
+    public abstract String getIbanityClientSslPrivateCertificatePrivateKeyPathPropertyKey();
 
-    String getIbanityClientSslPrivateCertificatePrivateKeyPasswordPropertyKey();
+    public abstract String getIbanityClientSslPrivateCertificatePrivateKeyPasswordPropertyKey();
 }
