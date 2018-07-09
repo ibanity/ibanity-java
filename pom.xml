@@ -320,7 +320,6 @@
                         <exclude>**/links/*</exclude>
                         <exclude>**/paging/*</exclude>
                         <exclude>**/exceptions/*</exclude>
-                        <exclude>**/Client*Sample.*</exclude>
                     </excludes>
                 </configuration>
                 <dependencies>
@@ -346,7 +345,6 @@
                         <exclude>**/links/*</exclude>
                         <exclude>**/paging/*</exclude>
                         <exclude>**/exceptions/*</exclude>
-                        <exclude>**/Client*Sample.*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
