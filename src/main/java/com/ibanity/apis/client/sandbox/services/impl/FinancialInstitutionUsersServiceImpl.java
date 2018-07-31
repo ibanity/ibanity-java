@@ -1,7 +1,6 @@
 package com.ibanity.apis.client.sandbox.services.impl;
 
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
-import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
 import com.ibanity.apis.client.sandbox.services.FinancialInstitutionUsersService;
@@ -28,12 +27,12 @@ public class FinancialInstitutionUsersServiceImpl extends AbstractServiceImpl im
     public ResourceList<FinancialInstitutionUser> list(final IbanityPagingSpec pagingSpec) {
         QuerySpec querySpec = new QuerySpec(FinancialInstitutionUser.class);
         querySpec.setPagingSpec(pagingSpec);
-        return findAll(querySpec, getFinancialInstitutionUsersRepo(null));
+        return findAll(querySpec, getRepository(null));
     }
 
     @Override
-    public FinancialInstitutionUser find(final UUID financialInstitutionUserId)  throws ApiErrorsException {
-        return getFinancialInstitutionUsersRepo(null).findOne(financialInstitutionUserId, new QuerySpec(FinancialInstitutionUser.class));
+    public FinancialInstitutionUser find(final UUID financialInstitutionUserId) {
+        return getRepository(null).findOne(financialInstitutionUserId, new QuerySpec(FinancialInstitutionUser.class));
     }
 
     @Override
@@ -48,27 +47,27 @@ public class FinancialInstitutionUsersServiceImpl extends AbstractServiceImpl im
         financialInstitutionUser.setPassword(password);
         financialInstitutionUser.setLastName(lastName);
         financialInstitutionUser.setFirstName(firstName);
-        return getFinancialInstitutionUsersRepo(idempotencyKey).create(financialInstitutionUser);
+        return getRepository(idempotencyKey).create(financialInstitutionUser);
     }
 
     @Override
     public FinancialInstitutionUser update(final FinancialInstitutionUser financialInstitutionUser) {
-        return getFinancialInstitutionUsersRepo(null).save(financialInstitutionUser);
+        return getRepository(null).save(financialInstitutionUser);
     }
 
     @Override
     public FinancialInstitutionUser update(final FinancialInstitutionUser financialInstitutionUser, final UUID idempotencyKey) {
-        return getFinancialInstitutionUsersRepo(idempotencyKey).save(financialInstitutionUser);
+        return getRepository(idempotencyKey).save(financialInstitutionUser);
     }
 
     @Override
-    public void delete(final UUID financialInstitutionUserId) throws ApiErrorsException {
-        getFinancialInstitutionUsersRepo(null).delete(financialInstitutionUserId);
+    public void delete(final UUID financialInstitutionUserId) {
+        getRepository(null).delete(financialInstitutionUserId);
     }
 
-    protected ResourceRepositoryV2<FinancialInstitutionUser, UUID> getFinancialInstitutionUsersRepo(final UUID idempotencyKey) {
+    private ResourceRepositoryV2<FinancialInstitutionUser, UUID> getRepository(final UUID idempotencyKey) {
         String finalPath = StringUtils.removeEnd(
-                IbanityConfiguration.getApiIUrls().getSandbox().getFinancialInstitutionUsers()
+                IbanityConfiguration.getApiUrls().getSandbox().getFinancialInstitutionUsers()
                         .replace(FinancialInstitutionUser.RESOURCE_PATH, "")
                         .replace(FinancialInstitutionUser.API_URL_TAG_ID, ""), "//");
 

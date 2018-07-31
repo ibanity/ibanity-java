@@ -6,8 +6,10 @@ import java.util.UUID;
 
 public interface AccountInformationAccessRequestsService {
 
-    AccountInformationAccessRequest createForFinancialInstitution(String customerAccessToken, UUID financialInstitutionId, String redirectURI, String consentReference);
+    AccountInformationAccessRequest create(String customerAccessToken, UUID financialInstitutionId,
+                                           String redirectURI, String consentReference);
 
-    AccountInformationAccessRequest createForFinancialInstitution(String customerAccessToken, UUID financialInstitutionId, String redirectURI, String consentReference, UUID idempotencyKey);
+    AccountInformationAccessRequest create(String customerAccessToken, UUID financialInstitutionId,
+                                           String redirectURI, String consentReference, UUID idempotencyKey);
 
 }

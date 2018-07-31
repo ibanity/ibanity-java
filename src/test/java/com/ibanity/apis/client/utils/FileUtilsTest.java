@@ -1,8 +1,7 @@
 package com.ibanity.apis.client.utils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -11,41 +10,21 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * FileUtils Tester.
- *
- * @author Daniel De Luca
- * @version 1.0
- * @since <pre>Jun 13, 2018</pre>
- */
+@Disabled
 public class FileUtilsTest {
 
-    FileUtils fileUtils = new FileUtils();
+    final FileUtils fileUtils = new FileUtils();
 
-    @BeforeEach
-    public void before() throws Exception {
-    }
-
-    @AfterEach
-    public void after() throws Exception {
-    }
-
-    /**
-     * Method: loadFile(String path)
-     */
     @Test
-    public void testLoadFile() throws Exception {
-        InputStream inputStream = fileUtils.loadFile(getFilePath());
+    public void testLoadFile() {
+        InputStream inputStream = fileUtils.getInputStream(getFilePath());
         assertNotNull(inputStream);
     }
 
-    /**
-     * Method: loadFile(String path)
-     */
     @Test
-    public void testLoadFileFailed() throws Exception {
+    public void testLoadFileFailed() {
         AtomicReference<InputStream> inputStream = new AtomicReference<>();
-        assertThrows(IllegalArgumentException.class, () -> inputStream.set(fileUtils.loadFile(getFilePath() + "_NON_EXISTING")));
+        assertThrows(IllegalArgumentException.class, () -> inputStream.set(fileUtils.getInputStream(getFilePath() + "_NON_EXISTING")));
         assertNull(inputStream.get());
     }
 

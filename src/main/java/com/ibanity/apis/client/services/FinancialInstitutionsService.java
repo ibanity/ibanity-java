@@ -1,6 +1,5 @@
 package com.ibanity.apis.client.services;
 
-import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 
@@ -17,5 +16,5 @@ public interface FinancialInstitutionsService {
 
     List<FinancialInstitution> list(IbanityPagingSpec pagingSpec);
 
-    FinancialInstitution find(UUID financialInstitutionId) throws ApiErrorsException;
+    FinancialInstitution find(UUID financialInstitutionId);
 }

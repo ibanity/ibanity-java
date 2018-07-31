@@ -18,14 +18,14 @@ public class FinancialInstitution extends AbstractModel {
     public static final String RESOURCE_PATH    = "financial-institutions";
     public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
 
-    private Boolean sandbox;
+    private boolean sandbox;
     private String name;
 
     public FinancialInstitution(final UUID id) {
         super(id);
     }
 
-    public FinancialInstitution(final UUID id, final Boolean sandbox, final String name) {
+    public FinancialInstitution(final UUID id, final boolean sandbox, final String name) {
         super(id);
         this.sandbox = sandbox;
         this.name = name;
@@ -35,11 +35,11 @@ public class FinancialInstitution extends AbstractModel {
         super();
     }
 
-    public Boolean getSandbox() {
+    public boolean isSandbox() {
         return sandbox;
     }
 
-    public void setSandbox(final Boolean sandbox) {
+    public void setSandbox(final boolean sandbox) {
         this.sandbox = sandbox;
     }
 
@@ -65,7 +65,7 @@ public class FinancialInstitution extends AbstractModel {
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(getSandbox(), that.getSandbox())
+                .append(isSandbox(), that.isSandbox())
                 .append(getName(), that.getName())
                 .isEquals();
     }
@@ -74,7 +74,7 @@ public class FinancialInstitution extends AbstractModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
-                .append(getSandbox())
+                .append(isSandbox())
                 .append(getName())
                 .toHashCode();
     }

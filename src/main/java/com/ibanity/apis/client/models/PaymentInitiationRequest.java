@@ -45,12 +45,11 @@ public class PaymentInitiationRequest extends AbstractModel {
     private String customerIp;
     private String customerAgent;
 
-
     @JsonApiLinksInformation
     private PaymentAccessLinks links;
 
-    @JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.ONLY_ID)
-    private FinancialInstitution financialInstitution = null;
+    @JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.LAZY)
+    private FinancialInstitution financialInstitution;
 
     public PaymentInitiationRequest() {
         super();

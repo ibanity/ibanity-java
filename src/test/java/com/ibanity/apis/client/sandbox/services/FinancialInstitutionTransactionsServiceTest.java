@@ -11,8 +11,6 @@ import org.apache.commons.math3.util.Precision;
 import org.apache.http.HttpStatus;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -22,51 +20,32 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * FinancialInstitutionTransactionsServiceImpl Tester.
- *
- * @author Daniel De Luca
- * @version 1.0
- * @since <pre>Jun 13, 2018</pre>
- */
 public class FinancialInstitutionTransactionsServiceTest extends AbstractServiceTest {
 
     private static final FinancialInstitutionTransactionsService financialInstitutionTransactionsService = new FinancialInstitutionTransactionsServiceImpl();
 
-    @BeforeEach
-    public void before() {
-    }
-
-    @AfterEach
-    public void after() {
-    }
-
-    /**
-     * Method: getFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID financialInstitutionTransactionId)
-     */
     @Test
-    public void testGetFinancialInstitutionTransaction() throws Exception {
+    public void testGetFinancialInstitutionTransaction() {
         getFinancialInstitutionTransaction(null);
     }
 
-    private void getFinancialInstitutionTransaction(UUID idempotencyKey) throws Exception {
+    private void getFinancialInstitutionTransaction(UUID idempotencyKey) {
         FinancialInstitution financialInstitution = createFinancialInstitution(idempotencyKey);
         FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(idempotencyKey);
         FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId(), idempotencyKey);
         FinancialInstitutionTransaction financialInstitutionTransaction = createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount, idempotencyKey);
         FinancialInstitutionTransaction financialInstitutionTransactionGet = financialInstitutionTransactionsService.find(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId(), financialInstitutionTransaction.getId());
-        assertTrue(financialInstitutionTransactionGet.getCounterpartName().equals(financialInstitutionTransaction.getCounterpartName()));
-        assertTrue(financialInstitutionTransactionGet.getCounterpartReference().equals(financialInstitutionTransaction.getCounterpartReference()));
-        assertTrue(financialInstitutionTransactionGet.getCurrency().equals(financialInstitutionTransaction.getCurrency()));
-        assertTrue(financialInstitutionTransactionGet.getDescription().equals(financialInstitutionTransaction.getDescription()));
-        assertTrue(financialInstitutionTransactionGet.getRemittanceInformation().equals(financialInstitutionTransaction.getRemittanceInformation()));
-        assertTrue(financialInstitutionTransactionGet.getRemittanceInformationType().equals(financialInstitutionTransaction.getRemittanceInformationType()));
-        assertTrue(financialInstitutionTransactionGet.getAmount().equals(financialInstitutionTransaction.getAmount()));
-        assertTrue(financialInstitutionTransactionGet.getExecutionDate().equals(financialInstitutionTransaction.getExecutionDate()));
-        assertTrue(financialInstitutionTransactionGet.getValueDate().equals(financialInstitutionTransaction.getValueDate()));
+        assertEquals(financialInstitutionTransaction.getCounterpartName(), financialInstitutionTransactionGet.getCounterpartName());
+        assertEquals(financialInstitutionTransaction.getCounterpartReference(), financialInstitutionTransactionGet.getCounterpartReference());
+        assertEquals(financialInstitutionTransaction.getCurrency(), financialInstitutionTransactionGet.getCurrency());
+        assertEquals(financialInstitutionTransaction.getDescription(), financialInstitutionTransactionGet.getDescription());
+        assertEquals(financialInstitutionTransaction.getRemittanceInformation(), financialInstitutionTransactionGet.getRemittanceInformation());
+        assertEquals(financialInstitutionTransaction.getRemittanceInformationType(), financialInstitutionTransactionGet.getRemittanceInformationType());
+        assertEquals(financialInstitutionTransaction.getAmount(), financialInstitutionTransactionGet.getAmount());
+        assertEquals(financialInstitutionTransaction.getExecutionDate(), financialInstitutionTransactionGet.getExecutionDate());
+        assertEquals(financialInstitutionTransaction.getValueDate(), financialInstitutionTransactionGet.getValueDate());
 
         deleteFinancialInstitutionTransaction(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId(),financialInstitutionTransaction.getId());
         deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
@@ -75,27 +54,21 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
 
     }
 
-    /**
-     * Method: getFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID financialInstitutionTransactionId)
-     */
     @Test
-    public void testGetFinancialInstitutionTransactionWithWrongIDs() throws Exception {
+    public void testGetFinancialInstitutionTransactionWithWrongIDs() {
         try {
             financialInstitutionTransactionsService.find(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
-            fail("Should raise ApiErrorsException");
+            fail("Expected financialInstitutionTransactionsService.find to raise an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
-            assertTrue(apiErrorsException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
-            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
-            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
-            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count() == 1);
+            assertEquals(HttpStatus.SC_NOT_FOUND, apiErrorsException.getHttpStatus());
+            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
+            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
+            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
         }
     }
 
-    /**
-     * Method: getFinancialInstitutionAccountTransactions(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId)
-     */
     @Test
-    public void testGetFinancialInstitutionAccountTransactions() throws Exception {
+    public void testGetFinancialInstitutionAccountTransactions() {
         List<FinancialInstitutionTransaction> financialInstitutionTransactions = new ArrayList<>();
         FinancialInstitution financialInstitution = createFinancialInstitution(null);
         FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(null);
@@ -115,73 +88,57 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
         deleteFinancialInstitution(financialInstitution.getId());
     }
 
-
-    /**
-     * Method: getFinancialInstitutionAccountTransactions(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId)
-     */
     @Test
-    public void testGetFinancialInstitutionAccountTransactionsWithWrongIds() throws Exception {
+    public void testGetFinancialInstitutionAccountTransactionsWithWrongIds() {
         try {
             financialInstitutionTransactionsService.list(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
-            fail("Should raise ApiErrorsException");
+            fail("Expected financialInstitutionTransactionsService.list to raise an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
-            assertTrue(apiErrorsException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
-            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
-            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
-            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count() == 1);
+            assertEquals(HttpStatus.SC_NOT_FOUND, apiErrorsException.getHttpStatus());
+            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
+            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
+            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
         }
     }
 
-    /**
-     * Method: createFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, FinancialInstitutionTransaction financialInstitutionTransaction)
-     */
     @Test
-    public void testCreateFinancialInstitutionTransaction() throws Exception {
+    public void testCreateFinancialInstitutionTransaction() {
         getFinancialInstitutionTransaction(null);
     }
 
     @Test
-    public void testCreateFinancialInstitutionTransactionIdempotency() throws Exception {
+    public void testCreateFinancialInstitutionTransactionIdempotency() {
         getFinancialInstitutionTransaction(UUID.randomUUID());
     }
 
-    /**
-     * Method: createFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, FinancialInstitutionTransaction financialInstitutionTransaction)
-     */
     @Test
-    public void testCreateFinancialInstitutionTransactionWithWrongIds() throws Exception {
+    public void testCreateFinancialInstitutionTransactionWithWrongIds() {
         try {
             financialInstitutionTransactionsService.create(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), new FinancialInstitutionTransaction());
-            fail("Should raise ApiErrorsException");
+            fail("Expected financialInstitutionTransactionsService.create to rais an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
-            assertTrue(apiErrorsException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
-            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
-            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
-            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count() == 1);
+            assertEquals(HttpStatus.SC_NOT_FOUND, apiErrorsException.getHttpStatus());
+            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
+            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
+            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
         }
     }
 
-    /**
-     * Method: deleteFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID financialInstitutionTransactionId)
-     */
     @Test
-    public void testDeleteFinancialInstitutionTransaction() throws Exception {
+    public void testDeleteFinancialInstitutionTransaction() {
         testGetFinancialInstitutionTransaction();
     }
 
-    /**
-     * Method: deleteFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID financialInstitutionTransactionId)
-     */
     @Test
-    public void testDeleteFinancialInstitutionTransactionWithWrongIds() throws Exception {
+    public void testDeleteFinancialInstitutionTransactionWithWrongIds() {
         try {
             deleteFinancialInstitutionTransaction(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
-            fail("Should raise ApiErrorsException");
+            fail("Expected deleteFinancialInstitutionTransaction to raise an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
-            assertTrue(apiErrorsException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
-            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
-            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
-            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count() == 1);
+            assertEquals(HttpStatus.SC_NOT_FOUND, apiErrorsException.getHttpStatus());
+            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
+            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
+            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
         }
     }
 
@@ -208,18 +165,18 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
         financialInstitutionTransaction.setValueDate(valueDate);
         if (idempotencyKey == null) {
             return financialInstitutionTransactionsService.create(
-                    financialInstitutionAccount.getFinancialInstitution().getId()
-                    , financialInstitutionUserId
-                    , financialInstitutionAccount.getId()
-                    , financialInstitutionTransaction
+                    financialInstitutionAccount.getFinancialInstitution().getId(),
+                    financialInstitutionUserId,
+                    financialInstitutionAccount.getId(),
+                    financialInstitutionTransaction
             );
         } else {
             return financialInstitutionTransactionsService.create(
-                    financialInstitutionAccount.getFinancialInstitution().getId()
-                    , financialInstitutionUserId
-                    , financialInstitutionAccount.getId()
-                    , financialInstitutionTransaction
-                    , idempotencyKey
+                    financialInstitutionAccount.getFinancialInstitution().getId(),
+                    financialInstitutionUserId,
+                    financialInstitutionAccount.getId(),
+                    financialInstitutionTransaction,
+                    idempotencyKey
             );
         }
     }

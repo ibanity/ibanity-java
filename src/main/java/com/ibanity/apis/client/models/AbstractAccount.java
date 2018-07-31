@@ -20,7 +20,7 @@ public abstract class AbstractAccount extends AbstractModel {
     private Double currentBalance;
     private Double availableBalance;
 
-    @JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.ONLY_ID)
+    @JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.LAZY)
     private FinancialInstitution financialInstitution;
 
     public AbstractAccount() {

@@ -1,6 +1,5 @@
 package com.ibanity.apis.client.sandbox.services;
 
-import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
 
@@ -13,7 +12,7 @@ public interface FinancialInstitutionUsersService {
 
     List<FinancialInstitutionUser> list(IbanityPagingSpec pagingSpec);
 
-    FinancialInstitutionUser find(UUID financialInstitutionUserId) throws ApiErrorsException;
+    FinancialInstitutionUser find(UUID financialInstitutionUserId);
 
     FinancialInstitutionUser create(String login, String password, String lastName, String firstName);
 
@@ -23,5 +22,5 @@ public interface FinancialInstitutionUsersService {
 
     FinancialInstitutionUser update(FinancialInstitutionUser financialInstitutionUser, UUID idempotencyKey);
 
-    void delete(UUID financialInstitutionUserId) throws ApiErrorsException;
+    void delete(UUID financialInstitutionUserId);
 }

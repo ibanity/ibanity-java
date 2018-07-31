@@ -1,7 +1,6 @@
 package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
-import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.Transaction;
@@ -21,29 +20,36 @@ public class TransactionsServiceImpl extends AbstractServiceImpl implements Tran
     }
 
     @Override
-    public ResourceList<Transaction> list(final String customerAccessToken, final UUID financialInstitutionId, final UUID accountId) throws ApiErrorsException {
+    public ResourceList<Transaction> list(final String customerAccessToken, final UUID financialInstitutionId,
+                                          final UUID accountId) {
         return list(customerAccessToken, financialInstitutionId, accountId, new IbanityPagingSpec());
     }
 
     @Override
-    public ResourceList<Transaction> list(final String customerAccessToken, final UUID financialInstitutionId, final UUID accountId, final IbanityPagingSpec pagingSpec) throws ApiErrorsException {
-        QuerySpec querySpec = new QuerySpec(Transaction.class);
-        querySpec.setPagingSpec(pagingSpec);
-        return findAll(querySpec, getTransactionsRepo(customerAccessToken, financialInstitutionId, accountId));
+    public ResourceList<Transaction> list(final String customerAccessToken, final UUID financialInstitutionId,
+                                          final UUID accountId, final IbanityPagingSpec pagingSpec) {
+        QuerySpec querySpec = new QuerySpec(Transaction.class).setPagingSpec(pagingSpec);
+
+        return getRepository(customerAccessToken, financialInstitutionId, accountId)
+                .findAll(querySpec);
     }
 
     @Override
-    public Transaction find(final String customerAccessToken, final UUID financialInstitutionId, final UUID accountId, final UUID transactionId) throws ApiErrorsException {
-        return getTransactionsRepo(customerAccessToken, financialInstitutionId, accountId).findOne(transactionId, new QuerySpec(Transaction.class));
+    public Transaction find(final String customerAccessToken, final UUID financialInstitutionId,
+                            final UUID accountId, final UUID transactionId) {
+        return getRepository(customerAccessToken, financialInstitutionId, accountId)
+                .findOne(transactionId, new QuerySpec(Transaction.class));
     }
 
-    protected ResourceRepositoryV2<Transaction, UUID> getTransactionsRepo(final String customerAccessToken, final UUID financialInstitutionId, final UUID accountId) {
+    private ResourceRepositoryV2<Transaction, UUID> getRepository(
+            final String customerAccessToken, final UUID financialInstitutionId, final UUID accountId) {
         String finalPath = StringUtils.removeEnd(
-                IbanityConfiguration.getApiIUrls().getCustomer().getFinancialInstitution().getTransactions()
+                IbanityConfiguration.getApiUrls().getCustomer().getFinancialInstitution().getTransactions()
                         .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
                         .replace(Account.API_URL_TAG_ID, accountId.toString())
                         .replace(Transaction.RESOURCE_PATH, "")
-                        .replace(Transaction.API_URL_TAG_ID, ""), "//");
+                        .replace(Transaction.API_URL_TAG_ID, ""),
+                "//");
 
         return getApiClient(finalPath, customerAccessToken).getRepositoryForType(Transaction.class);
     }

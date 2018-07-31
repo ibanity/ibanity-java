@@ -1,7 +1,6 @@
 package com.ibanity.apis.client.sandbox.services.impl;
 
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
-import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.sandbox.services.SandboxFinancialInstitutionsService;
 import com.ibanity.apis.client.services.impl.FinancialInstitutionsServiceImpl;
@@ -26,26 +25,36 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
         FinancialInstitution financialInstitution = new FinancialInstitution();
         financialInstitution.setSandbox(Boolean.TRUE);
         financialInstitution.setName(name);
-        return getFinancialInstitutionsRepo(idempotencyKey).create(financialInstitution);
+        return getRepository(idempotencyKey).create(financialInstitution);
     }
 
     @Override
-    public FinancialInstitution updateFinancialInstitution(final FinancialInstitution financialInstitution) {
-        return getFinancialInstitutionsRepo(null).save(financialInstitution);
+    public FinancialInstitution update(final FinancialInstitution financialInstitution) {
+        return getRepository(null).save(financialInstitution);
     }
 
     @Override
-    public FinancialInstitution updateFinancialInstitution(final FinancialInstitution financialInstitution, final UUID idempotencyKey) {
-        return getFinancialInstitutionsRepo(idempotencyKey).save(financialInstitution);
+    public FinancialInstitution update(final FinancialInstitution financialInstitution, final UUID idempotencyKey) {
+        return getRepository(idempotencyKey).save(financialInstitution);
     }
 
     @Override
-    public void deleteFinancialInstitution(final UUID financialInstitutionId) throws ApiErrorsException {
-        getFinancialInstitutionsRepo(null).delete(financialInstitutionId);
+    public void delete(final UUID financialInstitutionId) {
+        getRepository().delete(financialInstitutionId);
     }
-    protected ResourceRepositoryV2<FinancialInstitution, UUID> getFinancialInstitutionsRepo(final UUID idempotencyKey) {
+
+    private ResourceRepositoryV2<FinancialInstitution, UUID> getRepository() {
         String finalPath = StringUtils.removeEnd(
-                IbanityConfiguration.getApiIUrls().getSandbox().getFinancialInstitutions()
+                IbanityConfiguration.getApiUrls().getSandbox().getFinancialInstitutions()
+                        .replace(FinancialInstitution.RESOURCE_PATH, "")
+                        .replace(FinancialInstitution.API_URL_TAG_ID, ""), "//");
+
+        return getApiClient(finalPath, null, null).getRepositoryForType(FinancialInstitution.class);
+    }
+
+    private ResourceRepositoryV2<FinancialInstitution, UUID> getRepository(final UUID idempotencyKey) {
+        String finalPath = StringUtils.removeEnd(
+                IbanityConfiguration.getApiUrls().getSandbox().getFinancialInstitutions()
                 .replace(FinancialInstitution.RESOURCE_PATH, "")
                 .replace(FinancialInstitution.API_URL_TAG_ID, ""), "//");
 

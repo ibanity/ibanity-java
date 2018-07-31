@@ -1,7 +1,7 @@
 package com.ibanity.apis.client.services;
 
-import com.ibanity.apis.client.configuration.ApiIUrls;
+import com.ibanity.apis.client.configuration.ApiUrls;
 
 public interface ApiService {
-    ApiIUrls getApiUrls();
+    ApiUrls getApiUrls();
 }

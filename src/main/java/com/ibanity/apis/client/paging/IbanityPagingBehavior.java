@@ -7,7 +7,7 @@ import io.crnk.core.queryspec.pagingspec.OffsetLimitPagingSpec;
 import io.crnk.core.queryspec.pagingspec.PagingBehavior;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -27,15 +27,15 @@ public class IbanityPagingBehavior extends OffsetLimitPagingBehavior implements 
 
         Map<String, Set<String>> values = new HashMap<>();
         if (offsetLimitPagingSpec.getLimit() != null) {
-            values.put(String.format("%s", LIMIT_PARAMETER), new HashSet<>(Arrays.asList(Long.toString(offsetLimitPagingSpec.getLimit()))));
+            values.put(String.format("%s", LIMIT_PARAMETER), new HashSet<>(Collections.singletonList(Long.toString(offsetLimitPagingSpec.getLimit()))));
         }
         if (offsetLimitPagingSpec instanceof IbanityPagingSpec) {
             IbanityPagingSpec pagingSpec = (IbanityPagingSpec) offsetLimitPagingSpec;
             if (pagingSpec.getBefore() != null) {
-                values.put(String.format("%s", BEFORE_PARAMETER), new HashSet<>(Arrays.asList(pagingSpec.getBefore().toString())));
+                values.put(String.format("%s", BEFORE_PARAMETER),  new HashSet<>(Collections.singletonList(pagingSpec.getBefore().toString())));
             }
             if (pagingSpec.getAfter() != null) {
-                values.put(String.format("%s", AFTER_PARAMETER), new HashSet<>(Arrays.asList(pagingSpec.getAfter().toString())));
+                values.put(String.format("%s", AFTER_PARAMETER), new HashSet<>(Collections.singletonList(pagingSpec.getAfter().toString())));
             }
         }
 
@@ -50,7 +50,7 @@ public class IbanityPagingBehavior extends OffsetLimitPagingBehavior implements 
             switch (StringUtils.lowerCase(param.getKey())) {
                 case LIMIT_PARAMETER :
                     Long limit = getLongValue(param.getKey(), param.getValue());
-                    if (limit != null && limit > MAX_PAGE_LIMIT) {
+                    if (limit > MAX_PAGE_LIMIT) {
                         throw new ClientBadRequestException(
                                 String.format("%s legacy value %d is larger than the maximum allowed of %d", LIMIT_PARAMETER, limit, MAX_PAGE_LIMIT)
                         );

@@ -4,20 +4,22 @@ import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import io.crnk.core.engine.document.ErrorData;
 import io.crnk.core.engine.error.ErrorResponse;
 import io.crnk.core.engine.error.ExceptionMapper;
-import io.crnk.core.repository.response.JsonApiResponse;
 
 import java.util.List;
 
 public class IbanityExceptionMapper implements ExceptionMapper<ApiErrorsException> {
     @Override
     public ErrorResponse toErrorResponse(final ApiErrorsException e) {
-        return ErrorResponse.builder().setStatus(e.getHttpStatus()).setErrorData(e.getErrorDatas()).build();
+        return ErrorResponse.builder()
+                .setStatus(e.getHttpStatus())
+                .setErrorData(e.getErrorDatas())
+                .build();
     }
 
     @Override
     public ApiErrorsException fromErrorResponse(final ErrorResponse errorResponse) {
-        JsonApiResponse response = errorResponse.getResponse();
-        List<ErrorData> errors = (List<ErrorData>) response.getEntity();
+        List<ErrorData> errors = (List<ErrorData>) errorResponse.getResponse().getEntity();
+
         return new ApiErrorsException(errorResponse.getHttpStatus(), errors);
     }
 

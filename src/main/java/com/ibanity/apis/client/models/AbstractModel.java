@@ -11,7 +11,6 @@ public abstract class AbstractModel {
     @JsonApiId
     private UUID id;
 
-
     public AbstractModel(final UUID id) {
         this.id = id;
     }

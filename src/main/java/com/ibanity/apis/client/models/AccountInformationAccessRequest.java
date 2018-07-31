@@ -26,10 +26,11 @@ public class AccountInformationAccessRequest extends AbstractModel {
 
     private String redirectUri;
     private String consentReference;
+
     @JsonApiLinksInformation
     private AccountInformationAccessLinks links;
 
-    @JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.ONLY_ID)
+    @JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.LAZY)
     private FinancialInstitution financialInstitution = null;
 
     public AccountInformationAccessRequest() {

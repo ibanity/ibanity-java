@@ -8,5 +8,5 @@ public interface CustomerAccessTokensService {
 
     CustomerAccessToken create(String applicationCustomerReference);
 
-    CustomerAccessToken create(String applicationCustomerReference, final UUID idempotencyKey);
+    CustomerAccessToken create(String applicationCustomerReference, UUID idempotencyKey);
 }

@@ -67,6 +67,7 @@
         <commons-io.version>2.6</commons-io.version>
         <commons-math3.version>3.6.1</commons-math3.version>
         <log4j.version>2.11.0</log4j.version>
+        <slf4j.version>1.7.25</slf4j.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
         <!--crnk.version>2.5.20180326220647</crnk.version-->
         <crnk.version>2.6.20180430102904</crnk.version>
@@ -130,6 +131,23 @@
             <version>${log4j.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-jcl</artifactId>
+            <version>2.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.surefire</groupId>
+            <artifactId>surefire-logger-api</artifactId>
+            <version>2.21.0</version>
+            <!-- to get around bug https://github.com/junit-team/junit5/issues/801 -->
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
             <version>${commons-beanutils.version}</version>
@@ -138,6 +156,11 @@
             <groupId>io.crnk</groupId>
             <artifactId>crnk-client</artifactId>
             <version>${crnk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>${reflections.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -163,11 +186,6 @@
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk14</artifactId>
             <version>${bcpkix-jdk14.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>${reflections.version}</version>
         </dependency>
 
         <dependency>
@@ -311,6 +329,10 @@
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <argLine>${surefireArgLine}</argLine>
+<!--                    <forkCount>0</forkCount>
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                    <reuseForks>true</reuseForks>-->
+                    <trimStackTrace>false</trimStackTrace>
                     <includes>
                         <include>**/*Test.java</include>
                         <include>**/*Tests.java</include>
