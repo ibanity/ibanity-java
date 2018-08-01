@@ -14,7 +14,6 @@ import com.ibanity.apis.client.sandbox.models.FinancialInstitutionTransaction;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static com.ibanity.apis.client.configuration.IbanityConfiguration.URL_PARAMETER_ID_POSTFIX;

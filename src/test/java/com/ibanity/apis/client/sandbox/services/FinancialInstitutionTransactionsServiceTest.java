@@ -10,7 +10,6 @@ import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionTransac
 import org.apache.commons.math3.util.Precision;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
