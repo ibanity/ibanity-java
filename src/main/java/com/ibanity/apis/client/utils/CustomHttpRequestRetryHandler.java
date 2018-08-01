@@ -56,6 +56,7 @@ import java.util.Set;
  */
 public class CustomHttpRequestRetryHandler implements HttpRequestRetryHandler {
     private static final Logger LOGGER = LogManager.getLogger(CustomHttpRequestRetryHandler.class);
+    private static final int DEFAULT_RETRY_COUNT = 3;
 
     /** the number of times a method will be retried */
     private final int retryCount;
@@ -116,7 +117,7 @@ public class CustomHttpRequestRetryHandler implements HttpRequestRetryHandler {
      * </ul>
      */
     public CustomHttpRequestRetryHandler() {
-        this(3, false);
+        this(DEFAULT_RETRY_COUNT, false);
     }
     /**
      * Used {@code retryCount} and {@code requestSentRetryEnabled} to determine

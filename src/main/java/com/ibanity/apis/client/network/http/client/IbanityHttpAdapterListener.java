@@ -22,6 +22,7 @@ import java.util.UUID;
 public class IbanityHttpAdapterListener implements HttpClientAdapterListener {
     private static final Logger LOGGER = LogManager.getLogger(IbanityHttpAdapterListener.class);
     private static final int DEFAULT_REQUEST_TIMEOUT = 10_000;
+    private static final int RETRY_COUNTS = 10;
 
     private String customerAccessToken;
     private final UUID idempotencyKey;
@@ -60,7 +61,7 @@ public class IbanityHttpAdapterListener implements HttpClientAdapterListener {
         httpClientBuilder.setSSLContext(sslContext);
         httpClientBuilder.setSSLSocketFactory(new SSLConnectionSocketFactory(sslContext));
         httpClientBuilder.setDefaultHeaders(getAuthorizationHttpRequestHeaders());
-        httpClientBuilder.setRetryHandler(new CustomHttpRequestRetryHandler(10, true));
+        httpClientBuilder.setRetryHandler(new CustomHttpRequestRetryHandler(RETRY_COUNTS, true));
         httpClientBuilder.addInterceptorLast(new IdempotencyInterceptor());
         if (customerAccessToken != null) {
             httpClientBuilder.addInterceptorLast(new IbanitySignatureInterceptor());

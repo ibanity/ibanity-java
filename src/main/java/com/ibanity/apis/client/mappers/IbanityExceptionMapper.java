@@ -8,6 +8,10 @@ import io.crnk.core.engine.error.ExceptionMapper;
 import java.util.List;
 
 public class IbanityExceptionMapper implements ExceptionMapper<ApiErrorsException> {
+    private static final int CLIENT_ERROR_SERIE_VALUE = 4;
+    private static final int SERVER_ERROR_SERIE_VALUE = 5;
+    private static final int SERIES_DIVIDER = 100;
+
     @Override
     public ErrorResponse toErrorResponse(final ApiErrorsException e) {
         return ErrorResponse.builder()
@@ -25,6 +29,8 @@ public class IbanityExceptionMapper implements ExceptionMapper<ApiErrorsExceptio
 
     @Override
     public boolean accepts(final ErrorResponse errorResponse) {
-        return errorResponse.getHttpStatus() >= 400 & errorResponse.getHttpStatus() < 600;
+        int seriesCode = errorResponse.getHttpStatus() / SERIES_DIVIDER;
+
+        return seriesCode == CLIENT_ERROR_SERIE_VALUE || seriesCode == SERVER_ERROR_SERIE_VALUE;
     }
 }
