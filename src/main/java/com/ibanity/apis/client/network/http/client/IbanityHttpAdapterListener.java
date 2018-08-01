@@ -4,6 +4,7 @@ import com.ibanity.apis.client.utils.CustomHttpRequestRetryHandler;
 import io.crnk.client.http.apache.HttpClientAdapterListener;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.DefaultClientConnectionReuseStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -20,6 +21,7 @@ import java.util.UUID;
 
 public class IbanityHttpAdapterListener implements HttpClientAdapterListener {
     private static final Logger LOGGER = LogManager.getLogger(IbanityHttpAdapterListener.class);
+    private static final int DEFAULT_REQUEST_TIMEOUT = 10_000;
 
     private String customerAccessToken;
     private final UUID idempotencyKey;
@@ -63,6 +65,12 @@ public class IbanityHttpAdapterListener implements HttpClientAdapterListener {
         if (customerAccessToken != null) {
             httpClientBuilder.addInterceptorLast(new IbanitySignatureInterceptor());
         }
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(DEFAULT_REQUEST_TIMEOUT)
+                .setSocketTimeout(DEFAULT_REQUEST_TIMEOUT)
+                .setConnectionRequestTimeout(DEFAULT_REQUEST_TIMEOUT)
+                .build();
+        httpClientBuilder.setDefaultRequestConfig(requestConfig);
         httpClientBuilder.setConnectionReuseStrategy(new DefaultClientConnectionReuseStrategy());
     }
 

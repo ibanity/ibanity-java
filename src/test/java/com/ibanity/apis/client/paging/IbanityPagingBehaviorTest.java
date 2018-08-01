@@ -12,8 +12,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class IbanityPagingBehaviorTest {
 
-    private static IbanityPagingSpec iBanityPagingSpec;
-    private static IbanityPagingBehavior iBanityPagingBehavior;
+    private static IbanityPagingSpec ibanityPagingSpec;
+    private static IbanityPagingBehavior ibanityPagingBehavior;
 
     private static final String AFTER = "after";
     private static final String BEFORE = "before";
@@ -22,18 +22,18 @@ public class IbanityPagingBehaviorTest {
 
     @BeforeAll
     public static void beforeAll() {
-        iBanityPagingBehavior = new IbanityPagingBehavior();
-        iBanityPagingSpec = new IbanityPagingSpec();
-        iBanityPagingSpec.setLimit(Long.valueOf(LIMIT_VALUE));
+        ibanityPagingBehavior = new IbanityPagingBehavior();
+        ibanityPagingSpec = new IbanityPagingSpec();
+        ibanityPagingSpec.setLimit(Long.valueOf(LIMIT_VALUE));
     }
 
     @Test
     public void testSerialize() {
         UUID afterUUID = UUID.randomUUID();
         UUID beforeUUID = UUID.randomUUID();
-        iBanityPagingSpec.setAfter(afterUUID);
-        iBanityPagingSpec.setBefore(beforeUUID);
-        Map<String, Set<String>> values = iBanityPagingBehavior.serialize(iBanityPagingSpec, null);
+        ibanityPagingSpec.setAfter(afterUUID);
+        ibanityPagingSpec.setBefore(beforeUUID);
+        Map<String, Set<String>> values = ibanityPagingBehavior.serialize(ibanityPagingSpec, null);
         assertEquals(3, values.size());
         assertTrue(values.containsKey(BEFORE));
         assertTrue(values.containsKey(AFTER));
@@ -50,19 +50,18 @@ public class IbanityPagingBehaviorTest {
     public void testDeserialize() {
         UUID afterUUID = UUID.randomUUID();
         UUID beforeUUID = UUID.randomUUID();
-        iBanityPagingSpec.setAfter(afterUUID);
-        iBanityPagingSpec.setBefore(beforeUUID);
-        Map<String, Set<String>> serializedValues = iBanityPagingBehavior.serialize(iBanityPagingSpec, null);
-        IbanityPagingSpec iBanityPagingSpecResult = iBanityPagingBehavior.deserialize(serializedValues);
-        assertEquals(iBanityPagingSpec, iBanityPagingSpecResult);
+        ibanityPagingSpec.setAfter(afterUUID);
+        ibanityPagingSpec.setBefore(beforeUUID);
+        Map<String, Set<String>> serializedValues = ibanityPagingBehavior.serialize(ibanityPagingSpec, null);
+        assertEquals(ibanityPagingSpec, ibanityPagingBehavior.deserialize(serializedValues));
     }
 
     @Test
     public void testCreateEmptyPagingSpec() {
-        IbanityPagingSpec iBanityPagingSpecResult = iBanityPagingBehavior.createEmptyPagingSpec();
-        assertNull(iBanityPagingSpecResult.getAfter());
-        assertNull(iBanityPagingSpecResult.getBefore());
-        assertSame(iBanityPagingSpecResult.getLimit(), IbanityPagingSpec.LIMIT_DEFAULT);
+        IbanityPagingSpec ibanityPagingSpecResult = ibanityPagingBehavior.createEmptyPagingSpec();
+        assertNull(ibanityPagingSpecResult.getAfter());
+        assertNull(ibanityPagingSpecResult.getBefore());
+        assertSame(ibanityPagingSpecResult.getLimit(), IbanityPagingSpec.DEFAULT_PAGING_SPEC_LIMIT);
     }
 
     @Test
@@ -72,7 +71,7 @@ public class IbanityPagingBehaviorTest {
 
     @Test
     public void testIsRequired() {
-        IbanityPagingSpec iBanityPagingSpecResult = iBanityPagingBehavior.createEmptyPagingSpec();
-        assertTrue(iBanityPagingBehavior.isRequired(iBanityPagingSpecResult));
+        IbanityPagingSpec ibanityPagingSpecResult = ibanityPagingBehavior.createEmptyPagingSpec();
+        assertTrue(ibanityPagingBehavior.isRequired(ibanityPagingSpecResult));
     }
 } 

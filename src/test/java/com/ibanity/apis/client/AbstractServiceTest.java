@@ -31,6 +31,7 @@ import com.spotify.docker.client.messages.ContainerInfo;
 import com.spotify.docker.client.messages.HostConfig;
 import com.spotify.docker.client.messages.PortBinding;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,6 +48,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.ibanity.apis.client.configuration.IbanityConfiguration.getConfiguration;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public abstract class AbstractServiceTest {
     private static final String APACHE_WIRE_LOGGING_PACKAGE = "org.apache.http.wire";
@@ -64,18 +66,13 @@ public abstract class AbstractServiceTest {
     private static final String IBANITY_SANDBOX_AUTHORIZATION_CLI_DOCKER_IMAGE      = "ibanity/sandbox-authorization-cli:latest";
     private static final String IBANITY_SANDBOX_AUTHORIZATION_CLI_DOCKER_VOLUME     = "/usr/local/share/ca-certificates";
 
-    private static final String TEST_CASE                                           = AbstractServiceTest.class.getSimpleName();
+    protected static final String TEST_CASE                                           = AbstractServiceTest.class.getSimpleName();
 
-    private static boolean DOCKER_IMAGE_PULL_SUCCESS = false;
-
-    protected static final String FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL      = getConfiguration("tpp.accounts.information.access.result.redirect.url");
-    protected static final String FAKE_TPP_PAYMENT_INITIATION_REDIRECT_URL              = getConfiguration("tpp.payments.initiation.result.redirect.url");
+    private static boolean DOCKER_IMAGE_PULL_DONE = false;
 
     protected static final String ERROR_DATA_CODE_RESOURCE_NOT_FOUND                = "resourceNotFound";
     protected static final String ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND              = "The requested resource was not found.";
     protected static final String ERROR_DATA_META_RESOURCE_KEY                      = "resource";
-
-    protected Instant now;
 
     protected String name;
 
@@ -86,15 +83,18 @@ public abstract class AbstractServiceTest {
     protected final SandboxFinancialInstitutionsService sandboxFinancialInstitutionsService           = new SandboxFinancialInstitutionsServiceImpl();
     protected final CustomerAccessTokensService customerAccessTokensService                           = new CustomerAccessTokensServiceImpl();
 
-    protected CustomerAccessToken generatedCustomerAccessToken;
+    protected final List<FinancialInstitutionAccount> financialInstitutionAccounts = new ArrayList<>();
 
+    protected final String fakeTppAccountInformationAccessRedirectUrl = getConfiguration("tpp.accounts.information.access.result.redirect.url");
+    protected final String fakeTppPaymentInitiationRedirectUrl = getConfiguration("tpp.payments.initiation.result.redirect.url");
+
+    protected CustomerAccessToken generatedCustomerAccessToken;
     protected FinancialInstitution financialInstitution;
     protected FinancialInstitutionUser financialInstitutionUser;
-    protected final List<FinancialInstitutionAccount> financialInstitutionAccounts = new ArrayList<>();
 
     protected void initPublicAPIEnvironment() {
         generatedCustomerAccessToken = getCustomerAccessToken(UUID.randomUUID().toString());
-        financialInstitution = createFinancialInstitution(null);
+        financialInstitution = createFinancialInstitution();
         financialInstitutionUser = createFinancialInstitutionUser(null);
         for (int index = 0; index < 5; index++) {
             financialInstitutionAccounts.add(createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId(), null));
@@ -109,14 +109,26 @@ public abstract class AbstractServiceTest {
         deleteFinancialInstitutionUser(financialInstitutionUser.getId());
     }
 
-    protected FinancialInstitution createFinancialInstitution(final UUID idempotencyKey) {
-        now = Instant.now();
-        name = TEST_CASE + "-" + now.toString();
-        if (idempotencyKey != null) {
-            return sandboxFinancialInstitutionsService.create(name, idempotencyKey);
-        } else {
-            return sandboxFinancialInstitutionsService.create(name);
-        }
+    protected String generateFinancialInstitutionName(){
+        return TEST_CASE + "-" + Instant.now().toString();
+    }
+
+    protected FinancialInstitution createFinancialInstitution() {
+        return this.createFinancialInstitution((UUID) null);
+    }
+
+    protected FinancialInstitution createFinancialInstitution(final String name) {
+        return this.createFinancialInstitution(name, null);
+    }
+
+    protected FinancialInstitution createFinancialInstitution(final UUID idempotencyKey){
+        return createFinancialInstitution(generateFinancialInstitutionName(), idempotencyKey);
+    }
+
+    protected FinancialInstitution createFinancialInstitution(final String name, final UUID idempotencyKey) {
+        return sandboxFinancialInstitutionsService.create(
+                name,
+                idempotencyKey);
     }
 
     protected FinancialInstitutionUser createFinancialInstitutionUser(final UUID idempotencyKey) {
@@ -126,28 +138,31 @@ public abstract class AbstractServiceTest {
         financialInstitutionUser.setLastName("LastName-"+now);
         financialInstitutionUser.setLogin("Login-"+now);
         financialInstitutionUser.setPassword("Password-"+now);
-        if (idempotencyKey == null) {
-            return financialInstitutionUsersService.create(financialInstitutionUser.getLogin(), financialInstitutionUser.getPassword(), financialInstitutionUser.getLastName(), financialInstitutionUser.getFirstName());
-        } else {
-            return financialInstitutionUsersService.create(financialInstitutionUser.getLogin(), financialInstitutionUser.getPassword(), financialInstitutionUser.getLastName(), financialInstitutionUser.getFirstName(), idempotencyKey);
-        }
-    }
 
+        return financialInstitutionUsersService.create(
+                financialInstitutionUser.getLogin(), 
+                financialInstitutionUser.getPassword(), 
+                financialInstitutionUser.getLastName(), 
+                financialInstitutionUser.getFirstName(), 
+                idempotencyKey);
+    }
 
     protected void exitPublicApiEnvironment() {
         for (FinancialInstitutionAccount financialInstitutionAccount : financialInstitutionAccounts) {
-            deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
+            deleteFinancialInstitutionAccount(financialInstitution.getId(),
+                    financialInstitutionUser.getId(), financialInstitutionAccount.getId());
         }
         deleteFinancialInstitutionUser(financialInstitutionUser.getId());
         deleteFinancialInstitution(financialInstitution.getId());
     }
 
-    protected void deleteFinancialInstitutionUser(final UUID financialInstitutionUserID) throws ApiErrorsException {
+    protected void deleteFinancialInstitutionUser(final UUID financialInstitutionUserID) {
         financialInstitutionUsersService.delete(financialInstitutionUserID);
     }
 
-
-    protected FinancialInstitutionAccount createFinancialInstitutionAccount(final FinancialInstitution financialInstitution, final UUID financialInstitutionUser, final UUID idempotencyKey) throws ApiErrorsException {
+    protected FinancialInstitutionAccount createFinancialInstitutionAccount(
+            final FinancialInstitution financialInstitution, final UUID financialInstitutionUser, 
+            final UUID idempotencyKey) {
         FinancialInstitutionAccount financialInstitutionAccount = new FinancialInstitutionAccount();
         financialInstitutionAccount.setSubType("checking");
         financialInstitutionAccount.setReference(Iban.random(CountryCode.BE).toString());
@@ -155,22 +170,26 @@ public abstract class AbstractServiceTest {
         financialInstitutionAccount.setDescription("Checking Account");
         financialInstitutionAccount.setCurrency("EUR");
         financialInstitutionAccount.setFinancialInstitution(financialInstitution);
-        if (idempotencyKey == null) {
-            return financialInstitutionAccountsService.create(financialInstitution.getId(), financialInstitutionUser, financialInstitutionAccount);
-        } else {
-            return financialInstitutionAccountsService.create(financialInstitution.getId(), financialInstitutionUser, financialInstitutionAccount, idempotencyKey);
-        }
+
+        return financialInstitutionAccountsService.create(
+                financialInstitution.getId(), financialInstitutionUser, financialInstitutionAccount, idempotencyKey);
     }
 
-    protected void deleteFinancialInstitutionAccount(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID financialInstitutionAccountId) throws ApiErrorsException {
+    protected void deleteFinancialInstitutionAccount(final UUID financialInstitutionId,
+                                                     final UUID financialInstitutionUserId,
+                                                     final UUID financialInstitutionAccountId) {
         financialInstitutionAccountsService.delete(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId);
     }
 
     protected AccountInformationAccessRequest getAccountInformationAccessRequest() {
-        return accountInformationAccessRequestsService.create(generatedCustomerAccessToken.getToken(), financialInstitution.getId(), FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL, UUID.randomUUID().toString());
+        return accountInformationAccessRequestsService.create(
+                generatedCustomerAccessToken.getToken(),
+                financialInstitution.getId(),
+                fakeTppAccountInformationAccessRedirectUrl,
+                UUID.randomUUID().toString());
     }
 
-    protected void deleteFinancialInstitution(final UUID financialInstitutionId) throws ApiErrorsException {
+    protected void deleteFinancialInstitution(final UUID financialInstitutionId) {
         sandboxFinancialInstitutionsService.delete(financialInstitutionId);
     }
 
@@ -180,7 +199,9 @@ public abstract class AbstractServiceTest {
 
     protected void authorizeAccounts(final String redirectUrl) {
 
-        String iBanList = financialInstitutionAccounts.stream().map(AbstractAccount::getReference).collect(Collectors.joining(","));
+        String iBanList = financialInstitutionAccounts.stream()
+                .map(AbstractAccount::getReference)
+                .collect(Collectors.joining(","));
         String sslCAFilesPath = null;
         String sandboxAuthorizationHostname = null;
 
@@ -202,13 +223,13 @@ public abstract class AbstractServiceTest {
             // Create a client based on DOCKER_HOST and DOCKER_CERT_PATH env vars
             final DockerClient docker = DefaultDockerClient.fromEnv().build();
 
-            if (!DOCKER_IMAGE_PULL_SUCCESS) {
+            if (!DOCKER_IMAGE_PULL_DONE) {
                 int maxDockerPullRetry = 10;
                 while (maxDockerPullRetry-- > 0) {
                     try {
                         LOGGER.info("Pulling docker image " + IBANITY_SANDBOX_AUTHORIZATION_CLI_DOCKER_IMAGE + " for the test...");
                         docker.pull(IBANITY_SANDBOX_AUTHORIZATION_CLI_DOCKER_IMAGE);
-                        DOCKER_IMAGE_PULL_SUCCESS = true;
+                        DOCKER_IMAGE_PULL_DONE = true;
                     } catch (DockerRequestException dockerRequestException) {
                         LOGGER.warn("Failed to pull docker image " + dockerRequestException.getResponseBody() + ". Retrying...");
                     }
@@ -304,5 +325,12 @@ public abstract class AbstractServiceTest {
             LOGGER.error("Exception",e);
             throw new IbanityException("Error during account authorization process",e);
         }
+    }
+
+    protected void assertResourceNotFoundException(ApiErrorsException apiErrorsException){
+        assertEquals(HttpStatus.SC_NOT_FOUND, apiErrorsException.getHttpStatus());
+        assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
+        assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
+        assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
     }
 }

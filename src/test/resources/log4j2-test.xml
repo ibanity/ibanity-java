@@ -11,7 +11,7 @@
         <Logger name="io.crnk" level="error" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
-        <Logger name="org.apache.http.wire" level="trace" additivity="false">
+        <Logger name="org.apache.http.wire" level="info" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
         <Root level="error">

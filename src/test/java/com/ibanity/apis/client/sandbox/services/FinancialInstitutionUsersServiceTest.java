@@ -91,12 +91,9 @@ public class FinancialInstitutionUsersServiceTest extends AbstractServiceTest {
     private void updateFinancialInstitutionUser(UUID idempotencyKey) throws ApiErrorsException {
         FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(idempotencyKey);
         financialInstitutionUser.setPassword("Password");
-        FinancialInstitutionUser updatedFinancialInstitutionUser;
-        if (idempotencyKey == null) {
-            updatedFinancialInstitutionUser = financialInstitutionUsersService.update(financialInstitutionUser);
-        } else {
-            updatedFinancialInstitutionUser = financialInstitutionUsersService.update(financialInstitutionUser, idempotencyKey);
-        }
+        FinancialInstitutionUser updatedFinancialInstitutionUser =
+                financialInstitutionUsersService.update(financialInstitutionUser, idempotencyKey);
+
         assertEquals(financialInstitutionUser.getPassword(), updatedFinancialInstitutionUser.getPassword());
         assertEquals(financialInstitutionUser.getFirstName(), updatedFinancialInstitutionUser.getFirstName());
         assertEquals(financialInstitutionUser.getLastName(), updatedFinancialInstitutionUser.getLastName());

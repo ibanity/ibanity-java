@@ -8,9 +8,9 @@ import com.ibanity.apis.client.sandbox.models.FinancialInstitutionTransaction;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
 import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionTransactionsServiceImpl;
 import org.apache.commons.math3.util.Precision;
-import org.apache.http.HttpStatus;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -51,7 +51,6 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
         deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
         deleteFinancialInstitutionUser(financialInstitutionUser.getId());
         deleteFinancialInstitution(financialInstitution.getId());
-
     }
 
     @Test
@@ -60,17 +59,14 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
             financialInstitutionTransactionsService.find(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
             fail("Expected financialInstitutionTransactionsService.find to raise an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
-            assertEquals(HttpStatus.SC_NOT_FOUND, apiErrorsException.getHttpStatus());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
+            super.assertResourceNotFoundException(apiErrorsException);
         }
     }
 
     @Test
     public void testGetFinancialInstitutionAccountTransactions() {
         List<FinancialInstitutionTransaction> financialInstitutionTransactions = new ArrayList<>();
-        FinancialInstitution financialInstitution = createFinancialInstitution(null);
+        FinancialInstitution financialInstitution = createFinancialInstitution();
         FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(null);
         FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId(), null);
         financialInstitutionTransactions.add(createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount, null));
@@ -94,10 +90,7 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
             financialInstitutionTransactionsService.list(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
             fail("Expected financialInstitutionTransactionsService.list to raise an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
-            assertEquals(HttpStatus.SC_NOT_FOUND, apiErrorsException.getHttpStatus());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
+            super.assertResourceNotFoundException(apiErrorsException);
         }
     }
 
@@ -117,10 +110,7 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
             financialInstitutionTransactionsService.create(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), new FinancialInstitutionTransaction());
             fail("Expected financialInstitutionTransactionsService.create to rais an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
-            assertEquals(HttpStatus.SC_NOT_FOUND, apiErrorsException.getHttpStatus());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
+            super.assertResourceNotFoundException(apiErrorsException);
         }
     }
 
@@ -135,10 +125,7 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
             deleteFinancialInstitutionTransaction(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
             fail("Expected deleteFinancialInstitutionTransaction to raise an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
-            assertEquals(HttpStatus.SC_NOT_FOUND, apiErrorsException.getHttpStatus());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
+            super.assertResourceNotFoundException(apiErrorsException);
         }
     }
 

@@ -61,7 +61,7 @@ public class FinancialInstitutionsServiceTest extends AbstractServiceTest {
         ibanityPagingSpec.setLimit(3L);
         List<FinancialInstitution> createdFinancialInstitutionsList = new ArrayList<>();
         for (int index = 0; index < 5; index++){
-            createdFinancialInstitutionsList.add(createFinancialInstitution(null));
+            createdFinancialInstitutionsList.add(createFinancialInstitution());
         }
 
         List<FinancialInstitution> financialInstitutionsList = financialInstitutionsService.list(ibanityPagingSpec);

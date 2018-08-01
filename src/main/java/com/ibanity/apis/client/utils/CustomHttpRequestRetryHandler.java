@@ -130,7 +130,7 @@ public class CustomHttpRequestRetryHandler implements HttpRequestRetryHandler {
         Args.notNull(exception, "Exception parameter");
         Args.notNull(context, "HTTP context");
 
-        LOGGER.debug("Try call");
+        LOGGER.debug("Retry request");
 
         if (executionCount > this.retryCount) {
             // Do not retry if over max retry count
@@ -199,6 +199,8 @@ public class CustomHttpRequestRetryHandler implements HttpRequestRetryHandler {
 
     /**
      * @since 4.2
+     *
+     * @param request the request to verify
      */
     protected boolean handleAsIdempotent(final HttpRequest request) {
         return !(request instanceof HttpEntityEnclosingRequest);
@@ -208,6 +210,8 @@ public class CustomHttpRequestRetryHandler implements HttpRequestRetryHandler {
      * @since 4.2
      *
      * @deprecated (4.3)
+     *
+     * @param request the request to check if aborted
      */
     @Deprecated
     protected boolean requestIsAborted(final HttpRequest request) {

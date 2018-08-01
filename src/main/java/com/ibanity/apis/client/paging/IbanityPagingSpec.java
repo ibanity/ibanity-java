@@ -13,7 +13,7 @@ public class IbanityPagingSpec extends OffsetLimitPagingSpec implements PagingSp
     private UUID before = null;
     private UUID after = null;
 
-    public static final Long LIMIT_DEFAULT = 10L;
+    public static final Long DEFAULT_PAGING_SPEC_LIMIT = 10L;
 
 
     public IbanityPagingSpec(final OffsetLimitPagingSpec offsetLimitPagingSpec) {
@@ -21,8 +21,11 @@ public class IbanityPagingSpec extends OffsetLimitPagingSpec implements PagingSp
     }
 
     public IbanityPagingSpec() {
-        super();
-        setLimit(LIMIT_DEFAULT);
+        this(DEFAULT_PAGING_SPEC_LIMIT, null, null);
+    }
+
+    public IbanityPagingSpec(final Long limit) {
+        this(limit,  null, null);
     }
 
     public IbanityPagingSpec(final Long limit, final UUID before, final UUID after) {
@@ -32,7 +35,7 @@ public class IbanityPagingSpec extends OffsetLimitPagingSpec implements PagingSp
     }
 
     public IbanityPagingSpec(final Long offset, final Long limit) {
-        super(offset, limit);
+        throw new UnsupportedOperationException("This operation is not supported");
     }
 
     public UUID getBefore() {
@@ -41,6 +44,7 @@ public class IbanityPagingSpec extends OffsetLimitPagingSpec implements PagingSp
 
     public void setBefore(final UUID before) {
         this.before = before;
+        this.after = null;
     }
 
     public UUID getAfter() {
@@ -49,6 +53,17 @@ public class IbanityPagingSpec extends OffsetLimitPagingSpec implements PagingSp
 
     public void setAfter(final UUID after) {
         this.after = after;
+        this.before = null;
+    }
+
+    @Override
+    public OffsetLimitPagingSpec setOffset(final long offset) {
+        throw new UnsupportedOperationException("This operation is not supported");
+    }
+
+    @Override
+    public long getOffset() {
+        throw new UnsupportedOperationException("This operation is not supported");
     }
 
     @Override

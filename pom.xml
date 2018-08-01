@@ -10,7 +10,7 @@
 
     <name>ibanity-java</name>
     <packaging>jar</packaging>
-    <description>A Java Client towards the iBanity API server</description>
+    <description>A Java Client towards the ibanity API server</description>
     <url>https://github.com/ibanity/ibanity-java</url>
     <licenses>
         <license>

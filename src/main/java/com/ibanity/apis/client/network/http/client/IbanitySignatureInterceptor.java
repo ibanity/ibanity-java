@@ -27,7 +27,9 @@ import java.security.Signature;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.ibanity.apis.client.configuration.IbanityConfiguration.getConfiguration;
@@ -143,23 +145,20 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
         }
     }
 
-    private String getSignatureHeaders(final HttpRequestWrapper requestWrapper) {
-        StringBuilder headersValue = new StringBuilder();
-
-        headersValue.append(DEFAULT_SIGNATURE_HEADERS_NAME);
+    private String getSignatureHeaderNames(final HttpRequestWrapper requestWrapper) {
+        List<String> headersValue = new ArrayList<>();
+        headersValue.add(DEFAULT_SIGNATURE_HEADERS_NAME);
 
         Stream.of(requestWrapper.getAllHeaders())
                 .filter(header -> StringUtils.equalsIgnoreCase(header.getName(), HttpHeaders.AUTHORIZATION))
                 .findFirst()
-                .ifPresent(header -> headersValue.append(HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR)
-                        .append(StringUtils.lowerCase(header.getName())));
+                .ifPresent(header -> headersValue.add(header.getName().toLowerCase()));
 
         Stream.of(requestWrapper.getAllHeaders())
                 .filter(header -> StringUtils.startsWithIgnoreCase(header.getName(), IBANITY_HEADER_NAME_PREFIX))
-                .forEach(header -> headersValue.append(HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR)
-                        .append(StringUtils.lowerCase(header.getName())));
+                .forEach(header -> headersValue.add(header.getName().toLowerCase()));
 
-        return headersValue.toString();
+        return String.join(HEADER_SIGNATURE_HEADERS_NAME_SEPARATOR, headersValue);
     }
 
     private void setDefaultHttpHeaderValues(final HttpRequest httpRequest, final byte[] body) throws com.ibanity.apis.client.exceptions.DigestException, InvalidDefaultHttpHeaderForSignatureException {
@@ -199,16 +198,22 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
     private void setSignatureHeader(final HttpRequest httpRequest) throws SignatureException {
         HttpRequestWrapper requestWrapper = (HttpRequestWrapper) httpRequest;
 
-        String signatureHeaders = this.getSignatureHeaders(requestWrapper);
+        if (!shouldSign(requestWrapper)) {
+            return;
+        }
+
+        String signatureHeaders = this.getSignatureHeaderNames(requestWrapper);
         String signatureValue = this.generateSignature(requestWrapper, signatureHeaders);
 
+        requestWrapper.setHeader(HEADER_NAME_SIGNATURE,
+                String.format(signatureHeaderTemplate, signatureHeaders, signatureValue));
+    }
+
+    private boolean shouldSign(final HttpRequestWrapper requestWrapper) {
         String requestTarget = this.getRequestTargetHeaderValue(requestWrapper);
 
-        if (HttpMethod.POST.name().equalsIgnoreCase(requestTarget)
-                || HttpMethod.PATCH.name().equalsIgnoreCase(requestTarget)) {
-            requestWrapper.setHeader(HEADER_NAME_SIGNATURE,
-                    String.format(signatureHeaderTemplate, signatureHeaders, signatureValue));
-        }
+        return HttpMethod.POST.name().equalsIgnoreCase(requestTarget)
+                || HttpMethod.PATCH.name().equalsIgnoreCase(requestTarget);
     }
 
     private String generateSignatureString(final HttpRequestWrapper requestWrapper, final String signatureHeaders) {

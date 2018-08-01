@@ -29,19 +29,7 @@ public class ClientSandboxSample {
     private final FinancialInstitutionTransactionsService financialInstitutionTransactionsService = new FinancialInstitutionTransactionsServiceImpl();
     private final FinancialInstitutionUsersService financialInstitutionUsersService = new FinancialInstitutionUsersServiceImpl();
 
-    public static void main(String[] args) {
-        ClientSandboxSample client  = new ClientSandboxSample();
-
-        client.financialInstitutionSample();
-
-        client.financialInstitutionUserSample();
-
-        client.financialInstitutionAccountSample();
-
-        client.financialInstitutionTransactionSample();
-    }
-
-    private void financialInstitutionSample(){
+    public void financialInstitutionRequetSamples(){
         FinancialInstitution financialInstitution = this.createSandboxFinancialInstitution();
 
         financialInstitution.setName("New FI name-"+Instant.now());
@@ -52,7 +40,7 @@ public class ClientSandboxSample {
         sandBoxFinancialInstitutionsService.delete(financialInstitution.getId());
     }
 
-    private void financialInstitutionUserSample() {
+    public void financialInstitutionUserRequestSamples() {
         FinancialInstitutionUser financialInstitutionUser = this.createFinancialInstitutionUser();
 
         financialInstitutionUser.setPassword("new password");
@@ -63,7 +51,7 @@ public class ClientSandboxSample {
         financialInstitutionUsersService.delete(financialInstitutionUser.getId());
     }
 
-    private void financialInstitutionAccountSample() {
+    public void financialInstitutionAccountRequestSamples() {
         FinancialInstitution financialInstitution = this.createSandboxFinancialInstitution();
         FinancialInstitutionUser financialInstitutionUser = this.createFinancialInstitutionUser();
 
@@ -89,7 +77,7 @@ public class ClientSandboxSample {
         this.financialInstitutionUsersService.delete(financialInstitutionUser.getId());
     }
 
-    private void financialInstitutionTransactionSample() {
+    public void financialInstitutionTransactionRequestSamples() {
         FinancialInstitution financialInstitution = this.createSandboxFinancialInstitution();
         FinancialInstitutionUser financialInstitutionUser = this.createFinancialInstitutionUser();
         FinancialInstitutionAccount financialInstitutionAccount = this.generateRandomAccount(financialInstitution.getId());

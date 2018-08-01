@@ -14,14 +14,19 @@ import java.util.UUID;
 public class PaymentsInitiationServiceImpl extends AbstractServiceImpl implements PaymentsInitiationService {
 
     @Override
-    public PaymentInitiationRequest create(final String customerAccessToken, final PaymentInitiationRequest paymentInitiationRequest) {
-        return create(customerAccessToken, paymentInitiationRequest, null);
+    public PaymentInitiationRequest create(final String customerAccessToken,
+                                           final FinancialInstitution financialInstitution,
+                                           final PaymentInitiationRequest paymentInitiationRequest) {
+        return create(customerAccessToken, financialInstitution, paymentInitiationRequest, null);
     }
 
     @Override
-    public PaymentInitiationRequest create(
-            final String customerAccessToken, final PaymentInitiationRequest paymentInitiationRequest, final UUID idempotencyKey) {
-        return getRepository(customerAccessToken, paymentInitiationRequest.getFinancialInstitution().getId(), idempotencyKey)
+    public PaymentInitiationRequest create(final String customerAccessToken,
+                                           final FinancialInstitution financialInstitution,
+                                           final PaymentInitiationRequest paymentInitiationRequest,
+                                           final UUID idempotencyKey) {
+        paymentInitiationRequest.setFinancialInstitution(new FinancialInstitution(financialInstitution.getId()));
+        return getRepository(customerAccessToken, financialInstitution.getId(), idempotencyKey)
                 .create(paymentInitiationRequest);
     }
 

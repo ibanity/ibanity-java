@@ -4,6 +4,7 @@ import com.ibanity.apis.client.AbstractServiceTest;
 import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import org.apache.http.HttpStatus;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -14,25 +15,32 @@ public class SandboxFinancialInstitutionsServiceTest extends AbstractServiceTest
 
     @Test
     public void testCreateFinancialInstitution() {
-        FinancialInstitution newFinancialInstitution = createFinancialInstitution(null);
+        String financialInstitutionName = generateFinancialInstitutionName();
+
+        FinancialInstitution newFinancialInstitution = createFinancialInstitution(
+                financialInstitutionName, null);
         assertNotNull(newFinancialInstitution.getId());
-        assertEquals(name, newFinancialInstitution.getName());
+        assertEquals(financialInstitutionName, newFinancialInstitution.getName());
         assertTrue(newFinancialInstitution.isSandbox());
         sandboxFinancialInstitutionsService.delete(newFinancialInstitution.getId());
     }
 
     @Test
     public void testCreateFinancialInstitutionIdempotency() {
-        FinancialInstitution newFinancialInstitution = createFinancialInstitution(UUID.randomUUID());
+        String financialInstitutionName = generateFinancialInstitutionName();
+
+        FinancialInstitution newFinancialInstitution = createFinancialInstitution(financialInstitutionName);
         assertNotNull(newFinancialInstitution.getId());
-        assertEquals(name, newFinancialInstitution.getName());
+        assertEquals(financialInstitutionName, newFinancialInstitution.getName());
         assertTrue(newFinancialInstitution.isSandbox());
         sandboxFinancialInstitutionsService.delete(newFinancialInstitution.getId());
     }
 
     @Test
     public void testUpdateFinancialInstitution() {
-        FinancialInstitution newFinancialInstitution = createFinancialInstitution(null);
+        String financialInstitutionName = generateFinancialInstitutionName();
+
+        FinancialInstitution newFinancialInstitution = createFinancialInstitution(financialInstitutionName);
         newFinancialInstitution.setName(newFinancialInstitution.getName()+"-UPDATED");
         FinancialInstitution updatedFinancialInstitution = sandboxFinancialInstitutionsService.update(newFinancialInstitution, UUID.randomUUID());
         assertEquals(newFinancialInstitution.getName(), updatedFinancialInstitution.getName());
@@ -43,7 +51,9 @@ public class SandboxFinancialInstitutionsServiceTest extends AbstractServiceTest
 
     @Test
     public void testUpdateFinancialInstitutionIdempotency() {
-        FinancialInstitution newFinancialInstitution = createFinancialInstitution(null);
+        String financialInstitutionName = generateFinancialInstitutionName();
+
+        FinancialInstitution newFinancialInstitution = createFinancialInstitution(financialInstitutionName);
         newFinancialInstitution.setName(newFinancialInstitution.getName()+"-UPDATED");
         FinancialInstitution updatedFinancialInstitution = sandboxFinancialInstitutionsService.update(newFinancialInstitution, UUID.randomUUID());
         assertEquals(newFinancialInstitution.getName(), updatedFinancialInstitution.getName());
@@ -55,16 +65,15 @@ public class SandboxFinancialInstitutionsServiceTest extends AbstractServiceTest
 
     @Test
     public void testDeleteFinancialInstitution() {
-        FinancialInstitution newFinancialInstitution = createFinancialInstitution(null);
+        String financialInstitutionName = generateFinancialInstitutionName();
+
+        FinancialInstitution newFinancialInstitution = createFinancialInstitution(financialInstitutionName);
         sandboxFinancialInstitutionsService.delete(newFinancialInstitution.getId());
         try {
             sandboxFinancialInstitutionsService.find(newFinancialInstitution.getId());
-            fail("Should raise ApiErrorsException");
+            fail("Expected sandboxFinancialInstitutionsService.find to raise an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
-            assertEquals(HttpStatus.SC_NOT_FOUND, apiErrorsException.getHttpStatus());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
+            super.assertResourceNotFoundException(apiErrorsException);
         }
     }
 
@@ -72,18 +81,16 @@ public class SandboxFinancialInstitutionsServiceTest extends AbstractServiceTest
     public void testDeleteFinancialInstitutionWithWrongId() {
         try {
             sandboxFinancialInstitutionsService.delete(UUID.randomUUID());
-            fail("Should raise ApiErrorsException");
+            fail("Expected sandboxFinancialInstitutionsService.delete to raise an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
             assertEquals(HttpStatus.SC_NOT_FOUND, apiErrorsException.getHttpStatus());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
+            super.assertResourceNotFoundException(apiErrorsException);
         }
     }
 
     @Test
     public void testGetFinancialInstitution() {
-        FinancialInstitution newFinancialInstitution = createFinancialInstitution(null);
+        FinancialInstitution newFinancialInstitution = createFinancialInstitution();
         FinancialInstitution getFinancialInstitution = sandboxFinancialInstitutionsService.find(newFinancialInstitution.getId());
         assertEquals(newFinancialInstitution, getFinancialInstitution);
         sandboxFinancialInstitutionsService.delete(newFinancialInstitution.getId());
@@ -93,12 +100,10 @@ public class SandboxFinancialInstitutionsServiceTest extends AbstractServiceTest
     public void testGetFinancialInstitutionUnknownID() {
         try {
             sandboxFinancialInstitutionsService.find(UUID.randomUUID());
-            fail("Should raise ApiErrorsException");
+            fail("Expected sandboxFinancialInstitutionsService.find to raise an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
             assertEquals(HttpStatus.SC_NOT_FOUND, apiErrorsException.getHttpStatus());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
+            super.assertResourceNotFoundException(apiErrorsException);
         }
     }
 }

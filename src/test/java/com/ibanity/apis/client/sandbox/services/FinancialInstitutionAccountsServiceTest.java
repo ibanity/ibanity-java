@@ -18,7 +18,7 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
 
     @Test
     public void testGetFinancialInstitutionAccount() {
-        FinancialInstitution financialInstitution = createFinancialInstitution(null);
+        FinancialInstitution financialInstitution = createFinancialInstitution();
         FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(null);
 
         FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId(), null);
@@ -47,7 +47,7 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
 
     @Test
     public void testGetFinancialInstitutionUserAccounts() {
-        FinancialInstitution financialInstitution = createFinancialInstitution(null);
+        FinancialInstitution financialInstitution = createFinancialInstitution();
         FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(null);
 
         FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId(), null);
@@ -121,7 +121,7 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
 
     @Test
     public void testDeleteFinancialInstitutionAccount() {
-        FinancialInstitution financialInstitution = createFinancialInstitution(null);
+        FinancialInstitution financialInstitution = createFinancialInstitution();
         FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(null);
 
         FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId(), null);

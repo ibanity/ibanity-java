@@ -7,6 +7,7 @@ import com.ibanity.apis.client.models.FinancialInstitution;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
@@ -28,14 +29,14 @@ class AccountInformationAccessRequestsServiceTest extends AbstractServiceTest {
 
     @Test
     void testCreateForFinancialInstitution() {
-        AccountInformationAccessRequest accountInformationAccessRequest = accountInformationAccessRequestsService.create(generatedCustomerAccessToken.getToken(), financialInstitution.getId(), FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL, UUID.randomUUID().toString());
+        AccountInformationAccessRequest accountInformationAccessRequest = accountInformationAccessRequestsService.create(generatedCustomerAccessToken.getToken(), financialInstitution.getId(), fakeTppAccountInformationAccessRedirectUrl, UUID.randomUUID().toString());
         assertNotNull(accountInformationAccessRequest.getLinks().getRedirect());
         assertNotNull(URI.create(accountInformationAccessRequest.getLinks().getRedirect()));
     }
 
     @Test
     void testCreateForFinancialInstitutionWithIdempotency() {
-        AccountInformationAccessRequest accountInformationAccessRequest = accountInformationAccessRequestsService.create(generatedCustomerAccessToken.getToken(), financialInstitution.getId(), FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL, UUID.randomUUID().toString(), UUID.randomUUID());
+        AccountInformationAccessRequest accountInformationAccessRequest = accountInformationAccessRequestsService.create(generatedCustomerAccessToken.getToken(), financialInstitution.getId(), fakeTppAccountInformationAccessRedirectUrl, UUID.randomUUID().toString(), UUID.randomUUID());
         assertNotNull(accountInformationAccessRequest.getLinks().getRedirect());
         assertNotNull(URI.create(accountInformationAccessRequest.getLinks().getRedirect()));
     }
@@ -45,7 +46,7 @@ class AccountInformationAccessRequestsServiceTest extends AbstractServiceTest {
         FinancialInstitution unknownFinancialInstitution = new FinancialInstitution();
         unknownFinancialInstitution.setId(UUID.randomUUID());
         try {
-            AccountInformationAccessRequest accountInformationAccessRequest = accountInformationAccessRequestsService.create(generatedCustomerAccessToken.getToken(), unknownFinancialInstitution.getId(), FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL, UUID.randomUUID().toString());
+            AccountInformationAccessRequest accountInformationAccessRequest = accountInformationAccessRequestsService.create(generatedCustomerAccessToken.getToken(), unknownFinancialInstitution.getId(), fakeTppAccountInformationAccessRedirectUrl, UUID.randomUUID().toString());
             fail("Should raise ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
             assertEquals(HttpStatus.SC_NOT_FOUND, apiErrorsException.getHttpStatus());
