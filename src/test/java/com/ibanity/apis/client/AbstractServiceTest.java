@@ -340,7 +340,7 @@ public abstract class AbstractServiceTest {
                 int loop = 100;
                 while (containerInfo.state().running() && loop-- > 0) {
                     containerInfo = docker.inspectContainer(id);
-                    Thread.sleep(500);
+                    Thread.sleep(500); //NOSONAR
                 }
 
                 String logs = docker.logs(id, DockerClient.LogsParam.stdout(), DockerClient.LogsParam.stderr()).readFully();

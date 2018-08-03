@@ -139,17 +139,7 @@ public class CustomHttpRequestRetryHandler implements HttpRequestRetryHandler {
             return false;
         }
         if (this.nonRetriableClasses.contains(exception.getClass())) {
-            if (exception.getClass().equals(SSLException.class)) {
-                SSLException sslException = (SSLException) exception;
-                if ("Received fatal alert: unexpected_message".equals(sslException.getMessage())) {
-                    LOGGER.debug("Retry on unexpected_message");
-                    return true;
-                }
-                LOGGER.debug("Don't retry because SSLException with message " + sslException.getMessage());
-                return false;
-            }
-            LOGGER.debug("Do not retry HttpRequest anymore because non retriable exception class " + exception.getClass());
-            return false;
+            return verifyNonRetriableException(exception);
         } else {
             for (final Class<? extends IOException> rejectException : this.nonRetriableClasses) {
                 if (rejectException.isInstance(exception)) {
@@ -180,6 +170,20 @@ public class CustomHttpRequestRetryHandler implements HttpRequestRetryHandler {
         }
         // otherwise do not retry
         LOGGER.debug("Do not retry HttpRequest anymore because ... no other conditions");
+        return false;
+    }
+
+    private boolean verifyNonRetriableException(IOException exception) {
+        if (exception.getClass().equals(SSLException.class)) {
+            SSLException sslException = (SSLException) exception;
+            if ("Received fatal alert: unexpected_message".equals(sslException.getMessage())) {
+                LOGGER.debug("Retry on unexpected_message");
+                return true;
+            }
+            LOGGER.debug("Don't retry because SSLException with message " + sslException.getMessage());
+            return false;
+        }
+        LOGGER.debug("Do not retry HttpRequest anymore because non retriable exception class " + exception.getClass());
         return false;
     }
 

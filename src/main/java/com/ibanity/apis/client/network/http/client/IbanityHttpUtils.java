@@ -17,6 +17,8 @@ import java.security.cert.X509Certificate;
 import static com.ibanity.apis.client.configuration.IbanityConfiguration.getConfiguration;
 
 public final class IbanityHttpUtils {
+    private static final String KEY_ENTRY_NAME = "application certificate";
+
     private IbanityHttpUtils() {
     }
 
@@ -30,7 +32,7 @@ public final class IbanityHttpUtils {
             }
 
             public String chooseClientAlias(final String[] keyType, final Principal[] issuers, final Socket socket) {
-                return "application certificate";
+                return KEY_ENTRY_NAME;
             }
 
             @Override
@@ -54,7 +56,7 @@ public final class IbanityHttpUtils {
         };
     }
 
-    public static <T extends IbanityClientSecurityPropertiesKeys> SSLContext getSSLContext()
+    public static SSLContext getSSLContext()
             throws IOException, GeneralSecurityException {
 
         IbanityClientSecurityAuthenticationPropertiesKeys authenticationPropertiesKeys =
@@ -90,7 +92,7 @@ public final class IbanityHttpUtils {
         KeyStore keyStore = keyToolHelper.createKeyStore();
 
         keyToolHelper.addEntryIfNotPresent(
-                keyStore, "application certificate", privateKey,
+                keyStore, KEY_ENTRY_NAME, privateKey,
                 new X509Certificate[]{certificate});
 
         return keyStore;
