@@ -5,157 +5,91 @@ import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionTransaction;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
-import com.ibanity.apis.client.sandbox.services.FinancialInstitutionAccountsService;
-import com.ibanity.apis.client.sandbox.services.FinancialInstitutionTransactionsService;
-import com.ibanity.apis.client.sandbox.services.FinancialInstitutionUsersService;
-import com.ibanity.apis.client.sandbox.services.SandboxFinancialInstitutionsService;
-import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionAccountsServiceImpl;
-import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionTransactionsServiceImpl;
-import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionUsersServiceImpl;
-import com.ibanity.apis.client.sandbox.services.impl.SandboxFinancialInstitutionsServiceImpl;
-import org.apache.commons.math3.util.Precision;
-import org.iban4j.CountryCode;
-import org.iban4j.Iban;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Random;
-import java.util.UUID;
+import com.ibanity.samples.sandbox.FinancialInstitutionAccountSample;
+import com.ibanity.samples.sandbox.FinancialInstitutionSample;
+import com.ibanity.samples.sandbox.FinancialInstitutionTransactionSample;
+import com.ibanity.samples.sandbox.FinancialInstitutionUserSample;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ClientSandboxSample {
+    private static final Logger LOGGER = LogManager.getLogger(ClientSandboxSample.class);
 
-    private final SandboxFinancialInstitutionsService sandBoxFinancialInstitutionsService = new SandboxFinancialInstitutionsServiceImpl();
-    private final FinancialInstitutionAccountsService financialInstitutionAccountsService = new FinancialInstitutionAccountsServiceImpl();
-    private final FinancialInstitutionTransactionsService financialInstitutionTransactionsService = new FinancialInstitutionTransactionsServiceImpl();
-    private final FinancialInstitutionUsersService financialInstitutionUsersService = new FinancialInstitutionUsersServiceImpl();
+    // Sample services
+    private final FinancialInstitutionSample financialInstitutionSample = new FinancialInstitutionSample();
+    private final FinancialInstitutionUserSample financialInstitutionUserSample = new FinancialInstitutionUserSample();
+    private final FinancialInstitutionAccountSample financialInstitutionAccountSample = new FinancialInstitutionAccountSample();
+    private final FinancialInstitutionTransactionSample financialInstitutionTransactionSample = new FinancialInstitutionTransactionSample();
 
-    public void financialInstitutionRequetSamples(){
-        FinancialInstitution financialInstitution = this.createSandboxFinancialInstitution();
+    public static void main(String[] args) {
+        ClientSandboxSample clientSandboxSample = new ClientSandboxSample();
+        clientSandboxSample.financialInstitutionSamples();
+        clientSandboxSample.financialInstitutionUserSamples();
+        clientSandboxSample.financialInstitutionAccountSamples();
+        clientSandboxSample.financialInstitutionTransactionSamples();
 
-        financialInstitution.setName("New FI name-"+Instant.now());
-        sandBoxFinancialInstitutionsService.update(financialInstitution);
-
-        sandBoxFinancialInstitutionsService.find(financialInstitution.getId());
-
-        sandBoxFinancialInstitutionsService.delete(financialInstitution.getId());
+        LOGGER.info("Samples end");
     }
 
-    public void financialInstitutionUserRequestSamples() {
-        FinancialInstitutionUser financialInstitutionUser = this.createFinancialInstitutionUser();
+    public void financialInstitutionSamples() {
+        LOGGER.info("Financial Institution samples");
 
-        financialInstitutionUser.setPassword("new password");
-        financialInstitutionUser = financialInstitutionUsersService.update(financialInstitutionUser);
-
-        financialInstitutionUsersService.find(financialInstitutionUser.getId());
-
-        financialInstitutionUsersService.delete(financialInstitutionUser.getId());
+        FinancialInstitution financialInstitution = financialInstitutionSample.create();
+        financialInstitutionSample.update(financialInstitution);
+        financialInstitutionSample.find(financialInstitution.getId());
+        financialInstitutionSample.delete(financialInstitution);
     }
 
-    public void financialInstitutionAccountRequestSamples() {
-        FinancialInstitution financialInstitution = this.createSandboxFinancialInstitution();
-        FinancialInstitutionUser financialInstitutionUser = this.createFinancialInstitutionUser();
+    public void financialInstitutionUserSamples() {
+        LOGGER.info("Financial Institution User samples");
 
-        FinancialInstitutionAccount financialInstitutionAccount = this.generateRandomAccount(financialInstitution.getId());
-
-        financialInstitutionAccount = financialInstitutionAccountsService.create(
-                financialInstitution.getId(),
-                financialInstitutionUser.getId(),
-                financialInstitutionAccount);
-
-        financialInstitutionAccount = financialInstitutionAccountsService.find(
-                financialInstitution.getId(),
-                financialInstitutionUser.getId(),
-                financialInstitutionAccount.getId());
-
-        financialInstitutionAccountsService.delete(
-                financialInstitution.getId(),
-                financialInstitutionUser.getId(),
-                financialInstitutionAccount.getId());
-
-        // clean temporary objects
-        this.sandBoxFinancialInstitutionsService.delete(financialInstitution.getId());
-        this.financialInstitutionUsersService.delete(financialInstitutionUser.getId());
+        FinancialInstitutionUser financialInstitutionUser = financialInstitutionUserSample.create();
+        financialInstitutionUserSample.update(financialInstitutionUser);
+        financialInstitutionUserSample.find(financialInstitutionUser.getId());
+        financialInstitutionUserSample.delete(financialInstitutionUser);
     }
 
-    public void financialInstitutionTransactionRequestSamples() {
-        FinancialInstitution financialInstitution = this.createSandboxFinancialInstitution();
-        FinancialInstitutionUser financialInstitutionUser = this.createFinancialInstitutionUser();
-        FinancialInstitutionAccount financialInstitutionAccount = this.generateRandomAccount(financialInstitution.getId());
+    public void financialInstitutionAccountSamples() {
+        LOGGER.info("Financial Institution Account samples");
 
-        FinancialInstitutionTransaction createdFinancialInstitutionTransaction = financialInstitutionTransactionsService.create(
-                financialInstitution.getId(),
-                financialInstitutionUser.getId(),
-                financialInstitutionAccount.getId(),
-                this.generateRandomTransaction(financialInstitutionAccount)
-        );
+        // create related objects
+        FinancialInstitution financialInstitution = financialInstitutionSample.create();
+        FinancialInstitutionUser financialInstitutionUser = financialInstitutionUserSample.create();
 
-        financialInstitutionTransactionsService.find(financialInstitution.getId(),
-                financialInstitutionUser.getId(), financialInstitutionAccount.getId(),
-                createdFinancialInstitutionTransaction.getId());
+        FinancialInstitutionAccount financialInstitutionAccount =
+                financialInstitutionAccountSample.create(financialInstitution, financialInstitutionUser);
 
-        financialInstitutionTransactionsService.delete(financialInstitution.getId(),
-                financialInstitutionUser.getId(), financialInstitutionAccount.getId(),
-                createdFinancialInstitutionTransaction.getId());
+        financialInstitutionAccountSample.find(financialInstitution, financialInstitutionUser, financialInstitutionAccount.getId());
 
-        // clean temporary objects
-        this.financialInstitutionAccountsService.delete(financialInstitution.getId(),
-                financialInstitutionUser.getId(), financialInstitutionAccount.getId());
-        this.sandBoxFinancialInstitutionsService.delete(financialInstitution.getId());
-        this.financialInstitutionUsersService.delete(financialInstitutionUser.getId());
+        financialInstitutionAccountSample.delete(financialInstitution, financialInstitutionUser, financialInstitutionAccount);
+
+        // clean related objects
+        financialInstitutionSample.delete(financialInstitution);
+        financialInstitutionUserSample.delete(financialInstitutionUser);
     }
 
-    private FinancialInstitution createSandboxFinancialInstitution(){
-        return sandBoxFinancialInstitutionsService.create("FI name-"+Instant.now());
+    public void financialInstitutionTransactionSamples() {
+        LOGGER.info("Financial Institution Transaction samples");
+
+        // create related objects
+        FinancialInstitution financialInstitution = financialInstitutionSample.create();
+        FinancialInstitutionUser financialInstitutionUser = financialInstitutionUserSample.create();
+        FinancialInstitutionAccount financialInstitutionAccount =
+                financialInstitutionAccountSample.create(financialInstitution, financialInstitutionUser);
+
+        FinancialInstitutionTransaction financialInstitutionTransaction =
+                this.financialInstitutionTransactionSample.create(financialInstitution, financialInstitutionUser, financialInstitutionAccount);
+
+        this.financialInstitutionTransactionSample.find(financialInstitution, financialInstitutionUser,
+                financialInstitutionAccount, financialInstitutionTransaction.getId());
+
+        this.financialInstitutionTransactionSample.delete(financialInstitution, financialInstitutionUser,
+                financialInstitutionAccount, financialInstitutionTransaction);
+
+        // clean related objects
+        this.financialInstitutionAccountSample.delete(financialInstitution, financialInstitutionUser, financialInstitutionAccount);
+        this.financialInstitutionSample.delete(financialInstitution);
+        this.financialInstitutionUserSample.delete(financialInstitutionUser);
     }
 
-    private FinancialInstitutionUser createFinancialInstitutionUser() {
-        return financialInstitutionUsersService.create(
-                "Login-"+ Instant.now(), "Password",
-                "LastName", "FirstName"
-        );
-    }
-
-    private FinancialInstitutionAccount generateRandomAccount(UUID financialInstitutionId) {
-        FinancialInstitutionAccount financialInstitutionAccount = new FinancialInstitutionAccount();
-
-        financialInstitutionAccount.setSubType("checking");
-        financialInstitutionAccount.setReference(Iban.random(CountryCode.BE).toString());
-        financialInstitutionAccount.setReferenceType("IBAN");
-        financialInstitutionAccount.setDescription("Checking Account");
-        financialInstitutionAccount.setCurrency("EUR");
-        financialInstitutionAccount.setCurrentBalance(this.generateRandomAmount());
-        financialInstitutionAccount.setAvailableBalance(this.generateRandomAmount());
-        financialInstitutionAccount.setFinancialInstitutionId(financialInstitutionId);
-
-        return financialInstitutionAccount;
-    }
-
-    private FinancialInstitutionTransaction generateRandomTransaction(FinancialInstitutionAccount createdFinancialInstitutionAccount){
-        Instant now = Instant.now();
-
-        Instant executionDate = now.plus(3, ChronoUnit.DAYS);
-        Instant valueDate = now.minus(1, ChronoUnit.DAYS);
-        FinancialInstitutionTransaction financialInstitutionTransaction = new FinancialInstitutionTransaction();
-        financialInstitutionTransaction.setFinancialInstitutionAccount(createdFinancialInstitutionAccount);
-        financialInstitutionTransaction.setAmount(generateRandomAmount());
-        financialInstitutionTransaction.setCounterpartName("Stroman, Hettinger and Swift");
-        financialInstitutionTransaction.setCounterpartReference(Iban.random(CountryCode.BE).getAccountNumber());
-        financialInstitutionTransaction.setCurrency("EUR");
-        financialInstitutionTransaction.setDescription("Car rental");
-        financialInstitutionTransaction.setExecutionDate(executionDate);
-        financialInstitutionTransaction.setRemittanceInformation("Aspernatur et quibusdam.");
-        financialInstitutionTransaction.setRemittanceInformationType("unstructured");
-        financialInstitutionTransaction.setValueDate(valueDate);
-        return financialInstitutionTransaction;
-    }
-
-    private double generateRandomAmount() {
-        Random random = new Random();
-
-        int randomDebitCreditSign = random.nextBoolean() ? -1 : 1;
-
-        return Precision.round(
-                random.doubles(10,1000)
-                        .findFirst().getAsDouble() * randomDebitCreditSign, 2);
-    }
 }

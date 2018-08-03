@@ -1,20 +1,21 @@
 package com.ibanity.apis.client.sandbox.services;
 
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
+import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionAccountCreationQuery;
+import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionAccountDeleteQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionAccountReadQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionAccountsReadQuery;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface FinancialInstitutionAccountsService {
 
-    FinancialInstitutionAccount find(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId);
+    FinancialInstitutionAccount create(FinancialInstitutionAccountCreationQuery accountCreationQuery);
 
-    List<FinancialInstitutionAccount> list(UUID financialInstitutionId, UUID financialInstitutionUserId);
+    List<FinancialInstitutionAccount> list(FinancialInstitutionAccountsReadQuery accountsReadQuery);
 
-    FinancialInstitutionAccount create(UUID financialInstitutionId, UUID financialInstitutionUserId, FinancialInstitutionAccount financialInstitutionAccount);
+    FinancialInstitutionAccount find(FinancialInstitutionAccountReadQuery accountReadQuery);
 
-    FinancialInstitutionAccount create(UUID financialInstitutionId, UUID financialInstitutionUserId, FinancialInstitutionAccount financialInstitutionAccount, UUID idempotencyKey);
-
-    void delete(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId);
+    void delete(FinancialInstitutionAccountDeleteQuery accountDeleteQuery);
 
 }

@@ -1,10 +1,14 @@
 package com.ibanity.apis.client.sandbox.services.impl;
 
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
-import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.models.FinancialInstitution;
+import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
+import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionAccountCreationQuery;
+import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionAccountDeleteQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionAccountReadQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionAccountsReadQuery;
 import com.ibanity.apis.client.sandbox.services.FinancialInstitutionAccountsService;
 import com.ibanity.apis.client.services.impl.AbstractServiceImpl;
 import io.crnk.core.queryspec.QuerySpec;
@@ -17,34 +21,62 @@ import java.util.UUID;
 public class FinancialInstitutionAccountsServiceImpl extends AbstractServiceImpl implements FinancialInstitutionAccountsService {
 
     @Override
-    public FinancialInstitutionAccount find(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID financialInstitutionAccountId) throws ApiErrorsException {
-        ResourceRepositoryV2<FinancialInstitutionAccount, UUID> accountsRepo = getRepository(financialInstitutionId, financialInstitutionUserId, null);
+    public FinancialInstitutionAccount find(final FinancialInstitutionAccountReadQuery accountReadQuery) {
         QuerySpec querySpec = new QuerySpec(FinancialInstitutionAccount.class);
-        return accountsRepo.findOne(financialInstitutionAccountId, querySpec);
+        return getRepository(
+                accountReadQuery.getFinancialInstitutionId(),
+                accountReadQuery.getFinancialInstitutionUserId(),
+                null)
+                .findOne(accountReadQuery.getFinancialInstitutionAccountId(), querySpec);
     }
 
     @Override
-    public List<FinancialInstitutionAccount> list(final UUID financialInstitutionId, final UUID financialInstitutionUserId) throws ApiErrorsException {
-        return getRepository(financialInstitutionId, financialInstitutionUserId, null).findAll(new QuerySpec(FinancialInstitutionAccount.class));
+    public List<FinancialInstitutionAccount> list(final FinancialInstitutionAccountsReadQuery accountsReadQuery) {
+        QuerySpec querySpec = new QuerySpec(FinancialInstitutionAccount.class);
+
+        if (accountsReadQuery.getPagingSpec() != null) {
+            querySpec.setPagingSpec(accountsReadQuery.getPagingSpec());
+        } else {
+            querySpec.setPagingSpec(IbanityPagingSpec.DEFAULT_PAGING_SPEC);
+        }
+
+        return getRepository(
+                accountsReadQuery.getFinancialInstitutionId(),
+                accountsReadQuery.getFinancialInstitutionUserId(),
+                null)
+                .findAll(querySpec);
     }
 
     @Override
-    public FinancialInstitutionAccount create(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final FinancialInstitutionAccount financialInstitutionAccount) throws ApiErrorsException {
-        return internalCreate(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccount, null);
+    public FinancialInstitutionAccount create(final FinancialInstitutionAccountCreationQuery query) {
+        FinancialInstitutionAccount financialInstitutionAccount = new FinancialInstitutionAccount();
+
+        financialInstitutionAccount.setDescription(query.getDescription());
+        financialInstitutionAccount.setReference(query.getReference());
+        financialInstitutionAccount.setReferenceType(query.getReferenceType());
+        financialInstitutionAccount.setAvailableBalance(query.getAvailableBalance());
+        financialInstitutionAccount.setCurrentBalance(query.getCurrentBalance());
+        financialInstitutionAccount.setCurrency(query.getCurrency());
+        financialInstitutionAccount.setSubType(query.getSubType());
+
+        FinancialInstitution financialInstitution = new FinancialInstitution();
+        financialInstitution.setId(query.getFinancialInstitutionId());
+        financialInstitutionAccount.setFinancialInstitution(financialInstitution);
+
+        return getRepository(
+                query.getFinancialInstitutionId(),
+                query.getFinancialInstitutionUserId(),
+                query.getIdempotencyKey())
+                .create(financialInstitutionAccount);
     }
 
     @Override
-    public FinancialInstitutionAccount create(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final FinancialInstitutionAccount financialInstitutionAccount, final UUID idempotencyKey) throws ApiErrorsException {
-        return internalCreate(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccount, idempotencyKey);
-    }
-
-    @Override
-    public void delete(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID financialInstitutionAccountId) throws ApiErrorsException {
-        getRepository(financialInstitutionId, financialInstitutionUserId, null).delete(financialInstitutionAccountId);
-    }
-
-    private FinancialInstitutionAccount internalCreate(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final FinancialInstitutionAccount financialInstitutionAccount, final UUID idempotencyKey) throws ApiErrorsException {
-        return getRepository(financialInstitutionId, financialInstitutionUserId, idempotencyKey).create(financialInstitutionAccount);
+    public void delete(final FinancialInstitutionAccountDeleteQuery accountDeleteQuery) {
+        getRepository(
+                accountDeleteQuery.getFinancialInstitutionId(),
+                accountDeleteQuery.getFinancialInstitutionUserId(),
+                accountDeleteQuery.getIdempotencyKey())
+                .delete(accountDeleteQuery.getFinancialInstitutionAccountId());
     }
 
     private ResourceRepositoryV2<FinancialInstitutionAccount, UUID> getRepository(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID idempotencyKey) {

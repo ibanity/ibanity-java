@@ -1,26 +1,23 @@
 package com.ibanity.apis.client.sandbox.services;
 
-import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
+import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionUserCreationQuery;
+import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionUserDeleteQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionUserReadQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionUsersReadQuery;
+import com.ibanity.apis.client.sandbox.models.factory.update.FinancialInstitutionUserUpdateQuery;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface FinancialInstitutionUsersService {
 
-    List<FinancialInstitutionUser> list();
+    FinancialInstitutionUser create(FinancialInstitutionUserCreationQuery userCreationQuery);
 
-    List<FinancialInstitutionUser> list(IbanityPagingSpec pagingSpec);
+    List<FinancialInstitutionUser> list(FinancialInstitutionUsersReadQuery usersReadQuery);
 
-    FinancialInstitutionUser find(UUID financialInstitutionUserId);
+    FinancialInstitutionUser find(FinancialInstitutionUserReadQuery userReadQuery);
 
-    FinancialInstitutionUser create(String login, String password, String lastName, String firstName);
+    FinancialInstitutionUser update(FinancialInstitutionUserUpdateQuery userUpdateQuery);
 
-    FinancialInstitutionUser create(String login, String password, String lastName, String firstName, UUID idempotencyKey);
-
-    FinancialInstitutionUser update(FinancialInstitutionUser financialInstitutionUser);
-
-    FinancialInstitutionUser update(FinancialInstitutionUser financialInstitutionUser, UUID idempotencyKey);
-
-    void delete(UUID financialInstitutionUserId);
+    void delete(FinancialInstitutionUserDeleteQuery userDeleteQuery);
 }

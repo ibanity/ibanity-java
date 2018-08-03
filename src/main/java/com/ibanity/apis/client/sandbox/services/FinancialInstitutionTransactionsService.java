@@ -1,19 +1,20 @@
 package com.ibanity.apis.client.sandbox.services;
 
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionTransaction;
+import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionTransactionCreationQuery;
+import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionTransactionDeleteQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionTransactionReadQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionTransactionsReadQuery;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface FinancialInstitutionTransactionsService {
 
-    FinancialInstitutionTransaction find(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID financialInstitutionTransactionId);
+    FinancialInstitutionTransaction find(FinancialInstitutionTransactionReadQuery transactionReadQuery);
 
-    List<FinancialInstitutionTransaction> list(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId);
+    List<FinancialInstitutionTransaction> list(FinancialInstitutionTransactionsReadQuery transactionsReadQuery);
 
-    FinancialInstitutionTransaction create(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, FinancialInstitutionTransaction financialInstitutionTransaction);
+    FinancialInstitutionTransaction create(FinancialInstitutionTransactionCreationQuery transactionCreationQuery);
 
-    FinancialInstitutionTransaction create(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, FinancialInstitutionTransaction financialInstitutionTransaction, UUID idempotencyKey);
-
-    void delete(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID financialInstitutionTransactionId);
+    void delete(FinancialInstitutionTransactionDeleteQuery transactionDeleteQuery);
 }

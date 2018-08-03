@@ -2,6 +2,8 @@ package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.models.FinancialInstitution;
+import com.ibanity.apis.client.models.factory.read.FinancialInstitutionReadQuery;
+import com.ibanity.apis.client.models.factory.read.FinancialInstitutionsReadQuery;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.services.FinancialInstitutionsService;
 import io.crnk.core.queryspec.QuerySpec;
@@ -18,52 +20,42 @@ public class FinancialInstitutionsServiceImpl extends AbstractServiceImpl implem
     }
 
     @Override
-    public ResourceList<FinancialInstitution> list(final String customerAccessToken) {
-        return list(customerAccessToken, new IbanityPagingSpec());
+    public ResourceList<FinancialInstitution> list(final FinancialInstitutionsReadQuery financialInstitutionsReadQuery) {
+        QuerySpec querySpec = new QuerySpec(FinancialInstitution.class);
+
+        if (financialInstitutionsReadQuery.getPagingSpec() != null) {
+            querySpec.setPagingSpec(financialInstitutionsReadQuery.getPagingSpec());
+        } else {
+            querySpec.setPagingSpec(IbanityPagingSpec.DEFAULT_PAGING_SPEC);
+        }
+
+        return getRepository(financialInstitutionsReadQuery.getCustomerAccessToken())
+                .findAll(querySpec);
     }
 
     @Override
-    public ResourceList<FinancialInstitution> list(final String customerAccessToken, final IbanityPagingSpec pagingSpec) {
-        return list(getRepository(customerAccessToken), pagingSpec);
-    }
-
-    @Override
-    public ResourceList<FinancialInstitution> list() {
-        return list(new IbanityPagingSpec());
-    }
-
-    @Override
-    public ResourceList<FinancialInstitution> list(final IbanityPagingSpec pagingSpec) {
-        return list(getRepository(), pagingSpec);
-    }
-
-    @Override
-    public FinancialInstitution find(final UUID financialInstitutionId) {
-        return getRepository().findOne(financialInstitutionId, new QuerySpec(FinancialInstitution.class));
-    }
-
-    private ResourceList<FinancialInstitution> list(
-            final ResourceRepositoryV2<FinancialInstitution, UUID> repository,
-            final IbanityPagingSpec pagingSpec) {
-
-        QuerySpec querySpec = new QuerySpec(FinancialInstitution.class).setPagingSpec(pagingSpec);
-
-        return repository.findAll(querySpec);
-    }
-
-    private ResourceRepositoryV2<FinancialInstitution, UUID> getRepository() {
-        String finalPath = StringUtils.removeEnd(
-                IbanityConfiguration.getApiUrls().getFinancialInstitutions()
-                        .replace(FinancialInstitution.RESOURCE_PATH, "")
-                        .replace(FinancialInstitution.API_URL_TAG_ID, ""),
-                "//");
-
-        return getApiClient(finalPath).getRepositoryForType(FinancialInstitution.class);
+    public FinancialInstitution find(final FinancialInstitutionReadQuery financialInstitutionReadQuery) {
+        return getRepository(financialInstitutionReadQuery.getCustomerAccessToken())
+                .findOne(financialInstitutionReadQuery.getFinancialInstitutionId(),
+                new QuerySpec(FinancialInstitution.class));
     }
 
     private ResourceRepositoryV2<FinancialInstitution, UUID> getRepository(final String customerAccessToken) {
-        String finalPath = IbanityConfiguration.getApiUrls().getCustomer().getFinancialInstitutions()
-                .replace(FinancialInstitution.RESOURCE_PATH, "");
+        String finalPath;
+
+        if (customerAccessToken != null) {
+            finalPath = IbanityConfiguration.getApiUrls().getCustomer().getFinancialInstitutions();
+        } else {
+            finalPath = IbanityConfiguration.getApiUrls().getFinancialInstitutions();
+        }
+
+        finalPath = finalPath
+                .replace(FinancialInstitution.RESOURCE_PATH, "")
+                .replace(FinancialInstitution.API_URL_TAG_ID, "");
+
+        while (finalPath.endsWith("/")) {
+            finalPath = StringUtils.removeEnd(finalPath, "/");
+        }
 
         return getApiClient(finalPath, customerAccessToken).getRepositoryForType(FinancialInstitution.class);
     }

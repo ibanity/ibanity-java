@@ -4,6 +4,8 @@ import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.Transaction;
+import com.ibanity.apis.client.models.factory.read.TransactionReadQuery;
+import com.ibanity.apis.client.models.factory.read.TransactionsReadQuery;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.services.TransactionsService;
 import io.crnk.core.queryspec.QuerySpec;
@@ -20,25 +22,26 @@ public class TransactionsServiceImpl extends AbstractServiceImpl implements Tran
     }
 
     @Override
-    public ResourceList<Transaction> list(final String customerAccessToken, final UUID financialInstitutionId,
-                                          final UUID accountId) {
-        return list(customerAccessToken, financialInstitutionId, accountId, new IbanityPagingSpec());
-    }
+    public ResourceList<Transaction> list(final TransactionsReadQuery transactionsReadQuery) {
+        QuerySpec querySpec = new QuerySpec(Transaction.class);
 
-    @Override
-    public ResourceList<Transaction> list(final String customerAccessToken, final UUID financialInstitutionId,
-                                          final UUID accountId, final IbanityPagingSpec pagingSpec) {
-        QuerySpec querySpec = new QuerySpec(Transaction.class).setPagingSpec(pagingSpec);
+        if (transactionsReadQuery.getPagingSpec() != null) {
+            querySpec.setPagingSpec(transactionsReadQuery.getPagingSpec());
+        } else {
+            querySpec.setPagingSpec(IbanityPagingSpec.DEFAULT_PAGING_SPEC);
+        }
 
-        return getRepository(customerAccessToken, financialInstitutionId, accountId)
+        return getRepository(transactionsReadQuery.getCustomerAccessToken(),
+                transactionsReadQuery.getFinancialInstitutionId(),
+                transactionsReadQuery.getAccountId())
                 .findAll(querySpec);
     }
 
     @Override
-    public Transaction find(final String customerAccessToken, final UUID financialInstitutionId,
-                            final UUID accountId, final UUID transactionId) {
-        return getRepository(customerAccessToken, financialInstitutionId, accountId)
-                .findOne(transactionId, new QuerySpec(Transaction.class));
+    public Transaction find(final TransactionReadQuery transactionReadQuery) {
+        return getRepository(transactionReadQuery.getCustomerAccessToken(),
+                transactionReadQuery.getFinancialInstitutionId(), transactionReadQuery.getAccountId())
+                .findOne(transactionReadQuery.getTransactionId(), new QuerySpec(Transaction.class));
     }
 
     private ResourceRepositoryV2<Transaction, UUID> getRepository(

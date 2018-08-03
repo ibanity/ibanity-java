@@ -2,6 +2,9 @@ package com.ibanity.apis.client.sandbox.services.impl;
 
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.models.FinancialInstitution;
+import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionCreationQuery;
+import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionDeleteQuery;
+import com.ibanity.apis.client.sandbox.models.factory.update.FinancialInstitutionUpdateQuery;
 import com.ibanity.apis.client.sandbox.services.SandboxFinancialInstitutionsService;
 import com.ibanity.apis.client.services.impl.FinancialInstitutionsServiceImpl;
 import io.crnk.core.repository.ResourceRepositoryV2;
@@ -16,40 +19,30 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
     }
 
     @Override
-    public FinancialInstitution create(final String name) {
-        return create(name, null);
-    }
-
-    @Override
-    public FinancialInstitution create(final String name, final UUID idempotencyKey) {
+    public FinancialInstitution create(
+            final FinancialInstitutionCreationQuery financialInstitutionCreationQuery) {
         FinancialInstitution financialInstitution = new FinancialInstitution();
         financialInstitution.setSandbox(Boolean.TRUE);
-        financialInstitution.setName(name);
-        return getRepository(idempotencyKey).create(financialInstitution);
+        financialInstitution.setName(financialInstitutionCreationQuery.getName());
+        return getRepository(financialInstitutionCreationQuery.getIdempotencyKey())
+                .create(financialInstitution);
     }
 
     @Override
-    public FinancialInstitution update(final FinancialInstitution financialInstitution) {
-        return getRepository(null).save(financialInstitution);
+    public FinancialInstitution update(
+            final FinancialInstitutionUpdateQuery financialInstitutionUpdateQuery) {
+        FinancialInstitution financialInstitution = new FinancialInstitution();
+        financialInstitution.setId(financialInstitutionUpdateQuery.getFinancialInstitutionId());
+        financialInstitution.setName(financialInstitutionUpdateQuery.getName());
+
+        return getRepository(financialInstitutionUpdateQuery.getIdempotencyKey())
+                .save(financialInstitution);
     }
 
     @Override
-    public FinancialInstitution update(final FinancialInstitution financialInstitution, final UUID idempotencyKey) {
-        return getRepository(idempotencyKey).save(financialInstitution);
-    }
-
-    @Override
-    public void delete(final UUID financialInstitutionId) {
-        getRepository().delete(financialInstitutionId);
-    }
-
-    private ResourceRepositoryV2<FinancialInstitution, UUID> getRepository() {
-        String finalPath = StringUtils.removeEnd(
-                IbanityConfiguration.getApiUrls().getSandbox().getFinancialInstitutions()
-                        .replace(FinancialInstitution.RESOURCE_PATH, "")
-                        .replace(FinancialInstitution.API_URL_TAG_ID, ""), "//");
-
-        return getApiClient(finalPath, null, null).getRepositoryForType(FinancialInstitution.class);
+    public void delete(final FinancialInstitutionDeleteQuery financialInstitutionDeleteQuery) {
+        getRepository(financialInstitutionDeleteQuery.getIdempotencyKey())
+                .delete(financialInstitutionDeleteQuery.getFinancialInstitutionId());
     }
 
     private ResourceRepositoryV2<FinancialInstitution, UUID> getRepository(final UUID idempotencyKey) {
@@ -58,6 +51,7 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
                 .replace(FinancialInstitution.RESOURCE_PATH, "")
                 .replace(FinancialInstitution.API_URL_TAG_ID, ""), "//");
 
-        return getApiClient(finalPath, null, idempotencyKey).getRepositoryForType(FinancialInstitution.class);
+        return getApiClient(finalPath, null, idempotencyKey)
+                .getRepositoryForType(FinancialInstitution.class);
     }
 }

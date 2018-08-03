@@ -1,11 +1,15 @@
 package com.ibanity.apis.client.sandbox.services.impl;
 
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
-import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.models.FinancialInstitution;
+import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionTransaction;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
+import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionTransactionCreationQuery;
+import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionTransactionDeleteQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionTransactionReadQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionTransactionsReadQuery;
 import com.ibanity.apis.client.sandbox.services.FinancialInstitutionTransactionsService;
 import com.ibanity.apis.client.services.impl.AbstractServiceImpl;
 import io.crnk.core.queryspec.QuerySpec;
@@ -18,36 +22,67 @@ import java.util.UUID;
 public class FinancialInstitutionTransactionsServiceImpl extends AbstractServiceImpl implements FinancialInstitutionTransactionsService {
 
     @Override
-    public FinancialInstitutionTransaction find(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID financialInstitutionAccountId, final UUID financialInstitutionTransactionId) throws ApiErrorsException {
-        ResourceRepositoryV2<FinancialInstitutionTransaction, UUID> transactionsRepo = getRepository(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, null);
+    public FinancialInstitutionTransaction find(final FinancialInstitutionTransactionReadQuery transactionReadQuery) {
+        ResourceRepositoryV2<FinancialInstitutionTransaction, UUID> transactionsRepo =
+                getRepository(transactionReadQuery.getFinancialInstitutionId(),
+                        transactionReadQuery.getFinancialInstitutionUserId(),
+                        transactionReadQuery.getFinancialInstitutionAccountId(),
+                        transactionReadQuery.getIdempotencyKey());
         QuerySpec querySpec = new QuerySpec(FinancialInstitutionTransaction.class);
-        return transactionsRepo.findOne(financialInstitutionTransactionId, querySpec);
+        return transactionsRepo.findOne(transactionReadQuery.getFinancialInstitutionTransactionId(), querySpec);
     }
 
     @Override
-    public List<FinancialInstitutionTransaction> list(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID financialInstitutionAccountId) throws ApiErrorsException {
-        ResourceRepositoryV2<FinancialInstitutionTransaction, UUID> transactionsRepo = getRepository(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, null);
+    public List<FinancialInstitutionTransaction> list(final FinancialInstitutionTransactionsReadQuery transactionsReadQuery) {
+        ResourceRepositoryV2<FinancialInstitutionTransaction, UUID> transactionsRepo =
+                getRepository(transactionsReadQuery.getFinancialInstitutionId(),
+                        transactionsReadQuery.getFinancialInstitutionUserId(),
+                        transactionsReadQuery.getFinancialInstitutionAccountId(),
+                        transactionsReadQuery.getIdempotencyKey());
         QuerySpec querySpec = new QuerySpec(FinancialInstitutionTransaction.class);
+
+        if (transactionsReadQuery.getPagingSpec() != null) {
+            querySpec.setPagingSpec(transactionsReadQuery.getPagingSpec());
+        } else {
+            querySpec.setPagingSpec(IbanityPagingSpec.DEFAULT_PAGING_SPEC);
+        }
         return transactionsRepo.findAll(querySpec);
     }
 
     @Override
-    public FinancialInstitutionTransaction create(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID financialInstitutionAccountId, final FinancialInstitutionTransaction financialInstitutionTransaction) throws ApiErrorsException {
-        return internalCreate(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, financialInstitutionTransaction, null);
+    public FinancialInstitutionTransaction create(final FinancialInstitutionTransactionCreationQuery transactionCreationQuery) {
+        FinancialInstitutionTransaction financialInstitutionTransaction = new FinancialInstitutionTransaction();
+
+        financialInstitutionTransaction.setAmount(transactionCreationQuery.getAmount());
+        financialInstitutionTransaction.setCurrency(transactionCreationQuery.getCurrency());
+        financialInstitutionTransaction.setRemittanceInformation(transactionCreationQuery.getRemittanceInformation());
+        financialInstitutionTransaction.setRemittanceInformationType(transactionCreationQuery.getRemittanceInformationType());
+        financialInstitutionTransaction.setCounterpartName(transactionCreationQuery.getCounterpartName());
+        financialInstitutionTransaction.setCounterpartReference(transactionCreationQuery.getCounterpartReference());
+        financialInstitutionTransaction.setValueDate(transactionCreationQuery.getValueDate());
+        financialInstitutionTransaction.setExecutionDate(transactionCreationQuery.getExecutionDate());
+        financialInstitutionTransaction.setDescription(transactionCreationQuery.getDescription());
+
+        FinancialInstitutionAccount financialInstitutionAccount =
+                new FinancialInstitutionAccount();
+        financialInstitutionAccount.setId(transactionCreationQuery.getFinancialInstitutionAccountId());
+        financialInstitutionTransaction.setFinancialInstitutionAccount(financialInstitutionAccount);
+
+        return getRepository(
+                transactionCreationQuery.getFinancialInstitutionId(),
+                transactionCreationQuery.getFinancialInstitutionUserId(),
+                transactionCreationQuery.getFinancialInstitutionAccountId(),
+                transactionCreationQuery.getIdempotencyKey()
+        ).create(financialInstitutionTransaction);
     }
 
     @Override
-    public FinancialInstitutionTransaction create(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID financialInstitutionAccountId, final FinancialInstitutionTransaction financialInstitutionTransaction, final UUID idempotencyKey) throws ApiErrorsException {
-        return internalCreate(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, financialInstitutionTransaction, idempotencyKey);
-    }
-
-    @Override
-    public void delete(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID financialInstitutionAccountId, final UUID financialInstitutionTransactionId) throws ApiErrorsException {
-        getRepository(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, null).delete(financialInstitutionTransactionId);
-    }
-
-    private FinancialInstitutionTransaction internalCreate(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID financialInstitutionAccountId, final FinancialInstitutionTransaction financialInstitutionTransaction, final UUID idempotencyKey) throws ApiErrorsException {
-        return getRepository(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, idempotencyKey).create(financialInstitutionTransaction);
+    public void delete(final FinancialInstitutionTransactionDeleteQuery transactionDeleteQuery) {
+        getRepository(transactionDeleteQuery.getFinancialInstitutionId(),
+                transactionDeleteQuery.getFinancialInstitutionUserId(),
+                transactionDeleteQuery.getFinancialInstitutionAccountId(),
+                transactionDeleteQuery.getIdempotencyKey())
+                .delete(transactionDeleteQuery.getFinancialInstitutionTransactionId());
     }
 
     private ResourceRepositoryV2<FinancialInstitutionTransaction, UUID> getRepository(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID financialInstitutionAccountId, final UUID idempotencyKey) {

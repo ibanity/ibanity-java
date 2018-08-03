@@ -4,7 +4,7 @@ import com.ibanity.apis.client.AbstractServiceTest;
 import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.FinancialInstitution;
-import org.apache.http.HttpStatus;
+import com.ibanity.apis.client.models.factory.create.AccountInformationAccessRequestCreationQuery;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,8 @@ import org.junit.jupiter.api.Test;
 import java.net.URI;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class AccountInformationAccessRequestsServiceTest extends AbstractServiceTest {
 
@@ -28,30 +29,53 @@ class AccountInformationAccessRequestsServiceTest extends AbstractServiceTest {
 
     @Test
     void testCreateForFinancialInstitution() {
-        AccountInformationAccessRequest accountInformationAccessRequest = accountInformationAccessRequestsService.create(generatedCustomerAccessToken.getToken(), financialInstitution.getId(), fakeTppAccountInformationAccessRedirectUrl, UUID.randomUUID().toString());
+        AccountInformationAccessRequestCreationQuery accountInformationAccessRequestCreationQuery =
+                AccountInformationAccessRequestCreationQuery.builder()
+                        .customerAccessToken(generatedCustomerAccessToken.getToken())
+                        .financialInstitutionId(financialInstitution.getId())
+                        .redirectURI(fakeTppAccountInformationAccessRedirectUrl)
+                        .consentReference(UUID.randomUUID().toString())
+                        .build();
+
+        AccountInformationAccessRequest accountInformationAccessRequest =
+                accountInformationAccessRequestsService.create(accountInformationAccessRequestCreationQuery);
+
         assertNotNull(accountInformationAccessRequest.getLinks().getRedirect());
         assertNotNull(URI.create(accountInformationAccessRequest.getLinks().getRedirect()));
     }
 
     @Test
     void testCreateForFinancialInstitutionWithIdempotency() {
-        AccountInformationAccessRequest accountInformationAccessRequest = accountInformationAccessRequestsService.create(generatedCustomerAccessToken.getToken(), financialInstitution.getId(), fakeTppAccountInformationAccessRedirectUrl, UUID.randomUUID().toString(), UUID.randomUUID());
+        AccountInformationAccessRequestCreationQuery accountInformationAccessRequestCreationQuery =
+                AccountInformationAccessRequestCreationQuery.builder()
+                        .customerAccessToken(generatedCustomerAccessToken.getToken())
+                        .financialInstitutionId(financialInstitution.getId())
+                        .redirectURI(fakeTppAccountInformationAccessRedirectUrl)
+                        .consentReference(UUID.randomUUID().toString())
+                        .idempotencyKey(UUID.randomUUID())
+                        .build();
+
+        AccountInformationAccessRequest accountInformationAccessRequest =
+                accountInformationAccessRequestsService.create(accountInformationAccessRequestCreationQuery);
         assertNotNull(accountInformationAccessRequest.getLinks().getRedirect());
         assertNotNull(URI.create(accountInformationAccessRequest.getLinks().getRedirect()));
     }
 
     @Test
     void testCreateForUnknownFinancialInstitution() {
-        FinancialInstitution unknownFinancialInstitution = new FinancialInstitution();
-        unknownFinancialInstitution.setId(UUID.randomUUID());
+        AccountInformationAccessRequestCreationQuery accountInformationAccessRequestCreationQuery =
+                AccountInformationAccessRequestCreationQuery.builder()
+                        .customerAccessToken(generatedCustomerAccessToken.getToken())
+                        .financialInstitutionId(UUID.randomUUID())
+                        .redirectURI(fakeTppAccountInformationAccessRedirectUrl)
+                        .consentReference(UUID.randomUUID().toString())
+                        .build();
+
         try {
-            AccountInformationAccessRequest accountInformationAccessRequest = accountInformationAccessRequestsService.create(generatedCustomerAccessToken.getToken(), unknownFinancialInstitution.getId(), fakeTppAccountInformationAccessRedirectUrl, UUID.randomUUID().toString());
-            fail("Should raise ApiErrorsException");
+            accountInformationAccessRequestsService.create(accountInformationAccessRequestCreationQuery);
+            fail("Expected accountInformationAccessRequestsService.create to raise an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
-            assertEquals(HttpStatus.SC_NOT_FOUND, apiErrorsException.getHttpStatus());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
+            super.assertResourceNotFoundException(apiErrorsException, FinancialInstitution.RESOURCE_TYPE);
         }
     }
 }

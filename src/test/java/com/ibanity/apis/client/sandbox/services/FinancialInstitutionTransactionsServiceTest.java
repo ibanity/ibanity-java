@@ -3,9 +3,14 @@ package com.ibanity.apis.client.sandbox.services;
 import com.ibanity.apis.client.AbstractServiceTest;
 import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.models.FinancialInstitution;
+import com.ibanity.apis.client.models.Transaction;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionTransaction;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
+import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionTransactionCreationQuery;
+import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionTransactionDeleteQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionTransactionReadQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionTransactionsReadQuery;
 import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionTransactionsServiceImpl;
 import org.apache.commons.math3.util.Precision;
 import org.iban4j.CountryCode;
@@ -34,8 +39,21 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
         FinancialInstitution financialInstitution = createFinancialInstitution(idempotencyKey);
         FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(idempotencyKey);
         FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId(), idempotencyKey);
-        FinancialInstitutionTransaction financialInstitutionTransaction = createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount, idempotencyKey);
-        FinancialInstitutionTransaction financialInstitutionTransactionGet = financialInstitutionTransactionsService.find(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId(), financialInstitutionTransaction.getId());
+
+        FinancialInstitutionTransaction financialInstitutionTransaction =
+                createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount, idempotencyKey);
+
+        FinancialInstitutionTransactionReadQuery transactionsReadQuery =
+                FinancialInstitutionTransactionReadQuery.builder()
+                        .financialInstitutionId(financialInstitution.getId())
+                        .financialInstitutionAccountId(financialInstitutionAccount.getId())
+                        .financialInstitutionUserId(financialInstitutionUser.getId())
+                        .financialInstitutionTransactionId(financialInstitutionTransaction.getId())
+                        .build();
+
+        FinancialInstitutionTransaction financialInstitutionTransactionGet =
+                financialInstitutionTransactionsService.find(transactionsReadQuery);
+
         assertEquals(financialInstitutionTransaction.getCounterpartName(), financialInstitutionTransactionGet.getCounterpartName());
         assertEquals(financialInstitutionTransaction.getCounterpartReference(), financialInstitutionTransactionGet.getCounterpartReference());
         assertEquals(financialInstitutionTransaction.getCurrency(), financialInstitutionTransactionGet.getCurrency());
@@ -46,8 +64,10 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
         assertEquals(financialInstitutionTransaction.getExecutionDate(), financialInstitutionTransactionGet.getExecutionDate());
         assertEquals(financialInstitutionTransaction.getValueDate(), financialInstitutionTransactionGet.getValueDate());
 
-        deleteFinancialInstitutionTransaction(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId(),financialInstitutionTransaction.getId());
-        deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
+        deleteFinancialInstitutionTransaction(financialInstitution.getId(), financialInstitutionUser.getId(),
+                financialInstitutionAccount.getId(),financialInstitutionTransaction.getId());
+        deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(),
+                financialInstitutionAccount.getId());
         deleteFinancialInstitutionUser(financialInstitutionUser.getId());
         deleteFinancialInstitution(financialInstitution.getId());
     }
@@ -55,10 +75,18 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
     @Test
     public void testGetFinancialInstitutionTransactionWithWrongIDs() {
         try {
-            financialInstitutionTransactionsService.find(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
+            FinancialInstitutionTransactionReadQuery transactionReadQuery =
+                    FinancialInstitutionTransactionReadQuery.builder()
+                            .financialInstitutionId(UUID.randomUUID())
+                            .financialInstitutionAccountId(UUID.randomUUID())
+                            .financialInstitutionTransactionId(UUID.randomUUID())
+                            .financialInstitutionUserId(UUID.randomUUID())
+                            .build();
+
+            financialInstitutionTransactionsService.find(transactionReadQuery);
             fail("Expected financialInstitutionTransactionsService.find to raise an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
-            super.assertResourceNotFoundException(apiErrorsException);
+            super.assertResourceNotFoundException(apiErrorsException, Transaction.RESOURCE_TYPE);
         }
     }
 
@@ -68,14 +96,25 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
         FinancialInstitution financialInstitution = createFinancialInstitution();
         FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(null);
         FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId(), null);
-        financialInstitutionTransactions.add(createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount, null));
-        financialInstitutionTransactions.add(createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount, null));
-        financialInstitutionTransactions.add(createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount, null));
+        financialInstitutionTransactions.add(
+                createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount, null));
+        financialInstitutionTransactions.add(
+                createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount, null));
+        financialInstitutionTransactions.add(
+                createFinancialInstitutionTransaction(financialInstitutionUser.getId(), financialInstitutionAccount, null));
 
-        List<FinancialInstitutionTransaction> financialInstitutionTransactionsList = financialInstitutionTransactionsService.list(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
+        FinancialInstitutionTransactionsReadQuery transactionsReadQuery =
+                FinancialInstitutionTransactionsReadQuery.builder()
+                        .financialInstitutionId(financialInstitution.getId())
+                        .financialInstitutionAccountId(financialInstitutionAccount.getId())
+                        .financialInstitutionUserId(financialInstitutionUser.getId())
+                        .build();
+
+        List<FinancialInstitutionTransaction> financialInstitutionTransactionsList =
+                financialInstitutionTransactionsService.list(transactionsReadQuery);
         assertTrue (financialInstitutionTransactionsList.containsAll(financialInstitutionTransactions));
 
-        for (FinancialInstitutionTransaction financialInstitutionTransaction: financialInstitutionTransactions){
+        for (FinancialInstitutionTransaction financialInstitutionTransaction: financialInstitutionTransactions) {
             deleteFinancialInstitutionTransaction(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId(),financialInstitutionTransaction.getId());
         }
         deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
@@ -86,10 +125,17 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
     @Test
     public void testGetFinancialInstitutionAccountTransactionsWithWrongIds() {
         try {
-            financialInstitutionTransactionsService.list(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
+            FinancialInstitutionTransactionsReadQuery transactionsReadQuery =
+                    FinancialInstitutionTransactionsReadQuery.builder()
+                            .financialInstitutionId(UUID.randomUUID())
+                            .financialInstitutionAccountId(UUID.randomUUID())
+                            .financialInstitutionUserId(UUID.randomUUID())
+                            .build();
+
+            financialInstitutionTransactionsService.list(transactionsReadQuery );
             fail("Expected financialInstitutionTransactionsService.list to raise an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
-            super.assertResourceNotFoundException(apiErrorsException);
+            super.assertResourceNotFoundException(apiErrorsException, Transaction.RESOURCE_TYPE);
         }
     }
 
@@ -106,10 +152,17 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
     @Test
     public void testCreateFinancialInstitutionTransactionWithWrongIds() {
         try {
-            financialInstitutionTransactionsService.create(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), new FinancialInstitutionTransaction());
+            FinancialInstitutionTransactionCreationQuery transactionCreationQuery =
+                    FinancialInstitutionTransactionCreationQuery.builder()
+                            .financialInstitutionId(UUID.randomUUID())
+                            .financialInstitutionAccountId(UUID.randomUUID())
+                            .financialInstitutionUserId(UUID.randomUUID())
+                            .build();
+
+            financialInstitutionTransactionsService.create(transactionCreationQuery);
             fail("Expected financialInstitutionTransactionsService.create to rais an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
-            super.assertResourceNotFoundException(apiErrorsException);
+            super.assertResourceNotFoundException(apiErrorsException, Transaction.RESOURCE_TYPE);
         }
     }
 
@@ -124,47 +177,47 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
             deleteFinancialInstitutionTransaction(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
             fail("Expected deleteFinancialInstitutionTransaction to raise an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
-            super.assertResourceNotFoundException(apiErrorsException);
+            super.assertResourceNotFoundException(apiErrorsException, Transaction.RESOURCE_TYPE);
         }
     }
 
-    public static void deleteFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID financialInstitutionTransactionId) throws ApiErrorsException {
-        financialInstitutionTransactionsService.delete(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId, financialInstitutionTransactionId);
+    public static void deleteFinancialInstitutionTransaction(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId, UUID financialInstitutionTransactionId) {
+        FinancialInstitutionTransactionDeleteQuery transactionDeleteQuery =
+                FinancialInstitutionTransactionDeleteQuery.builder()
+                        .financialInstitutionId(financialInstitutionId)
+                        .financialInstitutionAccountId(financialInstitutionAccountId)
+                        .financialInstitutionUserId(financialInstitutionUserId)
+                        .financialInstitutionTransactionId(financialInstitutionTransactionId)
+                        .build();
+
+        financialInstitutionTransactionsService.delete(transactionDeleteQuery);
     }
 
-    public static FinancialInstitutionTransaction createFinancialInstitutionTransaction(UUID financialInstitutionUserId, FinancialInstitutionAccount financialInstitutionAccount, UUID idempotencyKey) throws ApiErrorsException {
+    public static FinancialInstitutionTransaction createFinancialInstitutionTransaction(UUID financialInstitutionUserId, FinancialInstitutionAccount financialInstitutionAccount, UUID idempotencyKey) {
         Instant now = Instant.now();
         Random random = new Random();
 
         Instant executionDate = now.plus(3, ChronoUnit.DAYS);
         Instant valueDate = now.minus(1, ChronoUnit.DAYS);
-        FinancialInstitutionTransaction financialInstitutionTransaction = new FinancialInstitutionTransaction();
-        financialInstitutionTransaction.setFinancialInstitutionAccount(financialInstitutionAccount);
-        financialInstitutionTransaction.setAmount(Precision.round(random.doubles(10,1000).findFirst().getAsDouble() * (random .nextBoolean() ? -1 : 1), 2));
-        financialInstitutionTransaction.setCounterpartName("Stroman, Hettinger and Swift");
-        financialInstitutionTransaction.setCounterpartReference(Iban.random(CountryCode.BE).getAccountNumber());
-        financialInstitutionTransaction.setCurrency("EUR");
-        financialInstitutionTransaction.setDescription("Car rental");
-        financialInstitutionTransaction.setExecutionDate(executionDate);
-        financialInstitutionTransaction.setRemittanceInformation("Aspernatur et quibusdam.");
-        financialInstitutionTransaction.setRemittanceInformationType("unstructured");
-        financialInstitutionTransaction.setValueDate(valueDate);
-        if (idempotencyKey == null) {
-            return financialInstitutionTransactionsService.create(
-                    financialInstitutionAccount.getFinancialInstitution().getId(),
-                    financialInstitutionUserId,
-                    financialInstitutionAccount.getId(),
-                    financialInstitutionTransaction
-            );
-        } else {
-            return financialInstitutionTransactionsService.create(
-                    financialInstitutionAccount.getFinancialInstitution().getId(),
-                    financialInstitutionUserId,
-                    financialInstitutionAccount.getId(),
-                    financialInstitutionTransaction,
-                    idempotencyKey
-            );
-        }
+
+        FinancialInstitutionTransactionCreationQuery transactionCreationQuery =
+                FinancialInstitutionTransactionCreationQuery.builder()
+                        .financialInstitutionId(financialInstitutionAccount.getFinancialInstitution().getId())
+                        .financialInstitutionAccountId(financialInstitutionAccount.getId())
+                        .financialInstitutionUserId(financialInstitutionUserId)
+                        .idempotencyKey(idempotencyKey)
+                        .amount(Precision.round(random.doubles(10,1000).findFirst().getAsDouble() * (random .nextBoolean() ? -1 : 1), 2))
+                        .counterpartName("Stroman, Hettinger and Swift")
+                        .counterpartReference(Iban.random(CountryCode.BE).getAccountNumber())
+                        .currency("EUR")
+                        .description("Car rental")
+                        .executionDate(executionDate)
+                        .remittanceInformation("Aspernatur et quibusdam.")
+                        .remittanceInformationType("unstructured")
+                        .valueDate(valueDate)
+                .build();
+
+        return financialInstitutionTransactionsService.create(transactionCreationQuery);
     }
 
 } 

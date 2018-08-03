@@ -3,6 +3,7 @@ package com.ibanity.apis.client.services.impl;
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.FinancialInstitution;
+import com.ibanity.apis.client.models.factory.create.AccountInformationAccessRequestCreationQuery;
 import com.ibanity.apis.client.services.AccountInformationAccessRequestsService;
 import io.crnk.core.repository.ResourceRepositoryV2;
 import org.apache.commons.lang3.StringUtils;
@@ -17,18 +18,17 @@ public class AccountInformationAccessRequestsServiceImpl extends AbstractService
 
     @Override
     public AccountInformationAccessRequest create(
-            final String customerAccessToken, final UUID financialInstitutionId, final String redirectURI, final String consentReference) {
-        return create(customerAccessToken, financialInstitutionId, redirectURI, consentReference, null);
-    }
+            final AccountInformationAccessRequestCreationQuery accountInformationAccessRequestCreationQuery) {
 
-    @Override
-    public AccountInformationAccessRequest create(
-            final String customerAccessToken, final UUID financialInstitutionId,
-            final String redirectURI, final String consentReference, final UUID idempotencyKey) {
         AccountInformationAccessRequest accountInformationAccessRequest = new AccountInformationAccessRequest();
-        accountInformationAccessRequest.setRedirectUri(redirectURI);
-        accountInformationAccessRequest.setConsentReference(consentReference);
-        return getRepository(customerAccessToken, financialInstitutionId, idempotencyKey).create(accountInformationAccessRequest);
+        accountInformationAccessRequest.setRedirectUri(accountInformationAccessRequestCreationQuery.getRedirectURI());
+        accountInformationAccessRequest.setConsentReference(accountInformationAccessRequestCreationQuery.getConsentReference());
+
+        return getRepository(
+                accountInformationAccessRequestCreationQuery.getCustomerAccessToken(),
+                accountInformationAccessRequestCreationQuery.getFinancialInstitutionId(),
+                accountInformationAccessRequestCreationQuery.getIdempotencyKey())
+                .create(accountInformationAccessRequest);
     }
 
     private ResourceRepositoryV2<AccountInformationAccessRequest, UUID> getRepository(

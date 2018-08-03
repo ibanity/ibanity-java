@@ -9,4 +9,6 @@
     <suppress checks="LineLength" files="."/>
     <suppress checks="DesignForExtension" files="."/>
     <suppress checks="MagicNumber" files="."/>
+    <suppress checks="HiddenField" files="."/>
+    <suppress checks="AvoidInlineConditionals" files="."/>
 </suppressions>

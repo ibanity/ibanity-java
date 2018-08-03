@@ -13,6 +13,8 @@ public class IbanityPagingSpec extends OffsetLimitPagingSpec implements PagingSp
     private UUID before = null;
     private UUID after = null;
 
+    public static final IbanityPagingSpec DEFAULT_PAGING_SPEC = new IbanityPagingSpec();
+
     public static final Long DEFAULT_PAGING_SPEC_LIMIT = 10L;
 
 

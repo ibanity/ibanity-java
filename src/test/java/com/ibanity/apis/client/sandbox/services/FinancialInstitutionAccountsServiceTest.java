@@ -5,7 +5,9 @@ import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
-import org.apache.http.HttpStatus;
+import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionAccountDeleteQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionAccountReadQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionAccountsReadQuery;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -22,25 +24,44 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
 
         FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId(), null);
 
-        FinancialInstitutionAccount financialInstitutionAccountGet = financialInstitutionAccountsService.find(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
+        FinancialInstitutionAccountReadQuery accountReadQuery =
+                FinancialInstitutionAccountReadQuery.builder()
+                        .financialInstitutionId(financialInstitution.getId())
+                        .financialInstitutionUserId(financialInstitutionUser.getId())
+                        .financialInstitutionAccountId(financialInstitutionAccount.getId())
+                        .build();
+
+        FinancialInstitutionAccount financialInstitutionAccountGet =
+                financialInstitutionAccountsService.find(accountReadQuery);
 
         assertEquals(financialInstitutionAccount, financialInstitutionAccountGet);
 
-        financialInstitutionAccountsService.delete(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
+        FinancialInstitutionAccountDeleteQuery accountDeleteQuery =
+                FinancialInstitutionAccountDeleteQuery.builder()
+                .financialInstitutionId(financialInstitution.getId())
+                .financialInstitutionUserId(financialInstitutionUser.getId())
+                .financialInstitutionAccountId(financialInstitutionAccount.getId())
+                .build();
+
+        financialInstitutionAccountsService.delete(accountDeleteQuery);
         deleteFinancialInstitutionUser(financialInstitutionUser.getId());
         deleteFinancialInstitution(financialInstitution.getId());
     }
 
     @Test
     public void testGetFinancialInstitutionAccountWithWrongIDs() {
+        FinancialInstitutionAccountReadQuery accountReadQuery =
+                FinancialInstitutionAccountReadQuery.builder()
+                        .financialInstitutionId(UUID.randomUUID())
+                        .financialInstitutionUserId(UUID.randomUUID())
+                        .financialInstitutionAccountId(UUID.randomUUID())
+                        .build();
+
         try {
-            financialInstitutionAccountsService.find(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
-            fail("Should raise ApiErrorsException");
+            financialInstitutionAccountsService.find(accountReadQuery);
+            fail("Expected financialInstitutionAccountsService.find to raise an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
-            assertEquals(HttpStatus.SC_NOT_FOUND, apiErrorsException.getHttpStatus());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
+            super.assertResourceNotFoundException(apiErrorsException, FinancialInstitution.RESOURCE_TYPE);
         }
     }
 
@@ -51,11 +72,25 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
 
         FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId(), null);
 
-        List<FinancialInstitutionAccount> financialInstitutionAccounts = financialInstitutionAccountsService.list(financialInstitution.getId(), financialInstitutionUser.getId());
+        FinancialInstitutionAccountsReadQuery accountsReadQuery =
+                FinancialInstitutionAccountsReadQuery.builder()
+                .financialInstitutionId(financialInstitution.getId())
+                .financialInstitutionUserId(financialInstitutionUser.getId())
+                .build();
+
+        List<FinancialInstitutionAccount> financialInstitutionAccounts =
+                        financialInstitutionAccountsService.list(accountsReadQuery);
 
         assertTrue(financialInstitutionAccounts.size() > 0);
 
-        financialInstitutionAccountsService.delete(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
+        FinancialInstitutionAccountDeleteQuery accountDeleteQuery =
+                FinancialInstitutionAccountDeleteQuery.builder()
+                        .financialInstitutionId(financialInstitution.getId())
+                        .financialInstitutionUserId(financialInstitutionUser.getId())
+                        .financialInstitutionAccountId(financialInstitutionAccount.getId())
+                        .build();
+
+        financialInstitutionAccountsService.delete(accountDeleteQuery);
         deleteFinancialInstitutionUser(financialInstitutionUser.getId());
         deleteFinancialInstitution(financialInstitution.getId());
     }
@@ -63,13 +98,16 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
     @Test
     public void testGetFinancialInstitutionUserAccountsWithWrongIDs() {
         try {
-            financialInstitutionAccountsService.list(UUID.randomUUID(), UUID.randomUUID());
-            fail("Should raise ApiErrorsException");
+            FinancialInstitutionAccountsReadQuery accountsReadQuery =
+                    FinancialInstitutionAccountsReadQuery.builder()
+                            .financialInstitutionId(UUID.randomUUID())
+                            .financialInstitutionUserId(UUID.randomUUID())
+                            .build();
+
+            financialInstitutionAccountsService.list(accountsReadQuery);
+            fail("Expected financialInstitutionAccountsService.list to raise an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
-            assertEquals(HttpStatus.SC_NOT_FOUND, apiErrorsException.getHttpStatus());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
+            super.assertResourceNotFoundException(apiErrorsException, FinancialInstitution.RESOURCE_TYPE);
         }
     }
 
@@ -88,7 +126,16 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
         FinancialInstitutionUser financialInstitutionUser = createFinancialInstitutionUser(idempotencyKey);
 
         FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId(), idempotencyKey);
-        FinancialInstitutionAccount financialInstitutionGet = financialInstitutionAccountsService.find(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
+
+        FinancialInstitutionAccountReadQuery accountReadQuery =
+                FinancialInstitutionAccountReadQuery.builder()
+                .financialInstitutionId(financialInstitution.getId())
+                .financialInstitutionUserId(financialInstitutionUser.getId())
+                .financialInstitutionAccountId(financialInstitutionAccount.getId())
+                .build();
+
+        FinancialInstitutionAccount financialInstitutionGet =
+                financialInstitutionAccountsService.find(accountReadQuery);
 
         assertEquals(financialInstitutionAccount.getCurrency(), financialInstitutionGet.getCurrency());
         assertEquals(financialInstitutionAccount.getReference(), financialInstitutionGet.getReference());
@@ -97,7 +144,14 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
         assertEquals(financialInstitutionAccount.getSubType(), financialInstitutionGet.getSubType());
         assertEquals(financialInstitution.getId(), financialInstitutionAccount.getFinancialInstitution().getId());
 
-        financialInstitutionAccountsService.delete(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
+        FinancialInstitutionAccountDeleteQuery accountDeleteQuery =
+                FinancialInstitutionAccountDeleteQuery.builder()
+                        .financialInstitutionId(financialInstitution.getId())
+                        .financialInstitutionUserId(financialInstitutionUser.getId())
+                        .financialInstitutionAccountId(financialInstitutionAccount.getId())
+                        .build();
+
+        financialInstitutionAccountsService.delete(accountDeleteQuery);
         deleteFinancialInstitutionUser(financialInstitutionUser.getId());
         deleteFinancialInstitution(financialInstitution.getId());
 
@@ -109,12 +163,9 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
         financialInstitution.setId(UUID.randomUUID());
         try {
             createFinancialInstitutionAccount(financialInstitution, UUID.randomUUID(), null);
-            fail("Should raise ApiErrorsException");
+            fail("Expected createFinancialInstitutionAccount to raise an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
-            assertEquals(HttpStatus.SC_NOT_FOUND, apiErrorsException.getHttpStatus());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
+            super.assertResourceNotFoundException(apiErrorsException, FinancialInstitution.RESOURCE_TYPE);
         }
     }
 
@@ -125,21 +176,32 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
 
         FinancialInstitutionAccount financialInstitutionAccount = createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId(), null);
 
-        financialInstitutionAccountsService.delete(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
+        FinancialInstitutionAccountDeleteQuery accountDeleteQuery =
+                FinancialInstitutionAccountDeleteQuery.builder()
+                .financialInstitutionId(financialInstitution.getId())
+                .financialInstitutionUserId(financialInstitutionUser.getId())
+                .financialInstitutionAccountId(financialInstitutionAccount.getId())
+                .build();
+
+        financialInstitutionAccountsService.delete(accountDeleteQuery);
         deleteFinancialInstitutionUser(financialInstitutionUser.getId());
         deleteFinancialInstitution(financialInstitution.getId());
     }
 
     @Test
     public void testDeleteFinancialInstitutionAccountWithWrongIDs() {
+        FinancialInstitutionAccountDeleteQuery accountDeleteQuery =
+                FinancialInstitutionAccountDeleteQuery.builder()
+                        .financialInstitutionId(UUID.randomUUID())
+                        .financialInstitutionUserId(UUID.randomUUID())
+                        .financialInstitutionAccountId(UUID.randomUUID())
+                        .build();
+
         try {
-            financialInstitutionAccountsService.delete(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
-            fail("Should raise ApiErrorsException");
+            financialInstitutionAccountsService.delete(accountDeleteQuery);
+            fail("Expected financialInstitutionAccountsService.delete to raise an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
-            assertEquals(HttpStatus.SC_NOT_FOUND, apiErrorsException.getHttpStatus());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
-            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
+            super.assertResourceNotFoundException(apiErrorsException, FinancialInstitution.RESOURCE_TYPE);
         }
     }
 }

@@ -3,6 +3,11 @@ package com.ibanity.apis.client.sandbox.services.impl;
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
+import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionUserCreationQuery;
+import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionUserDeleteQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionUserReadQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionUsersReadQuery;
+import com.ibanity.apis.client.sandbox.models.factory.update.FinancialInstitutionUserUpdateQuery;
 import com.ibanity.apis.client.sandbox.services.FinancialInstitutionUsersService;
 import com.ibanity.apis.client.services.impl.AbstractServiceImpl;
 import io.crnk.core.queryspec.QuerySpec;
@@ -19,50 +24,54 @@ public class FinancialInstitutionUsersServiceImpl extends AbstractServiceImpl im
     }
 
     @Override
-    public ResourceList<FinancialInstitutionUser> list() {
-        return list(new IbanityPagingSpec());
-    }
-
-    @Override
-    public ResourceList<FinancialInstitutionUser> list(final IbanityPagingSpec pagingSpec) {
+    public ResourceList<FinancialInstitutionUser> list(final FinancialInstitutionUsersReadQuery usersReadQuery) {
         QuerySpec querySpec = new QuerySpec(FinancialInstitutionUser.class);
-        querySpec.setPagingSpec(pagingSpec);
-        return findAll(querySpec, getRepository(null));
+
+        if (usersReadQuery.getPagingSpec() != null) {
+            querySpec.setPagingSpec(usersReadQuery.getPagingSpec());
+        } else {
+            querySpec.setPagingSpec(IbanityPagingSpec.DEFAULT_PAGING_SPEC);
+        }
+
+        return getRepository(null)
+                .findAll(querySpec);
     }
 
     @Override
-    public FinancialInstitutionUser find(final UUID financialInstitutionUserId) {
-        return getRepository(null).findOne(financialInstitutionUserId, new QuerySpec(FinancialInstitutionUser.class));
+    public FinancialInstitutionUser find(final FinancialInstitutionUserReadQuery userReadQuery) {
+        return getRepository(null)
+                .findOne(userReadQuery.getFinancialInstitutionUserId(),
+                        new QuerySpec(FinancialInstitutionUser.class));
     }
 
     @Override
-    public FinancialInstitutionUser create(final String login, final String password, final String lastName, final String firstName) {
-        return create(login, password, lastName, firstName, null);
-    }
-
-    @Override
-    public FinancialInstitutionUser create(final String login, final String password, final String lastName, final String firstName, final UUID idempotencyKey) {
+    public FinancialInstitutionUser create(final FinancialInstitutionUserCreationQuery userCreationQuery) {
         FinancialInstitutionUser financialInstitutionUser = new FinancialInstitutionUser();
-        financialInstitutionUser.setLogin(login);
-        financialInstitutionUser.setPassword(password);
-        financialInstitutionUser.setLastName(lastName);
-        financialInstitutionUser.setFirstName(firstName);
-        return getRepository(idempotencyKey).create(financialInstitutionUser);
+        financialInstitutionUser.setLogin(userCreationQuery.getLogin());
+        financialInstitutionUser.setPassword(userCreationQuery.getPassword());
+        financialInstitutionUser.setLastName(userCreationQuery.getLastName());
+        financialInstitutionUser.setFirstName(userCreationQuery.getFirstName());
+        return getRepository(userCreationQuery.getIdempotencyKey())
+                .create(financialInstitutionUser);
     }
 
     @Override
-    public FinancialInstitutionUser update(final FinancialInstitutionUser financialInstitutionUser) {
-        return getRepository(null).save(financialInstitutionUser);
+    public FinancialInstitutionUser update(final FinancialInstitutionUserUpdateQuery userUpdateQuery) {
+        FinancialInstitutionUser financialInstitutionUser = new FinancialInstitutionUser();
+        financialInstitutionUser.setId(userUpdateQuery.getFinancialInstitutionUserId());
+        financialInstitutionUser.setLogin(userUpdateQuery.getLogin());
+        financialInstitutionUser.setPassword(userUpdateQuery.getPassword());
+        financialInstitutionUser.setFirstName(userUpdateQuery.getFirstName());
+        financialInstitutionUser.setLastName(userUpdateQuery.getLastName());
+
+        return getRepository(userUpdateQuery.getIdempotencyKey())
+                .save(financialInstitutionUser);
     }
 
     @Override
-    public FinancialInstitutionUser update(final FinancialInstitutionUser financialInstitutionUser, final UUID idempotencyKey) {
-        return getRepository(idempotencyKey).save(financialInstitutionUser);
-    }
-
-    @Override
-    public void delete(final UUID financialInstitutionUserId) {
-        getRepository(null).delete(financialInstitutionUserId);
+    public void delete(final FinancialInstitutionUserDeleteQuery userDeleteQuery) {
+        getRepository(userDeleteQuery.getIdempotencyKey())
+                .delete(userDeleteQuery.getFinancialInstitutionUserId());
     }
 
     private ResourceRepositoryV2<FinancialInstitutionUser, UUID> getRepository(final UUID idempotencyKey) {

@@ -30,7 +30,7 @@ class ApiServiceTest extends AbstractServiceTest {
     public static final String CUSTOMER_PREFIX_PATH = FORWARD_SLASH + "customer";
 
     @BeforeAll
-    static void beforeAll(){
+    static void beforeAll() {
         apiUrls = IbanityConfiguration.getApiUrls();
     }
 

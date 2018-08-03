@@ -1,19 +1,16 @@
 package com.ibanity.apis.client.sandbox.services;
 
 import com.ibanity.apis.client.models.FinancialInstitution;
+import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionCreationQuery;
+import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionDeleteQuery;
+import com.ibanity.apis.client.sandbox.models.factory.update.FinancialInstitutionUpdateQuery;
 import com.ibanity.apis.client.services.FinancialInstitutionsService;
-
-import java.util.UUID;
 
 public interface SandboxFinancialInstitutionsService extends FinancialInstitutionsService {
 
-    FinancialInstitution create(String name);
+    FinancialInstitution create(FinancialInstitutionCreationQuery financialInstitutionCreationQuery);
 
-    FinancialInstitution create(String name, UUID idempotencyKey);
+    FinancialInstitution update(FinancialInstitutionUpdateQuery financialInstitutionUpdateQuery);
 
-    FinancialInstitution update(FinancialInstitution financialInstitution);
-
-    FinancialInstitution update(FinancialInstitution financialInstitution, UUID idempotencyKey);
-
-    void delete(UUID financialInstitutionId);
+    void delete(FinancialInstitutionDeleteQuery financialInstitutionDeleteQuery);
 }
