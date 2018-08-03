@@ -63,7 +63,7 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
 
         this.certificate = this.getCertificate(signaturePropertiesKeys);
 
-        this.certificateId = getConfiguration(signaturePropertiesKeys.getIbanityClientSslCertificateIdPropertyKey());
+        this.certificateId = getConfiguration(signaturePropertiesKeys.getIbanityClientSignatureCertificateIdPropertyKey());
 
         this.signatureHeaderTemplate = this.getSignatureHeaderTemplate();
     }
@@ -104,7 +104,7 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
     }
 
     private X509Certificate getCertificate(final IbanityClientSecuritySignaturePropertiesKeys signaturePropertiesKeys) {
-        String certificatePath = getConfiguration(signaturePropertiesKeys.getIbanityClientSslCertificatePathPropertyKey());
+        String certificatePath = getConfiguration(signaturePropertiesKeys.getIbanityClientCertificatePathPropertyKey());
         try {
             return keyToolHelper.loadCertificate(certificatePath);
         } catch (CertificateException e) {
@@ -113,8 +113,8 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
     }
 
     private PrivateKey getPrivateKey(final IbanityClientSecuritySignaturePropertiesKeys signaturePropertiesKeys) {
-        String privateKeyPath = getConfiguration(signaturePropertiesKeys.getIbanityClientSslPrivateKeyPathPropertyKey());
-        char[] privateKeyPassPhrase = getConfiguration(signaturePropertiesKeys.getIbanityClientSslPrivateKeyPassphrasePropertyKey()).toCharArray();
+        String privateKeyPath = getConfiguration(signaturePropertiesKeys.getIbanityClientPrivateKeyPathPropertyKey());
+        char[] privateKeyPassPhrase = getConfiguration(signaturePropertiesKeys.getIbanityClientPrivateKeyPassphrasePropertyKey()).toCharArray();
         try {
             return keyToolHelper.loadPrivateKey(privateKeyPath, privateKeyPassPhrase);
         } catch (IOException e) {

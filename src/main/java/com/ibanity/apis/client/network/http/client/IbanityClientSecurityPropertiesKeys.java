@@ -4,9 +4,9 @@ public abstract class IbanityClientSecurityPropertiesKeys {
 
     public static final String IBANITY_CLIENT_SSL_PROTOCOL_PROPERTY_KEY = "client.ssl.protocol";
 
-    public abstract String getIbanityClientSslCertificatePathPropertyKey();
+    public abstract String getIbanityClientCertificatePathPropertyKey();
 
-    public abstract String getIbanityClientSslPrivateKeyPathPropertyKey();
+    public abstract String getIbanityClientPrivateKeyPathPropertyKey();
 
-    public abstract String getIbanityClientSslPrivateKeyPassphrasePropertyKey();
+    public abstract String getIbanityClientPrivateKeyPassphrasePropertyKey();
 }

@@ -63,7 +63,7 @@ public final class IbanityHttpUtils {
         KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         kmf.init(
                 createKeyStore(authenticationPropertiesKeys),
-                getConfiguration(authenticationPropertiesKeys.getIbanityClientSslPrivateKeyPassphrasePropertyKey()).toCharArray()
+                getConfiguration(authenticationPropertiesKeys.getIbanityClientPrivateKeyPassphrasePropertyKey()).toCharArray()
         );
 
         SSLContext sslContext = SSLContext.getInstance(
@@ -79,12 +79,12 @@ public final class IbanityHttpUtils {
         KeyToolHelper keyToolHelper = new KeyToolHelper();
 
         PrivateKey privateKey = keyToolHelper.loadPrivateKey(
-                getConfiguration(clientProperties.getIbanityClientSslPrivateKeyPathPropertyKey()),
-                getConfiguration(clientProperties.getIbanityClientSslPrivateKeyPassphrasePropertyKey()).toCharArray()
+                getConfiguration(clientProperties.getIbanityClientPrivateKeyPathPropertyKey()),
+                getConfiguration(clientProperties.getIbanityClientPrivateKeyPassphrasePropertyKey()).toCharArray()
         );
 
         X509Certificate certificate = keyToolHelper.loadCertificate(
-                getConfiguration(clientProperties.getIbanityClientSslCertificatePathPropertyKey())
+                getConfiguration(clientProperties.getIbanityClientCertificatePathPropertyKey())
         );
 
         KeyStore keyStore = keyToolHelper.createKeyStore();

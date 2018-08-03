@@ -105,7 +105,7 @@ public final class KeyToolHelper {
 
         keyStore.setKeyEntry(
                 alias, privateKey,
-                getConfiguration(authenticationPropertiesKeys.getIbanityClientSslPrivateKeyPassphrasePropertyKey()).toCharArray(),
+                getConfiguration(authenticationPropertiesKeys.getIbanityClientPrivateKeyPassphrasePropertyKey()).toCharArray(),
                 certChain);
 
         return keyStore;
