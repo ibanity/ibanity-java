@@ -173,7 +173,7 @@ public class CustomHttpRequestRetryHandler implements HttpRequestRetryHandler {
         return false;
     }
 
-    private boolean verifyNonRetriableException(IOException exception) {
+    private boolean verifyNonRetriableException(final IOException exception) {
         if (exception.getClass().equals(SSLException.class)) {
             SSLException sslException = (SSLException) exception;
             if ("Received fatal alert: unexpected_message".equals(sslException.getMessage())) {
