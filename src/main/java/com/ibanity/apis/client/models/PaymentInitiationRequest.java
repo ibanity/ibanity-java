@@ -42,15 +42,12 @@ public class PaymentInitiationRequest extends AbstractModel {
     private String creditorAgentType;
     private String status;
     private String redirectUri;
-    private String customerIp;
-    private String customerAgent;
-
 
     @JsonApiLinksInformation
     private PaymentAccessLinks links;
 
-    @JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.ONLY_ID)
-    private FinancialInstitution financialInstitution = null;
+    @JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.LAZY)
+    private FinancialInstitution financialInstitution;
 
     public PaymentInitiationRequest() {
         super();
@@ -218,23 +215,6 @@ public class PaymentInitiationRequest extends AbstractModel {
         this.redirectUri = redirectUri;
     }
 
-    public String getCustomerIp() {
-        return customerIp;
-    }
-
-    public void setCustomerIp(final String customerIp) {
-        this.customerIp = customerIp;
-    }
-
-    public String getCustomerAgent() {
-        return customerAgent;
-    }
-
-    public void setCustomerAgent(final String customerAgent) {
-        this.customerAgent = customerAgent;
-    }
-
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -266,8 +246,6 @@ public class PaymentInitiationRequest extends AbstractModel {
                 .append(getCreditorAgentType(), that.getCreditorAgentType())
                 .append(getStatus(), that.getStatus())
                 .append(getRedirectUri(), that.getRedirectUri())
-                .append(getCustomerIp(), that.getCustomerIp())
-                .append(getCustomerAgent(), that.getCustomerAgent())
                 .append(getLinks(), that.getLinks())
                 .append(getFinancialInstitution(), that.getFinancialInstitution())
                 .isEquals();
@@ -294,8 +272,6 @@ public class PaymentInitiationRequest extends AbstractModel {
                 .append(getCreditorAgentType())
                 .append(getStatus())
                 .append(getRedirectUri())
-                .append(getCustomerIp())
-                .append(getCustomerAgent())
                 .append(getLinks())
                 .append(getFinancialInstitution())
                 .toHashCode();
@@ -312,8 +288,6 @@ public class PaymentInitiationRequest extends AbstractModel {
                 .append("creditorAgentType", creditorAgentType)
                 .append("creditorName", creditorName)
                 .append("currency", currency)
-                .append("customerAgent", customerAgent)
-                .append("customerIp", customerIp)
                 .append("debtorAccountReference", debtorAccountReference)
                 .append("debtorAccountReferenceType", debtorAccountReferenceType)
                 .append("debtorName", debtorName)

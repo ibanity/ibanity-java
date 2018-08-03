@@ -1,9 +1,9 @@
 package com.ibanity.apis.client.sandbox.models;
 
+import com.ibanity.apis.client.annotations.InstantJsonFormat;
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.models.AbstractTransaction;
 import com.ibanity.apis.client.paging.IbanityPagingBehavior;
-import com.ibanity.apis.client.sandbox.annotations.InstantFormatAnnotation;
 import io.crnk.core.resource.annotations.JsonApiRelation;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import io.crnk.core.resource.annotations.LookupIncludeBehavior;
@@ -25,14 +25,16 @@ public class FinancialInstitutionTransaction extends AbstractTransaction {
     public static final String RESOURCE_PATH    = "financial-institution-transactions";
     public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
 
-    @JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.ONLY_ID)
+    @JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.LAZY)
     private FinancialInstitutionAccount financialInstitutionAccount;
 
-    @InstantFormatAnnotation
+    @InstantJsonFormat
     private Instant createdAt = null;
-    @InstantFormatAnnotation
+
+    @InstantJsonFormat
     private Instant updatedAt = null;
-    @InstantFormatAnnotation
+
+    @InstantJsonFormat
     private Instant deletedAt = null;
 
     public FinancialInstitutionTransaction(final UUID id) {

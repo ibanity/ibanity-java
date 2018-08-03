@@ -1,7 +1,6 @@
 package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
-import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
@@ -20,8 +19,8 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
     }
 
     @Override
-    public Account find(final String customerAccessToken, final UUID accountId, final UUID financialInstitutionId) throws ApiErrorsException {
-        return getFinancialInstitutionAccountsRepo(customerAccessToken, financialInstitutionId).findOne(accountId, new QuerySpec(Account.class));
+    public Account find(final String customerAccessToken, final UUID accountId, final UUID financialInstitutionId) {
+        return getRepository(customerAccessToken, financialInstitutionId).findOne(accountId, new QuerySpec(Account.class));
     }
 
     @Override
@@ -33,34 +32,39 @@ public class AccountsServiceImpl extends AbstractServiceImpl implements Accounts
     public ResourceList<Account> list(final String customerAccessToken, final IbanityPagingSpec pagingSpec) {
         QuerySpec querySpec = new QuerySpec(Account.class);
         querySpec.setPagingSpec(pagingSpec);
-        return findAll(querySpec, getAccountsRepo(customerAccessToken));
+        return findAll(querySpec, getRepository(customerAccessToken));
     }
 
     @Override
-    public ResourceList<Account> list(final String customerAccessToken, final UUID financialInstitutionId) throws ApiErrorsException {
+    public ResourceList<Account> list(final String customerAccessToken, final UUID financialInstitutionId) {
         return list(customerAccessToken, financialInstitutionId, new IbanityPagingSpec());
     }
 
     @Override
-    public ResourceList<Account> list(final String customerAccessToken, final UUID financialInstitutionId, final IbanityPagingSpec pagingSpec) throws ApiErrorsException {
+    public ResourceList<Account> list(
+            final String customerAccessToken, final UUID financialInstitutionId, final IbanityPagingSpec pagingSpec) {
         QuerySpec querySpec = new QuerySpec(Account.class);
         querySpec.setPagingSpec(pagingSpec);
-        return findAll(querySpec, getFinancialInstitutionAccountsRepo(customerAccessToken, financialInstitutionId));
+        return findAll(querySpec, getRepository(customerAccessToken, financialInstitutionId));
     }
 
-    protected ResourceRepositoryV2<Account, UUID> getFinancialInstitutionAccountsRepo(final String customerAccessToken, final UUID financialInstitutionId) {
+    private ResourceRepositoryV2<Account, UUID> getRepository(
+            final String customerAccessToken, final UUID financialInstitutionId) {
+
         String finalPath = StringUtils.removeEnd(
-                IbanityConfiguration.getApiIUrls().getCustomer().getFinancialInstitution().getAccounts()
+                IbanityConfiguration.getApiUrls().getCustomer().getFinancialInstitution().getAccounts()
                         .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
                         .replace(Account.RESOURCE_PATH, "")
-                        .replace(Account.API_URL_TAG_ID, ""), "//");
+                        .replace(Account.API_URL_TAG_ID, ""),
+                "//");
 
         return getApiClient(finalPath, customerAccessToken).getRepositoryForType(Account.class);
     }
 
-    protected ResourceRepositoryV2<Account, UUID> getAccountsRepo(final String customerAccessToken) {
-        String finalPath = IbanityConfiguration.getApiIUrls().getCustomer().getAccounts()
+    private ResourceRepositoryV2<Account, UUID> getRepository(final String customerAccessToken) {
+        String finalPath = IbanityConfiguration.getApiUrls().getCustomer().getAccounts()
                         .replace(Account.RESOURCE_PATH, "");
+
         return getApiClient(finalPath, customerAccessToken).getRepositoryForType(Account.class);
     }
 }

@@ -1,6 +1,5 @@
 package com.ibanity.apis.client.paging;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -8,20 +7,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * IBanityPagingBehavior Tester.
- *
- * @author Daniel De Luca
- * @version 1.0
- * @since <pre>Jun 12, 2018</pre>
- */
 public class IbanityPagingBehaviorTest {
 
-    private static IbanityPagingSpec iBanityPagingSpec;
-    private static IbanityPagingBehavior iBanityPagingBehavior;
+    private static IbanityPagingSpec ibanityPagingSpec;
+    private static IbanityPagingBehavior ibanityPagingBehavior;
 
     private static final String AFTER = "after";
     private static final String BEFORE = "before";
@@ -29,77 +20,57 @@ public class IbanityPagingBehaviorTest {
     private static final String LIMIT_VALUE = "10";
 
     @BeforeAll
-    public static void beforeAll() throws Exception {
-        iBanityPagingBehavior = new IbanityPagingBehavior();
-        iBanityPagingSpec = new IbanityPagingSpec();
-        iBanityPagingSpec.setLimit(Long.valueOf(LIMIT_VALUE));
+    public static void beforeAll() {
+        ibanityPagingBehavior = new IbanityPagingBehavior();
+        ibanityPagingSpec = new IbanityPagingSpec();
+        ibanityPagingSpec.setLimit(Long.valueOf(LIMIT_VALUE));
     }
 
-    @AfterAll
-    public static void afterAll() throws Exception {
-    }
-
-    /**
-     * Method: serialize(final OffsetLimitPagingSpec offsetLimitPagingSpec, final String resourceType)
-     */
     @Test
-    public void testSerialize() throws Exception {
+    public void testSerialize() {
         UUID afterUUID = UUID.randomUUID();
         UUID beforeUUID = UUID.randomUUID();
-        iBanityPagingSpec.setAfter(afterUUID);
-        iBanityPagingSpec.setBefore(beforeUUID);
-        Map<String, Set<String>> values = iBanityPagingBehavior.serialize(iBanityPagingSpec, null);
-        assertTrue(values.size() == 3);
+        ibanityPagingSpec.setAfter(afterUUID);
+        ibanityPagingSpec.setBefore(beforeUUID);
+        Map<String, Set<String>> values = ibanityPagingBehavior.serialize(ibanityPagingSpec, null);
+        assertEquals(3, values.size());
         assertTrue(values.containsKey(BEFORE));
         assertTrue(values.containsKey(AFTER));
         assertTrue(values.containsKey(LIMIT));
-        assertTrue(values.get(LIMIT).size() == 1);
-        assertTrue(values.get(AFTER).size() == 1);
-        assertTrue(values.get(BEFORE).size() == 1);
+        assertEquals(1, values.get(LIMIT).size());
+        assertEquals(1, values.get(AFTER).size());
+        assertEquals(1, values.get(BEFORE).size());
         assertTrue(values.get(AFTER).contains(afterUUID.toString()));
         assertTrue(values.get(BEFORE).contains(beforeUUID.toString()));
         assertTrue(values.get(LIMIT).contains(LIMIT_VALUE));
     }
 
-    /**
-     * Method: deserialize(final Map<String, Set<String>> parameters)
-     */
     @Test
-    public void testDeserialize() throws Exception {
+    public void testDeserialize() {
         UUID afterUUID = UUID.randomUUID();
         UUID beforeUUID = UUID.randomUUID();
-        iBanityPagingSpec.setAfter(afterUUID);
-        iBanityPagingSpec.setBefore(beforeUUID);
-        Map<String, Set<String>> serializedValues = iBanityPagingBehavior.serialize(iBanityPagingSpec, null);
-        IbanityPagingSpec iBanityPagingSpecResult = iBanityPagingBehavior.deserialize(serializedValues);
-        assertTrue(iBanityPagingSpec.equals(iBanityPagingSpecResult));
+        ibanityPagingSpec.setAfter(afterUUID);
+        ibanityPagingSpec.setBefore(beforeUUID);
+        Map<String, Set<String>> serializedValues = ibanityPagingBehavior.serialize(ibanityPagingSpec, null);
+        assertEquals(ibanityPagingSpec, ibanityPagingBehavior.deserialize(serializedValues));
     }
 
-    /**
-     * Method: createEmptyPagingSpec()
-     */
     @Test
-    public void testCreateEmptyPagingSpec() throws Exception {
-        IbanityPagingSpec iBanityPagingSpecResult = iBanityPagingBehavior.createEmptyPagingSpec();
-        assertNull(iBanityPagingSpecResult.getAfter());
-        assertNull(iBanityPagingSpecResult.getBefore());
-        assertTrue(iBanityPagingSpecResult.getLimit() == IbanityPagingSpec.LIMIT_DEFAULT);
+    public void testCreateEmptyPagingSpec() {
+        IbanityPagingSpec ibanityPagingSpecResult = ibanityPagingBehavior.createEmptyPagingSpec();
+        assertNull(ibanityPagingSpecResult.getAfter());
+        assertNull(ibanityPagingSpecResult.getBefore());
+        assertSame(ibanityPagingSpecResult.getLimit(), IbanityPagingSpec.DEFAULT_PAGING_SPEC_LIMIT);
     }
 
-    /**
-     * Method: createDefaultPagingSpec()
-     */
     @Test
-    public void testCreateDefaultPagingSpec() throws Exception {
+    public void testCreateDefaultPagingSpec() {
         testCreateEmptyPagingSpec();
     }
 
-    /**
-     * Method: isRequired(final OffsetLimitPagingSpec offsetLimitPagingSpec)
-     */
     @Test
-    public void testIsRequired() throws Exception {
-        IbanityPagingSpec iBanityPagingSpecResult = iBanityPagingBehavior.createEmptyPagingSpec();
-        assertTrue(iBanityPagingBehavior.isRequired(iBanityPagingSpecResult));
+    public void testIsRequired() {
+        IbanityPagingSpec ibanityPagingSpecResult = ibanityPagingBehavior.createEmptyPagingSpec();
+        assertTrue(ibanityPagingBehavior.isRequired(ibanityPagingSpecResult));
     }
 } 

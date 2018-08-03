@@ -16,21 +16,25 @@ public class AccountInformationAccessRequestsServiceImpl extends AbstractService
     }
 
     @Override
-    public AccountInformationAccessRequest createForFinancialInstitution(final String customerAccessToken, final UUID financialInstitutionId, final String redirectURI, final String consentReference) {
-        return createForFinancialInstitution(customerAccessToken, financialInstitutionId, redirectURI, consentReference, null);
+    public AccountInformationAccessRequest create(
+            final String customerAccessToken, final UUID financialInstitutionId, final String redirectURI, final String consentReference) {
+        return create(customerAccessToken, financialInstitutionId, redirectURI, consentReference, null);
     }
 
     @Override
-    public AccountInformationAccessRequest createForFinancialInstitution(final String customerAccessToken, final UUID financialInstitutionId, final String redirectURI, final String consentReference, final UUID idempotencyKey) {
+    public AccountInformationAccessRequest create(
+            final String customerAccessToken, final UUID financialInstitutionId,
+            final String redirectURI, final String consentReference, final UUID idempotencyKey) {
         AccountInformationAccessRequest accountInformationAccessRequest = new AccountInformationAccessRequest();
         accountInformationAccessRequest.setRedirectUri(redirectURI);
         accountInformationAccessRequest.setConsentReference(consentReference);
-        return getAccounsInformationAccessRequestsRepo(customerAccessToken, financialInstitutionId, idempotencyKey).create(accountInformationAccessRequest);
+        return getRepository(customerAccessToken, financialInstitutionId, idempotencyKey).create(accountInformationAccessRequest);
     }
 
-    protected ResourceRepositoryV2<AccountInformationAccessRequest, UUID> getAccounsInformationAccessRequestsRepo(final String customerAccessToken, final UUID financialInstitutionId, final UUID idempotencyKey) {
+    private ResourceRepositoryV2<AccountInformationAccessRequest, UUID> getRepository(
+            final String customerAccessToken, final UUID financialInstitutionId, final UUID idempotencyKey) {
         String finalPath = StringUtils.removeEnd(
-                IbanityConfiguration.getApiIUrls().getCustomer().getFinancialInstitution().getAccountInformationAccessRequests()
+                IbanityConfiguration.getApiUrls().getCustomer().getFinancialInstitution().getAccountInformationAccessRequests()
                         .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
                         .replace(AccountInformationAccessRequest.RESOURCE_PATH, "")
                         .replace(AccountInformationAccessRequest.API_URL_TAG_ID, ""), "//");

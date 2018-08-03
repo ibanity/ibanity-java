@@ -22,3 +22,4 @@
 hs_err_pid*
 /ibanity-java.iml
 /.idea/
+/target/

@@ -21,6 +21,10 @@ More details about CRNK can be found here: [http://www.crnk.io](http://www.crnk.
 * Java 8 (or above)
 * Maven (for compilation)
 
+### JCE Unlimited Strength Jurisdiction Policy Files
+
+https://golb.hplar.ch/2017/10/JCE-policy-changes-in-Java-SE-8u151-and-8u152.html
+
 ## Non Production Environment Tests
 In order to run the tests within a local or non production environment, you need to add the following properties in the ibanity.properties file:
 

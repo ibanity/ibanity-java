@@ -1,6 +1,6 @@
 package com.ibanity.apis.client.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ibanity.apis.client.annotations.InstantJsonFormat;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,9 +13,10 @@ public abstract class AbstractTransaction extends AbstractModel {
     private Double amount;
     private String currency;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
+    @InstantJsonFormat
     private Instant valueDate;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "UTC")
+
+    @InstantJsonFormat
     private Instant executionDate;
 
     private String description;

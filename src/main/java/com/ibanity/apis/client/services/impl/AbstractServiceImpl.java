@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.services.impl;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -35,10 +36,14 @@ public abstract class AbstractServiceImpl {
 
     protected CrnkClient getApiClient(final String path, final String customerAccessToken, final UUID idempotencyKey) {
         System.setProperty(CrnkProperties.RESOURCE_SEARCH_PACKAGE, "com.ibanity.apis");
+
         CrnkClient apiClient = new CrnkClient(path, CrnkClient.ClientType.OBJECT_LINKS);
-        apiClient.getObjectMapper().registerModule(new Jdk8Module());
-        apiClient.getObjectMapper().registerModule(new JavaTimeModule());
-        apiClient.getObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        apiClient.getObjectMapper()
+                .registerModule(new Jdk8Module())
+                .registerModule(new JavaTimeModule())
+                .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
         SimpleModule simpleModule = new SimpleModule("ErrorResponse");
         simpleModule.addExceptionMapper(new IbanityExceptionMapper());
         apiClient.addModule(simpleModule);

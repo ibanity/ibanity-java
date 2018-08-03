@@ -22,11 +22,12 @@ public class CustomerAccessTokensServiceImpl extends AbstractServiceImpl impleme
     public CustomerAccessToken create(final String applicationCustomerReference, final UUID idempotencyKey) {
         CustomerAccessToken customerAccessToken = new CustomerAccessToken();
         customerAccessToken.setApplicationCustomerReference(applicationCustomerReference);
-        return getCustomerAccessTokensRepo(idempotencyKey).create(customerAccessToken);
+        return getRepository(idempotencyKey).create(customerAccessToken);
     }
 
-    protected ResourceRepositoryV2<CustomerAccessToken, UUID> getCustomerAccessTokensRepo(final UUID idempotencyKey) {
-        String finalPath = IbanityConfiguration.getApiIUrls().getCustomerAccessTokens().replace(CustomerAccessToken.RESOURCE_PATH, "");
+    private ResourceRepositoryV2<CustomerAccessToken, UUID> getRepository(final UUID idempotencyKey) {
+        String finalPath = IbanityConfiguration.getApiUrls().getCustomerAccessTokens()
+                .replace(CustomerAccessToken.RESOURCE_PATH, "");
 
         return getApiClient(finalPath, null, idempotencyKey).getRepositoryForType(CustomerAccessToken.class);
     }

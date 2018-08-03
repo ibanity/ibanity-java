@@ -2,7 +2,7 @@ package com.ibanity.apis.client.configuration;
 
 import io.crnk.core.resource.links.LinksInformation;
 
-public class ApiIUrls implements LinksInformation {
+public class ApiUrls implements LinksInformation {
 
     private Sandbox sandbox;
     private Customer customer;

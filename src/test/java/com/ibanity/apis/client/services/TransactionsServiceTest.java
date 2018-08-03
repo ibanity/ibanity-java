@@ -20,26 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-/**
- * TransactionsServiceImpl Tester.
- *
- * @author <Authors name>
- * @version 1.0
- * @since <pre>Jun 19, 2018</pre>
- */
 public class TransactionsServiceTest extends AbstractServiceTest {
 
     private final TransactionsService transactionsService = new TransactionsServiceImpl();
     private final AccountsService accountsService = new AccountsServiceImpl();
 
-    private List<FinancialInstitutionTransaction> financialInstitutionTransactions = new ArrayList<>();
+    private final List<FinancialInstitutionTransaction> financialInstitutionTransactions = new ArrayList<>();
 
 
     @BeforeEach
-    public void beforeEach() throws Exception {
+    public void beforeEach() {
         initPublicAPIEnvironment();
         for (FinancialInstitutionAccount financialInstitutionAccount : financialInstitutionAccounts){
             for (int index = 0; index < 5; index++) {
@@ -55,7 +48,7 @@ public class TransactionsServiceTest extends AbstractServiceTest {
     }
 
     @AfterEach
-    public void afterEach() throws Exception {
+    public void afterEach() {
         for (FinancialInstitutionTransaction financialInstitutionTransaction : financialInstitutionTransactions) {
             FinancialInstitutionTransactionsServiceTest.deleteFinancialInstitutionTransaction(
                     financialInstitution.getId()
@@ -67,23 +60,20 @@ public class TransactionsServiceTest extends AbstractServiceTest {
         cleanPublicAPIEnvironment();
     }
 
-    /**
-     * Method: getList(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountId)
-     */
     @Test
-    public void testGetAccountTransactionsForCustomerAccessTokenFinancialInstitutionIdAccountId() throws Exception {
+    public void testGetAccountTransactionsForCustomerAccessTokenFinancialInstitutionIdAccountId() {
         for (Account account : accountsService.list(generatedCustomerAccessToken.getToken(), financialInstitution.getId())){
             List<Transaction> transactionsList = transactionsService.list(
                     generatedCustomerAccessToken.getToken()
                     , financialInstitution.getId()
                     , account.getId()
             );
-            assertTrue(transactionsList.size() == financialInstitutionTransactions.size());
+            assertEquals(transactionsList.size(), financialInstitutionTransactions.size());
         }
     }
 
     @Test
-    public void testGetAccountTransactionsForCustomerAccessTokenFinancialInstitutionIdAccountIdDefaultPagingSpec() throws Exception {
+    public void testGetAccountTransactionsForCustomerAccessTokenFinancialInstitutionIdAccountIdDefaultPagingSpec() {
         for (Account account : accountsService.list(generatedCustomerAccessToken.getToken(), financialInstitution.getId())){
             List<Transaction> transactionsList = transactionsService.list(
                     generatedCustomerAccessToken.getToken()
@@ -91,27 +81,27 @@ public class TransactionsServiceTest extends AbstractServiceTest {
                     , account.getId()
                     , new IbanityPagingSpec()
             );
-            assertTrue(transactionsList.size() == financialInstitutionTransactions.size());
+            assertEquals(transactionsList.size(), financialInstitutionTransactions.size());
         }
     }
 
     @Test
-    public void testGetAccountTransactionsForCustomerAccessTokenAndWrongFinancialInstitutionIdAccountId() throws Exception {
+    public void testGetAccountTransactionsForCustomerAccessTokenAndWrongFinancialInstitutionIdAccountId() {
         for (Account account : accountsService.list(generatedCustomerAccessToken.getToken(), financialInstitution.getId())){
             try {
                 transactionsService.list(generatedCustomerAccessToken.getToken(), UUID.randomUUID(), UUID.randomUUID());
-                fail("Should raise ApiErrorsException");
+                fail("Expected transactionsService.list to raise an ApiErrorsException");
             } catch (ApiErrorsException apiErrorsException) {
-                assertTrue(apiErrorsException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
-                assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
-                assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
-                assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count() == 1);
+                assertEquals(apiErrorsException.getHttpStatus(), HttpStatus.SC_NOT_FOUND);
+                assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
+                assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
+                assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
             }
         }
     }
 
     @Test
-    public void testGetAccountTransactionsForCustomerAccessTokenAndWrongFinancialInstitutionIdAccountIdPaginSpec() throws Exception {
+    public void testGetAccountTransactionsForCustomerAccessTokenAndWrongFinancialInstitutionIdAccountIdPaginSpec() {
         try {
             transactionsService.list(
                     generatedCustomerAccessToken.getToken()
@@ -119,20 +109,17 @@ public class TransactionsServiceTest extends AbstractServiceTest {
                     , UUID.randomUUID()
                     , new IbanityPagingSpec()
             );
-            fail("Should raise ApiErrorsException");
+            fail("Expected transactionsService.list to raise an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
-            assertTrue(apiErrorsException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
-            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
-            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
-            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count() == 1);
+            assertEquals(HttpStatus.SC_NOT_FOUND, apiErrorsException.getHttpStatus());
+            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
+            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
+            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
         }
     }
 
-    /**
-     * Method: getList(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountId, IbanityPagingSpec pagingSpec)
-     */
     @Test
-    public void testGetAccountTransactionsForCustomerAccessTokenFinancialInstitutionIdAccountIdPagingSpec() throws Exception {
+    public void testGetAccountTransactionsForCustomerAccessTokenFinancialInstitutionIdAccountIdPagingSpec() {
         IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
         pagingSpec.setLimit(1L);
         for (Account account : accountsService.list(generatedCustomerAccessToken.getToken(), financialInstitution.getId())){
@@ -142,15 +129,12 @@ public class TransactionsServiceTest extends AbstractServiceTest {
                     , account.getId()
                     , pagingSpec
             );
-            assertTrue(transactionsList.size() == 1);
+            assertEquals(1, transactionsList.size());
         }
     }
 
-    /**
-     * Method: find(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountId, UUID transactionId)
-     */
     @Test
-    public void testGetAccountTransaction() throws Exception {
+    public void testGetAccountTransaction() {
         for (Account account : accountsService.list(generatedCustomerAccessToken.getToken(), financialInstitution.getId())){
             List<Transaction> transactionsList = transactionsService.list(
                     generatedCustomerAccessToken.getToken()
@@ -159,30 +143,30 @@ public class TransactionsServiceTest extends AbstractServiceTest {
             );
             for (Transaction transaction : transactionsList){
                 Transaction transactionReceived = transactionsService.find(generatedCustomerAccessToken.getToken(), financialInstitution.getId(), transaction.getAccount().getId(), transaction.getId());
-                assertTrue(transactionReceived.getAccount().equals(transaction.getAccount()));
-                assertTrue(transactionReceived.getAmount().equals(transaction.getAmount()));
-                assertTrue(transactionReceived.getCounterpartName().equals(transaction.getCounterpartName()));
-                assertTrue(transactionReceived.getCounterpartReference().equals(transaction.getCounterpartReference()));
-                assertTrue(transactionReceived.getCurrency().equals(transaction.getCurrency()));
-                assertTrue(transactionReceived.getDescription().equals(transaction.getDescription()));
-                assertTrue(transactionReceived.getExecutionDate().equals(transaction.getExecutionDate()));
-                assertTrue(transactionReceived.getId().equals(transaction.getId()));
-                assertTrue(transactionReceived.getRemittanceInformation().equals(transaction.getRemittanceInformation()));
-                assertTrue(transactionReceived.getRemittanceInformationType().equals(transaction.getRemittanceInformationType()));
-                assertTrue(transactionReceived.getValueDate().equals(transaction.getValueDate()));
+                assertEquals(transactionReceived.getAccount(), transaction.getAccount());
+                assertEquals(transactionReceived.getAmount(), transaction.getAmount());
+                assertEquals(transactionReceived.getCounterpartName(), transaction.getCounterpartName());
+                assertEquals(transactionReceived.getCounterpartReference(), transaction.getCounterpartReference());
+                assertEquals(transactionReceived.getCurrency(), transaction.getCurrency());
+                assertEquals(transactionReceived.getDescription(), transaction.getDescription());
+                assertEquals(transactionReceived.getExecutionDate(), transaction.getExecutionDate());
+                assertEquals(transactionReceived.getId(), transaction.getId());
+                assertEquals(transactionReceived.getRemittanceInformation(), transaction.getRemittanceInformation());
+                assertEquals(transactionReceived.getRemittanceInformationType(), transaction.getRemittanceInformationType());
+                assertEquals(transactionReceived.getValueDate(), transaction.getValueDate());
             }
         }
     }
     @Test
-    public void testGetAccountTransactionWithWrongId() throws Exception {
+    public void testGetAccountTransactionWithWrongId() {
         try {
             transactionsService.find(generatedCustomerAccessToken.getToken(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
-            fail("Should raise ApiErrorsException");
+            fail("Expected transactionsService.find to raise an ApiErrorsException");
         } catch (ApiErrorsException apiErrorsException) {
-            assertTrue(apiErrorsException.getHttpStatus() == HttpStatus.SC_NOT_FOUND);
-            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count() == 1);
-            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count() == 1);
-            assertTrue(apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count() == 1);
+            assertEquals(apiErrorsException.getHttpStatus(), HttpStatus.SC_NOT_FOUND);
+            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
+            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
+            assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
         }
     }
 }

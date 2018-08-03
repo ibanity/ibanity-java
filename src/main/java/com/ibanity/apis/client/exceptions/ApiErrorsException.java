@@ -11,9 +11,8 @@ public class ApiErrorsException extends IbanityException {
     private final List<ErrorData> errorDatas;
     private final int httpStatus;
 
-
     public ApiErrorsException(final int httpStatus, final List<ErrorData> errorDatas) {
-        super(errorDatas.stream().map(errorData -> errorData.getCode()).collect(Collectors.joining(":")));
+        super(errorDatas.stream().map(ErrorData::getCode).collect(Collectors.joining(":")));
         this.errorDatas = errorDatas;
         this.httpStatus = httpStatus;
     }
