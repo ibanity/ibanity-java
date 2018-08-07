@@ -1,12 +1,13 @@
 package com.ibanity.apis.client.exceptions;
 
-public class IbanityException extends RuntimeException {
+import io.crnk.core.exception.CrnkException;
 
-    public IbanityException(String message) {
+public class IbanityException extends CrnkException {
+    public IbanityException(final String message) {
         super(message);
     }
 
-    public IbanityException(String message, Throwable cause) {
+    public IbanityException(final String message, final Throwable cause) {
         super(message, cause);
     }
 }

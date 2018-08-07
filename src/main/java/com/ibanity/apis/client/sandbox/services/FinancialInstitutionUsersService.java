@@ -1,72 +1,23 @@
 package com.ibanity.apis.client.sandbox.services;
 
-import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
-import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
+import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionUserCreationQuery;
+import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionUserDeleteQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionUserReadQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionUsersReadQuery;
+import com.ibanity.apis.client.sandbox.models.factory.update.FinancialInstitutionUserUpdateQuery;
 
 import java.util.List;
-import java.util.UUID;
 
-/**
- * Service for Users related APIs
- */
 public interface FinancialInstitutionUsersService {
 
-    /**
-     * Returns the list of all financial institution users
-     * @return list of financial institution users
-     */
-    List<FinancialInstitutionUser> getFinancialInstitutionUsers();
+    FinancialInstitutionUser create(FinancialInstitutionUserCreationQuery userCreationQuery);
 
-    /**
-     * Returns the list of all financial institution users based on the provided paging specification
-     * @param pagingSpec The paging specification to be used for tuning the resulting list
-     * @return list of financial institutions users
-     */
-    List<FinancialInstitutionUser> getFinancialInstitutionUsers(IbanityPagingSpec pagingSpec);
+    List<FinancialInstitutionUser> list(FinancialInstitutionUsersReadQuery usersReadQuery);
 
-    /**
-     * Get a specific financial institution user
-     * @param financialInstitutionUserId the UUID of the financial institution user
-     * @return the financial institution user
-     * @throws ResourceNotFoundException when the provided ID is not known
-     */
-    FinancialInstitutionUser getFinancialInstitutionUser(UUID financialInstitutionUserId) throws ResourceNotFoundException;
+    FinancialInstitutionUser find(FinancialInstitutionUserReadQuery userReadQuery);
 
-    /**
-     * Create a new financial institution user
-     * @param financialInstitutionUser the details of the financial institution user
-     * @return the newly created financial institution user details
-     */
-    FinancialInstitutionUser createFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser);
+    FinancialInstitutionUser update(FinancialInstitutionUserUpdateQuery userUpdateQuery);
 
-    /**
-     * Create a new financial institution user
-     * @param financialInstitutionUser the details of the financial institution user
-     * @param idempotency to prevent the same request from being performed more than once
-     * @return the newly created financial institution user details
-     */
-    FinancialInstitutionUser createFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser, UUID idempotency);
-
-    /**
-     * Update an existing financial institution user
-     * @param financialInstitutionUser to details of the financial institution user to be updated
-     * @return the updated version
-     */
-    FinancialInstitutionUser updateFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser);
-
-    /**
-     * Update an existing financial institution user
-     * @param financialInstitutionUser to details of the financial institution user to be updated
-     * @param idempotency to prevent the same request from being performed more than once
-     * @return the updated version
-     */
-    FinancialInstitutionUser updateFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser, UUID idempotency);
-
-    /**
-     * Delete a financial institution user
-     * @param financialInstitutionUserId the id of the financial institution user
-     * @throws ResourceNotFoundException when the provided ID is not known
-     */
-    void deleteFinancialInstitutionUser(UUID financialInstitutionUserId) throws ResourceNotFoundException;
+    void delete(FinancialInstitutionUserDeleteQuery userDeleteQuery);
 }

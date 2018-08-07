@@ -1,86 +1,91 @@
 package com.ibanity.apis.client.sandbox.services.impl;
 
-import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
+import com.ibanity.apis.client.configuration.IbanityConfiguration;
+import com.ibanity.apis.client.models.FinancialInstitution;
+import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
+import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
+import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionAccountCreationQuery;
+import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionAccountDeleteQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionAccountReadQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionAccountsReadQuery;
 import com.ibanity.apis.client.sandbox.services.FinancialInstitutionAccountsService;
 import com.ibanity.apis.client.services.impl.AbstractServiceImpl;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryV2;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.UUID;
 
-import static com.ibanity.apis.client.services.configuration.IbanityConfiguration.FORWARD_SLASH;
-import static com.ibanity.apis.client.services.configuration.IbanityConfiguration.SANBOX_PREFIX_PATH;
-
 public class FinancialInstitutionAccountsServiceImpl extends AbstractServiceImpl implements FinancialInstitutionAccountsService {
 
-    private static final Logger LOGGER = LogManager.getLogger(FinancialInstitutionAccountsServiceImpl.class);
-
-    private static final String SANDBOX_ACCOUNTS_FI_REQUEST_PATH                = SANBOX_PREFIX_PATH+ FORWARD_SLASH + FINANCIAL_INSTITUTIONS_PATH + FORWARD_SLASH + FINANCIAL_INSTITUTION_ID_TAG;
-    private static final String SANDBOX_USER_ACCOUNTS_FI_REQUEST_PATH           = SANDBOX_ACCOUNTS_FI_REQUEST_PATH + FORWARD_SLASH + "financial-institution-users" + FORWARD_SLASH + USER_ID_TAG;
-
-    private static final String ERROR_RESOURCE_NOT_FOUND                        = "Resource with provided IDs not found";
-
     @Override
-    public FinancialInstitutionAccount getFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) throws ResourceNotFoundException {
-        ResourceRepositoryV2<FinancialInstitutionAccount, UUID> accountsRepo = getAccountsRepository(financialInstitutionId, financialInstitutionUserId, null);
+    public FinancialInstitutionAccount find(final FinancialInstitutionAccountReadQuery accountReadQuery) {
         QuerySpec querySpec = new QuerySpec(FinancialInstitutionAccount.class);
-        try {
-            return accountsRepo.findOne(financialInstitutionAccountId, querySpec);
-        } catch (io.crnk.core.exception.ResourceNotFoundException e) {
-            String errorMessage = "Resource with ID:"+financialInstitutionAccountId+": not found";
-            LOGGER.debug(errorMessage);
-            throw new ResourceNotFoundException(errorMessage);
-        }
+        return getRepository(
+                accountReadQuery.getFinancialInstitutionId(),
+                accountReadQuery.getFinancialInstitutionUserId(),
+                null)
+                .findOne(accountReadQuery.getFinancialInstitutionAccountId(), querySpec);
     }
 
     @Override
-    public List<FinancialInstitutionAccount> getFinancialInstitutionUserAccounts(UUID financialInstitutionId, UUID financialInstitutionUserId) throws ResourceNotFoundException{
-        try {
-            return getAccountsRepository(financialInstitutionId, financialInstitutionUserId, null).findAll(new QuerySpec(FinancialInstitutionAccount.class));
-        } catch (io.crnk.core.exception.ResourceNotFoundException e) {
-            LOGGER.debug(ERROR_RESOURCE_NOT_FOUND);
-            throw new ResourceNotFoundException(ERROR_RESOURCE_NOT_FOUND);
+    public List<FinancialInstitutionAccount> list(final FinancialInstitutionAccountsReadQuery accountsReadQuery) {
+        QuerySpec querySpec = new QuerySpec(FinancialInstitutionAccount.class);
+
+        if (accountsReadQuery.getPagingSpec() != null) {
+            querySpec.setPagingSpec(accountsReadQuery.getPagingSpec());
+        } else {
+            querySpec.setPagingSpec(IbanityPagingSpec.DEFAULT_PAGING_SPEC);
         }
+
+        return getRepository(
+                accountsReadQuery.getFinancialInstitutionId(),
+                accountsReadQuery.getFinancialInstitutionUserId(),
+                null)
+                .findAll(querySpec);
     }
 
     @Override
-    public FinancialInstitutionAccount createFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, FinancialInstitutionAccount financialInstitutionAccount) throws ResourceNotFoundException {
-        return create(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccount, null);
-    }
+    public FinancialInstitutionAccount create(final FinancialInstitutionAccountCreationQuery query) {
+        FinancialInstitutionAccount financialInstitutionAccount = new FinancialInstitutionAccount();
 
-    private FinancialInstitutionAccount create(UUID financialInstitutionId, UUID financialInstitutionUserId, FinancialInstitutionAccount financialInstitutionAccount, UUID idempotency) throws ResourceNotFoundException {
-        try {
-            return getAccountsRepository(financialInstitutionId, financialInstitutionUserId, idempotency).create(financialInstitutionAccount);
-        } catch (io.crnk.core.exception.ResourceNotFoundException e) {
-            LOGGER.debug(ERROR_RESOURCE_NOT_FOUND);
-            throw new ResourceNotFoundException(ERROR_RESOURCE_NOT_FOUND);
-        }
+        financialInstitutionAccount.setDescription(query.getDescription());
+        financialInstitutionAccount.setReference(query.getReference());
+        financialInstitutionAccount.setReferenceType(query.getReferenceType());
+        financialInstitutionAccount.setAvailableBalance(query.getAvailableBalance());
+        financialInstitutionAccount.setCurrentBalance(query.getCurrentBalance());
+        financialInstitutionAccount.setCurrency(query.getCurrency());
+        financialInstitutionAccount.setSubType(query.getSubType());
+
+        FinancialInstitution financialInstitution = new FinancialInstitution();
+        financialInstitution.setId(query.getFinancialInstitutionId());
+        financialInstitutionAccount.setFinancialInstitution(financialInstitution);
+
+        return getRepository(
+                query.getFinancialInstitutionId(),
+                query.getFinancialInstitutionUserId(),
+                query.getIdempotencyKey())
+                .create(financialInstitutionAccount);
     }
 
     @Override
-    public FinancialInstitutionAccount createFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, FinancialInstitutionAccount financialInstitutionAccount, UUID idempotency) throws ResourceNotFoundException {
-        return create(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccount, idempotency);
+    public void delete(final FinancialInstitutionAccountDeleteQuery accountDeleteQuery) {
+        getRepository(
+                accountDeleteQuery.getFinancialInstitutionId(),
+                accountDeleteQuery.getFinancialInstitutionUserId(),
+                accountDeleteQuery.getIdempotencyKey())
+                .delete(accountDeleteQuery.getFinancialInstitutionAccountId());
     }
 
-    @Override
-    public void deleteFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) throws ResourceNotFoundException {
-        try {
-            getAccountsRepository(financialInstitutionId, financialInstitutionUserId, null).delete(financialInstitutionAccountId);
-        } catch (io.crnk.core.exception.ResourceNotFoundException e) {
-            LOGGER.debug(ERROR_RESOURCE_NOT_FOUND);
-            throw new ResourceNotFoundException(ERROR_RESOURCE_NOT_FOUND);
-        }
-    }
-
-    protected ResourceRepositoryV2<FinancialInstitutionAccount, UUID> getAccountsRepository(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID idempotency){
-        String correctPath = SANDBOX_USER_ACCOUNTS_FI_REQUEST_PATH
-                .replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString())
-                .replace(USER_ID_TAG, financialInstitutionUserId.toString())
-                ;
-        return getApiClient(correctPath, null, idempotency).getRepositoryForType(FinancialInstitutionAccount.class);
+    private ResourceRepositoryV2<FinancialInstitutionAccount, UUID> getRepository(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID idempotencyKey) {
+        String finalPath = StringUtils.removeEnd(
+                IbanityConfiguration.getApiUrls().getSandbox().getFinancialInstitution().getFinancialInstitutionAccounts()
+                        .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
+                        .replace(FinancialInstitutionUser.API_URL_TAG_ID, financialInstitutionUserId.toString())
+                        .replace(FinancialInstitutionAccount.RESOURCE_PATH, "")
+                        .replace(FinancialInstitutionAccount.API_URL_TAG_ID, ""), "//");
+        return getApiClient(finalPath, null, idempotencyKey).getRepositoryForType(FinancialInstitutionAccount.class);
     }
 }

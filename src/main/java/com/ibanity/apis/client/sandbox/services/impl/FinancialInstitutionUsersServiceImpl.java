@@ -1,84 +1,85 @@
 package com.ibanity.apis.client.sandbox.services.impl;
 
-import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
+import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
+import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionUserCreationQuery;
+import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionUserDeleteQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionUserReadQuery;
+import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionUsersReadQuery;
+import com.ibanity.apis.client.sandbox.models.factory.update.FinancialInstitutionUserUpdateQuery;
 import com.ibanity.apis.client.sandbox.services.FinancialInstitutionUsersService;
 import com.ibanity.apis.client.services.impl.AbstractServiceImpl;
-import com.ibanity.apis.client.services.impl.FinancialInstitutionsServiceImpl;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryV2;
 import io.crnk.core.resource.list.ResourceList;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.UUID;
 
-import static com.ibanity.apis.client.services.configuration.IbanityConfiguration.FORWARD_SLASH;
-import static com.ibanity.apis.client.services.configuration.IbanityConfiguration.SANBOX_PREFIX_PATH;
-
 public class FinancialInstitutionUsersServiceImpl extends AbstractServiceImpl implements FinancialInstitutionUsersService {
-    private static final Logger LOGGER = LogManager.getLogger(FinancialInstitutionsServiceImpl.class);
 
     public FinancialInstitutionUsersServiceImpl() {
         super();
     }
 
     @Override
-    public ResourceList<FinancialInstitutionUser> getFinancialInstitutionUsers() {
-        return getFinancialInstitutionUsers(new IbanityPagingSpec());
-    }
-
-    @Override
-    public ResourceList<FinancialInstitutionUser> getFinancialInstitutionUsers(IbanityPagingSpec pagingSpec) {
+    public ResourceList<FinancialInstitutionUser> list(final FinancialInstitutionUsersReadQuery usersReadQuery) {
         QuerySpec querySpec = new QuerySpec(FinancialInstitutionUser.class);
-        querySpec.setPagingSpec(pagingSpec);
-        return findAll(querySpec, getFinancialInstitutionUsersRepo(null));
-    }
 
-    @Override
-    public FinancialInstitutionUser getFinancialInstitutionUser(UUID financialInstitutionUserId)  throws ResourceNotFoundException {
-        try {
-            return getFinancialInstitutionUsersRepo(null).findOne(financialInstitutionUserId, new QuerySpec(FinancialInstitutionUser.class));
-        } catch (io.crnk.core.exception.ResourceNotFoundException e) {
-            String errorMessage = "Resource with ID:"+financialInstitutionUserId+": not found";
-            LOGGER.debug(errorMessage);
-            throw new ResourceNotFoundException(errorMessage);
+        if (usersReadQuery.getPagingSpec() != null) {
+            querySpec.setPagingSpec(usersReadQuery.getPagingSpec());
+        } else {
+            querySpec.setPagingSpec(IbanityPagingSpec.DEFAULT_PAGING_SPEC);
         }
+
+        return getRepository(null)
+                .findAll(querySpec);
     }
 
     @Override
-    public FinancialInstitutionUser createFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser) {
-        return getFinancialInstitutionUsersRepo(null).create(financialInstitutionUser);
+    public FinancialInstitutionUser find(final FinancialInstitutionUserReadQuery userReadQuery) {
+        return getRepository(null)
+                .findOne(userReadQuery.getFinancialInstitutionUserId(),
+                        new QuerySpec(FinancialInstitutionUser.class));
     }
 
     @Override
-    public FinancialInstitutionUser createFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser, UUID idempotency) {
-        return getFinancialInstitutionUsersRepo(idempotency).create(financialInstitutionUser);
+    public FinancialInstitutionUser create(final FinancialInstitutionUserCreationQuery userCreationQuery) {
+        FinancialInstitutionUser financialInstitutionUser = new FinancialInstitutionUser();
+        financialInstitutionUser.setLogin(userCreationQuery.getLogin());
+        financialInstitutionUser.setPassword(userCreationQuery.getPassword());
+        financialInstitutionUser.setLastName(userCreationQuery.getLastName());
+        financialInstitutionUser.setFirstName(userCreationQuery.getFirstName());
+        return getRepository(userCreationQuery.getIdempotencyKey())
+                .create(financialInstitutionUser);
     }
 
     @Override
-    public FinancialInstitutionUser updateFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser) {
-        return getFinancialInstitutionUsersRepo(null).save(financialInstitutionUser);
+    public FinancialInstitutionUser update(final FinancialInstitutionUserUpdateQuery userUpdateQuery) {
+        FinancialInstitutionUser financialInstitutionUser = new FinancialInstitutionUser();
+        financialInstitutionUser.setId(userUpdateQuery.getFinancialInstitutionUserId());
+        financialInstitutionUser.setLogin(userUpdateQuery.getLogin());
+        financialInstitutionUser.setPassword(userUpdateQuery.getPassword());
+        financialInstitutionUser.setFirstName(userUpdateQuery.getFirstName());
+        financialInstitutionUser.setLastName(userUpdateQuery.getLastName());
+
+        return getRepository(userUpdateQuery.getIdempotencyKey())
+                .save(financialInstitutionUser);
     }
 
     @Override
-    public FinancialInstitutionUser updateFinancialInstitutionUser(FinancialInstitutionUser financialInstitutionUser, UUID idempotency) {
-        return getFinancialInstitutionUsersRepo(idempotency).save(financialInstitutionUser);
+    public void delete(final FinancialInstitutionUserDeleteQuery userDeleteQuery) {
+        getRepository(userDeleteQuery.getIdempotencyKey())
+                .delete(userDeleteQuery.getFinancialInstitutionUserId());
     }
 
-    @Override
-    public void deleteFinancialInstitutionUser(UUID financialInstitutionUserId) throws ResourceNotFoundException {
-        try {
-            getFinancialInstitutionUsersRepo(null).delete(financialInstitutionUserId);
-        } catch (io.crnk.core.exception.ResourceNotFoundException e) {
-            String errorMessage = "Resource with ID:"+financialInstitutionUserId+": not found";
-            LOGGER.debug(errorMessage);
-            throw new ResourceNotFoundException(errorMessage);
-        }
-    }
+    private ResourceRepositoryV2<FinancialInstitutionUser, UUID> getRepository(final UUID idempotencyKey) {
+        String finalPath = StringUtils.removeEnd(
+                IbanityConfiguration.getApiUrls().getSandbox().getFinancialInstitutionUsers()
+                        .replace(FinancialInstitutionUser.RESOURCE_PATH, "")
+                        .replace(FinancialInstitutionUser.API_URL_TAG_ID, ""), "//");
 
-    protected ResourceRepositoryV2<FinancialInstitutionUser, UUID> getFinancialInstitutionUsersRepo(UUID idempotency){
-        return getApiClient(SANBOX_PREFIX_PATH + FORWARD_SLASH, null, idempotency).getRepositoryForType(FinancialInstitutionUser.class);
+        return getApiClient(finalPath, null, idempotencyKey).getRepositoryForType(FinancialInstitutionUser.class);
     }
 }

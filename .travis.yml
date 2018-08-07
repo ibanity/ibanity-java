@@ -5,16 +5,13 @@ jdk:
 
 sudo: required
 
-## export GPG details
+services:
+  - docker
+
 before_install:
+    - docker pull ibanity/sandbox-authorization-cli:latest
     - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
     - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
-
-before_script:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3
-  - fluxbox >/dev/null 2>&1 &
 
 install:
   - mvn install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
@@ -23,12 +20,6 @@ script:
   - sonar-scanner
 
 addons:
-  chrome: stable
-  apt:
-    sources:
-     - google-chrome
-    packages:
-     - google-chrome-stable fluxbox
   sonarcloud:
     organization: "ibanity"
     token:

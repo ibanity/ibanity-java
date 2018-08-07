@@ -1,100 +1,37 @@
 package com.ibanity.apis.client.sandbox.models;
 
+import com.ibanity.apis.client.annotations.InstantJsonFormat;
+import com.ibanity.apis.client.configuration.IbanityConfiguration;
+import com.ibanity.apis.client.models.AbstractModel;
 import com.ibanity.apis.client.paging.IbanityPagingBehavior;
 import io.crnk.core.resource.annotations.JsonApiResource;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import lombok.Data;
 
-@JsonApiResource(type = "financialInstitutionUser", resourcePath = "financial-institution-users", pagingBehavior = IbanityPagingBehavior.class)
-public class FinancialInstitutionUser extends AbstractTimestamps {
+import java.time.Instant;
 
-    String password;
-    String firstName;
-    String lastName;
-    String login;
+import static com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser.RESOURCE_PATH;
+import static com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser.RESOURCE_TYPE;
 
-    public FinancialInstitutionUser(String password, String firstName, String lastName, String login) {
-        super();
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.login = login;
+@Data
+@JsonApiResource(type = RESOURCE_TYPE, resourcePath = RESOURCE_PATH, pagingBehavior = IbanityPagingBehavior.class)
+public class FinancialInstitutionUser extends AbstractModel {
 
-    }
+    public static final String RESOURCE_TYPE    = "financialInstitutionUser";
+    public static final String RESOURCE_PATH    = "financial-institution-users";
+    public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
 
-    public FinancialInstitutionUser() {
-        super();
-    }
+    @InstantJsonFormat
+    private Instant createdAt;
 
-    public String getPassword() {
-        return password;
-    }
+    @InstantJsonFormat
+    private Instant updatedAt;
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    @InstantJsonFormat
+    private Instant deletedAt;
 
-    public String getFirstName() {
-        return firstName;
-    }
+    private String password;
+    private String firstName;
+    private String lastName;
+    private String login;
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (!(o instanceof FinancialInstitutionUser)) return false;
-
-        FinancialInstitutionUser that = (FinancialInstitutionUser) o;
-
-        return new EqualsBuilder()
-                .appendSuper(super.equals(o))
-                .append(getPassword(), that.getPassword())
-                .append(getFirstName(), that.getFirstName())
-                .append(getLastName(), that.getLastName())
-                .append(getLogin(), that.getLogin())
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .appendSuper(super.hashCode())
-                .append(getPassword())
-                .append(getFirstName())
-                .append(getLastName())
-                .append(getLogin())
-                .toHashCode();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append(super.toString())
-                .append("firstName", firstName)
-                .append("lastName", lastName)
-                .append("login", login)
-                .append("password", password)
-                .toString();
-    }
 }

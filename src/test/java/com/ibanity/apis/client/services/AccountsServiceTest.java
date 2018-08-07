@@ -1,198 +1,219 @@
 package com.ibanity.apis.client.services;
 
 import com.ibanity.apis.client.AbstractServiceTest;
-import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
+import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
+import com.ibanity.apis.client.models.FinancialInstitution;
+import com.ibanity.apis.client.models.factory.read.AccountReadQuery;
+import com.ibanity.apis.client.models.factory.read.AccountsReadQuery;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
+import com.ibanity.apis.client.utils.DockerHelper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * AccountsServiceImpl Tester.
- *
- * @author <Authors name>
- * @version 1.0
- * @since <pre>Jun 14, 2018</pre>
- */
 public class AccountsServiceTest extends AbstractServiceTest {
+    private static final Logger LOGGER = LogManager.getLogger(AccountsServiceTest.class);
 
     @BeforeEach
-    public void beforeEach() throws Exception {
-        initSelenium();
-        initPublicAPIEnvironment();
+    public void createData(){
+        this.initPublicAPIEnvironment();
     }
 
     @AfterEach
-    public void afterEach() throws Exception {
-        exitSelenium();
-        cleanPublicAPIEnvironment();
+    public void deleteData(){
+        this.cleanPublicAPIEnvironment();
     }
 
-    /**
-     * Method: getCustomerAccount(CustomerAccessToken customerAccessToken, UUID accountId, UUID financialInstitutionId)
-     */
+    @BeforeAll
+    public static void dockerPull() throws Exception{
+        DockerHelper.pullImage();
+    }
+
     @Test
-    public void testGetCustomerAccount() throws Exception {
-        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
+    public void testGetCustomerAccount() {
+        AccountInformationAccessRequest accountInformationAccessRequest = createAccountInformationAccessRequest();
         authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
-        List<Account> accountsList = accountsService.getCustomerAccounts(generatedCustomerAccessToken, financialInstitution.getId());
+
+        AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()
+                .customerAccessToken(generatedCustomerAccessToken.getToken())
+                .financialInstitutionId(financialInstitution.getId())
+                .build();
+
+        List<Account> accountsList = accountsService.list(accountsReadQuery);
+        if (accountsList.size() == 0) {
+            fail("authorized accounts list size is 0");
+        }
         for (Account account : accountsList) {
-            Account accountResult = accountsService.getCustomerAccount(generatedCustomerAccessToken, account.getId(), financialInstitution.getId());
-            assertTrue(account.getReference().equals(accountResult.getReference()));
-            assertTrue(account.getReferenceType().equals(accountResult.getReferenceType()));
-            assertTrue(account.getCurrency().equals(accountResult.getCurrency()));
-            assertTrue(account.getSubType().equals(accountResult.getSubType()));
-            assertTrue(account.getAvailableBalance().equals(accountResult.getAvailableBalance()));
-            assertTrue(account.getCurrentBalance().equals(accountResult.getCurrentBalance()));
+            AccountReadQuery accountReadQuery = AccountReadQuery.builder()
+                    .customerAccessToken(generatedCustomerAccessToken.getToken())
+                    .financialInstitutionId(financialInstitution.getId())
+                    .accountId(account.getId())
+                    .build();
+
+            Account accountResult = accountsService.find(accountReadQuery);
+            assertEquals(account.getReference(), accountResult.getReference());
+            assertEquals(account.getReferenceType(), accountResult.getReferenceType());
+            assertEquals(account.getCurrency(), accountResult.getCurrency());
+            assertEquals(account.getSubType(), accountResult.getSubType());
+            assertEquals(account.getAvailableBalance(), accountResult.getAvailableBalance());
+            assertEquals(account.getCurrentBalance(), accountResult.getCurrentBalance());
         }
     }
 
     @Test
-    public void testGetCustomerAccountWithWrongIDs() throws Exception {
-        assertThrows(ResourceNotFoundException.class, () -> accountsService.getCustomerAccount(generatedCustomerAccessToken, UUID.randomUUID(), UUID.randomUUID()));
+    public void testGetCustomerAccountWithWrongIDs() {
+        try {
+            AccountReadQuery accountReadQuery = AccountReadQuery.builder()
+                    .customerAccessToken(generatedCustomerAccessToken.getToken())
+                    .financialInstitutionId(UUID.randomUUID())
+                    .accountId(UUID.randomUUID())
+                    .build();
+            accountsService.find(accountReadQuery);
+            fail("Expected accountsService.find to raise an ApiErrorsException");
+        } catch (ApiErrorsException apiErrorsException) {
+            super.assertResourceNotFoundException(apiErrorsException, Account.RESOURCE_TYPE);
+        }
     }
 
-    /**
-     * Method: getCustomerAccounts(CustomerAccessToken customerAccessToken)
-     */
     @Test
-    public void testGetCustomerAccountsCustomerAccessToken() throws Exception {
-        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
+    public void testGetCustomerAccountsCustomerAccessToken() {
+        AccountInformationAccessRequest accountInformationAccessRequest = createAccountInformationAccessRequest();
         authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
         IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
         pagingSpec.setLimit(50L);
-        List<Account> accountsList = accountsService.getCustomerAccounts(generatedCustomerAccessToken, pagingSpec);
-        assertTrue(financialInstitutionAccounts.size() == accountsList.size());
+
+        AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()
+                .customerAccessToken(generatedCustomerAccessToken.getToken())
+                .pagingSpec(pagingSpec)
+                .build();
+
+        List<Account> accountsList = accountsService.list(accountsReadQuery);
+        assertEquals(financialInstitutionAccounts.size(), accountsList.size());
     }
 
     @Test
-    public void testGetCustomerAccountsCustomerAccessTokenDefaultPagingSpec() throws Exception {
-        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
+    public void testGetCustomerAccountsCustomerAccessTokenDefaultPagingSpec() {
+        AccountInformationAccessRequest accountInformationAccessRequest = createAccountInformationAccessRequest();
         authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
-        List<Account> accountsList = accountsService.getCustomerAccounts(generatedCustomerAccessToken);
-        assertTrue(financialInstitutionAccounts.size() == accountsList.size());
+
+        AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()
+                .customerAccessToken(generatedCustomerAccessToken.getToken())
+                .build();
+
+        List<Account> accountsList = accountsService.list(accountsReadQuery);
+        assertEquals(financialInstitutionAccounts.size(), accountsList.size());
     }
 
     @Test
-    public void testGetCustomerAccountsCustomerAccessTokenNoAccountsAuthorized() throws Exception {
+    public void testGetCustomerAccountsCustomerAccessTokenNoAccountsAuthorized() {
         IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
         pagingSpec.setLimit(50L);
-        List<Account> accountsList = accountsService.getCustomerAccounts(getCustomerAccessToken(UUID.randomUUID().toString()), pagingSpec);
+
+        AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()
+                .customerAccessToken(createCustomerAccessToken(UUID.randomUUID().toString()).getToken())
+                .pagingSpec(pagingSpec)
+                .build();
+
+        List<Account> accountsList = accountsService.list(accountsReadQuery);
         assertTrue(accountsList.isEmpty());
         assertFalse(financialInstitutionAccounts.size() == accountsList.size());
     }
 
-    /**
-     * Method: getCustomerAccounts(CustomerAccessToken customerAccessToken, IbanityPagingSpec pagingSpec)
-     */
     @Test
-    public void testGetCustomerAccountsForCustomerAccessTokenPagingSpec() throws Exception {
-        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
+    public void testGetCustomerAccountsCustomerAccessTokenPagingSpec() {
+        AccountInformationAccessRequest accountInformationAccessRequest =
+                createAccountInformationAccessRequest();
         authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
+
         IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
         pagingSpec.setLimit(1L);
-        List<Account> accountsList = accountsService.getCustomerAccounts(generatedCustomerAccessToken, pagingSpec);
-        assertTrue(accountsList.size() == 1);
+
+        AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()
+                .customerAccessToken(generatedCustomerAccessToken.getToken())
+                .pagingSpec(pagingSpec)
+                .build();
+
+        List<Account> accountsList = accountsService.list(accountsReadQuery);
+        assertEquals(1, accountsList.size());
         Account account = accountsList.get(0);
-        assertTrue(financialInstitutionAccounts.stream().filter(financialInstitutionAccount -> financialInstitutionAccount.getReference().equals(account.getReference())).collect(Collectors.toList()).size() == 1);
+        assertEquals(1, financialInstitutionAccounts.stream().filter(financialInstitutionAccount -> financialInstitutionAccount.getReference().equals(account.getReference())).collect(Collectors.toList()).size());
     }
 
-    /**
-     * Method: getCustomerAccounts(CustomerAccessToken customerAccessToken, UUID financialInstitutionId)
-     */
     @Test
-    public void testGetCustomerAccountsForCustomerAccessTokenFinancialInstitutionId() throws Exception {
-        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
+    public void testGetCustomerAccountsForCustomerAccessTokenFinancialInstitutionId() {
+        AccountInformationAccessRequest accountInformationAccessRequest = createAccountInformationAccessRequest();
         authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
-        List<Account> accountsList = accountsService.getCustomerAccounts(generatedCustomerAccessToken, financialInstitution.getId());
-        assertTrue(accountsList.size() == financialInstitutionAccounts.size());
+
+        AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()
+                .customerAccessToken(generatedCustomerAccessToken.getToken())
+                .financialInstitutionId(financialInstitution.getId())
+                .build();
+
+        List<Account> accountsList = accountsService.list(accountsReadQuery);
+        assertEquals(financialInstitutionAccounts.size(), accountsList.size());
     }
 
     @Test
-    public void testGetCustomerAccountsForCustomerAccessTokenUnknownFinancialInstitutionId() throws Exception {
-        assertThrows(ResourceNotFoundException.class, () -> accountsService.getCustomerAccounts(generatedCustomerAccessToken, UUID.randomUUID()));
+    public void testGetCustomerAccountsForCustomerAccessTokenUnknownFinancialInstitutionId() {
+        try {
+            AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()
+                    .customerAccessToken(generatedCustomerAccessToken.getToken())
+                    .financialInstitutionId(UUID.randomUUID())
+                    .build();
+
+            accountsService.list(accountsReadQuery);
+            fail("Expected accountsService.list to raise an ApiErrorsException");
+        } catch (ApiErrorsException apiErrorsException) {
+            super.assertResourceNotFoundException(apiErrorsException, Account.RESOURCE_TYPE);
+        }
     }
 
-    /**
-     * Method: getCustomerAccounts(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, IbanityPagingSpec pagingSpec)
-     */
     @Test
-    public void testGetCustomerAccountsForCustomerAccessTokenFinancialInstitutionIdPagingSpec() throws Exception {
-        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
+    public void testGetCustomerAccountsForCustomerAccessTokenFinancialInstitutionIdPagingSpec() {
+        AccountInformationAccessRequest accountInformationAccessRequest = createAccountInformationAccessRequest();
         authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
         IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
         pagingSpec.setLimit(1L);
-        List<Account> accountsList = accountsService.getCustomerAccounts(generatedCustomerAccessToken, financialInstitution.getId(), pagingSpec);
+
+        AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()
+                .customerAccessToken(generatedCustomerAccessToken.getToken())
+                .financialInstitutionId(financialInstitution.getId())
+                .pagingSpec(pagingSpec)
+                .build();
+
+        List<Account> accountsList = accountsService.list(accountsReadQuery);
         Account account = accountsList.get(0);
-        assertTrue(financialInstitutionAccounts.stream().filter(financialInstitutionAccount -> financialInstitutionAccount.getReference().equals(account.getReference())).collect(Collectors.toList()).size() == 1);
+        assertEquals(1, financialInstitutionAccounts.stream()
+                .filter(financialInstitutionAccount -> financialInstitutionAccount.getReference().equals(account.getReference()))
+                .collect(Collectors.toList()).size());
     }
 
     @Test
-    public void testGetCustomerAccountsForCustomerAccessTokenUnknownFinancialInstitutionIdPagingSpec() throws Exception {
+    public void testGetCustomerAccountsForCustomerAccessTokenUnknownFinancialInstitutionIdPagingSpecErrorsContent() {
         IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
         pagingSpec.setLimit(1L);
-        assertThrows(ResourceNotFoundException.class, () -> accountsService.getCustomerAccounts(generatedCustomerAccessToken, UUID.randomUUID(), pagingSpec));
+        try {
+            AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()
+                    .customerAccessToken(generatedCustomerAccessToken.getToken())
+                    .financialInstitutionId(UUID.randomUUID())
+                    .pagingSpec(pagingSpec)
+                    .build();
+
+            accountsService.list(accountsReadQuery);
+            fail("Expected accountsService.list to raise an ApiErrorsException");
+        } catch (ApiErrorsException apiErrorsException) {
+            super.assertResourceNotFoundException(apiErrorsException, FinancialInstitution.RESOURCE_TYPE);
+        }
     }
-
-    /**
-     * Method: getAccountInformationAccessRequest(CustomerAccessToken customerAccessToken, AccountInformationAccessRequest accountInformationAccessRequest)
-     */
-    @Test
-    public void testGetAccountInformationAccessRequest() throws Exception {
-        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
-        assertNotNull(accountInformationAccessRequest.getLinks().getRedirect());
-        assertNotNull(URI.create(accountInformationAccessRequest.getLinks().getRedirect()));
-        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
-        List<Account> accounts = accountsService.getCustomerAccounts(generatedCustomerAccessToken, financialInstitution.getId());
-        assertTrue(accounts.size() > 0);
-    }
-
-    /**
-     * Method: getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountInformationAccessRequestId)
-     * **** IMPORTANT ****: Functionality not yet implemented by Ibanity Core, uncomment when implemented
-     */
-//    @Test
-//    public void testGetAccountsInformationAccessAuthorizationsForCustomerAccessTokenFinancialInstitutionIdAccountInformationAccessRequestId() throws Exception {
-//        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
-//        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
-//        List<AccountInformationAccessAuthorization> results = accountsService.getAccountsInformationAccessAuthorizations(generatedCustomerAccessToken, financialInstitution.getId(), accountInformationAccessRequest.getId());
-//        assertTrue(results.size() > 0);
-//    }
-
-    /**
-     * Method: getAccountsInformationAccessAuthorizations(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountInformationAccessRequestId, IbanityPagingSpec pagingSpec)
-     * **** IMPORTANT ****: Functionality not yet implemented by Ibanity Core, uncomment when implemented
-     */
-//    @Test
-//    public void testGetAccountsInformationAccessAuthorizationsForCustomerAccessTokenFinancialInstitutionIdAccountInformationAccessRequestIdPagingSpec() throws Exception {
-//        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
-//        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
-//        IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
-//        pagingSpec.setLimit(1L);
-//        List<AccountInformationAccessAuthorization> authorisationsList = accountsService.getAccountsInformationAccessAuthorizations(generatedCustomerAccessToken, financialInstitution.getId(), accountInformationAccessRequest.getId(), pagingSpec);
-//        assertTrue(authorisationsList.size() == 1);
-//    }
-
-    /**
-     * Method: revokeAccountsAccessAuthorization(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, AccountInformationAccessAuthorization accountInformationAccessAuthorization)
-     * **** IMPORTANT ****: Functionality not yet implemented by Ibanity Core, uncomment when implemented
-     */
-//    @Test
-//    public void testRevokeAccountsAccessAuthorization() throws Exception {
-//        AccountInformationAccessRequest accountInformationAccessRequest = getAccountInformationAccessRequest();
-//        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
-//        List<AccountInformationAccessAuthorization> authorizationsList = accountsService.getAccountsInformationAccessAuthorizations(generatedCustomerAccessToken, financialInstitution.getId(), accountInformationAccessRequest.getId());
-//        accountsService.revokeAccountsAccessAuthorization(generatedCustomerAccessToken, financialInstitution.getId(), authorizationsList.get(0));
-//        List<AccountInformationAccessAuthorization> updatedAuthorizationsList = accountsService.getAccountsInformationAccessAuthorizations(generatedCustomerAccessToken, financialInstitution.getId(), accountInformationAccessRequest.getId());
-//        assertTrue(authorizationsList.size() == updatedAuthorizationsList.size() + 1);
-//    }
 }

@@ -1,11 +1,16 @@
 package com.ibanity.apis.client.services;
 
 import com.ibanity.apis.client.AbstractServiceTest;
-import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
+import com.ibanity.apis.client.exceptions.ApiErrorsException;
+import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.FinancialInstitution;
+import com.ibanity.apis.client.models.factory.read.FinancialInstitutionReadQuery;
+import com.ibanity.apis.client.models.factory.read.FinancialInstitutionsReadQuery;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.services.impl.FinancialInstitutionsServiceImpl;
+import com.ibanity.apis.client.utils.DockerHelper;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,73 +18,101 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * FinancialInstitutionsServiceImpl Tester.
- *
- * @author Daniel De Luca
- * @version 1.0
- * @since <pre>Jun 14, 2018</pre>
- */
 public class FinancialInstitutionsServiceTest extends AbstractServiceTest {
 
-    private FinancialInstitutionsService financialInstitutionsService = new FinancialInstitutionsServiceImpl();
-    private FinancialInstitution financialInstitution;
+    private final FinancialInstitutionsService financialInstitutionsService = new FinancialInstitutionsServiceImpl();
+
+    @BeforeAll
+    public static void dockerPull() throws Exception{
+        DockerHelper.pullImage();
+    }
 
     @BeforeEach
     public void before() {
-        financialInstitution = createFinancialInstitution(null);
+        initPublicAPIEnvironment();
     }
 
     @AfterEach
-    public void after() throws Exception {
-        deleteFinancialInstitution(financialInstitution.getId());
+    public void after() {
+        cleanPublicAPIEnvironment();
     }
 
-    /**
-     * Method: getFinancialInstitutions()
-     */
     @Test
     public void testGetFinancialInstitutions() {
-        List<FinancialInstitution> financialInstitutionsList = financialInstitutionsService.getFinancialInstitutions();
+        List<FinancialInstitution> financialInstitutionsList =
+                financialInstitutionsService.list(FinancialInstitutionsReadQuery.builder().build());
         assertTrue(financialInstitutionsList.size() > 0);
     }
 
-    /**
-     * Method: getFinancialInstitutions(IbanityPagingSpec pagingSpec)
-     */
     @Test
-    public void testGetFinancialInstitutionsPagingSpec() throws Exception {
+    public void testGetFinancialInstitutionsCustomerAccessToken() {
+        FinancialInstitutionsReadQuery financialInstitutionsReadQuery =
+                FinancialInstitutionsReadQuery.builder()
+                        .customerAccessToken(generatedCustomerAccessToken.getToken())
+                        .build();
+
+        AccountInformationAccessRequest accountInformationAccessRequest = createAccountInformationAccessRequest();
+        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
+        List<FinancialInstitution> financialInstitutionsList = financialInstitutionsService.list(financialInstitutionsReadQuery);
+        assertTrue(financialInstitutionsList.size() > 0);
+    }
+
+    @Test
+    public void testGetFinancialInstitutionsCustomerAccessTokenIbanityPagingSpec() {
+        AccountInformationAccessRequest accountInformationAccessRequest = createAccountInformationAccessRequest();
+        authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
+        IbanityPagingSpec ibanityPagingSpec = new IbanityPagingSpec();
+        ibanityPagingSpec.setLimit(1L);
+
+        FinancialInstitutionsReadQuery financialInstitutionsReadQuery =
+                FinancialInstitutionsReadQuery.builder()
+                        .customerAccessToken(generatedCustomerAccessToken.getToken())
+                        .pagingSpec(ibanityPagingSpec)
+                        .build();
+
+        List<FinancialInstitution> financialInstitutionsList =
+                financialInstitutionsService.list(financialInstitutionsReadQuery);
+        assertEquals(1, financialInstitutionsList.size());
+    }
+
+    @Test
+    public void testGetFinancialInstitutionsPagingSpec() {
         IbanityPagingSpec ibanityPagingSpec = new IbanityPagingSpec();
         ibanityPagingSpec.setLimit(3L);
         List<FinancialInstitution> createdFinancialInstitutionsList = new ArrayList<>();
-        for (int index = 0; index < 5; index++){
-            createdFinancialInstitutionsList.add(createFinancialInstitution(null));
+        for (int index = 0; index < 5; index++) {
+            createdFinancialInstitutionsList.add(createFinancialInstitution());
         }
 
-        List<FinancialInstitution> financialInstitutionsList = financialInstitutionsService.getFinancialInstitutions(ibanityPagingSpec);
-        assertTrue(financialInstitutionsList.size() == 3);
+        FinancialInstitutionsReadQuery financialInstitutionsReadQuery =
+                FinancialInstitutionsReadQuery.builder()
+                        .pagingSpec(ibanityPagingSpec)
+                        .build();
 
-        for (FinancialInstitution financialInstitution : createdFinancialInstitutionsList){
+        List<FinancialInstitution> financialInstitutionsList = financialInstitutionsService.list(financialInstitutionsReadQuery);
+        assertEquals(3, financialInstitutionsList.size());
+
+        for (FinancialInstitution financialInstitution : createdFinancialInstitutionsList) {
             deleteFinancialInstitution(financialInstitution.getId());
         }
     }
 
-    /**
-     * Method: getFinancialInstitution(UUID financialInstitutionId)
-     */
     @Test
-    public void testGetFinancialInstitution() throws Exception {
-        financialInstitutionsService.getFinancialInstitution(financialInstitution.getId());
+    public void testGetFinancialInstitution() {
+        FinancialInstitution financialInstitutionReceived = financialInstitutionsService.find(
+                FinancialInstitutionReadQuery.builder().financialInstitutionId(financialInstitution.getId()).build());
+        assertEquals(financialInstitutionReceived.getId(), financialInstitution.getId());
     }
 
-    /**
-     * Method: getFinancialInstitution(UUID financialInstitutionId)
-     */
     @Test
-    public void testGetFinancialInstitutionWrongId() throws Exception {
-        assertThrows(ResourceNotFoundException.class, () -> financialInstitutionsService.getFinancialInstitution(UUID.randomUUID()));
+    public void testGetFinancialInstitutionWrongId() {
+        try {
+            financialInstitutionsService.find(FinancialInstitutionReadQuery.builder().financialInstitutionId(UUID.randomUUID()).build());
+            fail("Expected financialInstitutionsService.find to raise an ApiErrorsException");
+        } catch (ApiErrorsException apiErrorsException) {
+            super.assertResourceNotFoundException(apiErrorsException, FinancialInstitution.RESOURCE_TYPE);
+        }
     }
 }

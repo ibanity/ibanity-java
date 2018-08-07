@@ -10,7 +10,7 @@
 
     <name>ibanity-java</name>
     <packaging>jar</packaging>
-    <description>A Java Client towards the iBanity API server</description>
+    <description>A Java Client towards the ibanity API server</description>
     <url>https://github.com/ibanity/ibanity-java</url>
     <licenses>
         <license>
@@ -67,13 +67,14 @@
         <commons-io.version>2.6</commons-io.version>
         <commons-math3.version>3.6.1</commons-math3.version>
         <log4j.version>2.11.0</log4j.version>
+        <slf4j.version>1.7.25</slf4j.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
-        <!--crnk.version>2.5.20180326220647</crnk.version-->
         <crnk.version>2.6.20180430102904</crnk.version>
         <httpclient.version>4.5.5</httpclient.version>
         <jackson.version>2.9.5</jackson.version>
         <bcpkix-jdk14.version>1.59</bcpkix-jdk14.version>
         <reflections.version>0.9.11</reflections.version>
+        <lombok.version>1.18.2</lombok.version>
 
         <!-- IBAN Generator -->
         <iban4j.version>3.2.1</iban4j.version>
@@ -85,13 +86,15 @@
         <maven-javadoc-plugin.version>3.0.0</maven-javadoc-plugin.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
+        <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
+        <jacoco-maven-plugin.version>0.8.1</jacoco-maven-plugin.version>
 
+        <!-- Tests version -->
         <junit.version>5.2.0</junit.version>
         <junit-platform-launcher.version>1.2.0</junit-platform-launcher.version>
         <junit-platform-surefire-provider.version>1.2.0</junit-platform-surefire-provider.version>
-        <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
-        <jacoco-maven-plugin.version>0.8.1</jacoco-maven-plugin.version>
-        <selenium-java.version>3.0.0</selenium-java.version>
+        <docker-client.version>8.11.7</docker-client.version>
 
         <!-- Sonar -->
         <sonar.language>java</sonar.language>
@@ -129,6 +132,23 @@
             <version>${log4j.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-jcl</artifactId>
+            <version>2.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.surefire</groupId>
+            <artifactId>surefire-logger-api</artifactId>
+            <version>2.21.0</version>
+            <!-- to get around bug https://github.com/junit-team/junit5/issues/801 -->
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
             <version>${commons-beanutils.version}</version>
@@ -137,6 +157,16 @@
             <groupId>io.crnk</groupId>
             <artifactId>crnk-client</artifactId>
             <version>${crnk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>${reflections.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -163,11 +193,6 @@
             <artifactId>bcpkix-jdk14</artifactId>
             <version>${bcpkix-jdk14.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>${reflections.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.iban4j</groupId>
@@ -193,15 +218,48 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <version>${selenium-java.version}</version>
+            <groupId>com.spotify</groupId>
+            <artifactId>docker-client</artifactId>
+            <version>${docker-client.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15on</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcpkix-jdk15on</artifactId>
+                </exclusion>
+            </exclusions>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <configLocation>checkstyle.xml</configLocation>
+                            <encoding>UTF-8</encoding>
+                            <consoleOutput>true</consoleOutput>
+                            <failsOnError>true</failsOnError>
+                            <linkXRef>false</linkXRef>
+                            <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+                            <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -276,7 +334,10 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <argLine>${surefireArgLine}</argLine>
+<!--                    <argLine>${surefireArgLine}</argLine>-->
+                    <forkCount>0</forkCount>
+                    <reuseForks>true</reuseForks>
+                    <trimStackTrace>false</trimStackTrace>
                     <includes>
                         <include>**/*Test.java</include>
                         <include>**/*Tests.java</include>
@@ -286,7 +347,6 @@
                         <exclude>**/links/*</exclude>
                         <exclude>**/paging/*</exclude>
                         <exclude>**/exceptions/*</exclude>
-                        <exclude>**/Client*Sample.*</exclude>
                     </excludes>
                 </configuration>
                 <dependencies>
@@ -312,7 +372,6 @@
                         <exclude>**/links/*</exclude>
                         <exclude>**/paging/*</exclude>
                         <exclude>**/exceptions/*</exclude>
-                        <exclude>**/Client*Sample.*</exclude>
                     </excludes>
                 </configuration>
                 <executions>

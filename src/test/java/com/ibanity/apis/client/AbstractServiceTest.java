@@ -1,254 +1,384 @@
 package com.ibanity.apis.client;
 
-import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
+import com.ibanity.apis.client.exceptions.ApiErrorsException;
+import com.ibanity.apis.client.exceptions.IbanityException;
+import com.ibanity.apis.client.models.AbstractAccount;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.FinancialInstitution;
+import com.ibanity.apis.client.models.factory.create.AccountInformationAccessRequestCreationQuery;
+import com.ibanity.apis.client.models.factory.create.CustomerAccessTokenCreationQuery;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
+import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionAccountCreationQuery;
+import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionCreationQuery;
+import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionUserCreationQuery;
+import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionAccountDeleteQuery;
+import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionDeleteQuery;
+import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionUserDeleteQuery;
 import com.ibanity.apis.client.sandbox.services.FinancialInstitutionAccountsService;
 import com.ibanity.apis.client.sandbox.services.FinancialInstitutionUsersService;
 import com.ibanity.apis.client.sandbox.services.SandboxFinancialInstitutionsService;
 import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionAccountsServiceImpl;
 import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionUsersServiceImpl;
 import com.ibanity.apis.client.sandbox.services.impl.SandboxFinancialInstitutionsServiceImpl;
+import com.ibanity.apis.client.services.AccountInformationAccessRequestsService;
 import com.ibanity.apis.client.services.AccountsService;
 import com.ibanity.apis.client.services.CustomerAccessTokensService;
-import com.ibanity.apis.client.services.configuration.IbanityConfiguration;
+import com.ibanity.apis.client.services.impl.AccountInformationAccessRequestsServiceImpl;
 import com.ibanity.apis.client.services.impl.AccountsServiceImpl;
 import com.ibanity.apis.client.services.impl.CustomerAccessTokensServiceImpl;
 import com.ibanity.apis.client.utils.FileUtils;
-import com.ibanity.apis.client.utils.OSValidator;
+import com.spotify.docker.client.DefaultDockerClient;
+import com.spotify.docker.client.DockerClient;
+import com.spotify.docker.client.messages.ContainerConfig;
+import com.spotify.docker.client.messages.ContainerCreation;
+import com.spotify.docker.client.messages.ContainerInfo;
+import com.spotify.docker.client.messages.HostConfig;
+import com.spotify.docker.client.messages.PortBinding;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpStatus;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInfo;
 
-import java.io.File;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static com.ibanity.apis.client.configuration.IbanityConfiguration.getConfiguration;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public abstract class AbstractServiceTest {
-    protected static final String FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.accounts.information.access.result.redirect.url");
-    protected static final String FAKE_TPP_PAYMENT_INITIATION_REDIRECT_URL = IbanityConfiguration.getConfiguration().getString(IbanityConfiguration.IBANITY_PROPERTIES_PREFIX + "tpp.payments.initiation.result.redirect.url");
-    private static final String TEST_CASE = AbstractServiceTest.class.getSimpleName();
+    private static final String IBANITY_CLIENT_SSL_CA_CERTIFICATES_FOLDER_PROPERTY_KEY = "client.ssl.ca.certificates.folder";
+    private static final String DOCKER_SANDBOX_AUTHORIZATION_CLI_POSITIVE_ANSWER    = "Your authorization has been submitted";
 
-    protected Instant now;
+    private static final Logger LOGGER = LogManager.getLogger(AbstractServiceTest.class);
 
-    protected String name;
+    private static final String IBANITY_CLIENT_DOCKER_EXTRAHOST_CALLBACK_NAME_PROPERTY_KEY                  = "client.docker.extrahost.callback.name";
+    private static final String IBANITY_CLIENT_DOCKER_EXTRAHOST_CALLBACK_IP_PROPERTY_KEY                    = "client.docker.extrahost.callback.ip";
+    private static final String IBANITY_CLIENT_DOCKER_EXTRAHOST_SANDBOX_AUTHORIZATION_NAME_PROPERTY_KEY     = "client.docker.extrahost.sandbox.authorization.name";
+    private static final String IBANITY_CLIENT_DOCKER_EXTRAHOST_SANDBOX_AUTHORIZATION_IP_PROPERTY_KEY       = "client.docker.extrahost.sandbox.authorization.ip";
 
+    private static final String IBANITY_SANDBOX_AUTHORIZATION_CLI_DOCKER_IMAGE      = "ibanity/sandbox-authorization-cli:latest";
+    private static final String IBANITY_SANDBOX_AUTHORIZATION_CLI_DOCKER_VOLUME     = "/usr/local/share/ca-certificates";
+    private static final String APACHE_WIRE_LOGGING_PACKAGE = "org.apache.http.wire";
 
-    protected WebDriver driver;
-    protected Actions actions;
-    protected JavascriptExecutor javascriptExecutor;
+    protected static final String TEST_CASE                                           = AbstractServiceTest.class.getSimpleName();
 
-    protected StringBuffer verificationErrors = new StringBuffer();
+    protected static final String ERROR_DATA_CODE_RESOURCE_NOT_FOUND                = "resourceNotFound";
+    protected static final String ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND              = "The requested resource was not found.";
+    protected static final String ERROR_DATA_META_RESOURCE_KEY                      = "resource";
 
-    protected AccountsService accountsService = new AccountsServiceImpl();
-    protected FinancialInstitutionAccountsService financialInstitutionAccountsService = new FinancialInstitutionAccountsServiceImpl();
-    protected FinancialInstitutionUsersService financialInstitutionUsersService = new FinancialInstitutionUsersServiceImpl();
-    protected SandboxFinancialInstitutionsService sandboxFinancialInstitutionsService = new SandboxFinancialInstitutionsServiceImpl();
-    protected CustomerAccessTokensService customerAccessTokensService = new CustomerAccessTokensServiceImpl();
+    protected final AccountInformationAccessRequestsService accountInformationAccessRequestsService   = new AccountInformationAccessRequestsServiceImpl();
+    protected final AccountsService accountsService                                                   = new AccountsServiceImpl();
+    protected final FinancialInstitutionAccountsService financialInstitutionAccountsService           = new FinancialInstitutionAccountsServiceImpl();
+    protected final FinancialInstitutionUsersService financialInstitutionUsersService                 = new FinancialInstitutionUsersServiceImpl();
+    protected final SandboxFinancialInstitutionsService sandboxFinancialInstitutionsService           = new SandboxFinancialInstitutionsServiceImpl();
+    protected final CustomerAccessTokensService customerAccessTokensService                           = new CustomerAccessTokensServiceImpl();
 
+    protected final String fakeTppAccountInformationAccessRedirectUrl = getConfiguration("tpp.accounts.information.access.result.redirect.url");
+    protected final String fakeTppPaymentInitiationRedirectUrl = getConfiguration("tpp.payments.initiation.result.redirect.url");
+
+    protected List<FinancialInstitutionAccount> financialInstitutionAccounts;
     protected CustomerAccessToken generatedCustomerAccessToken;
-
     protected FinancialInstitution financialInstitution;
     protected FinancialInstitutionUser financialInstitutionUser;
-    protected List<FinancialInstitutionAccount> financialInstitutionAccounts = new ArrayList<>();
 
-    protected ExpectedCondition<Boolean> expectationPageCompleted = driver -> ((JavascriptExecutor) driver).executeScript("return document.readyState").toString().equals("complete");
-
-
-    protected void initSelenium() {
-        FileUtils fileUtils = new FileUtils();
-        String driverFilePath = fileUtils.getFile("chromedriver." + OSValidator.getSystemOperatingSystem()).getAbsolutePath();
-        File driverFile = new File(driverFilePath);
-        driverFile.setExecutable(true);
-        System.setProperty("webdriver.chrome.driver", driverFilePath);
-
-        ChromeOptions options = new ChromeOptions();
-
-        options.addArguments("headless");
-        driver = new ChromeDriver(options);
-        actions = new Actions(driver);
-        options.addArguments("window-size=1900x1600");
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-        driver.manage().window().maximize();
-        javascriptExecutor = (JavascriptExecutor) driver;
+    @BeforeEach
+    public void beforeEach(TestInfo testInfo){
+        LOGGER.info("Testing {}", testInfo.getTestClass().get().getSimpleName()
+                        + "."
+                        + testInfo.getTestMethod().get().getName());
     }
 
-    protected void exitSelenium() {
-        driver.quit();
-        driver = null;
-    }
-
-    protected void initPublicAPIEnvironment() throws Exception {
-        generatedCustomerAccessToken = getCustomerAccessToken(UUID.randomUUID().toString());
-        financialInstitution = createFinancialInstitution(null);
-        financialInstitutionUser = createFinancialInstitutionUser(null);
+    protected void initPublicAPIEnvironment() {
+        generatedCustomerAccessToken = createCustomerAccessToken(UUID.randomUUID().toString());
+        financialInstitution = createFinancialInstitution();
+        financialInstitutionUser = createFinancialInstitutionUser();
+        financialInstitutionAccounts = new ArrayList<>();
         for (int index = 0; index < 5; index++) {
-            financialInstitutionAccounts.add(createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser.getId(), null));
+            financialInstitutionAccounts.add(
+                    createFinancialInstitutionAccount(
+                            financialInstitution, financialInstitutionUser.getId()));
         }
     }
 
-    protected void cleanPublicAPIEnvironment() throws Exception {
-        for (FinancialInstitutionAccount financialInstitutionAccount : financialInstitutionAccounts) {
-            deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(),financialInstitutionAccount.getId());
-        }
-        deleteFinancialInstitution(financialInstitution.getId());
-        deleteFinancialInstitutionUser(financialInstitutionUser.getId());
-    }
-
-    public FinancialInstitution createFinancialInstitution(UUID idempotency) {
-        now = Instant.now();
-        name = TEST_CASE + "-" + now.toString();
-        FinancialInstitution newFinancialInstitution = new FinancialInstitution();
-        newFinancialInstitution.setSandbox(Boolean.TRUE);
-        newFinancialInstitution.setName(name);
-        if (idempotency != null) {
-            return sandboxFinancialInstitutionsService.createFinancialInstitution(newFinancialInstitution, idempotency);
-        } else {
-            return sandboxFinancialInstitutionsService.createFinancialInstitution(newFinancialInstitution);
-        }
-    }
-
-    protected FinancialInstitutionUser createFinancialInstitutionUser(UUID idempotency) {
-        Instant now = Instant.now();
-        FinancialInstitutionUser financialInstitutionUser = new FinancialInstitutionUser();
-        financialInstitutionUser.setFirstName("FirstName-"+now);
-        financialInstitutionUser.setLastName("LastName-"+now);
-        financialInstitutionUser.setLogin("Login-"+now);
-        financialInstitutionUser.setPassword("Password-"+now);
-        if (idempotency == null) {
-            return financialInstitutionUsersService.createFinancialInstitutionUser(financialInstitutionUser);
-        } else {
-            return financialInstitutionUsersService.createFinancialInstitutionUser(financialInstitutionUser, idempotency);
-        }
-    }
-
-
-    protected void exitPublicApiEnvironment() throws Exception {
+    protected void cleanPublicAPIEnvironment() {
         for (FinancialInstitutionAccount financialInstitutionAccount : financialInstitutionAccounts) {
             deleteFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser.getId(), financialInstitutionAccount.getId());
         }
+        deleteFinancialInstitution(financialInstitution.getId());
+        deleteFinancialInstitutionUser(financialInstitutionUser.getId());
+    }
+
+    protected String generateFinancialInstitutionName() {
+        return TEST_CASE + "-" + Instant.now().toString();
+    }
+
+    protected FinancialInstitution createFinancialInstitution() {
+        return this.createFinancialInstitution((UUID) null);
+    }
+
+    protected FinancialInstitution createFinancialInstitution(final String name) {
+        return this.createFinancialInstitution(name, null);
+    }
+
+    protected FinancialInstitution createFinancialInstitution(final UUID idempotencyKey) {
+        return createFinancialInstitution(generateFinancialInstitutionName(), idempotencyKey);
+    }
+
+    protected FinancialInstitution createFinancialInstitution(final String name, final UUID idempotencyKey) {
+        FinancialInstitutionCreationQuery financialInstitutionCreationQuery =
+                FinancialInstitutionCreationQuery.builder()
+                .name(name)
+                .idempotencyKey(idempotencyKey)
+                .build();
+
+        return sandboxFinancialInstitutionsService.create(financialInstitutionCreationQuery);
+    }
+
+    protected FinancialInstitutionUser createFinancialInstitutionUser() {
+        return this.createFinancialInstitutionUser(null);
+    }
+
+    protected FinancialInstitutionUser createFinancialInstitutionUser(final UUID idempotencyKey) {
+
+        FinancialInstitutionUserCreationQuery userCreationQuery =
+                FinancialInstitutionUserCreationQuery.builder()
+                .login("Login-"+Instant.now())
+                .password("Password")
+                .lastName("LastName")
+                .firstName("FirstName")
+                .idempotencyKey(idempotencyKey)
+                .build();
+
+        return financialInstitutionUsersService.create(userCreationQuery);
+    }
+
+    protected void exitPublicApiEnvironment() {
+        for (FinancialInstitutionAccount financialInstitutionAccount : financialInstitutionAccounts) {
+            deleteFinancialInstitutionAccount(financialInstitution.getId(),
+                    financialInstitutionUser.getId(), financialInstitutionAccount.getId());
+        }
         deleteFinancialInstitutionUser(financialInstitutionUser.getId());
         deleteFinancialInstitution(financialInstitution.getId());
     }
 
-    protected void deleteFinancialInstitutionUser(UUID financialInstitutionUserID) throws ResourceNotFoundException {
-        financialInstitutionUsersService.deleteFinancialInstitutionUser(financialInstitutionUserID);
+    protected void deleteFinancialInstitutionUser(final UUID financialInstitutionUserID) {
+        FinancialInstitutionUserDeleteQuery userDeleteQuery =
+                FinancialInstitutionUserDeleteQuery.builder()
+                        .financialInstitutionUserId(financialInstitutionUserID)
+                        .build();
+
+        financialInstitutionUsersService.delete(userDeleteQuery);
     }
 
+    protected FinancialInstitutionAccount createFinancialInstitutionAccount(
+            final FinancialInstitution financialInstitution, final UUID financialInstitutionUser) {
+        return this.createFinancialInstitutionAccount(financialInstitution, financialInstitutionUser, null);
+    }
 
-    protected FinancialInstitutionAccount createFinancialInstitutionAccount(FinancialInstitution financialInstitution, UUID financialInstitutionUser, UUID idempotency) throws ResourceNotFoundException {
-        FinancialInstitutionAccount financialInstitutionAccount = new FinancialInstitutionAccount();
-        financialInstitutionAccount.setSubType("checking");
-        financialInstitutionAccount.setReference(Iban.random(CountryCode.BE).toString());
-        financialInstitutionAccount.setReferenceType("IBAN");
-        financialInstitutionAccount.setDescription("Checking Account");
-        financialInstitutionAccount.setCurrency("EUR");
-        financialInstitutionAccount.setFinancialInstitution(financialInstitution);
-        if (idempotency == null) {
-            return financialInstitutionAccountsService.createFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser, financialInstitutionAccount);
-        } else {
-            return financialInstitutionAccountsService.createFinancialInstitutionAccount(financialInstitution.getId(), financialInstitutionUser, financialInstitutionAccount, idempotency);
+    protected FinancialInstitutionAccount createFinancialInstitutionAccount(
+            final FinancialInstitution financialInstitution, final UUID financialInstitutionUserId,
+            final UUID idempotencyKey) {
+
+        FinancialInstitutionAccountCreationQuery accountCreationQuery =
+                FinancialInstitutionAccountCreationQuery.builder()
+                        .subType("checking")
+                        .reference(Iban.random(CountryCode.BE).toString())
+                        .referenceType("IBAN")
+                        .description("Checking Account")
+                        .currency("EUR")
+                        .financialInstitutionId(financialInstitution.getId())
+                        .financialInstitutionUserId(financialInstitutionUserId)
+                        .idempotencyKey(idempotencyKey)
+                        .build();
+
+        return financialInstitutionAccountsService.create(accountCreationQuery);
+    }
+
+    protected void deleteFinancialInstitutionAccount(final UUID financialInstitutionId,
+                                                     final UUID financialInstitutionUserId,
+                                                     final UUID financialInstitutionAccountId) {
+        FinancialInstitutionAccountDeleteQuery accountDeleteQuery =
+                FinancialInstitutionAccountDeleteQuery.builder()
+                .financialInstitutionId(financialInstitutionId)
+                .financialInstitutionUserId(financialInstitutionUserId)
+                .financialInstitutionAccountId(financialInstitutionAccountId)
+                .build();
+
+        financialInstitutionAccountsService.delete(accountDeleteQuery);
+    }
+
+    protected AccountInformationAccessRequest createAccountInformationAccessRequest() {
+        AccountInformationAccessRequestCreationQuery accountInformationAccessRequestCreationQuery =
+                AccountInformationAccessRequestCreationQuery.builder()
+                    .customerAccessToken(generatedCustomerAccessToken.getToken())
+                    .financialInstitutionId(financialInstitution.getId())
+                    .redirectURI(fakeTppAccountInformationAccessRedirectUrl)
+                    .consentReference(UUID.randomUUID().toString())
+                    .build();
+
+        return accountInformationAccessRequestsService.create(accountInformationAccessRequestCreationQuery);
+    }
+
+    protected void deleteFinancialInstitution(final UUID financialInstitutionId) {
+        FinancialInstitutionDeleteQuery financialInstitutionDeleteQuery =
+                FinancialInstitutionDeleteQuery.builder()
+                .financialInstitutionId(financialInstitutionId)
+                .build();
+
+        sandboxFinancialInstitutionsService.delete(financialInstitutionDeleteQuery);
+    }
+
+    protected CustomerAccessToken createCustomerAccessToken(final String applicationCustomerReference) {
+        CustomerAccessTokenCreationQuery customerAccessTokenCreationQuery =
+                CustomerAccessTokenCreationQuery.builder()
+                        .applicationCustomerReference(applicationCustomerReference)
+                        .build();
+
+        return customerAccessTokensService.create(customerAccessTokenCreationQuery);
+    }
+
+    protected void authorizeAccounts(final String redirectUrl) {
+
+        String iBanList = financialInstitutionAccounts.stream()
+                .map(AbstractAccount::getReference)
+                .collect(Collectors.joining(","));
+        String sslCAFilesPath = null;
+        String sandboxAuthorizationHostname = null;
+
+        if (getConfiguration(IBANITY_CLIENT_SSL_CA_CERTIFICATES_FOLDER_PROPERTY_KEY) != null) {
+            FileUtils filesUtils = new FileUtils();
+            sslCAFilesPath = filesUtils.getFile(getConfiguration(IBANITY_CLIENT_SSL_CA_CERTIFICATES_FOLDER_PROPERTY_KEY)).getPath();
+        }
+
+        if (getConfiguration(IBANITY_CLIENT_DOCKER_EXTRAHOST_SANDBOX_AUTHORIZATION_NAME_PROPERTY_KEY) != null) {
+            sandboxAuthorizationHostname = getConfiguration(IBANITY_CLIENT_DOCKER_EXTRAHOST_SANDBOX_AUTHORIZATION_NAME_PROPERTY_KEY);
+        }
+
+        try {
+            // Disable Apache Http Client Wire logging during Docker pull to prevent tonnes of logs
+            Logger apacheWireLogger = LogManager.getLogger(APACHE_WIRE_LOGGING_PACKAGE);
+            Level currentLogLevel = apacheWireLogger.getLevel();
+            Configurator.setLevel(APACHE_WIRE_LOGGING_PACKAGE, Level.ERROR);
+
+            // Create a client based on DOCKER_HOST and DOCKER_CERT_PATH env vars
+            final DockerClient docker = DefaultDockerClient.fromEnv().build();
+
+            // Bind container ports to host ports
+            final String[] ports = {"80", "22", "443"};
+            final Map<String, List<PortBinding>> portBindings = new HashMap<>();
+            for (String port : ports) {
+                List<PortBinding> hostPorts = new ArrayList<>();
+                hostPorts.add(PortBinding.of(getConfiguration(IBANITY_CLIENT_DOCKER_EXTRAHOST_CALLBACK_IP_PROPERTY_KEY), port));
+                portBindings.put(port, hostPorts);
+            }
+
+            HostConfig hostConfig;
+            if (getConfiguration(IBANITY_CLIENT_DOCKER_EXTRAHOST_CALLBACK_NAME_PROPERTY_KEY) != null
+                    && getConfiguration(IBANITY_CLIENT_DOCKER_EXTRAHOST_SANDBOX_AUTHORIZATION_NAME_PROPERTY_KEY) != null
+                    && getConfiguration(IBANITY_CLIENT_SSL_CA_CERTIFICATES_FOLDER_PROPERTY_KEY) != null) {
+                hostConfig = HostConfig.builder()
+                        .appendBinds(sslCAFilesPath + ":" + IBANITY_SANDBOX_AUTHORIZATION_CLI_DOCKER_VOLUME)
+                        .extraHosts(
+                                getConfiguration(IBANITY_CLIENT_DOCKER_EXTRAHOST_CALLBACK_NAME_PROPERTY_KEY) + ":" + getConfiguration(IBANITY_CLIENT_DOCKER_EXTRAHOST_CALLBACK_IP_PROPERTY_KEY)
+                                , getConfiguration(IBANITY_CLIENT_DOCKER_EXTRAHOST_SANDBOX_AUTHORIZATION_NAME_PROPERTY_KEY) + ":" + getConfiguration(IBANITY_CLIENT_DOCKER_EXTRAHOST_SANDBOX_AUTHORIZATION_IP_PROPERTY_KEY))
+                        .portBindings(portBindings).build();
+            } else {
+                hostConfig = HostConfig.builder().build();
+            }
+
+            List<String> cmdParameters = new ArrayList<>();
+
+            cmdParameters.add("account-information-access");
+
+            cmdParameters.add("-l");
+            cmdParameters.add(financialInstitutionUser.getLogin());
+
+            cmdParameters.add("-p");
+            cmdParameters.add(financialInstitutionUser.getPassword());
+
+            cmdParameters.add("-f");
+            cmdParameters.add(financialInstitution.getId().toString());
+
+            cmdParameters.add("-a");
+            cmdParameters.add(iBanList);
+
+            cmdParameters.add("-r");
+            cmdParameters.add(redirectUrl);
+
+            if (sandboxAuthorizationHostname != null) {
+                cmdParameters.add("-o");
+                cmdParameters.add(sandboxAuthorizationHostname);
+            }
+
+            final ContainerConfig containerConfig = ContainerConfig.builder()
+                    .hostConfig(hostConfig)
+                    .image(IBANITY_SANDBOX_AUTHORIZATION_CLI_DOCKER_IMAGE)
+                    .cmd(cmdParameters.toArray(new String[0]))
+                    .build();
+
+            final ContainerCreation creation = docker.createContainer(containerConfig);
+            final String id = creation.id();
+
+            while (true){
+                docker.startContainer(id);
+
+                ContainerInfo containerInfo = docker.inspectContainer(id);
+
+                int loop = 100;
+                while (containerInfo.state().running() && loop-- > 0) {
+                    containerInfo = docker.inspectContainer(id);
+                    Thread.sleep(500); //NOSONAR
+                }
+
+                String logs = docker.logs(id, DockerClient.LogsParam.stdout(), DockerClient.LogsParam.stderr()).readFully();
+                if (!logs.isEmpty()) {
+                    if (StringUtils.contains(logs, "SSL")) {
+                        LOGGER.warn("Seems like an SSL error... Retrying. Logs is " + logs);
+                        continue;
+                    }
+                    if (!StringUtils.contains(logs, DOCKER_SANDBOX_AUTHORIZATION_CLI_POSITIVE_ANSWER)) {
+                        throw new IbanityException("Failed to authorize accounts through docker image:" + logs + ":");
+                    }
+                    LOGGER.info("Account authorization success");
+                }
+
+                if (containerInfo.state().running()) {
+                    docker.stopContainer(id,4);
+                }
+
+                break;
+            }
+            docker.removeContainer(id);
+            docker.close();
+
+            Configurator.setLevel(APACHE_WIRE_LOGGING_PACKAGE, currentLogLevel);
+        } catch (IbanityException ibanityException) {
+            LOGGER.error("IbanityException",ibanityException);
+            throw ibanityException;
+        } catch (Exception e) {
+            LOGGER.error("Exception",e);
+            throw new IbanityException("Error during account authorization process",e);
         }
     }
 
-    protected void deleteFinancialInstitutionAccount(UUID financialInstitutionId, UUID financialInstitutionUserId, UUID financialInstitutionAccountId) throws ResourceNotFoundException {
-        financialInstitutionAccountsService.deleteFinancialInstitutionAccount(financialInstitutionId, financialInstitutionUserId, financialInstitutionAccountId);
+    protected void assertResourceNotFoundException(ApiErrorsException apiErrorsException, String resourceType) {
+        assertEquals(HttpStatus.SC_NOT_FOUND, apiErrorsException.getHttpStatus());
+        assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getCode().equals(ERROR_DATA_CODE_RESOURCE_NOT_FOUND)).count());
+        assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getDetail().equals(ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND)).count());
+        // TODO: verify the resourceType
+//        assertEquals(1, apiErrorsException.getErrorDatas().stream().filter(errorData -> errorData.getMeta().get(ERROR_DATA_META_RESOURCE_KEY).equals(FinancialInstitution.RESOURCE_TYPE)).count());
     }
-
-    protected AccountInformationAccessRequest getAccountInformationAccessRequest() {
-        AccountInformationAccessRequest accountInformationAccessRequest = new AccountInformationAccessRequest();
-        accountInformationAccessRequest.setConsentReference(UUID.randomUUID().toString());
-        accountInformationAccessRequest.setRedirectUri(FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL);
-        accountInformationAccessRequest.setFinancialInstitution(financialInstitution);
-        return accountsService.getAccountInformationAccessRequest(generatedCustomerAccessToken, accountInformationAccessRequest);
-    }
-
-    protected void deleteFinancialInstitution(UUID financialInstitutionId) throws ResourceNotFoundException {
-        sandboxFinancialInstitutionsService.deleteFinancialInstitution(financialInstitutionId);
-    }
-
-    protected CustomerAccessToken getCustomerAccessToken(String applicationCustomerReference){
-        CustomerAccessToken customerAccessTokenRequest = new CustomerAccessToken();
-        customerAccessTokenRequest.setApplicationCustomerReference(applicationCustomerReference);
-        return customerAccessTokensService.createCustomerAccessToken(customerAccessTokenRequest);
-    }
-
-    protected void authorizeAccounts(String redirectUrl) {
-        if (driver == null) {
-            initSelenium();
-        }
-        driver.get(redirectUrl);
-        WebDriverWait wait = new WebDriverWait(driver, 30);
-        wait.until(expectationPageCompleted);
-        List<WebElement> webElements = driver.findElements(By.id("login"));
-        // Checking with the authentication was already done or not.
-        if (webElements.size() == 1){
-            // Doing the authentication
-            WebElement webElement = webElements.get(0);
-            webElement.click();
-            webElement.clear();
-            webElement.sendKeys(financialInstitutionUser.getLogin());
-            webElement = driver.findElements(By.id("password")).get(0);
-            webElement.clear();
-            webElement.sendKeys(financialInstitutionUser.getPassword());
-            driver.findElement(By.xpath("//button[@type='submit']")).submit();
-            wait = new WebDriverWait(driver, 30);
-            wait.until(expectationPageCompleted);
-            driver.findElement(By.id("response")).clear();
-            driver.findElement(By.id("response")).sendKeys("123456");
-            driver.findElement(By.xpath("//button[@type='submit']")).submit();
-
-            wait = new WebDriverWait(driver, 30);
-            wait.until(expectationPageCompleted);
-        }
-
-        List<String> iBanList = financialInstitutionAccounts.stream().map(financialInstitutionAccount -> financialInstitutionAccount.getReference()).collect(Collectors.toList());
-
-        List<WebElement> uiAccountsList = driver.findElements(By.xpath("//input[@type='checkbox']"));
-        uiAccountsList.stream()
-                .filter(webElement -> iBanList.contains(webElement.getAttribute("value")))
-                .forEach(webElement -> {
-                    javascriptExecutor.executeScript("arguments[0].scrollIntoView();", webElement);
-                    actions.moveToElement(webElement).click().build().perform();
-                })
-        ;
-
-        WebElement webElementSelectButton = driver.findElement(By.xpath("//button[text()='Select' and @type='submit']"));
-        if (webElementSelectButton.isEnabled() && webElementSelectButton.isDisplayed()) {
-            javascriptExecutor.executeScript("arguments[0].scrollIntoView();", webElementSelectButton);
-            javascriptExecutor.executeScript("arguments[0].click();", webElementSelectButton);
-        } else {
-            throw new RuntimeException("Accounts 'Select' button not visible or not displayed");
-        }
-
-        wait = new WebDriverWait(driver, 30);
-        wait.until(expectationPageCompleted);
-
-        WebElement acceptAccountsElement = driver.findElement(By.xpath("//button[text()='Accept']"));
-        if (acceptAccountsElement.isEnabled() && acceptAccountsElement.isDisplayed()) {
-            javascriptExecutor.executeScript("arguments[0].scrollIntoView();", acceptAccountsElement);
-            javascriptExecutor.executeScript("arguments[0].click();", acceptAccountsElement);
-            wait = new WebDriverWait(driver, 30);
-            wait.until(ExpectedConditions.urlToBe(FAKE_TPP_ACCOUNT_INFORMATION_ACCESS_REDIRECT_URL));
-        } else {
-            throw new RuntimeException("Accounts selection final 'Accept' button not visible or not displayed");
-        }
-    }
-
 }

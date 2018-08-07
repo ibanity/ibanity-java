@@ -1,57 +1,59 @@
 package com.ibanity.apis.client.services.impl;
 
-import com.ibanity.apis.client.exceptions.ResourceNotFoundException;
-import com.ibanity.apis.client.models.CustomerAccessToken;
+import com.ibanity.apis.client.configuration.IbanityConfiguration;
+import com.ibanity.apis.client.models.Account;
+import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.Transaction;
+import com.ibanity.apis.client.models.factory.read.TransactionReadQuery;
+import com.ibanity.apis.client.models.factory.read.TransactionsReadQuery;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.services.TransactionsService;
 import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryV2;
 import io.crnk.core.resource.list.ResourceList;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.UUID;
 
-import static com.ibanity.apis.client.services.configuration.IbanityConfiguration.FORWARD_SLASH;
-
 public class TransactionsServiceImpl extends AbstractServiceImpl implements TransactionsService {
-
-    private static final String TRANSACTIONS_REQUEST_PATH = FORWARD_SLASH + "customer" + FORWARD_SLASH + "financial-institutions" + FORWARD_SLASH + FINANCIAL_INSTITUTION_ID_TAG + FORWARD_SLASH + "accounts" + FORWARD_SLASH + ACCOUNT_ID_TAG;
 
     public TransactionsServiceImpl() {
         super();
     }
 
     @Override
-    public ResourceList<Transaction> getAccountTransactions(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountId) throws ResourceNotFoundException {
-        return getAccountTransactions(customerAccessToken, financialInstitutionId, accountId, new IbanityPagingSpec());
-    }
-
-    @Override
-    public ResourceList<Transaction> getAccountTransactions(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountId, IbanityPagingSpec pagingSpec) throws ResourceNotFoundException {
+    public ResourceList<Transaction> list(final TransactionsReadQuery transactionsReadQuery) {
         QuerySpec querySpec = new QuerySpec(Transaction.class);
-        querySpec.setPagingSpec(pagingSpec);
-        try {
-            return findAll(querySpec, getRepository(customerAccessToken, financialInstitutionId, accountId));
-        } catch (io.crnk.core.exception.ResourceNotFoundException e) {
-            String errorMessage = "Resource with provided ids not found";
-            throw new ResourceNotFoundException(errorMessage);
+
+        if (transactionsReadQuery.getPagingSpec() != null) {
+            querySpec.setPagingSpec(transactionsReadQuery.getPagingSpec());
+        } else {
+            querySpec.setPagingSpec(IbanityPagingSpec.DEFAULT_PAGING_SPEC);
         }
+
+        return getRepository(transactionsReadQuery.getCustomerAccessToken(),
+                transactionsReadQuery.getFinancialInstitutionId(),
+                transactionsReadQuery.getAccountId())
+                .findAll(querySpec);
     }
 
     @Override
-    public Transaction getAccountTransaction(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountId, UUID transactionId) throws ResourceNotFoundException {
-        try {
-            return getRepository(customerAccessToken, financialInstitutionId, accountId).findOne(transactionId, new QuerySpec(Transaction.class));
-        } catch (io.crnk.core.exception.ResourceNotFoundException e) {
-            String errorMessage = "Resource with provided ids not found";
-            throw new ResourceNotFoundException(errorMessage);
-        }
+    public Transaction find(final TransactionReadQuery transactionReadQuery) {
+        return getRepository(transactionReadQuery.getCustomerAccessToken(),
+                transactionReadQuery.getFinancialInstitutionId(), transactionReadQuery.getAccountId())
+                .findOne(transactionReadQuery.getTransactionId(), new QuerySpec(Transaction.class));
     }
 
-    private ResourceRepositoryV2<Transaction, UUID> getRepository(CustomerAccessToken customerAccessToken, UUID financialInstitutionId, UUID accountId){
-        String correctPath = TRANSACTIONS_REQUEST_PATH
-                .replace(FINANCIAL_INSTITUTION_ID_TAG, financialInstitutionId.toString())
-                .replace(ACCOUNT_ID_TAG, accountId.toString());
-        return getApiClient(correctPath, customerAccessToken).getRepositoryForType(Transaction.class);
+    private ResourceRepositoryV2<Transaction, UUID> getRepository(
+            final String customerAccessToken, final UUID financialInstitutionId, final UUID accountId) {
+        String finalPath = StringUtils.removeEnd(
+                IbanityConfiguration.getApiUrls().getCustomer().getFinancialInstitution().getTransactions()
+                        .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
+                        .replace(Account.API_URL_TAG_ID, accountId.toString())
+                        .replace(Transaction.RESOURCE_PATH, "")
+                        .replace(Transaction.API_URL_TAG_ID, ""),
+                "//");
+
+        return getApiClient(finalPath, customerAccessToken).getRepositoryForType(Transaction.class);
     }
 }
