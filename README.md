@@ -9,7 +9,13 @@
 [![Reliability](https://sonarcloud.io/api/project_badges/measure?project=com.ibanity.apis:ibanity-java&metric=reliability_rating)](https://sonarcloud.io/component_measures?id=com.ibanity.apis:ibanity-java&metric=vulnerabilities)
 
 
+
 This Java Client library offers various Services you can use in order to submit requests towards the Ibanity Platform.
+
+## /!\ Disclaimer /!\
+
+This library does not support all Ibanity endpoints and flow. We will work on it soon...
+
 ## Configuration
 * Adapt the ibanity.properties data based on your Ibanity environment.
 (See comments inside the properties file)
