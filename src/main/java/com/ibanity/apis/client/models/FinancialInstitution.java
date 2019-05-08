@@ -4,9 +4,13 @@ import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.paging.IbanityPagingBehavior;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import static com.ibanity.apis.client.models.FinancialInstitution.RESOURCE_PATH;
 
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Data
 @JsonApiResource(type = FinancialInstitution.RESOURCE_TYPE, resourcePath = RESOURCE_PATH, pagingBehavior = IbanityPagingBehavior.class)
 public class FinancialInstitution extends AbstractModel {
