@@ -56,6 +56,14 @@ public class PaymentInitiationRequestServiceImpl extends AbstractServiceImpl imp
                 .findOne(paymentInitiationRequestReadQuery.getPaymentInitiationRequestId(), querySpec);
     }
 
+    @Override
+    public void delete(final PaymentInitiationRequestReadQuery paymentInitiationRequestReadQuery) {
+        getRepository(paymentInitiationRequestReadQuery.getCustomerAccessToken(),
+                paymentInitiationRequestReadQuery.getFinancialInstitutionId(),
+                null)
+                .delete(paymentInitiationRequestReadQuery.getPaymentInitiationRequestId());
+    }
+
     private ResourceRepositoryV2<PaymentInitiationRequest, UUID> getRepository(
             final String customerAccessToken, final UUID financialInstitutionId, final UUID idempotencyKey) {
         String finalPath = StringUtils.removeEnd(
