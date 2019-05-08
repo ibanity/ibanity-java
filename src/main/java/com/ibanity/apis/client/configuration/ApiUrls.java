@@ -107,6 +107,8 @@ public class ApiUrls implements LinksInformation {
     public class Customer {
         private String financialInstitutions;
         private String accounts;
+        private String self;
+        private String synchronizations;
         private FinancialInstitution financialInstitution;
 
         public Customer(final String financialInstitutions, final String accounts) {
@@ -115,6 +117,22 @@ public class ApiUrls implements LinksInformation {
         }
 
         public Customer() {
+        }
+
+        public String getSelf() {
+            return self;
+        }
+
+        public void setSelf(String self) {
+            this.self = self;
+        }
+
+        public String getSynchronizations() {
+            return synchronizations;
+        }
+
+        public void setSynchronizations(String synchronizations) {
+            this.synchronizations = synchronizations;
         }
 
         public String getFinancialInstitutions() {
@@ -146,6 +164,7 @@ public class ApiUrls implements LinksInformation {
             private String paymentInitiationRequests;
             private String accounts;
             private String accountInformationAccessRequests;
+            private AccountInformationAccessRequest accountInformationAccessRequest;
 
             public String getTransactions() {
                 return transactions;
@@ -177,6 +196,26 @@ public class ApiUrls implements LinksInformation {
 
             public void setAccountInformationAccessRequests(final String accountInformationAccessRequests) {
                 this.accountInformationAccessRequests = accountInformationAccessRequests;
+            }
+
+            public AccountInformationAccessRequest getAccountInformationAccessRequest() {
+                return accountInformationAccessRequest;
+            }
+
+            public void setAccountInformationAccessRequest(AccountInformationAccessRequest accountInformationAccessRequest) {
+                this.accountInformationAccessRequest = accountInformationAccessRequest;
+            }
+
+            public class AccountInformationAccessRequest {
+                private String accounts;
+
+                public String getAccounts() {
+                    return accounts;
+                }
+
+                public void setAccounts(String accounts) {
+                    this.accounts = accounts;
+                }
             }
         }
     }
