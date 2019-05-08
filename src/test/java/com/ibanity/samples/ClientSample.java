@@ -5,12 +5,14 @@ import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.PaymentInitiationRequest;
+import com.ibanity.apis.client.models.Synchronization;
 import com.ibanity.apis.client.models.Transaction;
 import com.ibanity.samples.customer.AccountInformationAccessRequestSample;
 import com.ibanity.samples.customer.AccountSample;
 import com.ibanity.samples.customer.CustomerAccessTokenSample;
 import com.ibanity.samples.customer.FinancialInstitutionSample;
 import com.ibanity.samples.customer.PaymentInitiationRequestSample;
+import com.ibanity.samples.customer.SynchronizationSample;
 import com.ibanity.samples.customer.TransactionSample;
 import com.ibanity.samples.helper.SampleHelper;
 import org.apache.logging.log4j.LogManager;
@@ -31,6 +33,7 @@ public class ClientSample {
     private final AccountSample accountSample = new AccountSample();
     private final TransactionSample transactionSample = new TransactionSample();
     private final PaymentInitiationRequestSample paymentInitiationRequestSample = new PaymentInitiationRequestSample();
+    private final SynchronizationSample synchronizationSample = new SynchronizationSample();
 
     // Configurations
     private final String fakeTppAccountInformationAccessRedirectUrl = getConfiguration("tpp.accounts.information.access.result.redirect.url");
@@ -45,8 +48,25 @@ public class ClientSample {
         clientSample.accountSamples();
         clientSample.transactionSamples();
         clientSample.paymentInitiationRequestSamples();
+        clientSample.synchronizationSamples();
 
         LOGGER.info("Samples end");
+    }
+
+    private void synchronizationSamples() {
+        String consentReference = "application_customer_reference-" + UUID.randomUUID().toString();
+
+        CustomerAccessToken customerAccessToken = customerAccessTokenSample.create(consentReference);
+        FinancialInstitution financialInstitution = financialInstitutionSample.list().get(0);
+
+        AccountInformationAccessRequest accountInformationAccessRequest =
+                this.accountInformationAccessRequestSample.create(financialInstitution, customerAccessToken,
+                        consentReference, fakeTppAccountInformationAccessRedirectUrl);
+        SampleHelper.waitForAuthorizationWebFlow(accountInformationAccessRequest);
+        Account account = accountSample.list(customerAccessToken, financialInstitution).get(0);
+
+        Synchronization synchronization = synchronizationSample.create(customerAccessToken, account.getId());
+        synchronization = synchronizationSample.find(customerAccessToken, synchronization.getId());
     }
 
     public void customerAccessTokenSamples() {
