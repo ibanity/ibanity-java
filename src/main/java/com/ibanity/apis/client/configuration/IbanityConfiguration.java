@@ -31,7 +31,11 @@ public final class IbanityConfiguration {
     }
 
     public static String getConfiguration(final String configurationKey) {
-        return getConfigurationInstance().getString(IBANITY_PROPERTIES_PREFIX + configurationKey);
+        return getConfiguration(configurationKey, null);
+    }
+
+    public static String getConfiguration(final String configurationKey, String defaultValue) {
+        return getConfigurationInstance().getString(IBANITY_PROPERTIES_PREFIX + configurationKey, defaultValue);
     }
 
     public static synchronized ApiUrls getApiUrls() {
