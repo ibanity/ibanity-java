@@ -9,10 +9,14 @@ import io.crnk.core.resource.annotations.JsonApiResource;
 import io.crnk.core.resource.annotations.LookupIncludeBehavior;
 import io.crnk.core.resource.annotations.SerializeType;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import static com.ibanity.apis.client.models.PaymentInitiationRequest.RESOURCE_PATH;
 import static com.ibanity.apis.client.models.PaymentInitiationRequest.RESOURCE_TYPE;
 
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Data
 @JsonApiResource(type = RESOURCE_TYPE, resourcePath = RESOURCE_PATH, pagingBehavior = IbanityPagingBehavior.class)
 public class PaymentInitiationRequest extends AbstractModel {
