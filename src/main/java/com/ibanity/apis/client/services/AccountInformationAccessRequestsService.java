@@ -8,4 +8,7 @@ public interface AccountInformationAccessRequestsService {
     AccountInformationAccessRequest create(
             AccountInformationAccessRequestCreationQuery accountInformationAccessRequestCreationQuery);
 
+    AccountInformationAccessRequest find(
+            AccountInformationAccessRequestCreationQuery accountInformationAccessRequestCreationQuery);
+
 }

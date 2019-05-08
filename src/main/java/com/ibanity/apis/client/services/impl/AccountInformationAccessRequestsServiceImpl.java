@@ -5,6 +5,7 @@ import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.factory.create.AccountInformationAccessRequestCreationQuery;
 import com.ibanity.apis.client.services.AccountInformationAccessRequestsService;
+import io.crnk.core.queryspec.QuerySpec;
 import io.crnk.core.repository.ResourceRepositoryV2;
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,6 +30,17 @@ public class AccountInformationAccessRequestsServiceImpl extends AbstractService
                 accountInformationAccessRequestCreationQuery.getFinancialInstitutionId(),
                 accountInformationAccessRequestCreationQuery.getIdempotencyKey())
                 .create(accountInformationAccessRequest);
+    }
+
+    @Override
+    public AccountInformationAccessRequest find(AccountInformationAccessRequestCreationQuery accountInformationAccessRequestCreationQuery) {
+        QuerySpec querySpec = new QuerySpec(AccountInformationAccessRequest.class);
+
+        return getRepository(
+                accountInformationAccessRequestCreationQuery.getCustomerAccessToken(),
+                accountInformationAccessRequestCreationQuery.getFinancialInstitutionId(),
+                accountInformationAccessRequestCreationQuery.getIdempotencyKey())
+                .findOne(accountInformationAccessRequestCreationQuery.getAccountInformationAccessRequestId(), querySpec);
     }
 
     private ResourceRepositoryV2<AccountInformationAccessRequest, UUID> getRepository(
