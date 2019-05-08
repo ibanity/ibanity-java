@@ -1,7 +1,6 @@
 package com.ibanity.apis.client.exceptions;
 
 import io.crnk.core.engine.document.ErrorData;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,15 +33,9 @@ public class ApiErrorsException extends IbanityException {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("cause", getCause())
-                .append("errorDatas", errorDatas)
-                .append("fillInStackTrace", fillInStackTrace())
-                .append("httpStatus", httpStatus)
-                .append("localizedMessage", getLocalizedMessage())
-                .append("message", getMessage())
-                .append("stackTrace", getStackTrace())
-                .append("suppressed", getSuppressed())
-                .toString();
+        return "ApiErrorsException{" +
+                "errorDatas=" + errorDatas +
+                ", httpStatus=" + httpStatus +
+                '}';
     }
 }
