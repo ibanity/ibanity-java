@@ -24,6 +24,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.Signature;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.time.Instant;
@@ -33,6 +34,10 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static com.ibanity.apis.client.configuration.IbanityConfiguration.getConfiguration;
+import static com.ibanity.apis.client.network.http.client.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY;
+import static com.ibanity.apis.client.network.http.client.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.network.http.client.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY;
+import static com.ibanity.apis.client.network.http.client.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PATH_PROPERTY_KEY;
 
 public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
     private static final Logger LOGGER = LogManager.getLogger(IbanitySignatureInterceptor.class);
@@ -57,13 +62,12 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
     private final String signatureHeaderTemplate;
 
     public IbanitySignatureInterceptor() {
-        IbanityClientSecuritySignaturePropertiesKeys signaturePropertiesKeys = new IbanityClientSecuritySignaturePropertiesKeys();
 
-        this.privateKey = this.getPrivateKey(signaturePropertiesKeys);
+        this.privateKey = this.getPrivateKey();
 
-        this.certificate = this.getCertificate(signaturePropertiesKeys);
+        this.certificate = (X509Certificate) this.getCertificate();
 
-        this.certificateId = getConfiguration(signaturePropertiesKeys.getIbanityClientSignatureCertificateIdPropertyKey());
+        this.certificateId = getConfiguration(IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY);
 
         this.signatureHeaderTemplate = this.getSignatureHeaderTemplate();
     }
@@ -103,20 +107,19 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
                 + "signature=\"%s\"";
     }
 
-    private X509Certificate getCertificate(final IbanityClientSecuritySignaturePropertiesKeys signaturePropertiesKeys) {
-        String certificatePath = getConfiguration(signaturePropertiesKeys.getIbanityClientCertificatePathPropertyKey());
+    private Certificate getCertificate() {
+        String certificatePath = getConfiguration(IBANITY_CLIENT_SIGNATURE_CERTIFICATE_PATH_PROPERTY_KEY);
         try {
-            return keyToolHelper.loadCertificate(certificatePath);
+            return KeyToolHelper.loadCertificate(certificatePath);
         } catch (CertificateException e) {
             throw new IllegalArgumentException("Invalid certificate configuration", e);
         }
     }
 
-    private PrivateKey getPrivateKey(final IbanityClientSecuritySignaturePropertiesKeys signaturePropertiesKeys) {
-        String privateKeyPath = getConfiguration(signaturePropertiesKeys.getIbanityClientPrivateKeyPathPropertyKey());
-        char[] privateKeyPassPhrase = getConfiguration(signaturePropertiesKeys.getIbanityClientPrivateKeyPassphrasePropertyKey()).toCharArray();
+    private PrivateKey getPrivateKey() {
+        String privateKeyPassPhrase = getConfiguration(IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY, "");
         try {
-            return keyToolHelper.loadPrivateKey(privateKeyPath, privateKeyPassPhrase);
+            return KeyToolHelper.loadPrivateKey(getConfiguration(IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PATH_PROPERTY_KEY), privateKeyPassPhrase);
         } catch (IOException e) {
             throw new IllegalArgumentException("Invalid private key configuration", e);
         }

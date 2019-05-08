@@ -5,96 +5,91 @@ import com.ibanity.apis.client.utils.KeyToolHelper;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.X509KeyManager;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 import java.io.IOException;
-import java.net.Socket;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
-import java.security.Principal;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.cert.X509Certificate;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.Certificate;
 
 import static com.ibanity.apis.client.configuration.IbanityConfiguration.getConfiguration;
+import static com.ibanity.apis.client.network.http.client.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CA_CERTIFICATE_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.network.http.client.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_CERTIFICATE_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.network.http.client.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY;
+import static com.ibanity.apis.client.network.http.client.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_PRIVATE_KEY_PATH_PROPERTY_KEY;
 
 public final class IbanityHttpUtils {
+
     private static final String KEY_ENTRY_NAME = "application certificate";
 
     private IbanityHttpUtils() {
     }
 
-    private static X509KeyManager getX509KeyManager(final KeyManagerFactory kmf) {
-        final X509KeyManager origKm = (X509KeyManager) kmf.getKeyManagers()[0];
-
-        return new X509KeyManager() {
-            @Override
-            public String[] getClientAliases(final String s, final Principal[] principals) {
-                return origKm.getClientAliases(s, principals);
-            }
-
-            public String chooseClientAlias(final String[] keyType, final Principal[] issuers, final Socket socket) {
-                return KEY_ENTRY_NAME;
-            }
-
-            @Override
-            public String[] getServerAliases(final String s, final Principal[] principals) {
-                return origKm.getServerAliases(s, principals);
-            }
-
-            @Override
-            public String chooseServerAlias(final String s, final Principal[] principals, final Socket socket) {
-                return origKm.chooseServerAlias(s, principals, socket);
-            }
-
-            public X509Certificate[] getCertificateChain(final String alias) {
-                return origKm.getCertificateChain(alias);
-            }
-
-            @Override
-            public PrivateKey getPrivateKey(final String s) {
-                return origKm.getPrivateKey(s);
-            }
-        };
-    }
-
     public static SSLContext getSSLContext()
             throws IOException, GeneralSecurityException {
 
-        IbanityClientSecurityAuthenticationPropertiesKeys authenticationPropertiesKeys =
-                new IbanityClientSecurityAuthenticationPropertiesKeys();
+        String privateKeyPassphrase = getConfiguration(IBANITY_CLIENT_SSL_CLIENT_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY, "");
+        String sslProtocol = getConfiguration(IbanityClientSecurityPropertiesKeys.IBANITY_CLIENT_SSL_PROTOCOL_PROPERTY_KEY);
 
-        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-        kmf.init(
-                createKeyStore(authenticationPropertiesKeys),
-                getConfiguration(authenticationPropertiesKeys.getIbanityClientPrivateKeyPassphrasePropertyKey()).toCharArray()
-        );
+        KeyStore keyStore = createKeyStore(privateKeyPassphrase);
+        KeyManager[] keyManagers = createKeyManagers(keyStore, privateKeyPassphrase);
+
+        KeyStore trustStore = createTrustStore();
+        TrustManager[] trustManagers = createTrustManagers(trustStore);
+
 
         SSLContext sslContext = SSLContext.getInstance(
-                getConfiguration(IbanityClientSecurityPropertiesKeys.IBANITY_CLIENT_SSL_PROTOCOL_PROPERTY_KEY));
-        sslContext.init(new KeyManager[]{getX509KeyManager(kmf)}, null, null);
+                sslProtocol);
+        sslContext.init(keyManagers, trustManagers, null);
 
         return sslContext;
     }
 
-    private static <T extends IbanityClientSecurityPropertiesKeys> KeyStore createKeyStore(final T clientProperties)
+    private static TrustManager[] createTrustManagers(KeyStore trustStore) throws KeyStoreException, NoSuchAlgorithmException {
+        TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        trustManagerFactory.init(trustStore);
+        return trustManagerFactory.getTrustManagers();
+    }
+
+    private static KeyStore createTrustStore() throws GeneralSecurityException, IOException {
+        Certificate certificate = KeyToolHelper.loadCertificate(
+                getConfiguration(IBANITY_CLIENT_SSL_CA_CERTIFICATE_PATH_PROPERTY_KEY));
+
+        KeyStore trustStore = KeyToolHelper.createKeyStore();
+
+        if (!trustStore.containsAlias("ibanity-ca")) {
+            trustStore.setCertificateEntry("ibanity-ca", certificate);
+        }
+
+        return trustStore;
+    }
+
+    private static KeyStore createKeyStore(String privateKeyPassphrase)
             throws IOException, GeneralSecurityException {
 
-        KeyToolHelper keyToolHelper = new KeyToolHelper();
 
-        PrivateKey privateKey = keyToolHelper.loadPrivateKey(
-                getConfiguration(clientProperties.getIbanityClientPrivateKeyPathPropertyKey()),
-                getConfiguration(clientProperties.getIbanityClientPrivateKeyPassphrasePropertyKey()).toCharArray()
-        );
+        PrivateKey privateKey = KeyToolHelper.loadPrivateKey(
+                getConfiguration(IBANITY_CLIENT_SSL_CLIENT_PRIVATE_KEY_PATH_PROPERTY_KEY),
+                privateKeyPassphrase);
 
-        X509Certificate certificate = keyToolHelper.loadCertificate(
-                getConfiguration(clientProperties.getIbanityClientCertificatePathPropertyKey())
-        );
+        Certificate certificate = KeyToolHelper.loadCertificate(getConfiguration(IBANITY_CLIENT_SSL_CLIENT_CERTIFICATE_PATH_PROPERTY_KEY));
 
-        KeyStore keyStore = keyToolHelper.createKeyStore();
+        KeyStore keyStore = KeyToolHelper.createKeyStore();
 
-        keyToolHelper.addEntryIfNotPresent(
-                keyStore, KEY_ENTRY_NAME, privateKey,
-                new X509Certificate[]{certificate});
+        KeyToolHelper.addEntryIfNotPresent(
+                keyStore, KEY_ENTRY_NAME, privateKey, privateKeyPassphrase,
+                new Certificate[]{certificate});
 
         return keyStore;
+    }
+
+    private static KeyManager[] createKeyManagers(KeyStore keyStore, String passphrase) throws NoSuchAlgorithmException, KeyStoreException, UnrecoverableKeyException {
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        kmf.init(keyStore, passphrase.toCharArray());
+        return kmf.getKeyManagers();
     }
 }
