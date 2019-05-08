@@ -11,5 +11,6 @@ import java.util.UUID;
 public final class AccountsReadQuery {
     private String customerAccessToken;
     private UUID financialInstitutionId;
+    private UUID accountInformationAccessRequestId;
     private IbanityPagingSpec pagingSpec;
 }
