@@ -9,4 +9,6 @@ public interface PaymentInitiationRequestService {
     PaymentInitiationRequest create(PaymentInitiationRequestCreationQuery paymentInitiationRequestCreationQuery);
 
     PaymentInitiationRequest find(PaymentInitiationRequestReadQuery paymentInitiationRequestReadQuery);
+
+    void delete(PaymentInitiationRequestReadQuery paymentInitiationRequestReadQuery);
 }
