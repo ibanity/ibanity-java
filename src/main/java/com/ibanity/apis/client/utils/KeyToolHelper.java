@@ -35,7 +35,7 @@ public final class KeyToolHelper {
 
         try {
             CERTIFICATE_FACTORY_INSTANCE = CertificateFactory.getInstance(CERTIFICATE_FACTORY_X509_TYPE);
-        } catch (CertificateException e) {
+        } catch (CertificateException exception) {
             throw new IllegalStateException("Unable to create CERTIFICATE_FACTORY_INSTANCE");
         }
     }
@@ -59,7 +59,7 @@ public final class KeyToolHelper {
         try {
             InputStream is = FileUtils.openInputStream(new File(certificatePath));
             return getCertificateFactory().generateCertificate(is);
-        } catch (IOException e) {
+        } catch (IOException exception) {
             throw new IllegalArgumentException(new FileNotFoundException("Resource Path not found:" + certificatePath));
         }
     }

@@ -26,10 +26,6 @@ public abstract class AbstractServiceImpl {
         return getApiClient(path, null, null);
     }
 
-    protected <T extends AbstractModel> ResourceList<T> findAll(final QuerySpec querySpec, final ResourceRepositoryV2<T, UUID> repository) {
-        return repository.findAll(querySpec);
-    }
-
     protected CrnkClient getApiClient(final String path, final String customerAccessToken) {
         return getApiClient(path, customerAccessToken, null);
     }
@@ -54,5 +50,9 @@ public abstract class AbstractServiceImpl {
             adapter.addListener(new IbanityHttpAdapterListener(customerAccessToken, idempotencyKey));
         }
         return apiClient;
+    }
+
+    protected <T extends AbstractModel> ResourceList<T> findAll(final QuerySpec querySpec, final ResourceRepositoryV2<T, UUID> repository) {
+        return repository.findAll(querySpec);
     }
 }

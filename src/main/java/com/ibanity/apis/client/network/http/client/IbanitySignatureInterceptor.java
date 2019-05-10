@@ -57,8 +57,8 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
                     payload)
                     .entrySet()
                     .forEach(addHeaderToRequest(httpRequest));
-        } catch (Exception e) {
-            throw new IOException(e.getMessage(), e);
+        } catch (Exception exception) {
+            throw new IOException(exception.getMessage(), exception);
         }
     }
 
@@ -81,8 +81,8 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
         try {
             String certificatePath = getConfiguration(IBANITY_CLIENT_SIGNATURE_CERTIFICATE_PATH_PROPERTY_KEY);
             return KeyToolHelper.loadCertificate(certificatePath);
-        } catch (CertificateException e) {
-            throw new IllegalArgumentException("Invalid certificate configuration", e);
+        } catch (CertificateException exception) {
+            throw new IllegalArgumentException("Invalid certificate configuration", exception);
         }
     }
 
@@ -90,8 +90,8 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
         try {
             String privateKeyPassPhrase = getConfiguration(IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY, "");
             return KeyToolHelper.loadPrivateKey(getConfiguration(IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PATH_PROPERTY_KEY), privateKeyPassPhrase);
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Invalid private key configuration", e);
+        } catch (IOException exception) {
+            throw new IllegalArgumentException("Invalid private key configuration", exception);
         }
     }
 

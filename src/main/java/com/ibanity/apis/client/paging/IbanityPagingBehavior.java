@@ -99,7 +99,7 @@ public class IbanityPagingBehavior extends OffsetLimitPagingBehavior implements 
 
         try {
             return Long.parseLong(values.iterator().next());
-        } catch (RuntimeException e) {
+        } catch (RuntimeException exception) {
             throw new ParametersDeserializationException(name);
         }
     }
@@ -111,7 +111,7 @@ public class IbanityPagingBehavior extends OffsetLimitPagingBehavior implements 
 
         try {
             return UUID.fromString(values.iterator().next());
-        } catch (RuntimeException e) {
+        } catch (RuntimeException exception) {
             throw new ParametersDeserializationException(name);
         }
     }

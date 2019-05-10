@@ -16,8 +16,8 @@ public class ApiErrorsException extends IbanityException {
         this.httpStatus = httpStatus;
     }
 
-    public ApiErrorsException(final int httpStatus, final ErrorData errorData, final Throwable e) {
-        super(errorData.getCode(), e);
+    public ApiErrorsException(final int httpStatus, final ErrorData errorData, final Throwable throwable) {
+        super(errorData.getCode(), throwable);
         this.errorDatas = new ArrayList<>();
         this.errorDatas.add(errorData);
         this.httpStatus = httpStatus;
@@ -33,9 +33,9 @@ public class ApiErrorsException extends IbanityException {
 
     @Override
     public String toString() {
-        return "ApiErrorsException{" +
-                "errorDatas=" + errorDatas +
-                ", httpStatus=" + httpStatus +
-                '}';
+        return "ApiErrorsException{"
+                + "errorDatas=" + errorDatas
+                + ", httpStatus=" + httpStatus
+                + "} " + super.toString();
     }
 }

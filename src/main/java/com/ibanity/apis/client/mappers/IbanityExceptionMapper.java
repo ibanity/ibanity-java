@@ -13,10 +13,10 @@ public class IbanityExceptionMapper implements ExceptionMapper<ApiErrorsExceptio
     private static final int SERIES_DIVIDER = 100;
 
     @Override
-    public ErrorResponse toErrorResponse(final ApiErrorsException e) {
+    public ErrorResponse toErrorResponse(final ApiErrorsException exception) {
         return ErrorResponse.builder()
-                .setStatus(e.getHttpStatus())
-                .setErrorData(e.getErrorDatas())
+                .setStatus(exception.getHttpStatus())
+                .setErrorData(exception.getErrorDatas())
                 .build();
     }
 

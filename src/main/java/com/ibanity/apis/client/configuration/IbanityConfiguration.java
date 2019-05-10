@@ -49,8 +49,8 @@ public final class IbanityConfiguration {
         if (configuration == null) {
             try {
                 configuration = loadProperties();
-            } catch (ConfigurationException e) {
-                throw new IllegalStateException(PROPERTIES_FILE + " couldn't be found", e);
+            } catch (ConfigurationException configurationException) {
+                throw new IllegalStateException(PROPERTIES_FILE + " couldn't be found", configurationException);
             }
         }
         return configuration;

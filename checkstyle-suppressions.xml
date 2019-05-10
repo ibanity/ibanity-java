@@ -7,6 +7,9 @@
 <suppressions>
     <suppress checks="Javadoc" files="."/>
     <suppress checks="LineLength" files="."/>
+    <suppress checks="Indentation" files="."/>
+    <suppress checks="CustomImportOrder" files="."/>
+    <suppress checks="AbbreviationAsWordInName" files="."/>
     <suppress checks="DesignForExtension" files="."/>
     <suppress checks="MagicNumber" files="."/>
     <suppress checks="HiddenField" files="."/>
