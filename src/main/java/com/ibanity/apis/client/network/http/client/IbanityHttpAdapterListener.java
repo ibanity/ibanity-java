@@ -63,9 +63,7 @@ public class IbanityHttpAdapterListener implements HttpClientAdapterListener {
         httpClientBuilder.setDefaultHeaders(getAuthorizationHttpRequestHeaders());
         httpClientBuilder.setRetryHandler(new CustomHttpRequestRetryHandler(RETRY_COUNTS, true));
         httpClientBuilder.addInterceptorLast(new IdempotencyInterceptor());
-        if (customerAccessToken != null) {
-            httpClientBuilder.addInterceptorLast(new IbanitySignatureInterceptor());
-        }
+        httpClientBuilder.addInterceptorLast(new IbanitySignatureInterceptor());
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(DEFAULT_REQUEST_TIMEOUT)
                 .setSocketTimeout(DEFAULT_REQUEST_TIMEOUT)
@@ -76,7 +74,7 @@ public class IbanityHttpAdapterListener implements HttpClientAdapterListener {
     }
 
     private Collection<Header> getAuthorizationHttpRequestHeaders() {
-        Collection<Header> authorizationHttpRequestHeaders = new ArrayList();
+        Collection<Header> authorizationHttpRequestHeaders = new ArrayList<>();
         if (customerAccessToken != null) {
             authorizationHttpRequestHeaders.add(new BasicHeader(HttpHeaders.AUTHORIZATION, "Bearer " + customerAccessToken));
         }
