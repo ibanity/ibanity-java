@@ -43,9 +43,9 @@ public class IbanityHttpAdapterListener implements HttpClientAdapterListener {
 
         try {
             this.sslContext = IbanityHttpUtils.getSSLContext();
-        } catch (GeneralSecurityException | IOException e) {
+        } catch (GeneralSecurityException | IOException exception) {
             throw new IllegalArgumentException("Unable to instantiate SSLContext with the given properties "
-                    + "(certificate, private key, etc) " + e.getMessage(), e);
+                    + "(certificate, private key, etc) " + exception.getMessage(), exception);
         }
     }
 
@@ -53,9 +53,9 @@ public class IbanityHttpAdapterListener implements HttpClientAdapterListener {
     public void onBuild(final HttpClientBuilder httpClientBuilder) {
         try {
             this.sslContext = IbanityHttpUtils.getSSLContext();
-        } catch (GeneralSecurityException | IOException e) {
+        } catch (GeneralSecurityException | IOException exception) {
             throw new IllegalArgumentException("Unable to instantiate SSLContext with the given properties "
-                    + "(certificate, private key, etc) " + e.getMessage(), e);
+                    + "(certificate, private key, etc) " + exception.getMessage(), exception);
         }
 
         httpClientBuilder.setSSLContext(sslContext);

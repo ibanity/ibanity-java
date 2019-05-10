@@ -78,19 +78,19 @@ public class IbanityPagingSpec extends OffsetLimitPagingSpec implements PagingSp
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
         }
 
-        if (!(o instanceof IbanityPagingSpec)) {
+        if (!(obj instanceof IbanityPagingSpec)) {
             return false;
         }
 
-        IbanityPagingSpec that = (IbanityPagingSpec) o;
+        IbanityPagingSpec that = (IbanityPagingSpec) obj;
 
         return new EqualsBuilder()
-                .appendSuper(super.equals(o))
+                .appendSuper(super.equals(obj))
                 .append(getBefore(), that.getBefore())
                 .append(getAfter(), that.getAfter())
                 .isEquals();

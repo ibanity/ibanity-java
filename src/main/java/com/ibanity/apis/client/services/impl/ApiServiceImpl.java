@@ -45,8 +45,8 @@ public class ApiServiceImpl extends AbstractServiceImpl implements ApiService {
 
             return new JsonLinksInformation(document.getLinks(), apiClient.getObjectMapper())
                     .as(ApiUrls.class);
-        } catch (IOException e) {
-            throw new IbanityException(e.getMessage(), e);
+        } catch (IOException exception) {
+            throw new IbanityException(exception.getMessage(), exception);
         }
     }
 }

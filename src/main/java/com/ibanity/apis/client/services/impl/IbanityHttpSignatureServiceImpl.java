@@ -83,7 +83,7 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
         try {
             String digest = Base64.getEncoder().encodeToString(MessageDigest.getInstance(DIGEST_ALGORITHM).digest(payload.getBytes(UTF8_CHARSET)));
             return DIGEST_ALGORITHM + "=" + digest;
-        } catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException exception) {
             throw new IllegalArgumentException("Unsupported digest algorithm:" + DIGEST_ALGORITHM);
         }
     }
@@ -122,9 +122,9 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
             byte[] signedData = signature.sign();
 
             return Base64.getEncoder().encodeToString(signedData);
-        } catch (InvalidKeyException | NoSuchAlgorithmException | SignatureException e) {
+        } catch (InvalidKeyException | NoSuchAlgorithmException | SignatureException exception) {
             String errorMessage = "Error while trying to generate the signature of the request";
-            throw new IllegalArgumentException(errorMessage, e);
+            throw new IllegalArgumentException(errorMessage, exception);
         }
     }
 
@@ -157,7 +157,7 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
 
     private String getRequestTarget(String httpMethod, URL url) {
         String requestTarget = httpMethod.toLowerCase() + " " + url.getPath();
-        if(url.getQuery() != null) {
+        if (url.getQuery() != null) {
             requestTarget += "?" + url.getQuery();
         }
         return requestTarget;
