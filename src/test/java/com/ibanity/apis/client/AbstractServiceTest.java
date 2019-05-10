@@ -28,7 +28,6 @@ import com.ibanity.apis.client.services.CustomerAccessTokensService;
 import com.ibanity.apis.client.services.impl.AccountInformationAccessRequestsServiceImpl;
 import com.ibanity.apis.client.services.impl.AccountsServiceImpl;
 import com.ibanity.apis.client.services.impl.CustomerAccessTokensServiceImpl;
-import com.ibanity.apis.client.utils.FileUtils;
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
 import com.spotify.docker.client.messages.ContainerConfig;
@@ -47,6 +46,7 @@ import org.iban4j.Iban;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 
+import java.io.File;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -259,8 +259,7 @@ public abstract class AbstractServiceTest {
         String sandboxAuthorizationHostname = null;
 
         if (getConfiguration(IBANITY_CLIENT_SSL_CA_CERTIFICATES_FOLDER_PROPERTY_KEY) != null) {
-            FileUtils filesUtils = new FileUtils();
-            sslCAFilesPath = filesUtils.getFile(getConfiguration(IBANITY_CLIENT_SSL_CA_CERTIFICATES_FOLDER_PROPERTY_KEY)).getPath();
+            sslCAFilesPath = new File((getConfiguration(IBANITY_CLIENT_SSL_CA_CERTIFICATES_FOLDER_PROPERTY_KEY))).getPath();
         }
 
         if (getConfiguration(IBANITY_CLIENT_DOCKER_EXTRAHOST_SANDBOX_AUTHORIZATION_NAME_PROPERTY_KEY) != null) {
