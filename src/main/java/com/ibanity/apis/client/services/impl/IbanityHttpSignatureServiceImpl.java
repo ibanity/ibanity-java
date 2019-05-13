@@ -39,11 +39,18 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
     private PrivateKey privateKey;
     private X509Certificate certificate;
 
-    public IbanityHttpSignatureServiceImpl(PrivateKey privateKey, X509Certificate certificate, String certificateId) {
+    public IbanityHttpSignatureServiceImpl(
+            @NonNull PrivateKey privateKey,
+            @NonNull X509Certificate certificate,
+            @NonNull String certificateId) {
         this(privateKey, certificate, certificateId, Clock.systemUTC());
     }
 
-    public IbanityHttpSignatureServiceImpl(PrivateKey privateKey, X509Certificate certificate, String certificateId, Clock clock) {
+    public IbanityHttpSignatureServiceImpl(
+            @NonNull PrivateKey privateKey,
+            @NonNull X509Certificate certificate,
+            @NonNull String certificateId,
+            @NonNull Clock clock) {
         this.privateKey = privateKey;
         this.certificate = certificate;
         this.certificateId = certificateId;
