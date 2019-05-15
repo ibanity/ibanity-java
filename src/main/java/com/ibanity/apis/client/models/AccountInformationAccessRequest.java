@@ -19,7 +19,7 @@ import static com.ibanity.apis.client.models.AccountInformationAccessRequest.RES
 @ToString(callSuper = true)
 @Data
 @JsonApiResource(type = RESOURCE_TYPE, resourcePath = RESOURCE_PATH, pagingBehavior = IbanityPagingBehavior.class)
-public class AccountInformationAccessRequest extends AbstractModel {
+public class AccountInformationAccessRequest extends BaseModel {
 
     public static final String RESOURCE_TYPE    = "accountInformationAccessRequest";
     public static final String RESOURCE_PATH    = "account-information-access-requests";

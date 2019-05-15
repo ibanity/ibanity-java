@@ -13,7 +13,7 @@ import static com.ibanity.apis.client.models.FinancialInstitution.RESOURCE_PATH;
 @ToString(callSuper = true)
 @Data
 @JsonApiResource(type = FinancialInstitution.RESOURCE_TYPE, resourcePath = RESOURCE_PATH, pagingBehavior = IbanityPagingBehavior.class)
-public class FinancialInstitution extends AbstractModel {
+public class FinancialInstitution extends BaseModel {
 
     public static final String RESOURCE_TYPE    = "financialInstitution";
     public static final String RESOURCE_PATH    = "financial-institutions";

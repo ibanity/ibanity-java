@@ -19,7 +19,7 @@ import static com.ibanity.apis.client.models.PaymentInitiationRequest.RESOURCE_T
 @ToString(callSuper = true)
 @Data
 @JsonApiResource(type = RESOURCE_TYPE, resourcePath = RESOURCE_PATH, pagingBehavior = IbanityPagingBehavior.class)
-public class PaymentInitiationRequest extends AbstractModel {
+public class PaymentInitiationRequest extends BaseModel {
 
     public static final String RESOURCE_TYPE    = "paymentInitiationRequest";
     public static final String RESOURCE_PATH    = "payment-initiation-requests";

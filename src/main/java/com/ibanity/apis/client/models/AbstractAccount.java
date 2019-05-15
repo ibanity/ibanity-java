@@ -7,7 +7,7 @@ import io.crnk.core.resource.annotations.SerializeType;
 import lombok.Data;
 
 @Data
-public abstract class AbstractAccount extends AbstractModel {
+public abstract class AbstractAccount extends BaseModel {
     @JsonProperty("subtype")
     private String subType;
     private String currency;

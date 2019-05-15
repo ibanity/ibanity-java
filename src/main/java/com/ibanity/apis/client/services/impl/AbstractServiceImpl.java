@@ -5,8 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ibanity.apis.client.mappers.IbanityExceptionMapper;
-import com.ibanity.apis.client.models.AbstractModel;
-import com.ibanity.apis.client.network.http.client.IbanityHttpAdapterListener;
+import com.ibanity.apis.client.models.BaseModel;
 import io.crnk.client.CrnkClient;
 import io.crnk.client.http.HttpAdapter;
 import io.crnk.client.http.apache.HttpClientAdapter;
@@ -47,12 +46,12 @@ public abstract class AbstractServiceImpl {
         HttpAdapter httpAdapter = apiClient.getHttpAdapter();
         if (httpAdapter instanceof HttpClientAdapter) {
             HttpClientAdapter adapter = (HttpClientAdapter) httpAdapter;
-            adapter.addListener(new IbanityHttpAdapterListener(customerAccessToken, idempotencyKey));
+            //adapter.addListener(new IbanityHttpAdapterListener(customerAccessToken, idempotencyKey));
         }
         return apiClient;
     }
 
-    protected <T extends AbstractModel> ResourceList<T> findAll(final QuerySpec querySpec, final ResourceRepositoryV2<T, UUID> repository) {
+    protected <T extends BaseModel> ResourceList<T> findAll(final QuerySpec querySpec, final ResourceRepositoryV2<T, UUID> repository) {
         return repository.findAll(querySpec);
     }
 }
