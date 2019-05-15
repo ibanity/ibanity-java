@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.network.http.client;
+package com.ibanity.apis.client.network.http.client.interceptor;
 
 import com.ibanity.apis.client.services.impl.IbanityHttpSignatureServiceImpl;
 import com.ibanity.apis.client.utils.KeyToolHelper;
@@ -23,19 +23,19 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.ibanity.apis.client.configuration.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY;
+import static com.ibanity.apis.client.configuration.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.configuration.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY;
+import static com.ibanity.apis.client.configuration.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PATH_PROPERTY_KEY;
 import static com.ibanity.apis.client.configuration.IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY;
 import static com.ibanity.apis.client.configuration.IbanityConfiguration.getConfiguration;
-import static com.ibanity.apis.client.network.http.client.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY;
-import static com.ibanity.apis.client.network.http.client.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_PATH_PROPERTY_KEY;
-import static com.ibanity.apis.client.network.http.client.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY;
-import static com.ibanity.apis.client.network.http.client.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PATH_PROPERTY_KEY;
 
 public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
 
     private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
     private final IbanityHttpSignatureServiceImpl httpSignatureService;
 
-    IbanitySignatureInterceptor() {
+    public IbanitySignatureInterceptor() {
         httpSignatureService = new IbanityHttpSignatureServiceImpl(getPrivateKey(), (X509Certificate) getCertificate(), getConfiguration(IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY));
     }
 
