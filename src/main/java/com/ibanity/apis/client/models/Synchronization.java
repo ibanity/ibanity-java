@@ -19,7 +19,7 @@ import static com.ibanity.apis.client.models.Synchronization.RESOURCE_TYPE;
 @ToString(callSuper = true)
 @Data
 @JsonApiResource(type = RESOURCE_TYPE, resourcePath = RESOURCE_PATH, pagingBehavior = IbanityPagingBehavior.class)
-public class Synchronization extends AbstractModel {
+public class Synchronization extends BaseModel {
 
     public static final String RESOURCE_TYPE    = "synchronization";
     public static final String RESOURCE_PATH    = "synchronizations";

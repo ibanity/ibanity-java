@@ -6,7 +6,8 @@ import lombok.Data;
 import java.util.UUID;
 
 @Data
-public abstract class AbstractModel {
+public abstract class BaseModel {
+
     @JsonApiId
     private UUID id;
     @JsonApiId

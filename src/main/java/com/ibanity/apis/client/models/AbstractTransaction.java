@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.Instant;
 
 @Data
-public abstract class AbstractTransaction extends AbstractModel {
+public abstract class AbstractTransaction extends BaseModel {
 
     private Double amount;
     private String currency;
