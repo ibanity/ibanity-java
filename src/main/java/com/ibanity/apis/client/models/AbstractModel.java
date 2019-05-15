@@ -9,5 +9,7 @@ import java.util.UUID;
 public abstract class AbstractModel {
     @JsonApiId
     private UUID id;
+    @JsonApiId
+    private String selfLink;
 
 }

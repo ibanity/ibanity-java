@@ -13,16 +13,16 @@ import java.util.List;
 import java.util.UUID;
 
 public class TransactionSample {
-    private final TransactionsService transactionsService = new TransactionsServiceImpl();
 
-    public List<Transaction> list(CustomerAccessToken customerAccessToken, FinancialInstitution financialInstitution, Account account){
+    private final TransactionsService transactionsService = new TransactionsServiceImpl(null, null, null);
+
+    public List<Transaction> list(CustomerAccessToken customerAccessToken, FinancialInstitution financialInstitution, Account account) {
         TransactionsReadQuery transactionsReadQuery = TransactionsReadQuery.builder()
                 .customerAccessToken(customerAccessToken.getToken())
                 .financialInstitutionId(financialInstitution.getId())
                 .accountId(account.getId())
                 .build();
-
-        return transactionsService.list(transactionsReadQuery);
+        return transactionsService.list(transactionsReadQuery).getItems();
     }
 
     public Transaction get(CustomerAccessToken customerAccessToken, FinancialInstitution financialInstitution, Account account, UUID transactionId) {
