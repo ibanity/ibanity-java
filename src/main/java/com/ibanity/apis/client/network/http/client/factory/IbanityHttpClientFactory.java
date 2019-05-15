@@ -7,6 +7,6 @@ import com.ibanity.apis.client.network.http.client.impl.IbanityHttpClientImpl;
 public class IbanityHttpClientFactory {
 
     public IbanityHttpClient create() {
-        return new IbanityHttpClientImpl(IbanityHttpUtils.httpClient(), IbanityHttpUtils.objectMapper());
+        return new IbanityHttpClientImpl(IbanityHttpUtils.httpClient());
     }
 }

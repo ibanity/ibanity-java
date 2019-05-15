@@ -1,8 +1,6 @@
 package com.ibanity.apis.client.network.http.client.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,11 +26,9 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
     private static final String DEFAULT_ENCODING = "UTF-8";
 
     private final HttpClient httpClient;
-    private final ObjectMapper objectMapper;
 
-    public IbanityHttpClientImpl(HttpClient httpClient, ObjectMapper objectMapper) {
+    public IbanityHttpClientImpl(HttpClient httpClient) {
         this.httpClient = httpClient;
-        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -52,7 +48,7 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
     }
 
     @Override
-    public String post(URI path, String customerAccessToken, Map<String, String> additionalHeaders, RequestApiModel payload) {
+    public String post(URI path, String customerAccessToken, Map<String, String> additionalHeaders, String payload) {
         try {
             HttpPost httpPost = new HttpPost(path);
             addHeaders(customerAccessToken, additionalHeaders, httpPost);
@@ -74,8 +70,8 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
         }
     }
 
-    private HttpEntity createEntityRequest(RequestApiModel baseRequest) throws JsonProcessingException {
-        return new StringEntity(objectMapper.writeValueAsString(baseRequest), APPLICATION_JSON);
+    private HttpEntity createEntityRequest(String baseRequest) throws JsonProcessingException {
+        return new StringEntity(baseRequest, APPLICATION_JSON);
     }
 
     private String toString(HttpEntity entity) throws IOException {
