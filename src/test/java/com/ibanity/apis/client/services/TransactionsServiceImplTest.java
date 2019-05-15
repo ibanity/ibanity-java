@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class TransactionsServiceTest {
+public class TransactionsServiceImplTest {
 
     private static final UUID ACCOUNT_ID = UUID.fromString("1c020714-759c-4ee6-ae87-5ce667937e77");
     private static final UUID TRANSACTION_ID = UUID.fromString("eb535c31-f619-4092-9db2-4db84149ddcb");
@@ -42,7 +42,7 @@ public class TransactionsServiceTest {
     private ApiUrlProvider apiUrlProvider;
 
     @Mock
-    private IbanityHttpClient<Transaction> ibanityHttpClient;
+    private IbanityHttpClient ibanityHttpClient;
 
     private ObjectMapper objectMapper = IbanityHttpUtils.objectMapper();
 
@@ -63,7 +63,7 @@ public class TransactionsServiceTest {
                         .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                         .build();
 
-        when(apiUrlProvider.find("customer", "financialInstitutions", "transactions")).thenReturn(TRANSACTION_ENDPOINT);
+        when(apiUrlProvider.find("customer", "financialInstitution", "transactions")).thenReturn(TRANSACTION_ENDPOINT);
         when(ibanityHttpClient.get(new URI(TRANSACTION_URI), CUSTOMER_ACCESS_TOKEN)).thenReturn(loadFile("json/transaction.json"));
 
         Transaction actual = transactionsService.find(transactionReadQuery);
@@ -85,7 +85,7 @@ public class TransactionsServiceTest {
                         .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                         .build();
 
-        when(apiUrlProvider.find("customer", "financialInstitutions", "transactions")).thenReturn(TRANSACTION_ENDPOINT);
+        when(apiUrlProvider.find("customer", "financialInstitution", "transactions")).thenReturn(TRANSACTION_ENDPOINT);
         when(ibanityHttpClient.get(new URI(TRANSACTIONS_URI), CUSTOMER_ACCESS_TOKEN)).thenReturn(loadFile("json/transactions.json"));
 
         IbanityCollection<Transaction> actual = transactionsService.list(transactionReadQuery);

@@ -15,6 +15,6 @@ import lombok.ToString;
 @AllArgsConstructor
 public class RequestApiModel<T> {
 
-    private ResourceApiModel<T> data;
+    private DataApiModel<T> data;
 
 }

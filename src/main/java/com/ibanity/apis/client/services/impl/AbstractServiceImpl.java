@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ibanity.apis.client.mappers.IbanityExceptionMapper;
 import com.ibanity.apis.client.models.BaseModel;
+import com.ibanity.apis.client.network.http.client.IbanityHttpAdapterListener;
 import io.crnk.client.CrnkClient;
 import io.crnk.client.http.HttpAdapter;
 import io.crnk.client.http.apache.HttpClientAdapter;
@@ -46,7 +47,7 @@ public abstract class AbstractServiceImpl {
         HttpAdapter httpAdapter = apiClient.getHttpAdapter();
         if (httpAdapter instanceof HttpClientAdapter) {
             HttpClientAdapter adapter = (HttpClientAdapter) httpAdapter;
-            //adapter.addListener(new IbanityHttpAdapterListener(customerAccessToken, idempotencyKey));
+            adapter.addListener(new IbanityHttpAdapterListener(customerAccessToken));
         }
         return apiClient;
     }

@@ -3,7 +3,6 @@ package com.ibanity.apis.client.network.http.client.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
-import com.ibanity.apis.client.jsonapi.ResourceApiModel;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +23,7 @@ import static com.google.common.collect.Maps.newHashMap;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
-public class IbanityHttpClientImpl<T> implements IbanityHttpClient<T> {
+public class IbanityHttpClientImpl implements IbanityHttpClient {
 
     private static final String DEFAULT_ENCODING = "UTF-8";
 
@@ -53,7 +52,7 @@ public class IbanityHttpClientImpl<T> implements IbanityHttpClient<T> {
     }
 
     @Override
-    public String post(URI path, String customerAccessToken, Map<String, String> additionalHeaders, T payload) {
+    public String post(URI path, String customerAccessToken, Map<String, String> additionalHeaders, RequestApiModel payload) {
         try {
             HttpPost httpPost = new HttpPost(path);
             addHeaders(customerAccessToken, additionalHeaders, httpPost);
@@ -75,18 +74,8 @@ public class IbanityHttpClientImpl<T> implements IbanityHttpClient<T> {
         }
     }
 
-    private HttpEntity createEntityRequest(T payload) throws JsonProcessingException {
-        RequestApiModel<T> baseRequest = RequestApiModel.<T>builder().data(
-                ResourceApiModel.<T>builder()
-                        .type("")
-                        .attributes(payload)
-                        .build())
-                .build();
-        return new StringEntity(toJson(baseRequest), APPLICATION_JSON);
-    }
-
-    private String toJson(RequestApiModel baseRequest) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(baseRequest);
+    private HttpEntity createEntityRequest(RequestApiModel baseRequest) throws JsonProcessingException {
+        return new StringEntity(objectMapper.writeValueAsString(baseRequest), APPLICATION_JSON);
     }
 
     private String toString(HttpEntity entity) throws IOException {

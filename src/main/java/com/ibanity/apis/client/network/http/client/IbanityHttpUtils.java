@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ibanity.apis.client.configuration.IbanityClientSecurityPropertiesKeys;
+import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.network.http.client.interceptor.IbanitySignatureInterceptor;
 import com.ibanity.apis.client.network.http.client.interceptor.IdempotencyInterceptor;
 import com.ibanity.apis.client.utils.CustomHttpRequestRetryHandler;
@@ -47,11 +48,15 @@ public final class IbanityHttpUtils {
     private IbanityHttpUtils() {
     }
 
-    public static HttpClient httpClient() throws IOException, GeneralSecurityException {
-        SSLContext sslContext = getSSLContext();
-        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
-        configureHttpClient(sslContext, httpClientBuilder);
-        return httpClientBuilder.build();
+    public static HttpClient httpClient() {
+        try {
+            SSLContext sslContext = getSSLContext();
+            HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+            configureHttpClient(sslContext, httpClientBuilder);
+            return httpClientBuilder.build();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("An exception occurred while creating IbanityHttpClient", e);
+        }
     }
 
     static void configureHttpClient(SSLContext sslContext, HttpClientBuilder httpClientBuilder) {
@@ -59,7 +64,9 @@ public final class IbanityHttpUtils {
         httpClientBuilder.setSSLSocketFactory(new SSLConnectionSocketFactory(sslContext));
         httpClientBuilder.setRetryHandler(new CustomHttpRequestRetryHandler(RETRY_COUNTS, true));
         httpClientBuilder.addInterceptorLast(new IdempotencyInterceptor());
-        httpClientBuilder.addInterceptorLast(new IbanitySignatureInterceptor());
+        if (IbanityConfiguration.getConfiguration("ibanity.client.signature.certificate.path") != null) {
+            httpClientBuilder.addInterceptorLast(new IbanitySignatureInterceptor());
+        }
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(DEFAULT_REQUEST_TIMEOUT)
                 .setSocketTimeout(DEFAULT_REQUEST_TIMEOUT)
