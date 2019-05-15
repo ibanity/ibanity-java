@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.network.http.client;
+package com.ibanity.apis.client.configuration;
 
 public interface IbanityClientSecuritySignaturePropertiesKeys {
     String IBANITY_CLIENT_SIGNATURE_CERTIFICATE_PATH_PROPERTY_KEY = "client.signature.certificate.path";

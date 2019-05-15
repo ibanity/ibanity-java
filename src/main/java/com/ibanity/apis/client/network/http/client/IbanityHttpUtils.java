@@ -1,6 +1,21 @@
 package com.ibanity.apis.client.network.http.client;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.ibanity.apis.client.configuration.IbanityClientSecurityPropertiesKeys;
+import com.ibanity.apis.client.network.http.client.interceptor.IbanitySignatureInterceptor;
+import com.ibanity.apis.client.network.http.client.interceptor.IdempotencyInterceptor;
+import com.ibanity.apis.client.utils.CustomHttpRequestRetryHandler;
 import com.ibanity.apis.client.utils.KeyToolHelper;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.DefaultClientConnectionReuseStrategy;
+import org.apache.http.impl.client.HttpClientBuilder;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -16,21 +31,54 @@ import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 
+import static com.ibanity.apis.client.configuration.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CA_CERTIFICATE_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.configuration.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_CERTIFICATE_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.configuration.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY;
+import static com.ibanity.apis.client.configuration.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_PRIVATE_KEY_PATH_PROPERTY_KEY;
 import static com.ibanity.apis.client.configuration.IbanityConfiguration.getConfiguration;
-import static com.ibanity.apis.client.network.http.client.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CA_CERTIFICATE_PATH_PROPERTY_KEY;
-import static com.ibanity.apis.client.network.http.client.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_CERTIFICATE_PATH_PROPERTY_KEY;
-import static com.ibanity.apis.client.network.http.client.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY;
-import static com.ibanity.apis.client.network.http.client.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_PRIVATE_KEY_PATH_PROPERTY_KEY;
 
 public final class IbanityHttpUtils {
+
+    private static final int RETRY_COUNTS = 10;
+    private static final int DEFAULT_REQUEST_TIMEOUT = 10_000;
 
     private static final String KEY_ENTRY_NAME = "application certificate";
 
     private IbanityHttpUtils() {
     }
 
-    public static SSLContext getSSLContext()
-            throws IOException, GeneralSecurityException {
+    public static HttpClient httpClient() throws IOException, GeneralSecurityException {
+        SSLContext sslContext = getSSLContext();
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+        configureHttpClient(sslContext, httpClientBuilder);
+        return httpClientBuilder.build();
+    }
+
+    static void configureHttpClient(SSLContext sslContext, HttpClientBuilder httpClientBuilder) {
+        httpClientBuilder.setSSLContext(sslContext);
+        httpClientBuilder.setSSLSocketFactory(new SSLConnectionSocketFactory(sslContext));
+        httpClientBuilder.setRetryHandler(new CustomHttpRequestRetryHandler(RETRY_COUNTS, true));
+        httpClientBuilder.addInterceptorLast(new IdempotencyInterceptor());
+        httpClientBuilder.addInterceptorLast(new IbanitySignatureInterceptor());
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(DEFAULT_REQUEST_TIMEOUT)
+                .setSocketTimeout(DEFAULT_REQUEST_TIMEOUT)
+                .setConnectionRequestTimeout(DEFAULT_REQUEST_TIMEOUT)
+                .build();
+        httpClientBuilder.setDefaultRequestConfig(requestConfig);
+        httpClientBuilder.setConnectionReuseStrategy(new DefaultClientConnectionReuseStrategy());
+    }
+
+    public static ObjectMapper objectMapper() {
+        return new ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .registerModule(new Jdk8Module())
+                .registerModule(new JavaTimeModule())
+                .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    }
+
+    static SSLContext getSSLContext() throws IOException, GeneralSecurityException {
 
         String privateKeyPassphrase = getConfiguration(IBANITY_CLIENT_SSL_CLIENT_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY, "");
         String sslProtocol = getConfiguration(IbanityClientSecurityPropertiesKeys.IBANITY_CLIENT_SSL_PROTOCOL_PROPERTY_KEY);

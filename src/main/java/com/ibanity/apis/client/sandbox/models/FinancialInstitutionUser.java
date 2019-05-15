@@ -2,7 +2,7 @@ package com.ibanity.apis.client.sandbox.models;
 
 import com.ibanity.apis.client.annotations.InstantJsonFormat;
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
-import com.ibanity.apis.client.models.AbstractModel;
+import com.ibanity.apis.client.models.BaseModel;
 import com.ibanity.apis.client.paging.IbanityPagingBehavior;
 import io.crnk.core.resource.annotations.JsonApiResource;
 import lombok.Data;
@@ -14,7 +14,7 @@ import static com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser.RE
 
 @Data
 @JsonApiResource(type = RESOURCE_TYPE, resourcePath = RESOURCE_PATH, pagingBehavior = IbanityPagingBehavior.class)
-public class FinancialInstitutionUser extends AbstractModel {
+public class FinancialInstitutionUser extends BaseModel {
 
     public static final String RESOURCE_TYPE    = "financialInstitutionUser";
     public static final String RESOURCE_PATH    = "financial-institution-users";

@@ -5,8 +5,8 @@ import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.Transaction;
 import com.ibanity.apis.client.models.factory.read.TransactionReadQuery;
 import com.ibanity.apis.client.models.factory.read.TransactionsReadQuery;
-import com.ibanity.apis.client.network.http.client.HttpClientHelper;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
+import com.ibanity.apis.client.network.http.client.IbanityHttpUtils;
 import com.ibanity.apis.client.services.impl.TransactionsServiceImpl;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +44,7 @@ public class TransactionsServiceTest {
     @Mock
     private IbanityHttpClient<Transaction> ibanityHttpClient;
 
-    private ObjectMapper objectMapper = HttpClientHelper.objectMapper();
+    private ObjectMapper objectMapper = IbanityHttpUtils.objectMapper();
 
     private TransactionsService transactionsService;
 

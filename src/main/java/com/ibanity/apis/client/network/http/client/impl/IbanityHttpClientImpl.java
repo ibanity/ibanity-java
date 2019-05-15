@@ -1,9 +1,10 @@
-package com.ibanity.apis.client.network.http.client;
+package com.ibanity.apis.client.network.http.client.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.jsonapi.ResourceApiModel;
+import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
