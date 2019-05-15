@@ -1,29 +1,40 @@
 package com.ibanity.apis.client.models;
 
+import com.ibanity.apis.client.annotations.InstantJsonFormat;
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
-import com.ibanity.apis.client.paging.IbanityPagingBehavior;
-import io.crnk.core.resource.annotations.JsonApiRelation;
-import io.crnk.core.resource.annotations.JsonApiResource;
-import io.crnk.core.resource.annotations.LookupIncludeBehavior;
-import io.crnk.core.resource.annotations.SerializeType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
-import static com.ibanity.apis.client.models.Transaction.RESOURCE_PATH;
-import static com.ibanity.apis.client.models.Transaction.RESOURCE_TYPE;
+import java.time.Instant;
+import java.util.UUID;
 
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 @Data
-@JsonApiResource(type = RESOURCE_TYPE, resourcePath = RESOURCE_PATH, pagingBehavior = IbanityPagingBehavior.class)
-public class Transaction extends AbstractTransaction {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Transaction {
 
     public static final String RESOURCE_TYPE    = "transaction";
     public static final String RESOURCE_PATH    = "transactions";
     public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
 
-    @JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.LAZY)
-    private Account account;
+    private UUID id;
+    private String selfLink;
+    private Double amount;
+    private String currency;
 
+    @InstantJsonFormat
+    private Instant valueDate;
+
+    @InstantJsonFormat
+    private Instant executionDate;
+
+    private String description;
+    private String remittanceInformationType;
+    private String remittanceInformation;
+    private String counterpartName;
+    private String counterpartReference;
 }
+

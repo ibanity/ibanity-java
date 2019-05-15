@@ -1,221 +1,116 @@
 package com.ibanity.apis.client.services;
 
-import com.ibanity.apis.client.AbstractServiceTest;
-import com.ibanity.apis.client.exceptions.ApiErrorsException;
-import com.ibanity.apis.client.models.Account;
-import com.ibanity.apis.client.models.FinancialInstitution;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.Transaction;
-import com.ibanity.apis.client.models.factory.read.AccountsReadQuery;
 import com.ibanity.apis.client.models.factory.read.TransactionReadQuery;
 import com.ibanity.apis.client.models.factory.read.TransactionsReadQuery;
-import com.ibanity.apis.client.paging.IbanityPagingSpec;
-import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
-import com.ibanity.apis.client.sandbox.models.FinancialInstitutionTransaction;
-import com.ibanity.apis.client.sandbox.services.FinancialInstitutionTransactionsServiceTest;
-import com.ibanity.apis.client.services.impl.AccountsServiceImpl;
+import com.ibanity.apis.client.network.http.client.HttpClientHelper;
+import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.services.impl.TransactionsServiceImpl;
-import org.junit.jupiter.api.AfterEach;
+import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
-public class TransactionsServiceTest extends AbstractServiceTest {
+@ExtendWith(MockitoExtension.class)
+public class TransactionsServiceTest {
 
-    private final TransactionsService transactionsService = new TransactionsServiceImpl();
-    private final AccountsService accountsService = new AccountsServiceImpl();
+    private static final UUID ACCOUNT_ID = UUID.fromString("1c020714-759c-4ee6-ae87-5ce667937e77");
+    private static final UUID TRANSACTION_ID = UUID.fromString("eb535c31-f619-4092-9db2-4db84149ddcb");
+    private static final UUID FINANCIAL_INSTITUTION_ID = UUID.fromString("99477654-a061-414c-afb4-19e37d13c5a3");
 
-    private final List<FinancialInstitutionTransaction> financialInstitutionTransactions = new ArrayList<>();
+    private static final String CUSTOMER_ACCESS_TOKEN = UUID.randomUUID().toString();
+    private static final String TRANSACTION_ENDPOINT = "https://api.ibanity.com/xs2a/customer/financial-institutions/{financialInstitutionId}/accounts/{accountId}/transactions/{transactionId}";
+    private static final String TRANSACTION_URI = "https://api.ibanity.com/xs2a/customer/financial-institutions/99477654-a061-414c-afb4-19e37d13c5a3/accounts/1c020714-759c-4ee6-ae87-5ce667937e77/transactions/eb535c31-f619-4092-9db2-4db84149ddcb";
+    private static final String TRANSACTIONS_URI = "https://api.ibanity.com/xs2a/customer/financial-institutions/99477654-a061-414c-afb4-19e37d13c5a3/accounts/1c020714-759c-4ee6-ae87-5ce667937e77/transactions";
+
+    @Mock
+    private ApiUrlProvider apiUrlProvider;
+
+    @Mock
+    private IbanityHttpClient<Transaction> ibanityHttpClient;
+
+    private ObjectMapper objectMapper = HttpClientHelper.objectMapper();
+
+    private TransactionsService transactionsService;
 
     @BeforeEach
-    public void beforeEach() {
-        initPublicAPIEnvironment();
-        for (FinancialInstitutionAccount financialInstitutionAccount : financialInstitutionAccounts) {
-            for (int index = 0; index < 5; index++) {
-                financialInstitutionTransactions.add(
-                        FinancialInstitutionTransactionsServiceTest.createFinancialInstitutionTransaction(
-                                financialInstitutionUser.getId()
-                                ,financialInstitutionAccount
-                                , null
-                        )
-                );
-            }
-        }
-    }
-
-    @AfterEach
-    public void afterEach() {
-        for (FinancialInstitutionTransaction financialInstitutionTransaction : financialInstitutionTransactions) {
-            FinancialInstitutionTransactionsServiceTest.deleteFinancialInstitutionTransaction(
-                    financialInstitution.getId()
-                    , financialInstitutionUser.getId()
-                    , financialInstitutionTransaction.getFinancialInstitutionAccount().getId()
-                    , financialInstitutionTransaction.getId()
-            );
-        }
-        cleanPublicAPIEnvironment();
+    void setUp() {
+        transactionsService = new TransactionsServiceImpl(ibanityHttpClient, objectMapper, apiUrlProvider);
     }
 
     @Test
-    public void testGetAccountTransactionsForCustomerAccessTokenFinancialInstitutionIdAccountId() {
-        AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()
-                .customerAccessToken(generatedCustomerAccessToken.getToken())
-                .financialInstitutionId(financialInstitution.getId())
-                .build();
-
-        for (Account account : accountsService.list(accountsReadQuery)) {
-            TransactionsReadQuery transactionsReadQuery = TransactionsReadQuery.builder()
-                    .customerAccessToken(generatedCustomerAccessToken.getToken())
-                    .financialInstitutionId(financialInstitution.getId())
-                    .accountId(account.getId())
-                    .build();
-
-            List<Transaction> transactionsList = transactionsService.list(transactionsReadQuery);
-            assertEquals(transactionsList.size(), financialInstitutionTransactions.size());
-        }
-    }
-
-    @Test
-    public void testGetAccountTransactionsForCustomerAccessTokenFinancialInstitutionIdAccountIdDefaultPagingSpec() {
-        AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()
-                .customerAccessToken(generatedCustomerAccessToken.getToken())
-                .financialInstitutionId(financialInstitution.getId())
-                .build();
-
-        for (Account account : accountsService.list(accountsReadQuery)) {
-            TransactionsReadQuery transactionsReadQuery = TransactionsReadQuery.builder()
-                    .customerAccessToken(generatedCustomerAccessToken.getToken())
-                    .financialInstitutionId(financialInstitution.getId())
-                    .accountId(account.getId())
-                    .pagingSpec(new IbanityPagingSpec())
-                    .build();
-
-            List<Transaction> transactionsList = transactionsService.list(transactionsReadQuery);
-            assertEquals(transactionsList.size(), financialInstitutionTransactions.size());
-        }
-    }
-
-    @Test
-    public void testGetAccountTransactionsForCustomerAccessTokenAndWrongFinancialInstitutionIdAccountId() {
-        AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()
-                .customerAccessToken(generatedCustomerAccessToken.getToken())
-                .financialInstitutionId(financialInstitution.getId())
-                .build();
-
-        for (Account account : accountsService.list(accountsReadQuery)) {
-            try {
-                TransactionsReadQuery transactionsReadQuery = TransactionsReadQuery.builder()
-                        .customerAccessToken(generatedCustomerAccessToken.getToken())
-                        .financialInstitutionId(UUID.randomUUID())
-                        .accountId(UUID.randomUUID())
+    public void find() throws Exception {
+        TransactionReadQuery transactionReadQuery =
+                TransactionReadQuery.builder()
+                        .transactionId(TRANSACTION_ID)
+                        .accountId(ACCOUNT_ID)
+                        .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
+                        .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                         .build();
 
-                transactionsService.list(transactionsReadQuery);
-                fail("Expected transactionsService.list to raise an ApiErrorsException");
-            } catch (ApiErrorsException apiErrorsException) {
-                super.assertResourceNotFoundException(apiErrorsException, FinancialInstitution.RESOURCE_TYPE);
-            }
-        }
+        when(apiUrlProvider.find("customer", "financialInstitutions", "transactions")).thenReturn(TRANSACTION_ENDPOINT);
+        when(ibanityHttpClient.get(new URI(TRANSACTION_URI), CUSTOMER_ACCESS_TOKEN)).thenReturn(loadFile("json/transaction.json"));
+
+        Transaction actual = transactionsService.find(transactionReadQuery);
+
+        assertThat(actual).isEqualTo(createExpected());
     }
 
     @Test
-    public void testGetAccountTransactionsForCustomerAccessTokenAndWrongFinancialInstitutionIdAccountIdPaginSpec() {
-        try {
-            TransactionsReadQuery transactionsReadQuery = TransactionsReadQuery.builder()
-                    .customerAccessToken(generatedCustomerAccessToken.getToken())
-                    .financialInstitutionId(UUID.randomUUID())
-                    .accountId(UUID.randomUUID())
-                    .pagingSpec(new IbanityPagingSpec())
-                    .build();
-
-            transactionsService.list(transactionsReadQuery);
-            fail("Expected transactionsService.list to raise an ApiErrorsException");
-        } catch (ApiErrorsException apiErrorsException) {
-            super.assertResourceNotFoundException(apiErrorsException, FinancialInstitution.RESOURCE_TYPE);
-        }
-    }
-
-    @Test
-    public void testGetAccountTransactionsForCustomerAccessTokenFinancialInstitutionIdAccountIdPagingSpec() {
-        IbanityPagingSpec pagingSpec = new IbanityPagingSpec();
-        pagingSpec.setLimit(1L);
-
-        AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()
-                .customerAccessToken(generatedCustomerAccessToken.getToken())
-                .financialInstitutionId(financialInstitution.getId())
-                .build();
-
-        for (Account account : accountsService.list(accountsReadQuery)) {
-            TransactionsReadQuery transactionsReadQuery = TransactionsReadQuery.builder()
-                    .customerAccessToken(generatedCustomerAccessToken.getToken())
-                    .financialInstitutionId(financialInstitution.getId())
-                    .accountId(account.getId())
-                    .pagingSpec(pagingSpec)
-                    .build();
-
-            List<Transaction> transactionsList = transactionsService.list(transactionsReadQuery);
-            assertEquals(1, transactionsList.size());
-        }
-    }
-
-    @Test
-    public void testGetAccountTransaction() {
-        AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()
-                .customerAccessToken(generatedCustomerAccessToken.getToken())
-                .financialInstitutionId(financialInstitution.getId())
-                .build();
-
-        for (Account account : accountsService.list(accountsReadQuery)) {
-            TransactionsReadQuery transactionsReadQuery = TransactionsReadQuery.builder()
-                    .customerAccessToken(generatedCustomerAccessToken.getToken())
-                    .financialInstitutionId(financialInstitution.getId())
-                    .accountId(account.getId())
-                    .build();
-
-            List<Transaction> transactionsList = transactionsService.list(transactionsReadQuery);
-
-            for (Transaction transaction : transactionsList) {
-                TransactionReadQuery transactionReadQuery = TransactionReadQuery.builder()
-                        .customerAccessToken(generatedCustomerAccessToken.getToken())
-                        .financialInstitutionId(financialInstitution.getId())
-                        .accountId(account.getId())
-                        .transactionId(transaction.getId())
+    public void list() throws Exception {
+        IbanityCollection<Transaction> expected =
+                IbanityCollection.<Transaction>builder()
+                        .items(newArrayList(createExpected()))
                         .build();
 
-                Transaction transactionReceived = transactionsService.find(transactionReadQuery);
-                assertEquals(transactionReceived.getAccount(), transaction.getAccount());
-                assertEquals(transactionReceived.getAmount(), transaction.getAmount());
-                assertEquals(transactionReceived.getCounterpartName(), transaction.getCounterpartName());
-                assertEquals(transactionReceived.getCounterpartReference(), transaction.getCounterpartReference());
-                assertEquals(transactionReceived.getCurrency(), transaction.getCurrency());
-                assertEquals(transactionReceived.getDescription(), transaction.getDescription());
-                assertEquals(transactionReceived.getExecutionDate(), transaction.getExecutionDate());
-                assertEquals(transactionReceived.getId(), transaction.getId());
-                assertEquals(transactionReceived.getRemittanceInformation(), transaction.getRemittanceInformation());
-                assertEquals(transactionReceived.getRemittanceInformationType(), transaction.getRemittanceInformationType());
-                assertEquals(transactionReceived.getValueDate(), transaction.getValueDate());
-            }
-        }
-    }
-    @Test
-    public void testGetAccountTransactionWithWrongId() {
-        try {
-            TransactionReadQuery transactionReadQuery = TransactionReadQuery.builder()
-                    .customerAccessToken(generatedCustomerAccessToken.getToken())
-                    .financialInstitutionId(UUID.randomUUID())
-                    .accountId(UUID.randomUUID())
-                    .transactionId(UUID.randomUUID())
-                    .build();
+        TransactionsReadQuery transactionReadQuery =
+                TransactionsReadQuery.builder()
+                        .accountId(ACCOUNT_ID)
+                        .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
+                        .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
+                        .build();
 
-            transactionsService.find(transactionReadQuery);
-            fail("Expected transactionsService.find to raise an ApiErrorsException");
-        } catch (ApiErrorsException apiErrorsException) {
-            super.assertResourceNotFoundException(apiErrorsException, Transaction.RESOURCE_TYPE);
-        }
+        when(apiUrlProvider.find("customer", "financialInstitutions", "transactions")).thenReturn(TRANSACTION_ENDPOINT);
+        when(ibanityHttpClient.get(new URI(TRANSACTIONS_URI), CUSTOMER_ACCESS_TOKEN)).thenReturn(loadFile("json/transactions.json"));
+
+        IbanityCollection<Transaction> actual = transactionsService.list(transactionReadQuery);
+
+        assertThat(actual).isEqualTo(expected);
     }
+
+    private String loadFile(String filePath) throws IOException {
+        return IOUtils.toString(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(filePath)), Charset.forName("UTF-8"));
+    }
+
+    private Transaction createExpected() {
+        return Transaction.builder()
+                .amount(new Double("6.99"))
+                .currency("EUR")
+                .remittanceInformationType("unstructured")
+                .remittanceInformation("NEW SHOES")
+                .description("Small Cotton Shoes")
+                .valueDate(Instant.parse("2018-10-22T00:00:00Z"))
+                .counterpartName("ABBOTSTONE AGRICULTURAL PROPERTY UNIT TRUST")
+                .counterpartReference("BE4779002273920627")
+                .executionDate(Instant.parse("2018-10-25T00:00:00.000Z"))
+                .selfLink(TRANSACTION_URI)
+                .id(TRANSACTION_ID)
+                .build();
+    }
+
 }
