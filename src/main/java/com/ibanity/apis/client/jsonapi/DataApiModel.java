@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Builder
@@ -15,8 +15,10 @@ import java.util.List;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class CollectionApiModel<T> {
+public class DataApiModel<T> {
 
-    private MetaApiModel meta;
-    private List<DataApiModel<T>> data;
+    private UUID id;
+    private T attributes;
+    private LinksApiModel links;
+    private String type;
 }

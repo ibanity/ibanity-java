@@ -10,7 +10,6 @@ public abstract class BaseModel {
 
     @JsonApiId
     private UUID id;
-    @JsonApiId
     private String selfLink;
 
 }

@@ -12,6 +12,7 @@ import java.net.URISyntaxException;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.removeEnd;
 
 public class ApiUrlProviderImpl implements ApiUrlProvider {
 
@@ -38,7 +39,7 @@ public class ApiUrlProviderImpl implements ApiUrlProvider {
 
     @Override
     public void loadApiSchema() {
-        String ibanityApiUrl = IbanityConfiguration.getConfiguration(IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY);
+        String ibanityApiUrl = removeEnd(IbanityConfiguration.getConfiguration(IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY), "/");
         try {
             String schema = ibanityHttpClient.get(new URI(ibanityApiUrl + "/xs2a"), null);
             apiUrls = mapJsonToMap(schema);

@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.UUID;
-
 @Getter
 @Builder
 @ToString
@@ -17,8 +15,5 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ResourceApiModel<T> {
 
-    private UUID id;
-    private T attributes;
-    private LinksApiModel links;
-    private String type;
+    private DataApiModel<T> data;
 }

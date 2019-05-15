@@ -3,6 +3,7 @@ package com.ibanity.apis.client.services.impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ibanity.apis.client.jsonapi.CollectionApiModel;
+import com.ibanity.apis.client.jsonapi.DataApiModel;
 import com.ibanity.apis.client.jsonapi.ResourceApiModel;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.FinancialInstitution;
@@ -25,12 +26,12 @@ import java.util.stream.Collectors;
 
 public class TransactionsServiceImpl implements TransactionsService {
 
-    private final IbanityHttpClient<Transaction> ibanityHttpClient;
+    private final IbanityHttpClient ibanityHttpClient;
     private final ObjectMapper objectMapper;
     private final ApiUrlProvider apiUrlProvider;
 
     public TransactionsServiceImpl(
-            IbanityHttpClient<Transaction> ibanityHttpClient,
+            IbanityHttpClient ibanityHttpClient,
             ObjectMapper objectMapper,
             ApiUrlProvider apiUrlProvider) {
         this.ibanityHttpClient = ibanityHttpClient;
@@ -64,12 +65,12 @@ public class TransactionsServiceImpl implements TransactionsService {
         try {
             String url =
                     getUrl(transactionReadQuery.getFinancialInstitutionId(), transactionReadQuery.getAccountId())
-                            + "/" + transactionReadQuery.getTransactionId().toString();
+                            + "/"
+                            + transactionReadQuery.getTransactionId().toString();
             String response = ibanityHttpClient.get(new URI(url), transactionReadQuery.getCustomerAccessToken());
-
             ResourceApiModel<Transaction> transaction = objectMapper.readValue(response, new TypeReference<ResourceApiModel<Transaction>>() {
             });
-            return toTransaction(transaction);
+            return toTransaction(transaction.getData());
         } catch (URISyntaxException e) {
             throw new IllegalStateException("URL cannot be build", e);
         } catch (IOException e) {
@@ -83,7 +84,7 @@ public class TransactionsServiceImpl implements TransactionsService {
                 .build();
     }
 
-    private Transaction toTransaction(ResourceApiModel<Transaction> transactionData) {
+    private Transaction toTransaction(DataApiModel<Transaction> transactionData) {
         Transaction transaction = transactionData.getAttributes();
         transaction.setId(transactionData.getId());
         transaction.setSelfLink(transactionData.getLinks().getSelf());
@@ -91,7 +92,7 @@ public class TransactionsServiceImpl implements TransactionsService {
     }
 
     private String getUrl(UUID financialInstitutionId, UUID accountId) throws URISyntaxException {
-        String url = apiUrlProvider.find("customer", "financialInstitutions", "transactions");
+        String url = apiUrlProvider.find("customer", "financialInstitution", "transactions");
         return StringUtils.removeEnd(url
                         .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
                         .replace(Account.API_URL_TAG_ID, accountId.toString())
