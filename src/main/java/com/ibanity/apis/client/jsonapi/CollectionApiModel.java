@@ -15,8 +15,8 @@ import java.util.List;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class CollectionApiModel<T> {
+public class CollectionApiModel {
 
     private MetaApiModel meta;
-    private List<DataApiModel<T>> data;
+    private List<DataApiModel> data;
 }

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.Map;
 import java.util.UUID;
 
 @Getter
@@ -15,10 +16,10 @@ import java.util.UUID;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class DataApiModel<T> {
+public class DataApiModel {
 
     private UUID id;
-    private T attributes;
+    private Map<String, String> attributes;
     private LinksApiModel links;
     private String type;
 }
