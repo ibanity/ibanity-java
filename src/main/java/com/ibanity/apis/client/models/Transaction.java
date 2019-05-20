@@ -14,7 +14,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Transaction {
+public class Transaction implements IbanityModel{
 
     public static final String RESOURCE_TYPE    = "transaction";
     public static final String RESOURCE_PATH    = "transactions";

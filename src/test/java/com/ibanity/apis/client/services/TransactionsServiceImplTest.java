@@ -1,12 +1,10 @@
 package com.ibanity.apis.client.services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.Transaction;
 import com.ibanity.apis.client.models.factory.read.TransactionReadQuery;
 import com.ibanity.apis.client.models.factory.read.TransactionsReadQuery;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
-import com.ibanity.apis.client.network.http.client.IbanityHttpUtils;
 import com.ibanity.apis.client.services.impl.TransactionsServiceImpl;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,13 +42,11 @@ public class TransactionsServiceImplTest {
     @Mock
     private IbanityHttpClient ibanityHttpClient;
 
-    private ObjectMapper objectMapper = IbanityHttpUtils.objectMapper();
-
     private TransactionsService transactionsService;
 
     @BeforeEach
     void setUp() {
-        transactionsService = new TransactionsServiceImpl(ibanityHttpClient, objectMapper, apiUrlProvider);
+        transactionsService = new TransactionsServiceImpl(ibanityHttpClient, apiUrlProvider);
     }
 
     @Test

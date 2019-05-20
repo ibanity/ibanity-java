@@ -13,8 +13,8 @@ import lombok.ToString;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequestApiModel<T> {
+public class RequestApiModel {
 
-    private DataApiModel<T> data;
+    private DataApiModel data;
 
 }

@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class TransactionSample {
 
-    private final TransactionsService transactionsService = new TransactionsServiceImpl(null, null, null);
+    private final TransactionsService transactionsService = new TransactionsServiceImpl(null, null);
 
     public List<Transaction> list(CustomerAccessToken customerAccessToken, FinancialInstitution financialInstitution, Account account) {
         TransactionsReadQuery transactionsReadQuery = TransactionsReadQuery.builder()
