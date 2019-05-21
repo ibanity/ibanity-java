@@ -13,11 +13,8 @@ import lombok.ToString;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class LinksApiModel {
+public class RelationshipsApiModel {
 
-    private String self;
-    private String first;
-    private String prev;
-    private String next;
-    private String related;
+    private DataApiModel data;
+    private LinksApiModel links;
 }

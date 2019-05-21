@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,7 +26,8 @@ public class Synchronization implements IbanityModel {
     @Singular
     private List<String> errors;
     private String status;
-    private String subtype;
+    @JsonProperty("subtype")
+    private String subType;
     private String resourceId;
     private String resourceType;
     private String selfLink;

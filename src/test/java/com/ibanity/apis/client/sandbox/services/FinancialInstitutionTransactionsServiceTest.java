@@ -24,7 +24,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class FinancialInstitutionTransactionsServiceTest extends AbstractServiceTest {
 
@@ -202,7 +204,7 @@ public class FinancialInstitutionTransactionsServiceTest extends AbstractService
 
         FinancialInstitutionTransactionCreationQuery transactionCreationQuery =
                 FinancialInstitutionTransactionCreationQuery.builder()
-                        .financialInstitutionId(financialInstitutionAccount.getFinancialInstitution().getId())
+                        .financialInstitutionId(financialInstitutionAccount.getFinancialInstitutionId())
                         .financialInstitutionAccountId(financialInstitutionAccount.getId())
                         .financialInstitutionUserId(financialInstitutionUserId)
                         .idempotencyKey(idempotencyKey)

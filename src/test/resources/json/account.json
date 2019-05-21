@@ -1,0 +1,53 @@
+{
+  "data": {
+    "attributes": {
+      "availableBalance": 0,
+      "currency": "EUR",
+      "currentBalance": 0,
+      "description": "Checking account",
+      "reference": "BE0178572046576544",
+      "referenceType": "IBAN",
+      "subtype": "checking"
+    },
+    "id": "d6d2a2bc-6607-467b-ac78-86e4e19963ff",
+    "links": {
+      "self": "https://api.ibanity.com/xs2a/customer/financial-institutions/43a02473-1023-4b70-a881-6c9b1857e8e6/accounts/d6d2a2bc-6607-467b-ac78-86e4e19963ff"
+    },
+    "meta": {
+      "latestSynchronization": {
+        "attributes": {
+          "createdAt": "2019-05-09T09:19:37.683Z",
+          "errors": [],
+          "resourceId": "d6d2a2bc-6607-467b-ac78-86e4e19963ff",
+          "resourceType": "account",
+          "status": "success",
+          "subtype": "accountDetails",
+          "updatedAt": "2019-05-09T09:19:37.683Z"
+        },
+        "id": "d57d0a33-dcc0-4a45-b517-ca6a9d978fac",
+        "type": "synchronization"
+      },
+      "synchronizedAt": "2019-05-09T09:19:37.683Z"
+    },
+    "relationships": {
+      "financialInstitution": {
+        "data": {
+          "id": "43a02473-1023-4b70-a881-6c9b1857e8e6",
+          "type": "financialInstitution"
+        },
+        "links": {
+          "related": "https://api.ibanity.com/xs2a/financial-institutions/43a02473-1023-4b70-a881-6c9b1857e8e6"
+        }
+      },
+      "transactions": {
+        "links": {
+          "meta": {
+            "type": "transaction"
+          },
+          "related": "https://api.ibanity.com/xs2a/customer/financial-institutions/43a02473-1023-4b70-a881-6c9b1857e8e6/accounts/d6d2a2bc-6607-467b-ac78-86e4e19963ff/transactions"
+        }
+      }
+    },
+    "type": "account"
+  }
+}

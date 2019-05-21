@@ -1,6 +1,5 @@
 package com.ibanity.apis.client.models;
 
-import com.ibanity.apis.client.annotations.InstantJsonFormat;
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,10 +24,7 @@ public class Transaction implements IbanityModel{
     private Double amount;
     private String currency;
 
-    @InstantJsonFormat
     private Instant valueDate;
-
-    @InstantJsonFormat
     private Instant executionDate;
 
     private String description;
