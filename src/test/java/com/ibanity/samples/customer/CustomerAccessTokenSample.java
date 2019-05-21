@@ -6,7 +6,7 @@ import com.ibanity.apis.client.services.CustomerAccessTokensService;
 import com.ibanity.apis.client.services.impl.CustomerAccessTokensServiceImpl;
 
 public class CustomerAccessTokenSample {
-    private final CustomerAccessTokensService customerAccessTokensService = new CustomerAccessTokensServiceImpl();
+    private final CustomerAccessTokensService customerAccessTokensService = new CustomerAccessTokensServiceImpl(null, null);
 
     public CustomerAccessToken create(String consentReference) {
         CustomerAccessTokenCreationQuery customerAccessTokenCreationQuery =

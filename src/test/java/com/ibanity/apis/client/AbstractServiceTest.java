@@ -84,7 +84,7 @@ public abstract class AbstractServiceTest {
     protected final FinancialInstitutionAccountsService financialInstitutionAccountsService           = new FinancialInstitutionAccountsServiceImpl();
     protected final FinancialInstitutionUsersService financialInstitutionUsersService                 = new FinancialInstitutionUsersServiceImpl();
     protected final SandboxFinancialInstitutionsService sandboxFinancialInstitutionsService           = new SandboxFinancialInstitutionsServiceImpl();
-    protected final CustomerAccessTokensService customerAccessTokensService                           = new CustomerAccessTokensServiceImpl();
+    protected final CustomerAccessTokensService customerAccessTokensService                           = new CustomerAccessTokensServiceImpl(null, null);
 
     protected final String fakeTppAccountInformationAccessRedirectUrl = getConfiguration("tpp.accounts.information.access.result.redirect.url");
     protected final String fakeTppPaymentInitiationRedirectUrl = getConfiguration("tpp.payments.initiation.result.redirect.url");
