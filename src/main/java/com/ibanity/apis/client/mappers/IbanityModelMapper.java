@@ -39,7 +39,10 @@ public class IbanityModelMapper {
     private static <T extends IbanityModel> T toModel(DataApiModel data, Class<T> classType) {
         T clientObject = IbanityHttpUtils.objectMapper().convertValue(data.getAttributes(), classType);
         clientObject.setId(data.getId());
-        clientObject.setSelfLink(data.getLinks().getSelf());
+        if (data.getLinks() != null) {
+            clientObject.setSelfLink(data.getLinks().getSelf());
+        }
+
         return clientObject;
     }
 }

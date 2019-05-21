@@ -1,23 +1,20 @@
-package com.ibanity.apis.client.services;
+package com.ibanity.apis.client.services.impl;
 
+import com.ibanity.apis.client.helpers.IbanityTestHelper;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.Transaction;
 import com.ibanity.apis.client.models.factory.read.TransactionReadQuery;
 import com.ibanity.apis.client.models.factory.read.TransactionsReadQuery;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
-import com.ibanity.apis.client.services.impl.TransactionsServiceImpl;
-import org.apache.commons.io.IOUtils;
-import org.junit.jupiter.api.BeforeEach;
+import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.IOException;
 import java.net.URI;
-import java.nio.charset.Charset;
 import java.time.Instant;
-import java.util.Objects;
 import java.util.UUID;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -42,12 +39,8 @@ public class TransactionsServiceImplTest {
     @Mock
     private IbanityHttpClient ibanityHttpClient;
 
-    private TransactionsService transactionsService;
-
-    @BeforeEach
-    void setUp() {
-        transactionsService = new TransactionsServiceImpl(ibanityHttpClient, apiUrlProvider);
-    }
+    @InjectMocks
+    private TransactionsServiceImpl transactionsService;
 
     @Test
     public void find() throws Exception {
@@ -60,7 +53,7 @@ public class TransactionsServiceImplTest {
                         .build();
 
         when(apiUrlProvider.find("customer", "financialInstitution", "transactions")).thenReturn(TRANSACTION_ENDPOINT);
-        when(ibanityHttpClient.get(new URI(TRANSACTION_URI), CUSTOMER_ACCESS_TOKEN)).thenReturn(loadFile("json/transaction.json"));
+        when(ibanityHttpClient.get(new URI(TRANSACTION_URI), CUSTOMER_ACCESS_TOKEN)).thenReturn(IbanityTestHelper.loadFile("json/transaction.json"));
 
         Transaction actual = transactionsService.find(transactionReadQuery);
 
@@ -82,15 +75,11 @@ public class TransactionsServiceImplTest {
                         .build();
 
         when(apiUrlProvider.find("customer", "financialInstitution", "transactions")).thenReturn(TRANSACTION_ENDPOINT);
-        when(ibanityHttpClient.get(new URI(TRANSACTIONS_URI), CUSTOMER_ACCESS_TOKEN)).thenReturn(loadFile("json/transactions.json"));
+        when(ibanityHttpClient.get(new URI(TRANSACTIONS_URI), CUSTOMER_ACCESS_TOKEN)).thenReturn(IbanityTestHelper.loadFile("json/transactions.json"));
 
         IbanityCollection<Transaction> actual = transactionsService.list(transactionReadQuery);
 
         assertThat(actual).isEqualTo(expected);
-    }
-
-    private String loadFile(String filePath) throws IOException {
-        return IOUtils.toString(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(filePath)), Charset.forName("UTF-8"));
     }
 
     private Transaction createExpected() {
