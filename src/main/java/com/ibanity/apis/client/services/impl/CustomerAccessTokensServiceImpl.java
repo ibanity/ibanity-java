@@ -1,34 +1,33 @@
 package com.ibanity.apis.client.services.impl;
 
-import com.ibanity.apis.client.configuration.IbanityConfiguration;
+import com.ibanity.apis.client.mappers.IbanityModelMapper;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.factory.create.CustomerAccessTokenCreationQuery;
+import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
+import com.ibanity.apis.client.services.ApiUrlProvider;
 import com.ibanity.apis.client.services.CustomerAccessTokensService;
-import io.crnk.core.repository.ResourceRepositoryV2;
 
-import java.util.UUID;
+import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 
-public class CustomerAccessTokensServiceImpl extends AbstractServiceImpl implements CustomerAccessTokensService {
+public class CustomerAccessTokensServiceImpl implements CustomerAccessTokensService {
 
-    public CustomerAccessTokensServiceImpl() {
-        super();
+    private final ApiUrlProvider apiUrlProvider;
+    private final IbanityHttpClient ibanityHttpClient;
+
+    public CustomerAccessTokensServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
+        this.apiUrlProvider = apiUrlProvider;
+        this.ibanityHttpClient = ibanityHttpClient;
     }
 
     @Override
     public CustomerAccessToken create(final CustomerAccessTokenCreationQuery customerAccessTokenCreationQuery) {
-        CustomerAccessToken customerAccessToken = new CustomerAccessToken();
-        customerAccessToken.setApplicationCustomerReference(customerAccessTokenCreationQuery.getApplicationCustomerReference());
+        CustomerAccessToken customerAccessToken = CustomerAccessToken.builder()
+                .applicationCustomerReference(customerAccessTokenCreationQuery.getApplicationCustomerReference())
+                .build();
 
-        return getRepository(customerAccessTokenCreationQuery.getIdempotencyKey())
-                .create(customerAccessToken);
+        String url = apiUrlProvider.find("customerAccessTokens");
+        String response = ibanityHttpClient.post(buildUri(url), null, customerAccessToken);
+
+        return IbanityModelMapper.mapResource(response, CustomerAccessToken.class);
     }
-
-    private ResourceRepositoryV2<CustomerAccessToken, UUID> getRepository(final UUID idempotencyKey) {
-        String finalPath = IbanityConfiguration.getApiUrls().getCustomerAccessTokens()
-                .replace(CustomerAccessToken.RESOURCE_PATH, "");
-
-        return getApiClient(finalPath, null, idempotencyKey).getRepositoryForType(CustomerAccessToken.class);
-    }
-
-
 }

@@ -21,6 +21,14 @@ public class URIHelper {
         }
     }
 
+    public static URI buildUri(@NonNull String url) {
+        try {
+            return new URIBuilder(url).build();
+        } catch (URISyntaxException e) {
+            throw new IllegalStateException("URL cannot be build", e);
+        }
+    }
+
     private static void addIfNotNull(URIBuilder uriBuilder, String paramName, Object paramValue) {
         if (paramValue != null) {
             uriBuilder.addParameter(paramName, "" + paramValue.toString());
