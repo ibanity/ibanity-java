@@ -1,0 +1,15 @@
+{
+  "data": {
+    "attributes": {
+      "errors": [],
+      "createdAt": "2019-05-09T09:18:58.358Z",
+      "resourceId": "d0027fc6-0097-41f7-a9bb-3c400b5a3e2a",
+      "resourceType": "account",
+      "status": "pending",
+      "subtype": "accountDetails",
+      "updatedAt": "2019-05-09T09:18:59.012Z"
+    },
+    "id": "04e98b21-8213-4aec-b373-13eb51f948e9",
+    "type": "synchronization"
+  }
+}

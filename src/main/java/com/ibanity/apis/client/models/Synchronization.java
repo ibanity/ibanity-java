@@ -1,39 +1,36 @@
 package com.ibanity.apis.client.models;
 
-import com.ibanity.apis.client.annotations.InstantJsonFormat;
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
-import com.ibanity.apis.client.paging.IbanityPagingBehavior;
-import io.crnk.core.resource.annotations.JsonApiResource;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
+import lombok.Singular;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
-import static com.ibanity.apis.client.models.Synchronization.RESOURCE_PATH;
-import static com.ibanity.apis.client.models.Synchronization.RESOURCE_TYPE;
-
-
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 @Data
-@JsonApiResource(type = RESOURCE_TYPE, resourcePath = RESOURCE_PATH, pagingBehavior = IbanityPagingBehavior.class)
-public class Synchronization extends BaseModel {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Synchronization implements IbanityModel {
 
     public static final String RESOURCE_TYPE    = "synchronization";
     public static final String RESOURCE_PATH    = "synchronizations";
     public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
 
+    private UUID id;
+    @Singular
     private List<String> errors;
     private String status;
     private String subtype;
     private String resourceId;
     private String resourceType;
+    private String selfLink;
 
-    @InstantJsonFormat
     private Instant createdAt;
-    @InstantJsonFormat
     private Instant updatedAt;
 
 }
