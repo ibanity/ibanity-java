@@ -19,7 +19,7 @@ import java.util.UUID;
 public class DataApiModel {
 
     private UUID id;
-    private Map<String, String> attributes;
+    private Map<String, Object> attributes;
     private LinksApiModel links;
     private String type;
 }
