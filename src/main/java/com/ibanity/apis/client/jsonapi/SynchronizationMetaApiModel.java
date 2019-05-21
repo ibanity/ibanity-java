@@ -7,17 +7,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.time.Instant;
+
 @Getter
 @Builder
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class LinksApiModel {
+public class SynchronizationMetaApiModel {
 
-    private String self;
-    private String first;
-    private String prev;
-    private String next;
-    private String related;
+    private Instant synchronizedAt;
+    private DataApiModel latestSynchronization;
 }

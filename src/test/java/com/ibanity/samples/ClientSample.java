@@ -63,7 +63,7 @@ public class ClientSample {
                 this.accountInformationAccessRequestSample.create(financialInstitution, customerAccessToken,
                         consentReference, fakeTppAccountInformationAccessRedirectUrl);
         SampleHelper.waitForAuthorizationWebFlow(accountInformationAccessRequest);
-        Account account = accountSample.list(customerAccessToken, financialInstitution).get(0);
+        Account account = accountSample.list(customerAccessToken, financialInstitution).getItems().get(0);
 
         Synchronization synchronization = synchronizationSample.create(customerAccessToken, account.getId());
         synchronization = synchronizationSample.find(customerAccessToken, synchronization.getId());
@@ -112,7 +112,7 @@ public class ClientSample {
                         consentReference, fakeTppAccountInformationAccessRedirectUrl);
         SampleHelper.waitForAuthorizationWebFlow(accountInformationAccessRequest);
 
-        List<Account> accounts = accountSample.list(customerAccessToken, financialInstitution);
+        List<Account> accounts = accountSample.list(customerAccessToken, financialInstitution).getItems();
 
         Account account = accountSample.get(customerAccessToken, financialInstitution, accounts.get(0).getId());
     }
@@ -129,7 +129,7 @@ public class ClientSample {
                 this.accountInformationAccessRequestSample.create(financialInstitution, customerAccessToken,
                         consentReference, fakeTppAccountInformationAccessRedirectUrl);
         SampleHelper.waitForAuthorizationWebFlow(accountInformationAccessRequest);
-        Account account = accountSample.list(customerAccessToken, financialInstitution).get(0);
+        Account account = accountSample.list(customerAccessToken, financialInstitution).getItems().get(0);
 
         List<Transaction> transactions = transactionSample.list(customerAccessToken, financialInstitution, account);
 

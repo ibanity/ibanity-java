@@ -3,18 +3,18 @@ package com.ibanity.samples.customer;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.FinancialInstitution;
+import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.factory.read.AccountReadQuery;
 import com.ibanity.apis.client.models.factory.read.AccountsReadQuery;
 import com.ibanity.apis.client.services.AccountsService;
 import com.ibanity.apis.client.services.impl.AccountsServiceImpl;
 
-import java.util.List;
 import java.util.UUID;
 
 public class AccountSample {
-    private final AccountsService accountsService = new AccountsServiceImpl();
+    private final AccountsService accountsService = new AccountsServiceImpl(null, null);
 
-    public List<Account> list(CustomerAccessToken customerAccessToken, FinancialInstitution financialInstitution) {
+    public IbanityCollection<Account> list(CustomerAccessToken customerAccessToken, FinancialInstitution financialInstitution) {
         AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()
                 .customerAccessToken(customerAccessToken.getToken())
                 .financialInstitutionId(financialInstitution.getId())

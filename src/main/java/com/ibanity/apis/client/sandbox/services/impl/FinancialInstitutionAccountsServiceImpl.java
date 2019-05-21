@@ -61,7 +61,7 @@ public class FinancialInstitutionAccountsServiceImpl extends AbstractServiceImpl
 
         FinancialInstitution financialInstitution = new FinancialInstitution();
         financialInstitution.setId(query.getFinancialInstitutionId());
-        financialInstitutionAccount.setFinancialInstitution(financialInstitution);
+        financialInstitutionAccount.setFinancialInstitutionId(financialInstitution.getId());
 
         return getRepository(
                 query.getFinancialInstitutionId(),

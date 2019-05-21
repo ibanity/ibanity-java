@@ -8,17 +8,36 @@ import com.ibanity.apis.client.models.IbanityModel;
 import com.ibanity.apis.client.network.http.client.IbanityHttpUtils;
 
 import java.io.IOException;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class IbanityModelMapper {
 
+    public static <T extends IbanityModel> T mapResource(String jsonPayload, Class<T> classType) {
+        return mapResource(jsonPayload, dataApiModel -> toIbanityModel(dataApiModel, classType));
+    }
+
     public static <T extends IbanityModel> IbanityCollection<T> mapCollection(String jsonPayload, Class<T> classType) {
+        return mapCollection(jsonPayload, dataApiModel -> toIbanityModel(dataApiModel, classType));
+    }
+
+    public static <T extends IbanityModel> T mapResource(String jsonPayload, Function<DataApiModel, T> customMapping) {
+        try {
+            DataApiModel dataApiModel = IbanityHttpUtils.objectMapper().readValue(jsonPayload, ResourceApiModel.class).getData();
+            return customMapping.apply(dataApiModel);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Response cannot be parsed", e);
+        }
+    }
+
+    public static <T extends IbanityModel> IbanityCollection<T> mapCollection(String jsonPayload, Function<DataApiModel, T> customMapping) {
         try {
             CollectionApiModel collectionApiModel = IbanityHttpUtils.objectMapper().readValue(jsonPayload, CollectionApiModel.class);
             return IbanityCollection.<T>builder()
+                    .pageLimit(collectionApiModel.getMeta().getPaging().getLimit())
                     .items(
                             collectionApiModel.getData().stream()
-                                    .map(dataApiModel -> toModel(dataApiModel, classType))
+                                    .map(customMapping)
                                     .collect(Collectors.toList())
                     )
                     .build();
@@ -27,16 +46,7 @@ public class IbanityModelMapper {
         }
     }
 
-    public static <T extends IbanityModel> T mapResource(String jsonPayload, Class<T> classType) {
-        try {
-            DataApiModel data = IbanityHttpUtils.objectMapper().readValue(jsonPayload, ResourceApiModel.class).getData();
-            return toModel(data, classType);
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Response cannot be parsed", e);
-        }
-    }
-
-    private static <T extends IbanityModel> T toModel(DataApiModel data, Class<T> classType) {
+    public static <T extends IbanityModel> T toIbanityModel(DataApiModel data, Class<T> classType) {
         T clientObject = IbanityHttpUtils.objectMapper().convertValue(data.getAttributes(), classType);
         clientObject.setId(data.getId());
         if (data.getLinks() != null) {

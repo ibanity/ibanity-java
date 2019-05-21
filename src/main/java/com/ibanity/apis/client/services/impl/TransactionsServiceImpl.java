@@ -32,19 +32,15 @@ public class TransactionsServiceImpl implements TransactionsService {
 
     @Override
     public IbanityCollection<Transaction> list(TransactionsReadQuery transactionsReadQuery) {
-        try {
-            IbanityPagingSpec pagingSpec = transactionsReadQuery.getPagingSpec();
-            if (pagingSpec == null) {
-                pagingSpec = IbanityPagingSpec.DEFAULT_PAGING_SPEC;
-            }
-
-            String url = getUrl(transactionsReadQuery.getFinancialInstitutionId(), transactionsReadQuery.getAccountId());
-            String response = ibanityHttpClient.get(URIHelper.buildUri(url, pagingSpec), transactionsReadQuery.getCustomerAccessToken());
-
-            return mapCollection(response, Transaction.class);
-        } catch (URISyntaxException e) {
-            throw new IllegalStateException("URL cannot be build", e);
+        IbanityPagingSpec pagingSpec = transactionsReadQuery.getPagingSpec();
+        if (pagingSpec == null) {
+            pagingSpec = IbanityPagingSpec.DEFAULT_PAGING_SPEC;
         }
+
+        String url = getUrl(transactionsReadQuery.getFinancialInstitutionId(), transactionsReadQuery.getAccountId());
+        String response = ibanityHttpClient.get(URIHelper.buildUri(url, pagingSpec), transactionsReadQuery.getCustomerAccessToken());
+
+        return mapCollection(response, Transaction.class);
     }
 
     @Override

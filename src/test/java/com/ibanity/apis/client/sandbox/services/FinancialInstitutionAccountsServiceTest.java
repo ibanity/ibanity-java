@@ -13,7 +13,9 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest {
 
@@ -142,7 +144,7 @@ public class FinancialInstitutionAccountsServiceTest extends AbstractServiceTest
         assertEquals(financialInstitutionAccount.getDescription(), financialInstitutionGet.getDescription());
         assertEquals(financialInstitutionAccount.getReferenceType(), financialInstitutionGet.getReferenceType());
         assertEquals(financialInstitutionAccount.getSubType(), financialInstitutionGet.getSubType());
-        assertEquals(financialInstitution.getId(), financialInstitutionAccount.getFinancialInstitution().getId());
+        assertEquals(financialInstitution.getId(), financialInstitutionAccount.getFinancialInstitutionId());
 
         FinancialInstitutionAccountDeleteQuery accountDeleteQuery =
                 FinancialInstitutionAccountDeleteQuery.builder()

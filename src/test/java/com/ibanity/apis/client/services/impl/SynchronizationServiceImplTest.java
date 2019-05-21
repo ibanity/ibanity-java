@@ -74,7 +74,7 @@ class SynchronizationServiceImplTest {
         return Synchronization.builder()
                 .resourceId(synchronizationReadQuery.getResourceId())
                 .resourceType(synchronizationReadQuery.getResourceType())
-                .subtype(synchronizationReadQuery.getSubtype())
+                .subType(synchronizationReadQuery.getSubtype())
                 .build();
     }
 
@@ -84,7 +84,7 @@ class SynchronizationServiceImplTest {
                 .resourceId(ACCOUNT_ID)
                 .resourceType("account")
                 .status(status)
-                .subtype("accountDetails")
+                .subType("accountDetails")
                 .createdAt(Instant.parse("2019-05-09T09:18:58.358Z"))
                 .updatedAt(Instant.parse("2019-05-09T09:18:59.012Z"))
                 .build();

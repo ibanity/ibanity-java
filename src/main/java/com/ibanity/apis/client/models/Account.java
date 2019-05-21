@@ -1,23 +1,37 @@
 package com.ibanity.apis.client.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
-import com.ibanity.apis.client.paging.IbanityPagingBehavior;
-import io.crnk.core.resource.annotations.JsonApiResource;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
-import static com.ibanity.apis.client.models.Account.RESOURCE_PATH;
-import static com.ibanity.apis.client.models.Account.RESOURCE_TYPE;
+import java.time.Instant;
+import java.util.UUID;
 
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 @Data
-@JsonApiResource(type = RESOURCE_TYPE, resourcePath = RESOURCE_PATH, pagingBehavior = IbanityPagingBehavior.class)
-public class Account extends AbstractAccount {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Account implements IbanityModel {
 
     public static final String RESOURCE_TYPE    = "account";
     public static final String RESOURCE_PATH    = "accounts";
     public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
 
+    private UUID id;
+    private String selfLink;
+    private UUID financialInstitutionId;
+
+    @JsonProperty("subType")
+    private String subType;
+    private String currency;
+    private String description;
+    private String reference;
+    private String referenceType;
+    private Double currentBalance;
+    private Double availableBalance;
+    private Instant synchronizedAt;
+    private Synchronization lastSynchronization;
 }

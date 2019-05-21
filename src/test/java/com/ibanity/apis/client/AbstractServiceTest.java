@@ -2,7 +2,7 @@ package com.ibanity.apis.client;
 
 import com.ibanity.apis.client.exceptions.ApiErrorsException;
 import com.ibanity.apis.client.exceptions.IbanityException;
-import com.ibanity.apis.client.models.AbstractAccount;
+import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.FinancialInstitution;
@@ -80,7 +80,7 @@ public abstract class AbstractServiceTest {
     protected static final String ERROR_DATA_META_RESOURCE_KEY                      = "resource";
 
     protected final AccountInformationAccessRequestsService accountInformationAccessRequestsService   = new AccountInformationAccessRequestsServiceImpl();
-    protected final AccountsService accountsService                                                   = new AccountsServiceImpl();
+    protected final AccountsService accountsService                                                   = new AccountsServiceImpl(null, null);
     protected final FinancialInstitutionAccountsService financialInstitutionAccountsService           = new FinancialInstitutionAccountsServiceImpl();
     protected final FinancialInstitutionUsersService financialInstitutionUsersService                 = new FinancialInstitutionUsersServiceImpl();
     protected final SandboxFinancialInstitutionsService sandboxFinancialInstitutionsService           = new SandboxFinancialInstitutionsServiceImpl();
@@ -253,7 +253,7 @@ public abstract class AbstractServiceTest {
     protected void authorizeAccounts(final String redirectUrl) {
 
         String iBanList = financialInstitutionAccounts.stream()
-                .map(AbstractAccount::getReference)
+                .map(Account::getReference)
                 .collect(Collectors.joining(","));
         String sslCAFilesPath = null;
         String sandboxAuthorizationHostname = null;

@@ -9,12 +9,16 @@ import java.net.URISyntaxException;
 
 public class URIHelper {
 
-    public static URI buildUri(@NonNull String url, @NonNull IbanityPagingSpec pagingSpec) throws URISyntaxException {
-        URIBuilder uriBuilder = new URIBuilder(url);
-        addIfNotNull(uriBuilder, "before", pagingSpec.getBefore());
-        addIfNotNull(uriBuilder, "after", pagingSpec.getAfter());
-        addIfNotNull(uriBuilder, "limit", pagingSpec.getLimit());
-        return uriBuilder.build();
+    public static URI buildUri(@NonNull String url, @NonNull IbanityPagingSpec pagingSpec) {
+        try {
+            URIBuilder uriBuilder = new URIBuilder(url);
+            addIfNotNull(uriBuilder, "before", pagingSpec.getBefore());
+            addIfNotNull(uriBuilder, "after", pagingSpec.getAfter());
+            addIfNotNull(uriBuilder, "limit", pagingSpec.getLimit());
+            return uriBuilder.build();
+        } catch (URISyntaxException e) {
+            throw new IllegalStateException("URL cannot be build", e);
+        }
     }
 
     private static void addIfNotNull(URIBuilder uriBuilder, String paramName, Object paramValue) {

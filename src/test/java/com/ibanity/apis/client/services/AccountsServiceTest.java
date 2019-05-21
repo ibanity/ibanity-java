@@ -53,7 +53,7 @@ public class AccountsServiceTest extends AbstractServiceTest {
                 .financialInstitutionId(financialInstitution.getId())
                 .build();
 
-        List<Account> accountsList = accountsService.list(accountsReadQuery);
+        List<Account> accountsList = accountsService.list(accountsReadQuery).getItems();
         if (accountsList.size() == 0) {
             fail("authorized accounts list size is 0");
         }
@@ -101,7 +101,7 @@ public class AccountsServiceTest extends AbstractServiceTest {
                 .pagingSpec(pagingSpec)
                 .build();
 
-        List<Account> accountsList = accountsService.list(accountsReadQuery);
+        List<Account> accountsList = accountsService.list(accountsReadQuery).getItems();
         assertEquals(financialInstitutionAccounts.size(), accountsList.size());
     }
 
@@ -114,7 +114,7 @@ public class AccountsServiceTest extends AbstractServiceTest {
                 .customerAccessToken(generatedCustomerAccessToken.getToken())
                 .build();
 
-        List<Account> accountsList = accountsService.list(accountsReadQuery);
+        List<Account> accountsList = accountsService.list(accountsReadQuery).getItems();
         assertEquals(financialInstitutionAccounts.size(), accountsList.size());
     }
 
@@ -128,7 +128,7 @@ public class AccountsServiceTest extends AbstractServiceTest {
                 .pagingSpec(pagingSpec)
                 .build();
 
-        List<Account> accountsList = accountsService.list(accountsReadQuery);
+        List<Account> accountsList = accountsService.list(accountsReadQuery).getItems();
         assertTrue(accountsList.isEmpty());
         assertFalse(financialInstitutionAccounts.size() == accountsList.size());
     }
@@ -147,7 +147,7 @@ public class AccountsServiceTest extends AbstractServiceTest {
                 .pagingSpec(pagingSpec)
                 .build();
 
-        List<Account> accountsList = accountsService.list(accountsReadQuery);
+        List<Account> accountsList = accountsService.list(accountsReadQuery).getItems();
         assertEquals(1, accountsList.size());
         Account account = accountsList.get(0);
         assertEquals(1, financialInstitutionAccounts.stream().filter(financialInstitutionAccount -> financialInstitutionAccount.getReference().equals(account.getReference())).collect(Collectors.toList()).size());
@@ -163,7 +163,7 @@ public class AccountsServiceTest extends AbstractServiceTest {
                 .financialInstitutionId(financialInstitution.getId())
                 .build();
 
-        List<Account> accountsList = accountsService.list(accountsReadQuery);
+        List<Account> accountsList = accountsService.list(accountsReadQuery).getItems();
         assertEquals(financialInstitutionAccounts.size(), accountsList.size());
     }
 
@@ -195,7 +195,7 @@ public class AccountsServiceTest extends AbstractServiceTest {
                 .pagingSpec(pagingSpec)
                 .build();
 
-        List<Account> accountsList = accountsService.list(accountsReadQuery);
+        List<Account> accountsList = accountsService.list(accountsReadQuery).getItems();
         Account account = accountsList.get(0);
         assertEquals(1, financialInstitutionAccounts.stream()
                 .filter(financialInstitutionAccount -> financialInstitutionAccount.getReference().equals(account.getReference()))

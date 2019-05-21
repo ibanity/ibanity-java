@@ -29,7 +29,7 @@ public class SynchronizationServiceImpl implements SynchronizationService {
             Synchronization synchronization = Synchronization.builder()
                     .resourceId(synchronizationReadQuery.getResourceId())
                     .resourceType(synchronizationReadQuery.getResourceType())
-                    .subtype(synchronizationReadQuery.getSubtype())
+                    .subType(synchronizationReadQuery.getSubtype())
                     .build();
             String url = getUrl();
             String response = ibanityHttpClient.post(new URI(url), synchronizationReadQuery.getCustomerAccessToken(), synchronization);

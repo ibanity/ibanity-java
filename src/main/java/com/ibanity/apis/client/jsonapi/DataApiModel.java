@@ -22,4 +22,6 @@ public class DataApiModel {
     private Map<String, Object> attributes;
     private LinksApiModel links;
     private String type;
+    private Map<String, RelationshipsApiModel> relationships;
+    private SynchronizationMetaApiModel meta;
 }
