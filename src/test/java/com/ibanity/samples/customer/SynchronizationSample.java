@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class SynchronizationSample {
 
-    private SynchronizationService synchronizationService = new SynchronizationServiceImpl();
+    private SynchronizationService synchronizationService = new SynchronizationServiceImpl(null, null);
 
     public Synchronization create(CustomerAccessToken customerAccessToken, UUID accountId) {
         SynchronizationReadQuery synchronizationReadQuery =
