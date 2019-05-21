@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.utils;
+package com.ibanity.apis.client.helpers;
 
 import com.spotify.docker.client.DefaultDockerClient;
 import com.spotify.docker.client.DockerClient;
