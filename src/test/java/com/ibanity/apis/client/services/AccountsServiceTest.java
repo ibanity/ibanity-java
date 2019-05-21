@@ -2,13 +2,13 @@ package com.ibanity.apis.client.services;
 
 import com.ibanity.apis.client.AbstractServiceTest;
 import com.ibanity.apis.client.exceptions.ApiErrorsException;
+import com.ibanity.apis.client.helpers.DockerHelper;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.factory.read.AccountReadQuery;
 import com.ibanity.apis.client.models.factory.read.AccountsReadQuery;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
-import com.ibanity.apis.client.utils.DockerHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -20,7 +20,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class AccountsServiceTest extends AbstractServiceTest {
     private static final Logger LOGGER = LogManager.getLogger(AccountsServiceTest.class);
