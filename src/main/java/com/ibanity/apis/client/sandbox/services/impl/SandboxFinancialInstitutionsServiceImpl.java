@@ -15,7 +15,7 @@ import java.util.UUID;
 public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutionsServiceImpl implements SandboxFinancialInstitutionsService {
 
     public SandboxFinancialInstitutionsServiceImpl() {
-        super();
+        super(null, null);
     }
 
     @Override
@@ -51,7 +51,8 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
                 .replace(FinancialInstitution.RESOURCE_PATH, "")
                 .replace(FinancialInstitution.API_URL_TAG_ID, ""), "//");
 
-        return getApiClient(finalPath, null, idempotencyKey)
-                .getRepositoryForType(FinancialInstitution.class);
+        return null;
+/*        return getApiClient(finalPath, null, idempotencyKey)
+                .getRepositoryForType(FinancialInstitution.class);*/
     }
 }
