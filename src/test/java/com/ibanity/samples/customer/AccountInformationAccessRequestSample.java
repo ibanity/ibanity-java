@@ -7,8 +7,10 @@ import com.ibanity.apis.client.models.factory.create.AccountInformationAccessReq
 import com.ibanity.apis.client.services.AccountInformationAccessRequestsService;
 import com.ibanity.apis.client.services.impl.AccountInformationAccessRequestsServiceImpl;
 
+import java.util.UUID;
+
 public class AccountInformationAccessRequestSample {
-    private final AccountInformationAccessRequestsService accountInformationAccessRequestsService = new AccountInformationAccessRequestsServiceImpl();
+    private final AccountInformationAccessRequestsService accountInformationAccessRequestsService = new AccountInformationAccessRequestsServiceImpl(null, null);
 
     public AccountInformationAccessRequest create(FinancialInstitution financialInstitution, CustomerAccessToken customerAccessToken,
                                                   String consentReference, String redirectUrl){
@@ -17,7 +19,7 @@ public class AccountInformationAccessRequestSample {
                         .customerAccessToken(customerAccessToken.getToken())
                         .financialInstitutionId(financialInstitution.getId())
                         .redirectURI(redirectUrl)
-                        .consentReference(consentReference)
+                        .consentReference(UUID.fromString(consentReference))
                         .build();
 
         return accountInformationAccessRequestsService.create(accountInformationAccessRequestCreationQuery);

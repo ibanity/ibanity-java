@@ -40,7 +40,7 @@ public class ApiServiceImpl extends AbstractServiceImpl implements ApiService {
 
             Document document = apiClient.getObjectMapper().readValue(httpAdapterResponse.body(), Document.class);
             if (document.getLinks() == null) {
-                throw new IbanityException("Failed to list Ibanity API URLs: no 'links' in the response");
+                throw new IbanityException("Failed to list Ibanity API URLs: no 'accountInformationAccessLinks' in the response");
             }
 
             return new JsonLinksInformation(document.getLinks(), apiClient.getObjectMapper())

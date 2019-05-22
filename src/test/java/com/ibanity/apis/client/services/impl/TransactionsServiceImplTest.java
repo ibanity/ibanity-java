@@ -64,6 +64,7 @@ public class TransactionsServiceImplTest {
     public void list() throws Exception {
         IbanityCollection<Transaction> expected =
                 IbanityCollection.<Transaction>builder()
+                        .pageLimit(10)
                         .items(newArrayList(createExpected()))
                         .build();
 

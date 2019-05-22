@@ -15,7 +15,6 @@ import java.util.UUID;
 public class FinancialInstitution implements IbanityModel {
 
     public static final String RESOURCE_TYPE = "financialInstitution";
-    public static final String RESOURCE_PATH = "financial-institutions";
     public static final String API_URL_TAG_ID = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
 
     private UUID id;

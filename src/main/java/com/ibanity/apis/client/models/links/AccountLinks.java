@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.jsonapi;
+package com.ibanity.apis.client.models.links;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,16 +9,11 @@ import lombok.ToString;
 
 @Getter
 @Builder
-@ToString
-@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class LinksApiModel {
+@EqualsAndHashCode
+@ToString
+public class AccountLinks {
 
-    private String self;
-    private String first;
-    private String prev;
-    private String next;
     private String related;
-    private String redirect;
 }

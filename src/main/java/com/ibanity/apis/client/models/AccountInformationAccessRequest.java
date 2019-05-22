@@ -2,36 +2,38 @@ package com.ibanity.apis.client.models;
 
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.models.links.AccountInformationAccessLinks;
-import com.ibanity.apis.client.paging.IbanityPagingBehavior;
-import io.crnk.core.resource.annotations.JsonApiLinksInformation;
-import io.crnk.core.resource.annotations.JsonApiRelation;
-import io.crnk.core.resource.annotations.JsonApiResource;
-import io.crnk.core.resource.annotations.LookupIncludeBehavior;
-import io.crnk.core.resource.annotations.SerializeType;
+import com.ibanity.apis.client.models.links.AccountLinks;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
+import lombok.Singular;
 
-import static com.ibanity.apis.client.models.AccountInformationAccessRequest.RESOURCE_PATH;
-import static com.ibanity.apis.client.models.AccountInformationAccessRequest.RESOURCE_TYPE;
+import java.util.List;
+import java.util.UUID;
 
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 @Data
-@JsonApiResource(type = RESOURCE_TYPE, resourcePath = RESOURCE_PATH, pagingBehavior = IbanityPagingBehavior.class)
-public class AccountInformationAccessRequest extends BaseModel {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class AccountInformationAccessRequest implements IbanityModel {
 
-    public static final String RESOURCE_TYPE    = "accountInformationAccessRequest";
-    public static final String RESOURCE_PATH    = "account-information-access-requests";
-    public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
+    public static final String RESOURCE_TYPE = "accountInformationAccessRequest";
+    public static final String API_URL_TAG_ID = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
 
+    private UUID id;
+    private String selfLink;
+
+    private UUID consentReference;
     private String redirectUri;
-    private String consentReference;
+    private String status;
+    private String locale;
+    private String customerIpAddress;
 
-    @JsonApiLinksInformation
-    private AccountInformationAccessLinks links;
+    @Singular("requestedAccountReferences")
+    private List<String> requestedAccountReferences;
 
-    @JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.LAZY)
-    private FinancialInstitution financialInstitution;
+    private AccountInformationAccessLinks accountInformationAccessLinks;
+    private AccountLinks accountLinks;
 
 }

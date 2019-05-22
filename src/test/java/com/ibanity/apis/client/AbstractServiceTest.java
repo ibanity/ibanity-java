@@ -79,7 +79,7 @@ public abstract class AbstractServiceTest {
     protected static final String ERROR_DATA_DETAIL_RESOURCE_NOT_FOUND              = "The requested resource was not found.";
     protected static final String ERROR_DATA_META_RESOURCE_KEY                      = "resource";
 
-    protected final AccountInformationAccessRequestsService accountInformationAccessRequestsService   = new AccountInformationAccessRequestsServiceImpl();
+    protected final AccountInformationAccessRequestsService accountInformationAccessRequestsService   = new AccountInformationAccessRequestsServiceImpl(null, null);
     protected final AccountsService accountsService                                                   = new AccountsServiceImpl(null, null);
     protected final FinancialInstitutionAccountsService financialInstitutionAccountsService           = new FinancialInstitutionAccountsServiceImpl();
     protected final FinancialInstitutionUsersService financialInstitutionUsersService                 = new FinancialInstitutionUsersServiceImpl();
@@ -226,7 +226,7 @@ public abstract class AbstractServiceTest {
                     .customerAccessToken(generatedCustomerAccessToken.getToken())
                     .financialInstitutionId(financialInstitution.getId())
                     .redirectURI(fakeTppAccountInformationAccessRedirectUrl)
-                    .consentReference(UUID.randomUUID().toString())
+                    .consentReference(UUID.randomUUID())
                     .build();
 
         return accountInformationAccessRequestsService.create(accountInformationAccessRequestCreationQuery);
