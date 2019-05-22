@@ -16,6 +16,7 @@ import org.apache.http.message.BasicHeader;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collections;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
@@ -64,6 +65,11 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
         } catch (IOException e) {
             throw new RuntimeException("An error occurred while connecting to Ibanity", e);
         }
+    }
+
+    @Override
+    public String delete(URI path, String customerAccessToken) {
+        return delete(path, customerAccessToken, Collections.emptyMap());
     }
 
     @Override

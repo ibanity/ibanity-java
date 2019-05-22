@@ -1,25 +1,37 @@
 package com.ibanity.apis.client.models;
 
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
-import com.ibanity.apis.client.paging.IbanityPagingBehavior;
-import io.crnk.core.resource.annotations.JsonApiResource;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
-import static com.ibanity.apis.client.models.FinancialInstitution.RESOURCE_PATH;
+import java.util.UUID;
 
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 @Data
-@JsonApiResource(type = FinancialInstitution.RESOURCE_TYPE, resourcePath = RESOURCE_PATH, pagingBehavior = IbanityPagingBehavior.class)
-public class FinancialInstitution extends BaseModel {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class FinancialInstitution implements IbanityModel {
 
-    public static final String RESOURCE_TYPE    = "financialInstitution";
-    public static final String RESOURCE_PATH    = "financial-institutions";
-    public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
+    public static final String RESOURCE_TYPE = "financialInstitution";
+    public static final String RESOURCE_PATH = "financial-institutions";
+    public static final String API_URL_TAG_ID = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
 
-    private boolean sandbox;
+    private UUID id;
+    private String selfLink;
+
+    private String bic;
     private String name;
+    private String logoUrl;
+    private String primaryColor;
+    private String secondaryColor;
+    private Long maxRequestedAccountReferences;
+    private Long minRequestedAccountReferences;
+    private boolean futureDatedPaymentsAllowed;
+    private boolean requiresCredentialStorage;
+    private boolean requiresCustomerIpAddress;
+    private boolean sandbox;
+
 
 }

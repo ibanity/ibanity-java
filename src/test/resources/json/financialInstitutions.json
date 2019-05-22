@@ -1,0 +1,52 @@
+{
+  "data": [
+    {
+      "attributes": {
+        "bic": "NBBEBEBB203",
+        "futureDatedPaymentsAllowed": true,
+        "logoUrl": "https://s3.eu-central-1.amazonaws.com/ibanity-production-financial-institution-assets/sandbox.png",
+        "maxRequestedAccountReferences": null,
+        "minRequestedAccountReferences": 0,
+        "name": "ABN AMRO FUND MANAGERS LIMITED 0",
+        "primaryColor": "#7d39ff",
+        "requiresCredentialStorage": true,
+        "requiresCustomerIpAddress": true,
+        "sandbox": true,
+        "secondaryColor": "#3DF2C2"
+      },
+      "id": "268c9f39-736b-4a9a-b198-4191030c0e21",
+      "links": {
+        "self": "https://api.ibanity.com/xs2a/financial-institutions/268c9f39-736b-4a9a-b198-4191030c0e21"
+      },
+      "type": "financialInstitution"
+    },
+    {
+      "attributes": {
+        "bic": "NBBEBEBB203",
+        "futureDatedPaymentsAllowed": false,
+        "logoUrl": "https://s3.eu-central-1.amazonaws.com/ibanity-production-financial-institution-assets/sandbox.png",
+        "maxRequestedAccountReferences": 0,
+        "minRequestedAccountReferences": null,
+        "name": "PGMS (GLASGOW) LIMITED 2",
+        "primaryColor": "#7d39ff",
+        "requiresCredentialStorage": false,
+        "requiresCustomerIpAddress": false,
+        "sandbox": false,
+        "secondaryColor": "#3DF2C2"
+      },
+      "id": "c0f14bd6-ae49-4611-9709-0ea553464a1a",
+      "links": {
+        "self": "https://api.ibanity.com/xs2a/financial-institutions/c0f14bd6-ae49-4611-9709-0ea553464a1a"
+      },
+      "type": "financialInstitution"
+    }
+  ],
+  "links": {
+    "first": "https://api.ibanity.com/xs2a/financial-institutions"
+  },
+  "meta": {
+    "paging": {
+      "limit": 10
+    }
+  }
+}

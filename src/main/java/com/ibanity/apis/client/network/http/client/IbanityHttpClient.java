@@ -15,5 +15,7 @@ public interface IbanityHttpClient {
 
     String post(URI path, String customerAccessToken, IbanityModel ibanityModel, Map<String, String> additionalHeaders);
 
+    String delete(URI path, String customerAccessToken);
+
     String delete(URI path, String customerAccessToken, Map<String, String> additionalHeaders);
 }

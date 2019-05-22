@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class FinancialInstitutionsServiceTest extends AbstractServiceTest {
 
-    private final FinancialInstitutionsService financialInstitutionsService = new FinancialInstitutionsServiceImpl();
+    private final FinancialInstitutionsService financialInstitutionsService = new FinancialInstitutionsServiceImpl(null, null);
 
     @BeforeAll
     public static void dockerPull() throws Exception{
@@ -44,7 +44,7 @@ public class FinancialInstitutionsServiceTest extends AbstractServiceTest {
     @Test
     public void testGetFinancialInstitutions() {
         List<FinancialInstitution> financialInstitutionsList =
-                financialInstitutionsService.list(FinancialInstitutionsReadQuery.builder().build());
+                financialInstitutionsService.list(FinancialInstitutionsReadQuery.builder().build()).getItems();
         assertTrue(financialInstitutionsList.size() > 0);
     }
 
@@ -57,7 +57,7 @@ public class FinancialInstitutionsServiceTest extends AbstractServiceTest {
 
         AccountInformationAccessRequest accountInformationAccessRequest = createAccountInformationAccessRequest();
         authorizeAccounts(accountInformationAccessRequest.getLinks().getRedirect());
-        List<FinancialInstitution> financialInstitutionsList = financialInstitutionsService.list(financialInstitutionsReadQuery);
+        List<FinancialInstitution> financialInstitutionsList = financialInstitutionsService.list(financialInstitutionsReadQuery).getItems();
         assertTrue(financialInstitutionsList.size() > 0);
     }
 
@@ -75,7 +75,7 @@ public class FinancialInstitutionsServiceTest extends AbstractServiceTest {
                         .build();
 
         List<FinancialInstitution> financialInstitutionsList =
-                financialInstitutionsService.list(financialInstitutionsReadQuery);
+                financialInstitutionsService.list(financialInstitutionsReadQuery).getItems();
         assertEquals(1, financialInstitutionsList.size());
     }
 
@@ -93,7 +93,7 @@ public class FinancialInstitutionsServiceTest extends AbstractServiceTest {
                         .pagingSpec(ibanityPagingSpec)
                         .build();
 
-        List<FinancialInstitution> financialInstitutionsList = financialInstitutionsService.list(financialInstitutionsReadQuery);
+        List<FinancialInstitution> financialInstitutionsList = financialInstitutionsService.list(financialInstitutionsReadQuery).getItems();
         assertEquals(3, financialInstitutionsList.size());
 
         for (FinancialInstitution financialInstitution : createdFinancialInstitutionsList) {

@@ -8,9 +8,9 @@ import com.ibanity.apis.client.services.impl.FinancialInstitutionsServiceImpl;
 import java.util.List;
 
 public class FinancialInstitutionSample {
-    private final FinancialInstitutionsService financialInstitutionsService = new FinancialInstitutionsServiceImpl();
+    private final FinancialInstitutionsService financialInstitutionsService = new FinancialInstitutionsServiceImpl(null, null);
 
     public List<FinancialInstitution> list() {
-        return financialInstitutionsService.list(FinancialInstitutionsReadQuery.builder().build());
+        return financialInstitutionsService.list(FinancialInstitutionsReadQuery.builder().build()).getItems();
     }
 }
