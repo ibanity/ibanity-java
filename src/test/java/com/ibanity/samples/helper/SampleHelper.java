@@ -34,7 +34,7 @@ public class SampleHelper {
 
     public static void waitForAuthorizationWebFlow(AccountInformationAccessRequest accountInformationAccessRequest) {
         LOGGER.info("Open the following URL in your browser and follow the web flow:");
-        LOGGER.info("   " + accountInformationAccessRequest.getLinks().getRedirect());
+        LOGGER.info("   " + accountInformationAccessRequest.getAccountInformationAccessLinks().getRedirect());
         LOGGER.info("Once the authorization is done, press ENTER to continue...");
 
         new Scanner(System.in).nextLine();

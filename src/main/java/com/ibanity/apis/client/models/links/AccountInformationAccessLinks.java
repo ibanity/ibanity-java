@@ -1,10 +1,19 @@
 package com.ibanity.apis.client.models.links;
 
-import io.crnk.core.resource.meta.MetaInformation;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-@Data
-public class AccountInformationAccessLinks implements MetaInformation {
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@ToString
+public class AccountInformationAccessLinks {
 
     private String redirect;
 }

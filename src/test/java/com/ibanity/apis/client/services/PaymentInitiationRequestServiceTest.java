@@ -17,7 +17,11 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class PaymentInitiationRequestServiceTest extends AbstractServiceTest {
     private final PaymentInitiationRequestService paymentInitiationRequestService = new PaymentInitiationRequestServiceImpl();
@@ -79,8 +83,8 @@ class PaymentInitiationRequestServiceTest extends AbstractServiceTest {
         PaymentInitiationRequest resultingPaymentInitiationRequest =
                 paymentInitiationRequestService.create(
                         initializePaymentInitiationRequest(generatedCustomerAccessToken.getToken(), this.financialInstitution, UUID.randomUUID()));
-        assertNotNull(resultingPaymentInitiationRequest.getLinks().getRedirect(), "Missing 'redirect' attribute in 'links'");
-        assertFalse(resultingPaymentInitiationRequest.getLinks().getRedirect().isEmpty(), "'redirect' attribute is empty in 'links'");
+        assertNotNull(resultingPaymentInitiationRequest.getLinks().getRedirect(), "Missing 'redirect' attribute in 'accountInformationAccessLinks'");
+        assertFalse(resultingPaymentInitiationRequest.getLinks().getRedirect().isEmpty(), "'redirect' attribute is empty in 'accountInformationAccessLinks'");
     }
 
     @Test

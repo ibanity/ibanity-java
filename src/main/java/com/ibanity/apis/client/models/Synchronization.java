@@ -19,7 +19,6 @@ import java.util.UUID;
 public class Synchronization implements IbanityModel {
 
     public static final String RESOURCE_TYPE    = "synchronization";
-    public static final String RESOURCE_PATH    = "synchronizations";
     public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
 
     private UUID id;

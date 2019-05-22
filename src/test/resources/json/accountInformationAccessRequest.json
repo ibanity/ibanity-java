@@ -1,0 +1,19 @@
+{
+  "data": {
+    "attributes": {
+      "requestedAccountReferences": [
+        "BE9386908098818901"
+      ],
+      "status": "received"
+    },
+    "id": "cd273ba1-cb2a-464d-b85d-62c9fc4dc8d9",
+    "relationships": {
+      "accounts": {
+        "links": {
+          "related": "https://api.ibanity.com/xs2a/customer/financial-institutions/4876fdd6-7333-4f9f-b142-ba520ca497b1/account-information-access-requests/cd273ba1-cb2a-464d-b85d-62c9fc4dc8d9/accounts"
+        }
+      }
+    },
+    "type": "accountInformationAccessRequest"
+  }
+}

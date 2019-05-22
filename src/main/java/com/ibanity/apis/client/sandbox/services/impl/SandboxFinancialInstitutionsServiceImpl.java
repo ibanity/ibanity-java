@@ -48,7 +48,7 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
     private ResourceRepositoryV2<FinancialInstitution, UUID> getRepository(final UUID idempotencyKey) {
         String finalPath = StringUtils.removeEnd(
                 IbanityConfiguration.getApiUrls().getSandbox().getFinancialInstitutions()
-                .replace(FinancialInstitution.RESOURCE_PATH, "")
+                //.replace(FinancialInstitution.RESOURCE_PATH, "")
                 .replace(FinancialInstitution.API_URL_TAG_ID, ""), "//");
 
         return null;
