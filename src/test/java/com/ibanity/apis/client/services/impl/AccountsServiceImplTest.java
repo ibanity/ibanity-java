@@ -79,7 +79,7 @@ class AccountsServiceImplTest {
                 .accountInformationAccessRequestId(ACCOUNT_INFORMATION_ACCESS_REQUEST_ID)
                 .build();
 
-        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_AIAR_ENDPOINT), CUSTOMER_ACCESS_TOKEN)).thenReturn(loadFile("json/accounts.json"));
+        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_AIAR_ENDPOINT + "?limit=10"), CUSTOMER_ACCESS_TOKEN)).thenReturn(loadFile("json/accounts.json"));
 
         IbanityCollection<Account> actual = accountsService.list(accountsReadQuery);
 
@@ -94,7 +94,7 @@ class AccountsServiceImplTest {
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                 .build();
 
-        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT), CUSTOMER_ACCESS_TOKEN)).thenReturn(loadFile("json/accounts.json"));
+        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT + "?limit=10"), CUSTOMER_ACCESS_TOKEN)).thenReturn(loadFile("json/accounts.json"));
         IbanityCollection<Account> actual = accountsService.list(accountsReadQuery);
 
         assertThat(actual.getItems()).containsExactly(createExpected());
@@ -107,7 +107,7 @@ class AccountsServiceImplTest {
                 .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                 .build();
 
-        when(ibanityHttpClient.get(new URI(ACCOUNT_ENDPOINT), CUSTOMER_ACCESS_TOKEN)).thenReturn(loadFile("json/accounts.json"));
+        when(ibanityHttpClient.get(new URI(ACCOUNT_ENDPOINT + "?limit=10"), CUSTOMER_ACCESS_TOKEN)).thenReturn(loadFile("json/accounts.json"));
 
         IbanityCollection<Account> actual = accountsService.list(accountsReadQuery);
 
