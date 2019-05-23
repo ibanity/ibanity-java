@@ -6,6 +6,7 @@ import com.ibanity.apis.client.models.Synchronization;
 import com.ibanity.apis.client.models.factory.read.SynchronizationReadQuery;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.services.ApiUrlProvider;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,6 +38,11 @@ class SynchronizationServiceImplTest {
     @InjectMocks
     private SynchronizationServiceImpl synchronizationService;
 
+    @BeforeEach
+    void setUp() {
+        when(apiUrlProvider.find("customer", "synchronizations")).thenReturn(SYNCHRONIZATION_ENDPOINT);
+    }
+
     @Test
     void create() throws Exception {
         SynchronizationReadQuery synchronizationReadQuery =
@@ -47,7 +53,6 @@ class SynchronizationServiceImplTest {
                         .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                         .build();
 
-        when(apiUrlProvider.find("customer", "synchronizations")).thenReturn(SYNCHRONIZATION_ENDPOINT);
         when(ibanityHttpClient.post(new URI(SYNCHRONIZATION_ENDPOINT), createRequest(synchronizationReadQuery), CUSTOMER_ACCESS_TOKEN)).thenReturn(IbanityTestHelper.loadFile("json/create_synchronization.json"));
 
         Synchronization actual = synchronizationService.create(synchronizationReadQuery);
@@ -62,7 +67,7 @@ class SynchronizationServiceImplTest {
                         .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                         .synchronizationId(SYNCHRONIZATION_ID)
                         .build();
-        when(apiUrlProvider.find("customer", "synchronizations")).thenReturn(SYNCHRONIZATION_ENDPOINT);
+
         when(ibanityHttpClient.get(new URI(SYNCHRONIZATION_ENDPOINT + "/" + SYNCHRONIZATION_ID), CUSTOMER_ACCESS_TOKEN)).thenReturn(IbanityTestHelper.loadFile("json/synchronization.json"));
 
         Synchronization actual = synchronizationService.find(synchronizationReadQuery);

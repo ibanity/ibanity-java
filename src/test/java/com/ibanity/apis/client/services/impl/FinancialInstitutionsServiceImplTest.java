@@ -8,11 +8,14 @@ import com.ibanity.apis.client.models.factory.read.FinancialInstitutionsReadQuer
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.services.ApiUrlProvider;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.util.UUID;
 
@@ -21,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class FinancialInstitutionsServiceImplTest {
 
     private static final UUID FINANCIAL_INSTITUTION_ID = UUID.fromString("268c9f39-736b-4a9a-b198-4191030c0e21");
@@ -38,11 +42,18 @@ class FinancialInstitutionsServiceImplTest {
     @Mock
     private IbanityHttpClient ibanityHttpClient;
 
+    @BeforeEach
+    void setUp() {
+        when(apiUrlProvider.find("financialInstitutions")).thenReturn(FINANCIAL_INSTITUTION_ENDPOINT);
+        when(apiUrlProvider.find("customer", "financialInstitutions")).thenReturn(FINANCIAL_INSTITUTION_CUSTOMER_ENDPOINT);
+    }
+
+
     @Test
     void list() throws Exception {
-        when(apiUrlProvider.find("financialInstitutions")).thenReturn(FINANCIAL_INSTITUTION_ENDPOINT);
-        when(ibanityHttpClient.get(buildUri("https://api.ibanity.localhost/xs2a/financial-institutions", IbanityPagingSpec.DEFAULT_PAGING_SPEC), null)).thenReturn(IbanityTestHelper.loadFile("json/financialInstitutions.json"));
         FinancialInstitutionsReadQuery financialInstitutionsReadQuery = FinancialInstitutionsReadQuery.builder().build();
+
+        when(ibanityHttpClient.get(buildUri("https://api.ibanity.localhost/xs2a/financial-institutions", IbanityPagingSpec.DEFAULT_PAGING_SPEC), null)).thenReturn(IbanityTestHelper.loadFile("json/financialInstitutions.json"));
 
         IbanityCollection<FinancialInstitution> actual = financialInstitutionsService.list(financialInstitutionsReadQuery);
 
@@ -52,12 +63,12 @@ class FinancialInstitutionsServiceImplTest {
 
     @Test
     void list_whenCustomerAccessTokenProvided_fetchesFinancialInstitutionForCustomer() throws Exception {
-        when(apiUrlProvider.find("customer", "financialInstitutions")).thenReturn(FINANCIAL_INSTITUTION_CUSTOMER_ENDPOINT);
-        when(ibanityHttpClient.get(buildUri(FINANCIAL_INSTITUTION_CUSTOMER_ENDPOINT, IbanityPagingSpec.DEFAULT_PAGING_SPEC), CUSTOMER_ACCESS_TOKEN)).thenReturn(IbanityTestHelper.loadFile("json/financialInstitutions.json"));
         FinancialInstitutionsReadQuery financialInstitutionsReadQuery =
                 FinancialInstitutionsReadQuery.builder()
                         .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                         .build();
+
+        when(ibanityHttpClient.get(buildUri(FINANCIAL_INSTITUTION_CUSTOMER_ENDPOINT, IbanityPagingSpec.DEFAULT_PAGING_SPEC), CUSTOMER_ACCESS_TOKEN)).thenReturn(IbanityTestHelper.loadFile("json/financialInstitutions.json"));
 
         IbanityCollection<FinancialInstitution> actual = financialInstitutionsService.list(financialInstitutionsReadQuery);
 
@@ -67,13 +78,13 @@ class FinancialInstitutionsServiceImplTest {
 
     @Test
     void find() throws Exception {
-        when(apiUrlProvider.find("financialInstitutions")).thenReturn(FINANCIAL_INSTITUTION_ENDPOINT);
-        when(ibanityHttpClient.get(buildUri(FINANCIAL_INSTITUTION_ENDPOINT_ID), null))
-                .thenReturn(IbanityTestHelper.loadFile("json/financialInstitution.json"));
         FinancialInstitutionReadQuery financialInstitutionsReadQuery = FinancialInstitutionReadQuery
                 .builder()
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                 .build();
+
+        when(ibanityHttpClient.get(buildUri(FINANCIAL_INSTITUTION_ENDPOINT_ID), null))
+                .thenReturn(IbanityTestHelper.loadFile("json/financialInstitution.json"));
 
         FinancialInstitution actual = financialInstitutionsService.find(financialInstitutionsReadQuery);
 

@@ -11,7 +11,7 @@ import com.ibanity.apis.client.sandbox.services.impl.SandboxFinancialInstitution
 import java.util.UUID;
 
 public class FinancialInstitutionSample {
-    private final SandboxFinancialInstitutionsService sandBoxFinancialInstitutionsService = new SandboxFinancialInstitutionsServiceImpl(apiUrlProvider, ibanityHttpClient);
+    private final SandboxFinancialInstitutionsService sandBoxFinancialInstitutionsService = new SandboxFinancialInstitutionsServiceImpl(null, null);
 
     public FinancialInstitution create(){
         FinancialInstitutionCreationQuery financialInstitutionCreationQuery =
