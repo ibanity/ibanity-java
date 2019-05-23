@@ -10,5 +10,5 @@ public interface PaymentInitiationRequestService {
 
     PaymentInitiationRequest find(PaymentInitiationRequestReadQuery paymentInitiationRequestReadQuery);
 
-    void delete(PaymentInitiationRequestReadQuery paymentInitiationRequestReadQuery);
+    PaymentInitiationRequest delete(PaymentInitiationRequestReadQuery paymentInitiationRequestReadQuery);
 }

@@ -1,78 +1,66 @@
 package com.ibanity.apis.client.services.impl;
 
-import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.PaymentInitiationRequest;
 import com.ibanity.apis.client.models.factory.create.PaymentInitiationRequestCreationQuery;
 import com.ibanity.apis.client.models.factory.read.PaymentInitiationRequestReadQuery;
-import com.ibanity.apis.client.paging.IbanityPagingSpec;
+import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
+import com.ibanity.apis.client.services.ApiUrlProvider;
 import com.ibanity.apis.client.services.PaymentInitiationRequestService;
-import io.crnk.core.queryspec.QuerySpec;
-import io.crnk.core.repository.ResourceRepositoryV2;
-import org.apache.commons.lang3.StringUtils;
 
-import java.util.UUID;
+import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
+import static com.ibanity.apis.client.mappers.PaymentInitiationRequestMapper.getRequestMapping;
+import static com.ibanity.apis.client.mappers.PaymentInitiationRequestMapper.getResponseMapping;
+import static com.ibanity.apis.client.utils.URIHelper.buildUri;
+import static org.apache.commons.lang3.StringUtils.removeEnd;
 
-public class PaymentInitiationRequestServiceImpl extends AbstractServiceImpl implements PaymentInitiationRequestService {
+public class PaymentInitiationRequestServiceImpl implements PaymentInitiationRequestService {
+
+    private final ApiUrlProvider apiUrlProvider;
+    private final IbanityHttpClient ibanityHttpClient;
+
+    public PaymentInitiationRequestServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
+        this.apiUrlProvider = apiUrlProvider;
+        this.ibanityHttpClient = ibanityHttpClient;
+    }
 
     @Override
     public PaymentInitiationRequest create(final PaymentInitiationRequestCreationQuery query) {
+        PaymentInitiationRequest paymentInitiationRequest = getRequestMapping(query);
 
-        PaymentInitiationRequest paymentInitiationRequest = new PaymentInitiationRequest();
+        String url = getUrl(query.getFinancialInstitutionId().toString(), "");
+        String response = ibanityHttpClient.post(buildUri(url), query.getCustomerAccessToken(), paymentInitiationRequest);
 
-        FinancialInstitution financialInstitution = new FinancialInstitution();
-        financialInstitution.setId(query.getFinancialInstitutionId());
+        return mapResource(response, getResponseMapping());
+    }
 
-        paymentInitiationRequest.setFinancialInstitution(financialInstitution);
-        paymentInitiationRequest.setAmount(query.getAmount());
-        paymentInitiationRequest.setConsentReference(query.getConsentReference());
-        paymentInitiationRequest.setCreditorAccountReference(query.getCreditorAccountReference());
-        paymentInitiationRequest.setCreditorAccountReferenceType(query.getCreditorAccountReferenceType());
-        paymentInitiationRequest.setCreditorName(query.getCreditorName());
-        paymentInitiationRequest.setCurrency(query.getCurrency());
-        paymentInitiationRequest.setEndToEndId(query.getEndToEndId());
-        paymentInitiationRequest.setProductType(query.getProductType());
-        paymentInitiationRequest.setRedirectUri(query.getRedirectUri());
-        paymentInitiationRequest.setRemittanceInformation(query.getRemittanceInformation());
-        paymentInitiationRequest.setRemittanceInformationType(query.getRemittanceInformationType());
-        paymentInitiationRequest.setCreditorAgent(query.getCreditorAgent());
-        paymentInitiationRequest.setCreditorAgentType(query.getCreditorAgentType());
-        paymentInitiationRequest.setDebtorAccountReference(query.getDebtorAccountReference());
-        paymentInitiationRequest.setDebtorAccountReferenceType(query.getDebtorAccountReferenceType());
-        paymentInitiationRequest.setDebtorName(query.getDebtorName());
+    @Override
+    public PaymentInitiationRequest delete(final PaymentInitiationRequestReadQuery paymentInitiationRequestReadQuery) {
+        String financialInstitutionId = paymentInitiationRequestReadQuery.getFinancialInstitutionId().toString();
+        String paymentInitiationRequestId = paymentInitiationRequestReadQuery.getPaymentInitiationRequestId().toString();
 
-        return getRepository(query.getCustomerAccessToken(), query.getFinancialInstitutionId(), query.getIdempotencyKey())
-                .create(paymentInitiationRequest);
+        String url = getUrl(financialInstitutionId, paymentInitiationRequestId);
+        String response = ibanityHttpClient.delete(buildUri(url), paymentInitiationRequestReadQuery.getCustomerAccessToken());
+
+        return mapResource(response, getResponseMapping());
     }
 
     @Override
     public PaymentInitiationRequest find(final PaymentInitiationRequestReadQuery paymentInitiationRequestReadQuery) {
-        QuerySpec querySpec = new QuerySpec(PaymentInitiationRequest.class)
-                .setPagingSpec(new IbanityPagingSpec());
+        String financialInstitutionId = paymentInitiationRequestReadQuery.getFinancialInstitutionId().toString();
+        String paymentInitiationRequestId = paymentInitiationRequestReadQuery.getPaymentInitiationRequestId().toString();
 
-        return getRepository(paymentInitiationRequestReadQuery.getCustomerAccessToken(),
-                    paymentInitiationRequestReadQuery.getFinancialInstitutionId(),
-                    null)
-                .findOne(paymentInitiationRequestReadQuery.getPaymentInitiationRequestId(), querySpec);
+        String url = getUrl(financialInstitutionId, paymentInitiationRequestId);
+        String response = ibanityHttpClient.get(buildUri(url), paymentInitiationRequestReadQuery.getCustomerAccessToken());
+
+        return mapResource(response, getResponseMapping());
     }
 
-    @Override
-    public void delete(final PaymentInitiationRequestReadQuery paymentInitiationRequestReadQuery) {
-        getRepository(paymentInitiationRequestReadQuery.getCustomerAccessToken(),
-                paymentInitiationRequestReadQuery.getFinancialInstitutionId(),
-                null)
-                .delete(paymentInitiationRequestReadQuery.getPaymentInitiationRequestId());
-    }
-
-    private ResourceRepositoryV2<PaymentInitiationRequest, UUID> getRepository(
-            final String customerAccessToken, final UUID financialInstitutionId, final UUID idempotencyKey) {
-        String finalPath = StringUtils.removeEnd(
-                IbanityConfiguration.getApiUrls().getCustomer().getFinancialInstitution().getPaymentInitiationRequests()
-                        .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
-                        .replace(PaymentInitiationRequest.RESOURCE_PATH, "")
-                        .replace(PaymentInitiationRequest.API_URL_TAG_ID, ""),
-                "//");
-
-        return getApiClient(finalPath, customerAccessToken, idempotencyKey).getRepositoryForType(PaymentInitiationRequest.class);
+    private String getUrl(String financialInstitutionId, String paymentInitiationRequestId) {
+        return removeEnd(
+                apiUrlProvider.find("customer", "financialInstitution", "paymentInitiationRequests")
+                        .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId)
+                        .replace(PaymentInitiationRequest.API_URL_TAG_ID, paymentInitiationRequestId),
+                "/");
     }
 }

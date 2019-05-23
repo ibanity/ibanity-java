@@ -1,37 +1,36 @@
 package com.ibanity.apis.client.models;
 
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
+import com.ibanity.apis.client.models.links.FinancialInstitutionLinks;
 import com.ibanity.apis.client.models.links.PaymentAccessLinks;
-import com.ibanity.apis.client.paging.IbanityPagingBehavior;
-import io.crnk.core.resource.annotations.JsonApiLinksInformation;
-import io.crnk.core.resource.annotations.JsonApiRelation;
-import io.crnk.core.resource.annotations.JsonApiResource;
-import io.crnk.core.resource.annotations.LookupIncludeBehavior;
-import io.crnk.core.resource.annotations.SerializeType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
-import static com.ibanity.apis.client.models.PaymentInitiationRequest.RESOURCE_PATH;
-import static com.ibanity.apis.client.models.PaymentInitiationRequest.RESOURCE_TYPE;
+import java.time.LocalDate;
+import java.util.UUID;
 
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
 @Data
-@JsonApiResource(type = RESOURCE_TYPE, resourcePath = RESOURCE_PATH, pagingBehavior = IbanityPagingBehavior.class)
-public class PaymentInitiationRequest extends BaseModel {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class PaymentInitiationRequest implements IbanityModel {
 
     public static final String RESOURCE_TYPE    = "paymentInitiationRequest";
     public static final String RESOURCE_PATH    = "payment-initiation-requests";
     public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
 
+    private UUID id;
+    private UUID financialInstitutionId;
+
+    private String selfLink;
     private String consentReference;
     private String endToEndId;
     private String productType;
     private String remittanceInformationType;
     private String remittanceInformation;
     private String currency;
-    private Double amount;
     private String debtorName;
     private String debtorAccountReference;
     private String debtorAccountReferenceType;
@@ -42,11 +41,13 @@ public class PaymentInitiationRequest extends BaseModel {
     private String creditorAgentType;
     private String status;
     private String redirectUri;
+    private String locale;
+    private String customerIpAddress;
 
-    @JsonApiLinksInformation
+    private Double amount;
+
+    private LocalDate requestedExecutionDate;
+
     private PaymentAccessLinks links;
-
-    @JsonApiRelation(lookUp = LookupIncludeBehavior.AUTOMATICALLY_WHEN_NULL, serialize = SerializeType.LAZY)
-    private FinancialInstitution financialInstitution;
-
+    private FinancialInstitutionLinks financialInstitutionLink;
 }

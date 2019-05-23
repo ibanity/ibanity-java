@@ -9,7 +9,7 @@ import com.ibanity.apis.client.services.impl.PaymentInitiationRequestServiceImpl
 import com.ibanity.samples.helper.SampleHelper;
 
 public class PaymentInitiationRequestSample {
-    private final PaymentInitiationRequestService paymentInitiationRequestService = new PaymentInitiationRequestServiceImpl();
+    private final PaymentInitiationRequestService paymentInitiationRequestService = new PaymentInitiationRequestServiceImpl(null, null);
 
     public PaymentInitiationRequest create(FinancialInstitution financialInstitution, CustomerAccessToken customerAccessToken,
                                            String redirectUrl){

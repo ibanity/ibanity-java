@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
+
 public class IbanityModelMapper {
 
     public static <T extends IbanityModel> T mapResource(String jsonPayload, Class<T> classType) {
@@ -47,12 +49,19 @@ public class IbanityModelMapper {
     }
 
     public static <T extends IbanityModel> T toIbanityModel(DataApiModel data, Class<T> classType) {
-        T clientObject = IbanityHttpUtils.objectMapper().convertValue(data.getAttributes(), classType);
-        clientObject.setId(data.getId());
-        if (data.getLinks() != null) {
-            clientObject.setSelfLink(data.getLinks().getSelf());
-        }
+        try {
+            T clientObject = IbanityHttpUtils.objectMapper().convertValue(data.getAttributes(), classType);
+            if (clientObject == null) {
+                clientObject = classType.newInstance();
+            }
+            clientObject.setId(data.getId());
+            if (data.getLinks() != null) {
+                clientObject.setSelfLink(data.getLinks().getSelf());
+            }
 
-        return clientObject;
+            return clientObject;
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(format("Instantiation of class %s is impossible for default constructor", classType), e);
+        }
     }
 }
