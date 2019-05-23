@@ -69,7 +69,6 @@
         <log4j.version>2.11.0</log4j.version>
         <slf4j.version>1.7.25</slf4j.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
-        <crnk.version>2.6.20180430102904</crnk.version>
         <httpclient.version>4.5.8</httpclient.version>
         <jackson.version>2.9.8</jackson.version>
         <bcpkix-jdk14.version>1.61</bcpkix-jdk14.version>
@@ -123,9 +122,14 @@
             <version>${commons-math3.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${log4j.version}</version>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>${commons-beanutils.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -136,6 +140,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
             <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -150,16 +159,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>${commons-beanutils.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.crnk</groupId>
-            <artifactId>crnk-client</artifactId>
-            <version>${crnk.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>${reflections.version}</version>
@@ -169,11 +168,6 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${httpclient.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
@@ -195,7 +189,6 @@
             <artifactId>bcpkix-jdk14</artifactId>
             <version>${bcpkix-jdk14.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.iban4j</groupId>
             <artifactId>iban4j</artifactId>
@@ -354,7 +347,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-<!--                    <argLine>${surefireArgLine}</argLine>-->
+                    <!--                    <argLine>${surefireArgLine}</argLine>-->
                     <forkCount>0</forkCount>
                     <reuseForks>true</reuseForks>
                     <trimStackTrace>false</trimStackTrace>
