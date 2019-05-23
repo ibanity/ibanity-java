@@ -36,7 +36,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
 
         URI uri = getUri(financialInstitutionId, "");
 
-        String response = ibanityHttpClient.post(uri, accountInformationAccessRequestCreationQuery.getCustomerAccessToken(), mapRequest(accountInformationAccessRequestCreationQuery));
+        String response = ibanityHttpClient.post(uri, mapRequest(accountInformationAccessRequestCreationQuery), accountInformationAccessRequestCreationQuery.getCustomerAccessToken());
         return IbanityModelMapper.mapResource(response, responseMapping());
     }
 

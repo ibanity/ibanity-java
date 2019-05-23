@@ -15,7 +15,7 @@ import org.iban4j.Iban;
 import java.util.UUID;
 
 public class FinancialInstitutionAccountSample {
-    private final FinancialInstitutionAccountsService financialInstitutionAccountsService = new FinancialInstitutionAccountsServiceImpl();
+    private final FinancialInstitutionAccountsService financialInstitutionAccountsService = new FinancialInstitutionAccountsServiceImpl(apiUrlProvider, ibanityHttpClient);
 
     public FinancialInstitutionAccount create(FinancialInstitution financialInstitution, FinancialInstitutionUser financialInstitutionUser){
         FinancialInstitutionAccountCreationQuery accountCreationQuery =

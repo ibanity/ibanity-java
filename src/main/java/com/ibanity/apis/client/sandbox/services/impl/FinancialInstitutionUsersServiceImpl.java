@@ -1,85 +1,80 @@
 package com.ibanity.apis.client.sandbox.services.impl;
 
-import com.ibanity.apis.client.configuration.IbanityConfiguration;
-import com.ibanity.apis.client.paging.IbanityPagingSpec;
+import com.ibanity.apis.client.models.IbanityCollection;
+import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
-import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionUserCreationQuery;
 import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionUserDeleteQuery;
 import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionUserReadQuery;
 import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionUsersReadQuery;
 import com.ibanity.apis.client.sandbox.models.factory.update.FinancialInstitutionUserUpdateQuery;
 import com.ibanity.apis.client.sandbox.services.FinancialInstitutionUsersService;
-import com.ibanity.apis.client.services.impl.AbstractServiceImpl;
-import io.crnk.core.queryspec.QuerySpec;
-import io.crnk.core.repository.ResourceRepositoryV2;
-import io.crnk.core.resource.list.ResourceList;
-import org.apache.commons.lang3.StringUtils;
+import com.ibanity.apis.client.services.ApiUrlProvider;
 
-import java.util.UUID;
+import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapCollection;
+import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
+import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 
-public class FinancialInstitutionUsersServiceImpl extends AbstractServiceImpl implements FinancialInstitutionUsersService {
+public class FinancialInstitutionUsersServiceImpl implements FinancialInstitutionUsersService {
 
-    public FinancialInstitutionUsersServiceImpl() {
-        super();
+    private final ApiUrlProvider apiUrlProvider;
+    private final IbanityHttpClient ibanityHttpClient;
+
+    public FinancialInstitutionUsersServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
+        this.apiUrlProvider = apiUrlProvider;
+        this.ibanityHttpClient = ibanityHttpClient;
     }
 
     @Override
-    public ResourceList<FinancialInstitutionUser> list(final FinancialInstitutionUsersReadQuery usersReadQuery) {
-        QuerySpec querySpec = new QuerySpec(FinancialInstitutionUser.class);
+    public IbanityCollection<FinancialInstitutionUser> list(FinancialInstitutionUsersReadQuery usersReadQuery) {
+        String url = getUrl("");
+        String response = ibanityHttpClient.get(buildUri(url, usersReadQuery.getPagingSpec()));
+        return mapCollection(response, FinancialInstitutionUser.class);
 
-        if (usersReadQuery.getPagingSpec() != null) {
-            querySpec.setPagingSpec(usersReadQuery.getPagingSpec());
-        } else {
-            querySpec.setPagingSpec(IbanityPagingSpec.DEFAULT_PAGING_SPEC);
-        }
-
-        return getRepository(null)
-                .findAll(querySpec);
     }
 
     @Override
-    public FinancialInstitutionUser find(final FinancialInstitutionUserReadQuery userReadQuery) {
-        return getRepository(null)
-                .findOne(userReadQuery.getFinancialInstitutionUserId(),
-                        new QuerySpec(FinancialInstitutionUser.class));
+    public FinancialInstitutionUser find(FinancialInstitutionUserReadQuery userReadQuery) {
+        String url = getUrl(userReadQuery.getFinancialInstitutionUserId().toString());
+        String response = ibanityHttpClient.get(buildUri(url));
+        return mapResource(response, FinancialInstitutionUser.class);
+
     }
 
     @Override
-    public FinancialInstitutionUser create(final FinancialInstitutionUserCreationQuery userCreationQuery) {
-        FinancialInstitutionUser financialInstitutionUser = new FinancialInstitutionUser();
-        financialInstitutionUser.setLogin(userCreationQuery.getLogin());
-        financialInstitutionUser.setPassword(userCreationQuery.getPassword());
-        financialInstitutionUser.setLastName(userCreationQuery.getLastName());
-        financialInstitutionUser.setFirstName(userCreationQuery.getFirstName());
-        return getRepository(userCreationQuery.getIdempotencyKey())
-                .create(financialInstitutionUser);
+    public FinancialInstitutionUser delete(FinancialInstitutionUserDeleteQuery userDeleteQuery) {
+        String url = getUrl(userDeleteQuery.getFinancialInstitutionUserId().toString());
+        String response = ibanityHttpClient.delete(buildUri(url));
+        return mapResource(response, FinancialInstitutionUser.class);
     }
 
     @Override
-    public FinancialInstitutionUser update(final FinancialInstitutionUserUpdateQuery userUpdateQuery) {
+    public FinancialInstitutionUser create(FinancialInstitutionUserUpdateQuery userCreationQuery) {
+        FinancialInstitutionUser request = mapRequest(userCreationQuery);
+        String url = getUrl("");
+        String response = ibanityHttpClient.post(buildUri(url), request);
+        return mapResource(response, FinancialInstitutionUser.class);
+    }
+
+    @Override
+    public FinancialInstitutionUser update(FinancialInstitutionUserUpdateQuery userUpdateQuery) {
+        FinancialInstitutionUser request = mapRequest(userUpdateQuery);
+        String url = getUrl(userUpdateQuery.getFinancialInstitutionUserId().toString());
+        String response = ibanityHttpClient.post(buildUri(url), request);
+        return mapResource(response, FinancialInstitutionUser.class);
+    }
+
+    private FinancialInstitutionUser mapRequest(FinancialInstitutionUserUpdateQuery userUpdateQuery) {
         FinancialInstitutionUser financialInstitutionUser = new FinancialInstitutionUser();
         financialInstitutionUser.setId(userUpdateQuery.getFinancialInstitutionUserId());
         financialInstitutionUser.setLogin(userUpdateQuery.getLogin());
         financialInstitutionUser.setPassword(userUpdateQuery.getPassword());
         financialInstitutionUser.setFirstName(userUpdateQuery.getFirstName());
         financialInstitutionUser.setLastName(userUpdateQuery.getLastName());
-
-        return getRepository(userUpdateQuery.getIdempotencyKey())
-                .save(financialInstitutionUser);
+        return financialInstitutionUser;
     }
 
-    @Override
-    public void delete(final FinancialInstitutionUserDeleteQuery userDeleteQuery) {
-        getRepository(userDeleteQuery.getIdempotencyKey())
-                .delete(userDeleteQuery.getFinancialInstitutionUserId());
-    }
-
-    private ResourceRepositoryV2<FinancialInstitutionUser, UUID> getRepository(final UUID idempotencyKey) {
-        String finalPath = StringUtils.removeEnd(
-                IbanityConfiguration.getApiUrls().getSandbox().getFinancialInstitutionUsers()
-                        .replace(FinancialInstitutionUser.RESOURCE_PATH, "")
-                        .replace(FinancialInstitutionUser.API_URL_TAG_ID, ""), "//");
-
-        return getApiClient(finalPath, null, idempotencyKey).getRepositoryForType(FinancialInstitutionUser.class);
+    private String getUrl(String financialInstitutionUserId) {
+        return apiUrlProvider.find("sandbox", "financialInstitutionUsers")
+                .replace(FinancialInstitutionUser.API_URL_TAG_ID, financialInstitutionUserId);
     }
 }

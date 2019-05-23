@@ -61,7 +61,7 @@ class AccountInformationAccessRequestsServiceImplTest {
 
         when(apiUrlProvider.find("customer", "financialInstitution", "accountInformationAccessRequests"))
                 .thenReturn(AIAR_ENDPOINT);
-        when(ibanityHttpClient.post(buildUri(AIAR_ENDPOINT_FOR_CREATE), creationQuery.getCustomerAccessToken(), toIbanityModel(creationQuery)))
+        when(ibanityHttpClient.post(buildUri(AIAR_ENDPOINT_FOR_CREATE), toIbanityModel(creationQuery), creationQuery.getCustomerAccessToken()))
                 .thenReturn(loadFile("json/createAccountInformationAccessRequest.json"));
 
         AccountInformationAccessRequest actual = accountInformationAccessRequestsService.create(creationQuery);

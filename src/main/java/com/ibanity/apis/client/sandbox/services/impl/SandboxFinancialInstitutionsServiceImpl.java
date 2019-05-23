@@ -1,58 +1,59 @@
 package com.ibanity.apis.client.sandbox.services.impl;
 
-import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.models.FinancialInstitution;
+import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionCreationQuery;
 import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionDeleteQuery;
 import com.ibanity.apis.client.sandbox.models.factory.update.FinancialInstitutionUpdateQuery;
 import com.ibanity.apis.client.sandbox.services.SandboxFinancialInstitutionsService;
+import com.ibanity.apis.client.services.ApiUrlProvider;
 import com.ibanity.apis.client.services.impl.FinancialInstitutionsServiceImpl;
-import io.crnk.core.repository.ResourceRepositoryV2;
-import org.apache.commons.lang3.StringUtils;
 
-import java.util.UUID;
+import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
+import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 
 public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutionsServiceImpl implements SandboxFinancialInstitutionsService {
 
-    public SandboxFinancialInstitutionsServiceImpl() {
-        super(null, null);
+    private final ApiUrlProvider apiUrlProvider;
+    private final IbanityHttpClient ibanityHttpClient;
+
+    public SandboxFinancialInstitutionsServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
+        super(apiUrlProvider, ibanityHttpClient);
+        this.apiUrlProvider = apiUrlProvider;
+        this.ibanityHttpClient = ibanityHttpClient;
     }
 
     @Override
-    public FinancialInstitution create(
-            final FinancialInstitutionCreationQuery financialInstitutionCreationQuery) {
+    public FinancialInstitution create(FinancialInstitutionCreationQuery financialInstitutionCreationQuery) {
         FinancialInstitution financialInstitution = new FinancialInstitution();
         financialInstitution.setSandbox(Boolean.TRUE);
         financialInstitution.setName(financialInstitutionCreationQuery.getName());
-        return getRepository(financialInstitutionCreationQuery.getIdempotencyKey())
-                .create(financialInstitution);
+
+        String url = getUrl("");
+        String response = ibanityHttpClient.post(buildUri(url), financialInstitution);
+        return mapResource(response, FinancialInstitution.class);
     }
 
     @Override
-    public FinancialInstitution update(
-            final FinancialInstitutionUpdateQuery financialInstitutionUpdateQuery) {
+    public FinancialInstitution update(FinancialInstitutionUpdateQuery financialInstitutionUpdateQuery) {
         FinancialInstitution financialInstitution = new FinancialInstitution();
         financialInstitution.setId(financialInstitutionUpdateQuery.getFinancialInstitutionId());
         financialInstitution.setName(financialInstitutionUpdateQuery.getName());
 
-        return getRepository(financialInstitutionUpdateQuery.getIdempotencyKey())
-                .save(financialInstitution);
+        String url = getUrl(financialInstitutionUpdateQuery.getFinancialInstitutionId().toString());
+        String response = ibanityHttpClient.post(buildUri(url), financialInstitution);
+        return mapResource(response, FinancialInstitution.class);
     }
 
     @Override
-    public void delete(final FinancialInstitutionDeleteQuery financialInstitutionDeleteQuery) {
-        getRepository(financialInstitutionDeleteQuery.getIdempotencyKey())
-                .delete(financialInstitutionDeleteQuery.getFinancialInstitutionId());
+    public FinancialInstitution delete(final FinancialInstitutionDeleteQuery financialInstitutionDeleteQuery) {
+        String url = getUrl(financialInstitutionDeleteQuery.getFinancialInstitutionId().toString());
+        String response = ibanityHttpClient.delete(buildUri(url));
+        return mapResource(response, FinancialInstitution.class);
     }
 
-    private ResourceRepositoryV2<FinancialInstitution, UUID> getRepository(final UUID idempotencyKey) {
-        String finalPath = StringUtils.removeEnd(
-                IbanityConfiguration.getApiUrls().getSandbox().getFinancialInstitutions()
-                //.replace(FinancialInstitution.RESOURCE_PATH, "")
-                .replace(FinancialInstitution.API_URL_TAG_ID, ""), "//");
-
-        return null;
-/*        return getApiClient(finalPath, null, idempotencyKey)
-                .getRepositoryForType(FinancialInstitution.class);*/
+    private String getUrl(String financialInstitutionId) {
+        return apiUrlProvider.find("sandbox", "financialInstitutions")
+                .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId);
     }
 }

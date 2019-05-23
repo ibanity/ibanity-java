@@ -41,7 +41,7 @@ class CustomerAccessTokensServiceImplTest {
         CustomerAccessToken request = CustomerAccessToken.builder().applicationCustomerReference(APPLICATION_REFERENCE).build();
 
         when(apiUrlProvider.find("customerAccessTokens")).thenReturn(CUSTOMER_ACCESS_TOKEN_ENDPOINT);
-        when(httpClient.post(new URI(CUSTOMER_ACCESS_TOKEN_ENDPOINT), null, request)).thenReturn(loadFile("json/customerAccessToken.json"));
+        when(httpClient.post(new URI(CUSTOMER_ACCESS_TOKEN_ENDPOINT), request, null)).thenReturn(loadFile("json/customerAccessToken.json"));
 
         CustomerAccessToken actual = customerAccessTokensService.create(creationQuery);
 

@@ -35,6 +35,11 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
     }
 
     @Override
+    public String get(URI path) {
+        return get(path, null, newHashMap());
+    }
+
+    @Override
     public String get(URI path, String customerAccessToken) {
         return get(path, customerAccessToken, newHashMap());
     }
@@ -51,12 +56,17 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
     }
 
     @Override
-    public String post(URI path, String customerAccessToken, IbanityModel ibanityModel) {
-        return post(path, customerAccessToken, ibanityModel, newHashMap());
+    public String post(URI path, IbanityModel ibanityModel) {
+        return post(path, ibanityModel, null, newHashMap());
     }
 
     @Override
-    public String post(URI path, String customerAccessToken, IbanityModel ibanityModel, Map<String, String> additionalHeaders) {
+    public String post(URI path, IbanityModel ibanityModel, String customerAccessToken) {
+        return post(path, ibanityModel, customerAccessToken, newHashMap());
+    }
+
+    @Override
+    public String post(URI path, IbanityModel ibanityModel, String customerAccessToken, Map<String, String> additionalHeaders) {
         try {
             HttpPost httpPost = new HttpPost(path);
             addHeaders(customerAccessToken, additionalHeaders, httpPost);
@@ -65,6 +75,11 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
         } catch (IOException e) {
             throw new RuntimeException("An error occurred while connecting to Ibanity", e);
         }
+    }
+
+    @Override
+    public String delete(URI path) {
+        return delete(path, null, Collections.emptyMap());
     }
 
     @Override

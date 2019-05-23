@@ -58,7 +58,7 @@ class PaymentInitiationRequestServiceImplTest {
                         .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                         .build();
 
-        when(ibanityHttpClient.post(buildUri(PIR_ENDPOINT_FOR_CREATE), CUSTOMER_TOKEN_REFERENCE, mapRequest(requestCreationQuery)))
+        when(ibanityHttpClient.post(buildUri(PIR_ENDPOINT_FOR_CREATE), mapRequest(requestCreationQuery), CUSTOMER_TOKEN_REFERENCE))
                 .thenReturn(loadFile("json/createPir.json"));
 
         PaymentInitiationRequest actual = paymentInitiationRequestService.create(requestCreationQuery);

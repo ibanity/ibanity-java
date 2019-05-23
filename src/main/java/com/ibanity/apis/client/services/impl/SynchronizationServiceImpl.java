@@ -32,7 +32,7 @@ public class SynchronizationServiceImpl implements SynchronizationService {
                     .subType(synchronizationReadQuery.getSubtype())
                     .build();
             String url = getUrl();
-            String response = ibanityHttpClient.post(new URI(url), synchronizationReadQuery.getCustomerAccessToken(), synchronization);
+            String response = ibanityHttpClient.post(new URI(url), synchronization, synchronizationReadQuery.getCustomerAccessToken());
             return mapResource(response, Synchronization.class);
         } catch (URISyntaxException e) {
             throw new IllegalStateException("URL cannot be build", e);
