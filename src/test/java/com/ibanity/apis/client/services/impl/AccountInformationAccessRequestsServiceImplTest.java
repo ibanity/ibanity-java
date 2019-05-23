@@ -7,6 +7,7 @@ import com.ibanity.apis.client.models.links.AccountInformationAccessLinks;
 import com.ibanity.apis.client.models.links.AccountLinks;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.services.ApiUrlProvider;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -46,6 +47,12 @@ class AccountInformationAccessRequestsServiceImplTest {
     @Mock
     private IbanityHttpClient ibanityHttpClient;
 
+    @BeforeEach
+    void setUp() {
+        when(apiUrlProvider.find("customer", "financialInstitution", "accountInformationAccessRequests"))
+                .thenReturn(AIAR_ENDPOINT);
+    }
+
     @Test
     void create() throws IOException {
         AccountInformationAccessRequestCreationQuery creationQuery =
@@ -59,8 +66,6 @@ class AccountInformationAccessRequestsServiceImplTest {
                         .customerIpAddress("0.0.0.0")
                         .build();
 
-        when(apiUrlProvider.find("customer", "financialInstitution", "accountInformationAccessRequests"))
-                .thenReturn(AIAR_ENDPOINT);
         when(ibanityHttpClient.post(buildUri(AIAR_ENDPOINT_FOR_CREATE), toIbanityModel(creationQuery), creationQuery.getCustomerAccessToken()))
                 .thenReturn(loadFile("json/createAccountInformationAccessRequest.json"));
 
@@ -78,8 +83,6 @@ class AccountInformationAccessRequestsServiceImplTest {
                         .accountInformationAccessRequestId(ACCOUNT_INFORMATION_ACCESS_REQUEST_ID)
                         .build();
 
-        when(apiUrlProvider.find("customer", "financialInstitution", "accountInformationAccessRequests"))
-                .thenReturn(AIAR_ENDPOINT);
         when(ibanityHttpClient.get(buildUri(AIAR_ENDPOINT_FOR_FIND), creationQuery.getCustomerAccessToken()))
                 .thenReturn(loadFile("json/accountInformationAccessRequest.json"));
 

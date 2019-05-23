@@ -7,11 +7,14 @@ import com.ibanity.apis.client.models.factory.read.AccountReadQuery;
 import com.ibanity.apis.client.models.factory.read.AccountsReadQuery;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.services.ApiUrlProvider;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.net.URI;
 import java.time.Instant;
@@ -23,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class AccountsServiceImplTest {
 
     private static final UUID ACCOUNT_ID = UUID.fromString("d6d2a2bc-6607-467b-ac78-86e4e19963ff");
@@ -44,6 +48,13 @@ class AccountsServiceImplTest {
     @Mock
     private IbanityHttpClient ibanityHttpClient;
 
+    @BeforeEach
+    void setUp() {
+        when(apiUrlProvider.find("customer", "accounts")).thenReturn(ACCOUNT_ENDPOINT);
+        when(apiUrlProvider.find("customer", "financialInstitution", "accounts")).thenReturn(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT);
+        when(apiUrlProvider.find("customer", "financialInstitution", "accountInformationAccessRequest", "accounts")).thenReturn(ACCOUNT_BY_AIAR_ENDPOINT);
+    }
+
     @Test
     void find() throws Exception {
         AccountReadQuery accountReadQuery =
@@ -53,7 +64,6 @@ class AccountsServiceImplTest {
                         .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                         .build();
 
-        when(apiUrlProvider.find("customer", "financialInstitution", "accounts")).thenReturn(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT);
         when(ibanityHttpClient.get(new URI(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT + "/" + ACCOUNT_ID), CUSTOMER_ACCESS_TOKEN)).thenReturn(loadFile("json/account.json"));
 
         Account actual = accountsService.find(accountReadQuery);
@@ -63,14 +73,14 @@ class AccountsServiceImplTest {
 
     @Test
     void list_forAccountInformationAccessRequest() throws Exception {
-        when(apiUrlProvider.find("customer", "financialInstitution", "accountInformationAccessRequest", "accounts")).thenReturn(ACCOUNT_BY_AIAR_ENDPOINT);
-        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_AIAR_ENDPOINT), CUSTOMER_ACCESS_TOKEN)).thenReturn(loadFile("json/accounts.json"));
-
         AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()
                 .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                 .accountInformationAccessRequestId(ACCOUNT_INFORMATION_ACCESS_REQUEST_ID)
                 .build();
+
+        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_AIAR_ENDPOINT), CUSTOMER_ACCESS_TOKEN)).thenReturn(loadFile("json/accounts.json"));
+
         IbanityCollection<Account> actual = accountsService.list(accountsReadQuery);
 
         assertThat(actual.getItems()).containsExactly(createExpected());
@@ -79,13 +89,12 @@ class AccountsServiceImplTest {
 
     @Test
     void list_forFinancialInstitutions() throws Exception {
-        when(apiUrlProvider.find("customer", "financialInstitution", "accounts")).thenReturn(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT);
-        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT), CUSTOMER_ACCESS_TOKEN)).thenReturn(loadFile("json/accounts.json"));
-
         AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()
                 .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                 .build();
+
+        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT), CUSTOMER_ACCESS_TOKEN)).thenReturn(loadFile("json/accounts.json"));
         IbanityCollection<Account> actual = accountsService.list(accountsReadQuery);
 
         assertThat(actual.getItems()).containsExactly(createExpected());
@@ -94,12 +103,12 @@ class AccountsServiceImplTest {
 
     @Test
     void list() throws Exception {
-        when(apiUrlProvider.find("customer", "accounts")).thenReturn(ACCOUNT_ENDPOINT);
-        when(ibanityHttpClient.get(new URI(ACCOUNT_ENDPOINT), CUSTOMER_ACCESS_TOKEN)).thenReturn(loadFile("json/accounts.json"));
-
         AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()
                 .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                 .build();
+
+        when(ibanityHttpClient.get(new URI(ACCOUNT_ENDPOINT), CUSTOMER_ACCESS_TOKEN)).thenReturn(loadFile("json/accounts.json"));
+
         IbanityCollection<Account> actual = accountsService.list(accountsReadQuery);
 
         assertThat(actual.getItems()).containsExactly(createExpected());

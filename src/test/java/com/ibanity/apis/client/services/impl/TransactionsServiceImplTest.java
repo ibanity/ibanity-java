@@ -7,6 +7,7 @@ import com.ibanity.apis.client.models.factory.read.TransactionReadQuery;
 import com.ibanity.apis.client.models.factory.read.TransactionsReadQuery;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.services.ApiUrlProvider;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,6 +43,11 @@ public class TransactionsServiceImplTest {
     @InjectMocks
     private TransactionsServiceImpl transactionsService;
 
+    @BeforeEach
+    void setUp() {
+        when(apiUrlProvider.find("customer", "financialInstitution", "transactions")).thenReturn(TRANSACTION_ENDPOINT);
+    }
+
     @Test
     public void find() throws Exception {
         TransactionReadQuery transactionReadQuery =
@@ -52,7 +58,7 @@ public class TransactionsServiceImplTest {
                         .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                         .build();
 
-        when(apiUrlProvider.find("customer", "financialInstitution", "transactions")).thenReturn(TRANSACTION_ENDPOINT);
+
         when(ibanityHttpClient.get(new URI(TRANSACTION_URI), CUSTOMER_ACCESS_TOKEN)).thenReturn(IbanityTestHelper.loadFile("json/transaction.json"));
 
         Transaction actual = transactionsService.find(transactionReadQuery);
@@ -75,7 +81,6 @@ public class TransactionsServiceImplTest {
                         .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                         .build();
 
-        when(apiUrlProvider.find("customer", "financialInstitution", "transactions")).thenReturn(TRANSACTION_ENDPOINT);
         when(ibanityHttpClient.get(new URI(TRANSACTIONS_URI), CUSTOMER_ACCESS_TOKEN)).thenReturn(IbanityTestHelper.loadFile("json/transactions.json"));
 
         IbanityCollection<Transaction> actual = transactionsService.list(transactionReadQuery);

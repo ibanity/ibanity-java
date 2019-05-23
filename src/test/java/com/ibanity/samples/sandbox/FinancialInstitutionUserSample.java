@@ -1,7 +1,6 @@
 package com.ibanity.samples.sandbox;
 
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
-import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionUserCreationQuery;
 import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionUserDeleteQuery;
 import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionUserReadQuery;
 import com.ibanity.apis.client.sandbox.models.factory.update.FinancialInstitutionUserUpdateQuery;
@@ -11,11 +10,11 @@ import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionUsersSe
 import java.util.UUID;
 
 public class FinancialInstitutionUserSample {
-    private final FinancialInstitutionUsersService financialInstitutionUsersService = new FinancialInstitutionUsersServiceImpl(apiUrlProvider, ibanityHttpClient);
+    private final FinancialInstitutionUsersService financialInstitutionUsersService = new FinancialInstitutionUsersServiceImpl(null, null);
 
     public FinancialInstitutionUser create(){
-        FinancialInstitutionUserCreationQuery userCreationQuery =
-                FinancialInstitutionUserCreationQuery.builder()
+        FinancialInstitutionUserUpdateQuery userCreationQuery =
+                FinancialInstitutionUserUpdateQuery.builder()
                         .login("Login-"+ UUID.randomUUID().toString())
                         .password("Password")
                         .lastName("Lastname")
