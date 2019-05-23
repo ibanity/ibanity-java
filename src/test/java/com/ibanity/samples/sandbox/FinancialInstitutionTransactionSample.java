@@ -14,7 +14,7 @@ import com.ibanity.samples.helper.SampleHelper;
 import java.util.UUID;
 
 public class FinancialInstitutionTransactionSample {
-    private final FinancialInstitutionTransactionsService financialInstitutionTransactionsService = new FinancialInstitutionTransactionsServiceImpl();
+    private final FinancialInstitutionTransactionsService financialInstitutionTransactionsService = new FinancialInstitutionTransactionsServiceImpl(apiUrlProvider, ibanityHttpClient);
 
     public FinancialInstitutionTransaction create(FinancialInstitution financialInstitution,
                                                   FinancialInstitutionUser financialInstitutionUser,

@@ -7,13 +7,19 @@ import java.util.Map;
 
 public interface IbanityHttpClient {
 
+    String get(URI path);
+
     String get(URI path, String customerAccessToken);
 
     String get(URI path, String customerAccessToken, Map<String, String> additionalHeaders);
 
-    String post(URI path, String customerAccessToken, IbanityModel ibanityModel);
+    String post(URI path, IbanityModel ibanityModel);
 
-    String post(URI path, String customerAccessToken, IbanityModel ibanityModel, Map<String, String> additionalHeaders);
+    String post(URI path, IbanityModel ibanityModel, String customerAccessToken);
+
+    String post(URI path, IbanityModel ibanityModel, String customerAccessToken, Map<String, String> additionalHeaders);
+
+    String delete(URI path);
 
     String delete(URI path, String customerAccessToken);
 

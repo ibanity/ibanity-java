@@ -7,11 +7,14 @@ import org.apache.http.client.utils.URIBuilder;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static org.apache.commons.lang3.StringUtils.removeEnd;
+
 public class URIHelper {
 
-    public static URI buildUri(@NonNull String url, @NonNull IbanityPagingSpec pagingSpec) {
+    public static URI buildUri(@NonNull String url, IbanityPagingSpec pagingSpec) {
         try {
-            URIBuilder uriBuilder = new URIBuilder(url);
+            pagingSpec = pagingSpec == null ? IbanityPagingSpec.DEFAULT_PAGING_SPEC : pagingSpec;
+            URIBuilder uriBuilder = new URIBuilder(removeEnd(url, "/"));
             addIfNotNull(uriBuilder, "before", pagingSpec.getBefore());
             addIfNotNull(uriBuilder, "after", pagingSpec.getAfter());
             addIfNotNull(uriBuilder, "limit", pagingSpec.getLimit());

@@ -12,5 +12,5 @@ public interface SandboxFinancialInstitutionsService extends FinancialInstitutio
 
     FinancialInstitution update(FinancialInstitutionUpdateQuery financialInstitutionUpdateQuery);
 
-    void delete(FinancialInstitutionDeleteQuery financialInstitutionDeleteQuery);
+    FinancialInstitution delete(FinancialInstitutionDeleteQuery financialInstitutionDeleteQuery);
 }

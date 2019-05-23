@@ -1,8 +1,8 @@
 package com.ibanity.apis.client.sandbox.services.impl;
 
-import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.models.FinancialInstitution;
-import com.ibanity.apis.client.paging.IbanityPagingSpec;
+import com.ibanity.apis.client.models.IbanityCollection;
+import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionTransaction;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
@@ -11,46 +11,84 @@ import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutio
 import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionTransactionReadQuery;
 import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionTransactionsReadQuery;
 import com.ibanity.apis.client.sandbox.services.FinancialInstitutionTransactionsService;
-import com.ibanity.apis.client.services.impl.AbstractServiceImpl;
-import io.crnk.core.queryspec.QuerySpec;
-import io.crnk.core.repository.ResourceRepositoryV2;
-import org.apache.commons.lang3.StringUtils;
+import com.ibanity.apis.client.services.ApiUrlProvider;
 
-import java.util.List;
-import java.util.UUID;
+import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapCollection;
+import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
+import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 
-public class FinancialInstitutionTransactionsServiceImpl extends AbstractServiceImpl implements FinancialInstitutionTransactionsService {
+public class FinancialInstitutionTransactionsServiceImpl implements FinancialInstitutionTransactionsService {
 
-    @Override
-    public FinancialInstitutionTransaction find(final FinancialInstitutionTransactionReadQuery transactionReadQuery) {
-        ResourceRepositoryV2<FinancialInstitutionTransaction, UUID> transactionsRepo =
-                getRepository(transactionReadQuery.getFinancialInstitutionId(),
-                        transactionReadQuery.getFinancialInstitutionUserId(),
-                        transactionReadQuery.getFinancialInstitutionAccountId(),
-                        transactionReadQuery.getIdempotencyKey());
-        QuerySpec querySpec = new QuerySpec(FinancialInstitutionTransaction.class);
-        return transactionsRepo.findOne(transactionReadQuery.getFinancialInstitutionTransactionId(), querySpec);
+    private final ApiUrlProvider apiUrlProvider;
+    private final IbanityHttpClient ibanityHttpClient;
+
+    public FinancialInstitutionTransactionsServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
+        this.apiUrlProvider = apiUrlProvider;
+        this.ibanityHttpClient = ibanityHttpClient;
     }
 
     @Override
-    public List<FinancialInstitutionTransaction> list(final FinancialInstitutionTransactionsReadQuery transactionsReadQuery) {
-        ResourceRepositoryV2<FinancialInstitutionTransaction, UUID> transactionsRepo =
-                getRepository(transactionsReadQuery.getFinancialInstitutionId(),
-                        transactionsReadQuery.getFinancialInstitutionUserId(),
-                        transactionsReadQuery.getFinancialInstitutionAccountId(),
-                        transactionsReadQuery.getIdempotencyKey());
-        QuerySpec querySpec = new QuerySpec(FinancialInstitutionTransaction.class);
+    public FinancialInstitutionTransaction find(FinancialInstitutionTransactionReadQuery readQuery) {
+        String url =
+                getUrl(readQuery.getFinancialInstitutionId().toString(),
+                        readQuery.getFinancialInstitutionUserId().toString(),
+                        readQuery.getFinancialInstitutionAccountId().toString(),
+                        readQuery.getFinancialInstitutionTransactionId().toString());
 
-        if (transactionsReadQuery.getPagingSpec() != null) {
-            querySpec.setPagingSpec(transactionsReadQuery.getPagingSpec());
-        } else {
-            querySpec.setPagingSpec(IbanityPagingSpec.DEFAULT_PAGING_SPEC);
-        }
-        return transactionsRepo.findAll(querySpec);
+        String response = ibanityHttpClient.get(buildUri(url));
+        return mapResource(response, FinancialInstitutionTransaction.class);
     }
 
     @Override
-    public FinancialInstitutionTransaction create(final FinancialInstitutionTransactionCreationQuery transactionCreationQuery) {
+    public IbanityCollection<FinancialInstitutionTransaction> list(FinancialInstitutionTransactionsReadQuery readQuery) {
+        String url =
+                getUrl(readQuery.getFinancialInstitutionId().toString(),
+                        readQuery.getFinancialInstitutionUserId().toString(),
+                        readQuery.getFinancialInstitutionAccountId().toString(),
+                        "");
+
+        String response = ibanityHttpClient.get(buildUri(url, readQuery.getPagingSpec()));
+        return mapCollection(response, FinancialInstitutionTransaction.class);
+    }
+
+    @Override
+    public FinancialInstitutionTransaction delete(FinancialInstitutionTransactionDeleteQuery deleteQuery) {
+        String url =
+                getUrl(deleteQuery.getFinancialInstitutionId().toString(),
+                        deleteQuery.getFinancialInstitutionUserId().toString(),
+                        deleteQuery.getFinancialInstitutionAccountId().toString(),
+                        deleteQuery.getFinancialInstitutionTransactionId().toString());
+
+        String response = ibanityHttpClient.delete(buildUri(url));
+        return mapResource(response, FinancialInstitutionTransaction.class);
+    }
+
+    @Override
+    public FinancialInstitutionTransaction create(FinancialInstitutionTransactionCreationQuery creationQuery) {
+        FinancialInstitutionTransaction request = mapRequest(creationQuery);
+        String url =
+                getUrl(creationQuery.getFinancialInstitutionId().toString(),
+                        creationQuery.getFinancialInstitutionUserId().toString(),
+                        creationQuery.getFinancialInstitutionAccountId().toString(),
+                        "");
+
+        String response = ibanityHttpClient.post(buildUri(url), request);
+        return mapResource(response, FinancialInstitutionTransaction.class);
+    }
+
+    private String getUrl(
+            String financialInstitutionId,
+            String financialInstitutionUserId,
+            String financialInstitutionAccountId,
+            String financialInstitutionTransactionId) {
+        return apiUrlProvider.find("sandbox", "financialInstitution", "financialInstitutionAccount", "financialInstitutionTransactions")
+                .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId)
+                .replace(FinancialInstitutionUser.API_URL_TAG_ID, financialInstitutionUserId)
+                .replace(FinancialInstitutionAccount.API_URL_TAG_ID, financialInstitutionAccountId)
+                .replace(FinancialInstitutionTransaction.API_URL_TAG_ID, financialInstitutionTransactionId);
+    }
+
+    private FinancialInstitutionTransaction mapRequest(FinancialInstitutionTransactionCreationQuery transactionCreationQuery) {
         FinancialInstitutionTransaction financialInstitutionTransaction = new FinancialInstitutionTransaction();
 
         financialInstitutionTransaction.setAmount(transactionCreationQuery.getAmount());
@@ -62,39 +100,6 @@ public class FinancialInstitutionTransactionsServiceImpl extends AbstractService
         financialInstitutionTransaction.setValueDate(transactionCreationQuery.getValueDate());
         financialInstitutionTransaction.setExecutionDate(transactionCreationQuery.getExecutionDate());
         financialInstitutionTransaction.setDescription(transactionCreationQuery.getDescription());
-
-        FinancialInstitutionAccount financialInstitutionAccount =
-                new FinancialInstitutionAccount();
-        financialInstitutionAccount.setId(transactionCreationQuery.getFinancialInstitutionAccountId());
-        financialInstitutionTransaction.setFinancialInstitutionAccount(financialInstitutionAccount);
-
-        return getRepository(
-                transactionCreationQuery.getFinancialInstitutionId(),
-                transactionCreationQuery.getFinancialInstitutionUserId(),
-                transactionCreationQuery.getFinancialInstitutionAccountId(),
-                transactionCreationQuery.getIdempotencyKey()
-        ).create(financialInstitutionTransaction);
-    }
-
-    @Override
-    public void delete(final FinancialInstitutionTransactionDeleteQuery transactionDeleteQuery) {
-        getRepository(transactionDeleteQuery.getFinancialInstitutionId(),
-                transactionDeleteQuery.getFinancialInstitutionUserId(),
-                transactionDeleteQuery.getFinancialInstitutionAccountId(),
-                transactionDeleteQuery.getIdempotencyKey())
-                .delete(transactionDeleteQuery.getFinancialInstitutionTransactionId());
-    }
-
-    private ResourceRepositoryV2<FinancialInstitutionTransaction, UUID> getRepository(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID financialInstitutionAccountId, final UUID idempotencyKey) {
-        String finalPath = StringUtils.removeEnd(
-                IbanityConfiguration.getApiUrls().getSandbox().getFinancialInstitution().getFinancialInstitutionAccount().getFinancialInstitutionTransactions()
-                        .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
-                        .replace(FinancialInstitutionUser.API_URL_TAG_ID, financialInstitutionUserId.toString())
-                        .replace(FinancialInstitutionAccount.API_URL_TAG_ID, financialInstitutionAccountId.toString())
-                        .replace(FinancialInstitutionTransaction.RESOURCE_PATH, "")
-                        .replace(FinancialInstitutionTransaction.API_URL_TAG_ID, ""),
-                "//");
-
-        return getApiClient(finalPath, null, idempotencyKey).getRepositoryForType(FinancialInstitutionTransaction.class);
+        return financialInstitutionTransaction;
     }
 }

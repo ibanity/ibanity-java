@@ -81,9 +81,9 @@ public abstract class AbstractServiceTest {
 
     protected final AccountInformationAccessRequestsService accountInformationAccessRequestsService   = new AccountInformationAccessRequestsServiceImpl(null, null);
     protected final AccountsService accountsService                                                   = new AccountsServiceImpl(null, null);
-    protected final FinancialInstitutionAccountsService financialInstitutionAccountsService           = new FinancialInstitutionAccountsServiceImpl();
-    protected final FinancialInstitutionUsersService financialInstitutionUsersService                 = new FinancialInstitutionUsersServiceImpl();
-    protected final SandboxFinancialInstitutionsService sandboxFinancialInstitutionsService           = new SandboxFinancialInstitutionsServiceImpl();
+    protected final FinancialInstitutionAccountsService financialInstitutionAccountsService           = new FinancialInstitutionAccountsServiceImpl(apiUrlProvider, ibanityHttpClient);
+    protected final FinancialInstitutionUsersService financialInstitutionUsersService                 = new FinancialInstitutionUsersServiceImpl(apiUrlProvider, ibanityHttpClient);
+    protected final SandboxFinancialInstitutionsService sandboxFinancialInstitutionsService           = new SandboxFinancialInstitutionsServiceImpl(apiUrlProvider, ibanityHttpClient);
     protected final CustomerAccessTokensService customerAccessTokensService                           = new CustomerAccessTokensServiceImpl(null, null);
 
     protected final String fakeTppAccountInformationAccessRedirectUrl = getConfiguration("tpp.accounts.information.access.result.redirect.url");

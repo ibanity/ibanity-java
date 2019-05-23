@@ -48,7 +48,7 @@ class SynchronizationServiceImplTest {
                         .build();
 
         when(apiUrlProvider.find("customer", "synchronizations")).thenReturn(SYNCHRONIZATION_ENDPOINT);
-        when(ibanityHttpClient.post(new URI(SYNCHRONIZATION_ENDPOINT), CUSTOMER_ACCESS_TOKEN, createRequest(synchronizationReadQuery))).thenReturn(IbanityTestHelper.loadFile("json/create_synchronization.json"));
+        when(ibanityHttpClient.post(new URI(SYNCHRONIZATION_ENDPOINT), createRequest(synchronizationReadQuery), CUSTOMER_ACCESS_TOKEN)).thenReturn(IbanityTestHelper.loadFile("json/create_synchronization.json"));
 
         Synchronization actual = synchronizationService.create(synchronizationReadQuery);
 

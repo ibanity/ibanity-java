@@ -11,7 +11,7 @@ import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionUsersSe
 import java.util.UUID;
 
 public class FinancialInstitutionUserSample {
-    private final FinancialInstitutionUsersService financialInstitutionUsersService = new FinancialInstitutionUsersServiceImpl();
+    private final FinancialInstitutionUsersService financialInstitutionUsersService = new FinancialInstitutionUsersServiceImpl(apiUrlProvider, ibanityHttpClient);
 
     public FinancialInstitutionUser create(){
         FinancialInstitutionUserCreationQuery userCreationQuery =

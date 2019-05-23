@@ -1,8 +1,8 @@
 package com.ibanity.apis.client.sandbox.services.impl;
 
-import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.models.FinancialInstitution;
-import com.ibanity.apis.client.paging.IbanityPagingSpec;
+import com.ibanity.apis.client.models.IbanityCollection;
+import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
 import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionAccountCreationQuery;
@@ -10,45 +10,69 @@ import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutio
 import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionAccountReadQuery;
 import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionAccountsReadQuery;
 import com.ibanity.apis.client.sandbox.services.FinancialInstitutionAccountsService;
-import com.ibanity.apis.client.services.impl.AbstractServiceImpl;
-import io.crnk.core.queryspec.QuerySpec;
-import io.crnk.core.repository.ResourceRepositoryV2;
-import org.apache.commons.lang3.StringUtils;
+import com.ibanity.apis.client.services.ApiUrlProvider;
 
-import java.util.List;
-import java.util.UUID;
+import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapCollection;
+import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
+import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 
-public class FinancialInstitutionAccountsServiceImpl extends AbstractServiceImpl implements FinancialInstitutionAccountsService {
+public class FinancialInstitutionAccountsServiceImpl implements FinancialInstitutionAccountsService {
 
-    @Override
-    public FinancialInstitutionAccount find(final FinancialInstitutionAccountReadQuery accountReadQuery) {
-        QuerySpec querySpec = new QuerySpec(FinancialInstitutionAccount.class);
-        return getRepository(
-                accountReadQuery.getFinancialInstitutionId(),
-                accountReadQuery.getFinancialInstitutionUserId(),
-                null)
-                .findOne(accountReadQuery.getFinancialInstitutionAccountId(), querySpec);
+    private final ApiUrlProvider apiUrlProvider;
+    private final IbanityHttpClient ibanityHttpClient;
+
+    public FinancialInstitutionAccountsServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
+        this.apiUrlProvider = apiUrlProvider;
+        this.ibanityHttpClient = ibanityHttpClient;
     }
 
     @Override
-    public List<FinancialInstitutionAccount> list(final FinancialInstitutionAccountsReadQuery accountsReadQuery) {
-        QuerySpec querySpec = new QuerySpec(FinancialInstitutionAccount.class);
+    public FinancialInstitutionAccount find(FinancialInstitutionAccountReadQuery accountReadQuery) {
+        String url =
+                getUrl(accountReadQuery.getFinancialInstitutionId().toString(),
+                        accountReadQuery.getFinancialInstitutionUserId().toString(),
+                        accountReadQuery.getFinancialInstitutionAccountId().toString());
 
-        if (accountsReadQuery.getPagingSpec() != null) {
-            querySpec.setPagingSpec(accountsReadQuery.getPagingSpec());
-        } else {
-            querySpec.setPagingSpec(IbanityPagingSpec.DEFAULT_PAGING_SPEC);
-        }
-
-        return getRepository(
-                accountsReadQuery.getFinancialInstitutionId(),
-                accountsReadQuery.getFinancialInstitutionUserId(),
-                null)
-                .findAll(querySpec);
+        String response = ibanityHttpClient.get(buildUri(url));
+        return mapResource(response, FinancialInstitutionAccount.class);
     }
 
     @Override
-    public FinancialInstitutionAccount create(final FinancialInstitutionAccountCreationQuery query) {
+    public IbanityCollection<FinancialInstitutionAccount> list(FinancialInstitutionAccountsReadQuery accountsReadQuery) {
+        String url =
+                getUrl(accountsReadQuery.getFinancialInstitutionId().toString(),
+                        accountsReadQuery.getFinancialInstitutionUserId().toString(),
+                        "");
+
+        String response = ibanityHttpClient.get(buildUri(url, accountsReadQuery.getPagingSpec()));
+        return mapCollection(response, FinancialInstitutionAccount.class);
+    }
+
+    @Override
+    public FinancialInstitutionAccount delete(FinancialInstitutionAccountDeleteQuery accountDeleteQuery) {
+        String url =
+                getUrl(accountDeleteQuery.getFinancialInstitutionId().toString(),
+                        accountDeleteQuery.getFinancialInstitutionUserId().toString(),
+                        accountDeleteQuery.getFinancialInstitutionAccountId().toString());
+
+        String response = ibanityHttpClient.delete(buildUri(url));
+        return mapResource(response, FinancialInstitutionAccount.class);
+    }
+
+    @Override
+    public FinancialInstitutionAccount create(FinancialInstitutionAccountCreationQuery query) {
+        String url =
+                getUrl(query.getFinancialInstitutionId().toString(),
+                        query.getFinancialInstitutionUserId().toString(),
+                        "");
+
+        FinancialInstitutionAccount financialInstitutionAccount = mapRequest(query);
+
+        String response = ibanityHttpClient.post(buildUri(url), financialInstitutionAccount);
+        return mapResource(response, FinancialInstitutionAccount.class);
+    }
+
+    private FinancialInstitutionAccount mapRequest(FinancialInstitutionAccountCreationQuery query) {
         FinancialInstitutionAccount financialInstitutionAccount = new FinancialInstitutionAccount();
 
         financialInstitutionAccount.setDescription(query.getDescription());
@@ -58,34 +82,13 @@ public class FinancialInstitutionAccountsServiceImpl extends AbstractServiceImpl
         financialInstitutionAccount.setCurrentBalance(query.getCurrentBalance());
         financialInstitutionAccount.setCurrency(query.getCurrency());
         financialInstitutionAccount.setSubType(query.getSubType());
-
-        FinancialInstitution financialInstitution = new FinancialInstitution();
-        financialInstitution.setId(query.getFinancialInstitutionId());
-        financialInstitutionAccount.setFinancialInstitutionId(financialInstitution.getId());
-
-        return getRepository(
-                query.getFinancialInstitutionId(),
-                query.getFinancialInstitutionUserId(),
-                query.getIdempotencyKey())
-                .create(financialInstitutionAccount);
+        return financialInstitutionAccount;
     }
 
-    @Override
-    public void delete(final FinancialInstitutionAccountDeleteQuery accountDeleteQuery) {
-        getRepository(
-                accountDeleteQuery.getFinancialInstitutionId(),
-                accountDeleteQuery.getFinancialInstitutionUserId(),
-                accountDeleteQuery.getIdempotencyKey())
-                .delete(accountDeleteQuery.getFinancialInstitutionAccountId());
-    }
-
-    private ResourceRepositoryV2<FinancialInstitutionAccount, UUID> getRepository(final UUID financialInstitutionId, final UUID financialInstitutionUserId, final UUID idempotencyKey) {
-        String finalPath = StringUtils.removeEnd(
-                IbanityConfiguration.getApiUrls().getSandbox().getFinancialInstitution().getFinancialInstitutionAccounts()
-                        .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
-                        .replace(FinancialInstitutionUser.API_URL_TAG_ID, financialInstitutionUserId.toString())
-                        .replace(FinancialInstitutionAccount.RESOURCE_PATH, "")
-                        .replace(FinancialInstitutionAccount.API_URL_TAG_ID, ""), "//");
-        return getApiClient(finalPath, null, idempotencyKey).getRepositoryForType(FinancialInstitutionAccount.class);
+    private String getUrl(String financialInstitutionId, String financialInstitutionUserId, String financialInstutionAccountId) {
+        return apiUrlProvider.find("sandbox", "financialInstitution", "financialInstitutionAccounts")
+                .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId)
+                .replace(FinancialInstitutionUser.API_URL_TAG_ID, financialInstitutionUserId)
+                .replace(FinancialInstitutionAccount.API_URL_TAG_ID, financialInstutionAccountId);
     }
 }

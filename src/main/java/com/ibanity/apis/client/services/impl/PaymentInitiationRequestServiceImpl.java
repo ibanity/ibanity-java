@@ -29,7 +29,7 @@ public class PaymentInitiationRequestServiceImpl implements PaymentInitiationReq
         PaymentInitiationRequest paymentInitiationRequest = getRequestMapping(query);
 
         String url = getUrl(query.getFinancialInstitutionId().toString(), "");
-        String response = ibanityHttpClient.post(buildUri(url), query.getCustomerAccessToken(), paymentInitiationRequest);
+        String response = ibanityHttpClient.post(buildUri(url), paymentInitiationRequest, query.getCustomerAccessToken());
 
         return mapResource(response, getResponseMapping());
     }

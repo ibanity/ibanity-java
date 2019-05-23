@@ -26,7 +26,7 @@ public class CustomerAccessTokensServiceImpl implements CustomerAccessTokensServ
                 .build();
 
         String url = apiUrlProvider.find("customerAccessTokens");
-        String response = ibanityHttpClient.post(buildUri(url), null, customerAccessToken);
+        String response = ibanityHttpClient.post(buildUri(url), customerAccessToken, null);
 
         return IbanityModelMapper.mapResource(response, CustomerAccessToken.class);
     }
