@@ -9,12 +9,11 @@ import lombok.ToString;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-@AllArgsConstructor
-@NoArgsConstructor
-public class PaymentAccessLinks {
+public class FinancialInstitutionLinks {
 
-    private String redirect;
-
+    private String related;
 }
