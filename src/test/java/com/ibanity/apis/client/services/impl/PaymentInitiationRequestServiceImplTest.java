@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.services.impl;
 
+import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.PaymentInitiationRequest;
 import com.ibanity.apis.client.models.factory.create.PaymentInitiationRequestCreationQuery;
 import com.ibanity.apis.client.models.factory.read.PaymentInitiationRequestReadQuery;
@@ -104,7 +105,7 @@ class PaymentInitiationRequestServiceImplTest {
                 .build();
     }
 
-    private PaymentInitiationRequest mapRequest(PaymentInitiationRequestCreationQuery query) {
+    private RequestApiModel mapRequest(PaymentInitiationRequestCreationQuery query) {
         PaymentInitiationRequest paymentInitiationRequest = new PaymentInitiationRequest();
 
         paymentInitiationRequest.setFinancialInstitutionId(query.getFinancialInstitutionId());
@@ -124,7 +125,14 @@ class PaymentInitiationRequestServiceImplTest {
         paymentInitiationRequest.setDebtorAccountReference(query.getDebtorAccountReference());
         paymentInitiationRequest.setDebtorAccountReferenceType(query.getDebtorAccountReferenceType());
         paymentInitiationRequest.setDebtorName(query.getDebtorName());
-        return paymentInitiationRequest;
+        return RequestApiModel.builder()
+                .data(
+                        RequestApiModel.RequestDataApiModel.builder()
+                                .attributes(paymentInitiationRequest)
+                                .type(PaymentInitiationRequest.RESOURCE_TYPE)
+                                .build()
+                )
+                .build();
     }
 
     private PaymentInitiationRequest createExpectedForFind() {

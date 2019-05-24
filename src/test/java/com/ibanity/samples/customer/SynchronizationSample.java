@@ -1,5 +1,6 @@
 package com.ibanity.samples.customer;
 
+import com.ibanity.apis.client.helpers.IbanityService;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.Synchronization;
 import com.ibanity.apis.client.models.factory.read.SynchronizationReadQuery;
@@ -10,7 +11,7 @@ import java.util.UUID;
 
 public class SynchronizationSample {
 
-    private SynchronizationService synchronizationService = new SynchronizationServiceImpl(null, null);
+    private SynchronizationService synchronizationService = new SynchronizationServiceImpl(IbanityService.apiUrlProvider(), IbanityService.ibanityHttpClient());
 
     public Synchronization create(CustomerAccessToken customerAccessToken, UUID accountId) {
         SynchronizationReadQuery synchronizationReadQuery =

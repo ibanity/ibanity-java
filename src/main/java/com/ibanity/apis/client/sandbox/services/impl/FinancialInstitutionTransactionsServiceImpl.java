@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.sandbox.services.impl;
 
+import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
@@ -13,6 +14,7 @@ import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionT
 import com.ibanity.apis.client.sandbox.services.FinancialInstitutionTransactionsService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 
+import static com.ibanity.apis.client.mappers.IbanityModelMapper.buildRequest;
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapCollection;
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
@@ -65,13 +67,14 @@ public class FinancialInstitutionTransactionsServiceImpl implements FinancialIns
 
     @Override
     public FinancialInstitutionTransaction create(FinancialInstitutionTransactionCreationQuery creationQuery) {
-        FinancialInstitutionTransaction request = mapRequest(creationQuery);
+        FinancialInstitutionTransaction transaction = mapRequest(creationQuery);
         String url =
                 getUrl(creationQuery.getFinancialInstitutionId().toString(),
                         creationQuery.getFinancialInstitutionUserId().toString(),
                         creationQuery.getFinancialInstitutionAccountId().toString(),
                         "");
 
+        RequestApiModel request = buildRequest(FinancialInstitutionTransaction.RESOURCE_TYPE, transaction);
         String response = ibanityHttpClient.post(buildUri(url), request);
         return mapResource(response, FinancialInstitutionTransaction.class);
     }

@@ -1,5 +1,6 @@
 package com.ibanity.samples.customer;
 
+import com.ibanity.apis.client.helpers.IbanityService;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.FinancialInstitution;
@@ -14,7 +15,7 @@ import java.util.UUID;
 
 public class TransactionSample {
 
-    private final TransactionsService transactionsService = new TransactionsServiceImpl(null, null);
+    private final TransactionsService transactionsService = new TransactionsServiceImpl(IbanityService.apiUrlProvider(), IbanityService.ibanityHttpClient());
 
     public List<Transaction> list(CustomerAccessToken customerAccessToken, FinancialInstitution financialInstitution, Account account) {
         TransactionsReadQuery transactionsReadQuery = TransactionsReadQuery.builder()

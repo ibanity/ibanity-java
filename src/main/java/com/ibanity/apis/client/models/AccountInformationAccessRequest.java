@@ -24,7 +24,7 @@ public class AccountInformationAccessRequest implements IbanityModel {
     private UUID id;
     private String selfLink;
 
-    private UUID consentReference;
+    private String consentReference;
     private String redirectUri;
     private String status;
     private String locale;

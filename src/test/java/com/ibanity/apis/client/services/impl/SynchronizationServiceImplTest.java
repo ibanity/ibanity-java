@@ -1,7 +1,7 @@
 package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.helpers.IbanityTestHelper;
-import com.ibanity.apis.client.models.IbanityModel;
+import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.Synchronization;
 import com.ibanity.apis.client.models.factory.read.SynchronizationReadQuery;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
@@ -75,11 +75,19 @@ class SynchronizationServiceImplTest {
         assertThat(actual).isEqualToComparingFieldByField(createExpected("success"));
     }
 
-    private IbanityModel createRequest(SynchronizationReadQuery synchronizationReadQuery) {
-        return Synchronization.builder()
+    private RequestApiModel createRequest(SynchronizationReadQuery synchronizationReadQuery) {
+        Synchronization synchronization = Synchronization.builder()
                 .resourceId(synchronizationReadQuery.getResourceId())
                 .resourceType(synchronizationReadQuery.getResourceType())
                 .subType(synchronizationReadQuery.getSubtype())
+                .build();
+        return RequestApiModel.builder()
+                .data(
+                        RequestApiModel.RequestDataApiModel.builder()
+                                .attributes(synchronization)
+                                .type(Synchronization.RESOURCE_TYPE)
+                                .build()
+                )
                 .build();
     }
 

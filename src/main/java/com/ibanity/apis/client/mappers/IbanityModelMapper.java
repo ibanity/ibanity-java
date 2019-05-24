@@ -2,6 +2,7 @@ package com.ibanity.apis.client.mappers;
 
 import com.ibanity.apis.client.jsonapi.CollectionApiModel;
 import com.ibanity.apis.client.jsonapi.DataApiModel;
+import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.jsonapi.ResourceApiModel;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityModel;
@@ -63,5 +64,16 @@ public class IbanityModelMapper {
         } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(format("Instantiation of class %s is impossible for default constructor", classType), e);
         }
+    }
+
+    public static RequestApiModel buildRequest(String resourceType, Object attributes) {
+        return RequestApiModel.builder()
+                .data(
+                        RequestApiModel.RequestDataApiModel.builder()
+                                .type(resourceType)
+                                .attributes(attributes)
+                                .build()
+                )
+                .build();
     }
 }

@@ -1,5 +1,7 @@
 package com.ibanity.apis.client.services.impl;
 
+import com.ibanity.apis.client.jsonapi.RequestApiModel;
+import com.ibanity.apis.client.mappers.IbanityModelMapper;
 import com.ibanity.apis.client.models.Synchronization;
 import com.ibanity.apis.client.models.factory.read.SynchronizationReadQuery;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
@@ -17,10 +19,10 @@ public class SynchronizationServiceImpl implements SynchronizationService {
     private final ApiUrlProvider apiUrlProvider;
     private final IbanityHttpClient ibanityHttpClient;
 
-    public SynchronizationServiceImpl(IbanityHttpClient ibanityHttpClient, ApiUrlProvider apiUrlProvider) {
+    public SynchronizationServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
         super();
-        this.ibanityHttpClient = ibanityHttpClient;
         this.apiUrlProvider = apiUrlProvider;
+        this.ibanityHttpClient = ibanityHttpClient;
     }
 
     @Override
@@ -32,7 +34,8 @@ public class SynchronizationServiceImpl implements SynchronizationService {
                     .subType(synchronizationReadQuery.getSubtype())
                     .build();
             String url = getUrl();
-            String response = ibanityHttpClient.post(new URI(url), synchronization, synchronizationReadQuery.getCustomerAccessToken());
+            RequestApiModel request = IbanityModelMapper.buildRequest(Synchronization.RESOURCE_TYPE, synchronization);
+            String response = ibanityHttpClient.post(new URI(url), request, synchronizationReadQuery.getCustomerAccessToken());
             return mapResource(response, Synchronization.class);
         } catch (URISyntaxException e) {
             throw new IllegalStateException("URL cannot be build", e);

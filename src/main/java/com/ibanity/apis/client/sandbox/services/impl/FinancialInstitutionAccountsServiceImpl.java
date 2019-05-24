@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.sandbox.services.impl;
 
+import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
@@ -12,6 +13,7 @@ import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionA
 import com.ibanity.apis.client.sandbox.services.FinancialInstitutionAccountsService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 
+import static com.ibanity.apis.client.mappers.IbanityModelMapper.buildRequest;
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapCollection;
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
@@ -68,7 +70,8 @@ public class FinancialInstitutionAccountsServiceImpl implements FinancialInstitu
 
         FinancialInstitutionAccount financialInstitutionAccount = mapRequest(query);
 
-        String response = ibanityHttpClient.post(buildUri(url), financialInstitutionAccount);
+        RequestApiModel request = buildRequest(FinancialInstitutionAccount.RESOURCE_TYPE, financialInstitutionAccount);
+        String response = ibanityHttpClient.post(buildUri(url), request);
         return mapResource(response, FinancialInstitutionAccount.class);
     }
 

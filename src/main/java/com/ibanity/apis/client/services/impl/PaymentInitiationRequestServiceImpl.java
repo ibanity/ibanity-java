@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.services.impl;
 
+import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.PaymentInitiationRequest;
 import com.ibanity.apis.client.models.factory.create.PaymentInitiationRequestCreationQuery;
@@ -8,6 +9,7 @@ import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import com.ibanity.apis.client.services.PaymentInitiationRequestService;
 
+import static com.ibanity.apis.client.mappers.IbanityModelMapper.buildRequest;
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
 import static com.ibanity.apis.client.mappers.PaymentInitiationRequestMapper.getRequestMapping;
 import static com.ibanity.apis.client.mappers.PaymentInitiationRequestMapper.getResponseMapping;
@@ -27,9 +29,10 @@ public class PaymentInitiationRequestServiceImpl implements PaymentInitiationReq
     @Override
     public PaymentInitiationRequest create(final PaymentInitiationRequestCreationQuery query) {
         PaymentInitiationRequest paymentInitiationRequest = getRequestMapping(query);
+        RequestApiModel request = buildRequest(PaymentInitiationRequest.RESOURCE_TYPE, paymentInitiationRequest);
 
         String url = getUrl(query.getFinancialInstitutionId().toString(), "");
-        String response = ibanityHttpClient.post(buildUri(url), paymentInitiationRequest, query.getCustomerAccessToken());
+        String response = ibanityHttpClient.post(buildUri(url), request, query.getCustomerAccessToken());
 
         return mapResource(response, getResponseMapping());
     }
