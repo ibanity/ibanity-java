@@ -1,6 +1,7 @@
 package com.ibanity.samples;
 
 
+import com.ibanity.apis.client.helpers.IbanityService;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionTransaction;
@@ -22,6 +23,7 @@ public class ClientSandboxSample {
     private final FinancialInstitutionTransactionSample financialInstitutionTransactionSample = new FinancialInstitutionTransactionSample();
 
     public static void main(String[] args) {
+        IbanityService.apiUrlProvider().loadApiSchema();
         ClientSandboxSample clientSandboxSample = new ClientSandboxSample();
         clientSandboxSample.financialInstitutionSamples();
         clientSandboxSample.financialInstitutionUserSamples();
