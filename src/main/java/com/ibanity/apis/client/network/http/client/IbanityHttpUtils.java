@@ -10,6 +10,7 @@ import com.ibanity.apis.client.configuration.IbanityClientSecurityPropertiesKeys
 import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.network.http.client.interceptor.IbanitySignatureInterceptor;
 import com.ibanity.apis.client.network.http.client.interceptor.IdempotencyInterceptor;
+import com.ibanity.apis.client.services.impl.IbanityHttpSignatureServiceImpl;
 import com.ibanity.apis.client.utils.CustomHttpRequestRetryHandler;
 import com.ibanity.apis.client.utils.KeyToolHelper;
 import org.apache.http.client.HttpClient;
@@ -31,11 +32,17 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
 import static com.ibanity.apis.client.configuration.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CA_CERTIFICATE_PATH_PROPERTY_KEY;
 import static com.ibanity.apis.client.configuration.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_CERTIFICATE_PATH_PROPERTY_KEY;
 import static com.ibanity.apis.client.configuration.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY;
 import static com.ibanity.apis.client.configuration.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_PRIVATE_KEY_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.configuration.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY;
+import static com.ibanity.apis.client.configuration.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.configuration.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY;
+import static com.ibanity.apis.client.configuration.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PATH_PROPERTY_KEY;
 import static com.ibanity.apis.client.configuration.IbanityConfiguration.getConfiguration;
 
 public final class IbanityHttpUtils {
@@ -65,7 +72,8 @@ public final class IbanityHttpUtils {
         httpClientBuilder.setRetryHandler(new CustomHttpRequestRetryHandler(RETRY_COUNTS, true));
         httpClientBuilder.addInterceptorLast(new IdempotencyInterceptor());
         if (IbanityConfiguration.getConfiguration("ibanity.client.signature.certificate.path") != null) {
-            httpClientBuilder.addInterceptorLast(new IbanitySignatureInterceptor());
+            IbanityHttpSignatureServiceImpl httpSignatureService = getIbanityHttpSignatureService();
+            httpClientBuilder.addInterceptorLast(new IbanitySignatureInterceptor(httpSignatureService));
         }
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(DEFAULT_REQUEST_TIMEOUT)
@@ -142,9 +150,35 @@ public final class IbanityHttpUtils {
         return keyStore;
     }
 
+    private static IbanityHttpSignatureServiceImpl getIbanityHttpSignatureService() {
+        return new IbanityHttpSignatureServiceImpl(
+                getSignaturePrivateKey(),
+                (X509Certificate) getSignatureCertificate(),
+                getConfiguration(IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY));
+    }
+
     private static KeyManager[] createKeyManagers(KeyStore keyStore, String passphrase) throws NoSuchAlgorithmException, KeyStoreException, UnrecoverableKeyException {
         KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         kmf.init(keyStore, passphrase.toCharArray());
         return kmf.getKeyManagers();
+    }
+
+
+    private static Certificate getSignatureCertificate() {
+        try {
+            String certificatePath = getConfiguration(IBANITY_CLIENT_SIGNATURE_CERTIFICATE_PATH_PROPERTY_KEY);
+            return KeyToolHelper.loadCertificate(certificatePath);
+        } catch (CertificateException exception) {
+            throw new IllegalArgumentException("Invalid certificate configuration", exception);
+        }
+    }
+
+    private static PrivateKey getSignaturePrivateKey() {
+        try {
+            String privateKeyPassPhrase = getConfiguration(IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY, "");
+            return KeyToolHelper.loadPrivateKey(getConfiguration(IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PATH_PROPERTY_KEY), privateKeyPassPhrase);
+        } catch (IOException exception) {
+            throw new IllegalArgumentException("Invalid private key configuration", exception);
+        }
     }
 }
