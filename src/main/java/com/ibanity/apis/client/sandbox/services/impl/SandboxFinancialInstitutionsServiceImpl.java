@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.sandbox.services.impl;
 
+import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionCreationQuery;
@@ -9,6 +10,7 @@ import com.ibanity.apis.client.sandbox.services.SandboxFinancialInstitutionsServ
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import com.ibanity.apis.client.services.impl.FinancialInstitutionsServiceImpl;
 
+import static com.ibanity.apis.client.mappers.IbanityModelMapper.buildRequest;
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 
@@ -28,9 +30,11 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
         FinancialInstitution financialInstitution = new FinancialInstitution();
         financialInstitution.setSandbox(Boolean.TRUE);
         financialInstitution.setName(financialInstitutionCreationQuery.getName());
+        RequestApiModel request = buildRequest(FinancialInstitution.RESOURCE_TYPE, financialInstitution);
 
         String url = getUrl("");
-        String response = ibanityHttpClient.post(buildUri(url), financialInstitution);
+
+        String response = ibanityHttpClient.post(buildUri(url), request);
         return mapResource(response, FinancialInstitution.class);
     }
 
@@ -39,9 +43,10 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
         FinancialInstitution financialInstitution = new FinancialInstitution();
         financialInstitution.setId(financialInstitutionUpdateQuery.getFinancialInstitutionId());
         financialInstitution.setName(financialInstitutionUpdateQuery.getName());
+        RequestApiModel request = buildRequest(FinancialInstitution.RESOURCE_TYPE, financialInstitution);
 
         String url = getUrl(financialInstitutionUpdateQuery.getFinancialInstitutionId().toString());
-        String response = ibanityHttpClient.post(buildUri(url), financialInstitution);
+        String response = ibanityHttpClient.post(buildUri(url), request);
         return mapResource(response, FinancialInstitution.class);
     }
 

@@ -25,9 +25,9 @@ public class TransactionsServiceImpl implements TransactionsService {
     private final IbanityHttpClient ibanityHttpClient;
     private final ApiUrlProvider apiUrlProvider;
 
-    public TransactionsServiceImpl(IbanityHttpClient ibanityHttpClient, ApiUrlProvider apiUrlProvider) {
-        this.ibanityHttpClient = ibanityHttpClient;
+    public TransactionsServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
         this.apiUrlProvider = apiUrlProvider;
+        this.ibanityHttpClient = ibanityHttpClient;
     }
 
     @Override

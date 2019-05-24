@@ -1,5 +1,6 @@
 package com.ibanity.samples.sandbox;
 
+import com.ibanity.apis.client.helpers.IbanityService;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.factory.read.FinancialInstitutionReadQuery;
 import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionCreationQuery;
@@ -11,7 +12,7 @@ import com.ibanity.apis.client.sandbox.services.impl.SandboxFinancialInstitution
 import java.util.UUID;
 
 public class FinancialInstitutionSample {
-    private final SandboxFinancialInstitutionsService sandBoxFinancialInstitutionsService = new SandboxFinancialInstitutionsServiceImpl(null, null);
+    private final SandboxFinancialInstitutionsService sandBoxFinancialInstitutionsService = new SandboxFinancialInstitutionsServiceImpl(IbanityService.apiUrlProvider(), IbanityService.ibanityHttpClient());
 
     public FinancialInstitution create(){
         FinancialInstitutionCreationQuery financialInstitutionCreationQuery =

@@ -1,10 +1,10 @@
 package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.jsonapi.DataApiModel;
+import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.mappers.IbanityModelMapper;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.FinancialInstitution;
-import com.ibanity.apis.client.models.IbanityModel;
 import com.ibanity.apis.client.models.factory.create.AccountInformationAccessRequestCreationQuery;
 import com.ibanity.apis.client.models.links.AccountInformationAccessLinks;
 import com.ibanity.apis.client.models.links.AccountLinks;
@@ -15,6 +15,7 @@ import com.ibanity.apis.client.services.ApiUrlProvider;
 import java.net.URI;
 import java.util.function.Function;
 
+import static com.ibanity.apis.client.mappers.IbanityModelMapper.buildRequest;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static org.apache.commons.lang3.StringUtils.removeEnd;
 
@@ -36,7 +37,9 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
 
         URI uri = getUri(financialInstitutionId, "");
 
-        String response = ibanityHttpClient.post(uri, mapRequest(accountInformationAccessRequestCreationQuery), accountInformationAccessRequestCreationQuery.getCustomerAccessToken());
+        AccountInformationAccessRequest ibanityModel = mapRequest(accountInformationAccessRequestCreationQuery);
+        RequestApiModel request = buildRequest(AccountInformationAccessRequest.RESOURCE_TYPE, ibanityModel);
+        String response = ibanityHttpClient.post(uri, request, accountInformationAccessRequestCreationQuery.getCustomerAccessToken());
         return IbanityModelMapper.mapResource(response, responseMapping());
     }
 
@@ -80,7 +83,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
         };
     }
 
-    private IbanityModel mapRequest(AccountInformationAccessRequestCreationQuery creationQuery) {
+    private AccountInformationAccessRequest mapRequest(AccountInformationAccessRequestCreationQuery creationQuery) {
         return AccountInformationAccessRequest.builder()
                 .redirectUri(creationQuery.getRedirectURI())
                 .consentReference(creationQuery.getConsentReference())

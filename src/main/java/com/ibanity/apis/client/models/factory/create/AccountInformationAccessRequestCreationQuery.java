@@ -13,8 +13,8 @@ import java.util.UUID;
 public final class AccountInformationAccessRequestCreationQuery {
     private UUID accountInformationAccessRequestId;
     private UUID financialInstitutionId;
-    private UUID consentReference;
     private UUID idempotencyKey;
+    private String consentReference;
     private String redirectURI;
     private String customerAccessToken;
     private String locale;

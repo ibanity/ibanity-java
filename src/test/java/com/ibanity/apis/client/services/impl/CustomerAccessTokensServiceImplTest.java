@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.services.impl;
 
+import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.factory.create.CustomerAccessTokenCreationQuery;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
@@ -38,14 +39,25 @@ class CustomerAccessTokensServiceImplTest {
                 CustomerAccessTokenCreationQuery.builder()
                         .applicationCustomerReference(APPLICATION_REFERENCE)
                         .build();
-        CustomerAccessToken request = CustomerAccessToken.builder().applicationCustomerReference(APPLICATION_REFERENCE).build();
 
         when(apiUrlProvider.find("customerAccessTokens")).thenReturn(CUSTOMER_ACCESS_TOKEN_ENDPOINT);
-        when(httpClient.post(new URI(CUSTOMER_ACCESS_TOKEN_ENDPOINT), request, null)).thenReturn(loadFile("json/customerAccessToken.json"));
+        when(httpClient.post(new URI(CUSTOMER_ACCESS_TOKEN_ENDPOINT), buildRequest(), null)).thenReturn(loadFile("json/customerAccessToken.json"));
 
         CustomerAccessToken actual = customerAccessTokensService.create(creationQuery);
 
         assertThat(actual).isEqualToComparingFieldByField(createExpected());
+    }
+
+    private RequestApiModel buildRequest() {
+        CustomerAccessToken request = CustomerAccessToken.builder().applicationCustomerReference(APPLICATION_REFERENCE).build();
+        return RequestApiModel.builder()
+                .data(
+                        RequestApiModel.RequestDataApiModel.builder()
+                                .attributes(request)
+                                .type(CustomerAccessToken.RESOURCE_TYPE)
+                                .build()
+                )
+                .build();
     }
 
     private CustomerAccessToken createExpected() {

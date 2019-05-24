@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.sandbox.services.impl;
 
+import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
@@ -10,6 +11,7 @@ import com.ibanity.apis.client.sandbox.models.factory.update.FinancialInstitutio
 import com.ibanity.apis.client.sandbox.services.FinancialInstitutionUsersService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 
+import static com.ibanity.apis.client.mappers.IbanityModelMapper.buildRequest;
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapCollection;
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
@@ -49,16 +51,18 @@ public class FinancialInstitutionUsersServiceImpl implements FinancialInstitutio
 
     @Override
     public FinancialInstitutionUser create(FinancialInstitutionUserUpdateQuery userCreationQuery) {
-        FinancialInstitutionUser request = mapRequest(userCreationQuery);
+        FinancialInstitutionUser financialInstitutionUser = mapRequest(userCreationQuery);
         String url = getUrl("");
+        RequestApiModel request = buildRequest(FinancialInstitutionUser.RESOURCE_TYPE, financialInstitutionUser);
         String response = ibanityHttpClient.post(buildUri(url), request);
         return mapResource(response, FinancialInstitutionUser.class);
     }
 
     @Override
     public FinancialInstitutionUser update(FinancialInstitutionUserUpdateQuery userUpdateQuery) {
-        FinancialInstitutionUser request = mapRequest(userUpdateQuery);
+        FinancialInstitutionUser financialInstitutionUser = mapRequest(userUpdateQuery);
         String url = getUrl(userUpdateQuery.getFinancialInstitutionUserId().toString());
+        RequestApiModel request = buildRequest(FinancialInstitutionUser.RESOURCE_TYPE, financialInstitutionUser);
         String response = ibanityHttpClient.post(buildUri(url), request);
         return mapResource(response, FinancialInstitutionUser.class);
     }

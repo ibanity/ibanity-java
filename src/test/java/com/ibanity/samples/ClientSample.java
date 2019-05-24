@@ -1,5 +1,6 @@
 package com.ibanity.samples;
 
+import com.ibanity.apis.client.helpers.IbanityService;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.CustomerAccessToken;
@@ -40,56 +41,55 @@ public class ClientSample {
     private final String fakeTppPaymentInitiationRedirectUrl = getConfiguration("tpp.payments.initiation.result.redirect.url");
 
     public static void main(String[] args) {
+        IbanityService.apiUrlProvider().loadApiSchema();
         ClientSample clientSample = new ClientSample();
 
-        clientSample.customerAccessTokenSamples();
-        clientSample.financialInstitutionSamples();
-        clientSample.accountInformationAccessRequestSamples();
-        clientSample.accountSamples();
-        clientSample.transactionSamples();
+        CustomerAccessToken customerAccessToken = clientSample.customerAccessTokenSamples();
+        List<FinancialInstitution> financialInstitutions = clientSample.financialInstitutionSamples();
+
+        clientSample.accountInformationAccessRequestSamples(customerAccessToken, financialInstitutions);
+
+        List<Account> accounts = clientSample.accountSamples(customerAccessToken, financialInstitutions);
+        List<Transaction> transactions = clientSample.transactionSamples(customerAccessToken, financialInstitutions, accounts);
+        Synchronization synchronization = clientSample.synchronizationSamples(customerAccessToken, accounts);
+
+        LOGGER.info("List of financialInstitutions: {}", financialInstitutions);
+        LOGGER.info("List of accounts: {}", accounts);
+        LOGGER.info("List of transactions: {}", transactions);
+        LOGGER.info("synchronization: {}", synchronization);
+
+
         clientSample.paymentInitiationRequestSamples();
-        clientSample.synchronizationSamples();
 
         LOGGER.info("Samples end");
     }
 
-    private void synchronizationSamples() {
-        String consentReference = "application_customer_reference-" + UUID.randomUUID().toString();
-
-        CustomerAccessToken customerAccessToken = customerAccessTokenSample.create(consentReference);
-        FinancialInstitution financialInstitution = financialInstitutionSample.list().get(0);
-
-        AccountInformationAccessRequest accountInformationAccessRequest =
-                this.accountInformationAccessRequestSample.create(financialInstitution, customerAccessToken,
-                        consentReference, fakeTppAccountInformationAccessRedirectUrl);
-        SampleHelper.waitForAuthorizationWebFlow(accountInformationAccessRequest);
-        Account account = accountSample.list(customerAccessToken, financialInstitution).getItems().get(0);
+    private Synchronization synchronizationSamples(CustomerAccessToken customerAccessToken, List<Account> accounts) {
+        Account account = accounts.get(0);
 
         Synchronization synchronization = synchronizationSample.create(customerAccessToken, account.getId());
         synchronization = synchronizationSample.find(customerAccessToken, synchronization.getId());
+        return synchronization;
     }
 
-    public void customerAccessTokenSamples() {
+    public CustomerAccessToken customerAccessTokenSamples() {
         LOGGER.info("Customer Access Token samples");
 
         String consentReference = "application_customer_reference-" + UUID.randomUUID().toString();
 
-        CustomerAccessToken customerAccessToken = customerAccessTokenSample.create(consentReference);
+        return customerAccessTokenSample.create(consentReference);
     }
 
-    public void financialInstitutionSamples() {
+    public List<FinancialInstitution> financialInstitutionSamples() {
         LOGGER.info("Financial Institution samples");
 
-        List<FinancialInstitution> financialInstitutions = financialInstitutionSample.list();
+        return financialInstitutionSample.list();
     }
 
-    public void accountInformationAccessRequestSamples() {
+    public void accountInformationAccessRequestSamples(CustomerAccessToken customerAccessToken, List<FinancialInstitution> financialInstitutions) {
         LOGGER.info("Account Information Access Request samples");
 
         String consentReference = "application_customer_reference-" + UUID.randomUUID().toString();
-
-        List<FinancialInstitution> financialInstitutions = financialInstitutionSample.list();
-        CustomerAccessToken customerAccessToken = customerAccessTokenSample.create(consentReference);
 
         AccountInformationAccessRequest accountInformationAccessRequest =
                 this.accountInformationAccessRequestSample.create(
@@ -99,41 +99,29 @@ public class ClientSample {
         SampleHelper.waitForAuthorizationWebFlow(accountInformationAccessRequest);
     }
 
-    public void accountSamples() {
+    public List<Account> accountSamples(CustomerAccessToken customerAccessToken, List<FinancialInstitution> financialInstitutions) {
         LOGGER.info("Accounts samples");
 
-        String consentReference = "application_customer_reference-" + UUID.randomUUID().toString();
-
-        CustomerAccessToken customerAccessToken = customerAccessTokenSample.create(consentReference);
-        FinancialInstitution financialInstitution = financialInstitutionSample.list().get(0);
-
-        AccountInformationAccessRequest accountInformationAccessRequest =
-                this.accountInformationAccessRequestSample.create(financialInstitution, customerAccessToken,
-                        consentReference, fakeTppAccountInformationAccessRedirectUrl);
-        SampleHelper.waitForAuthorizationWebFlow(accountInformationAccessRequest);
-
+        FinancialInstitution financialInstitution = financialInstitutions.get(0);
         List<Account> accounts = accountSample.list(customerAccessToken, financialInstitution).getItems();
 
-        Account account = accountSample.get(customerAccessToken, financialInstitution, accounts.get(0).getId());
+        accountSample.get(customerAccessToken, financialInstitution, accounts.get(0).getId());
+
+        return accounts;
     }
 
-    public void transactionSamples() {
+    public List<Transaction> transactionSamples(CustomerAccessToken customerAccessToken, List<FinancialInstitution> financialInstitutionList, List<Account> accountList) {
         LOGGER.info("Transactions samples");
 
-        String consentReference = "application_customer_reference-" + UUID.randomUUID().toString();
+        FinancialInstitution financialInstitution = financialInstitutionList.get(0);
 
-        CustomerAccessToken customerAccessToken = customerAccessTokenSample.create(consentReference);
-        FinancialInstitution financialInstitution = financialInstitutionSample.list().get(0);
-
-        AccountInformationAccessRequest accountInformationAccessRequest =
-                this.accountInformationAccessRequestSample.create(financialInstitution, customerAccessToken,
-                        consentReference, fakeTppAccountInformationAccessRedirectUrl);
-        SampleHelper.waitForAuthorizationWebFlow(accountInformationAccessRequest);
-        Account account = accountSample.list(customerAccessToken, financialInstitution).getItems().get(0);
+        Account account = accountList.get(0);
 
         List<Transaction> transactions = transactionSample.list(customerAccessToken, financialInstitution, account);
 
-        Transaction transaction = transactionSample.get(customerAccessToken, financialInstitution, account, transactions.get(0).getId());
+        transactionSample.get(customerAccessToken, financialInstitution, account, transactions.get(0).getId());
+
+        return transactions;
     }
 
     public void paymentInitiationRequestSamples() {

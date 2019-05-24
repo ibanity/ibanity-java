@@ -1,7 +1,7 @@
 package com.ibanity.apis.client.services.impl;
 
+import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
-import com.ibanity.apis.client.models.IbanityModel;
 import com.ibanity.apis.client.models.factory.create.AccountInformationAccessRequestCreationQuery;
 import com.ibanity.apis.client.models.links.AccountInformationAccessLinks;
 import com.ibanity.apis.client.models.links.AccountLinks;
@@ -27,10 +27,10 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class AccountInformationAccessRequestsServiceImplTest {
 
-    private static final UUID CONSENT_REFERENCE = fromString("ae63691f-64e4-4563-a055-a387d38f07e2");
     private static final UUID FINANCIAL_INSTITUTION_ID = fromString("4876fdd6-7333-4f9f-b142-ba520ca497b1");
     private static final UUID ACCOUNT_INFORMATION_ACCESS_REQUEST_ID = fromString("cd273ba1-cb2a-464d-b85d-62c9fc4dc8d9");
 
+    private static final String CONSENT_REFERENCE = "ae63691f-64e4-4563-a055-a387d38f07e2";
     private static final String CUSTOMER_ACCESS_TOKEN = "itsme";
     private static final String AIAR_ENDPOINT = "https://api.ibanity.com/xs2a/customer/financial-institutions/{financialInstitutionId}/account-information-access-requests/{accountInformationAccessRequestId}";
     private static final String AIAR_ENDPOINT_FOR_FIND = "https://api.ibanity.com/xs2a/customer/financial-institutions/4876fdd6-7333-4f9f-b142-ba520ca497b1/account-information-access-requests/cd273ba1-cb2a-464d-b85d-62c9fc4dc8d9";
@@ -91,13 +91,21 @@ class AccountInformationAccessRequestsServiceImplTest {
         assertThat(actual).isEqualToComparingFieldByField(expectedForFind());
     }
 
-    private IbanityModel toIbanityModel(AccountInformationAccessRequestCreationQuery creationQuery) {
-        return AccountInformationAccessRequest.builder()
+    private RequestApiModel toIbanityModel(AccountInformationAccessRequestCreationQuery creationQuery) {
+        AccountInformationAccessRequest accessRequest = AccountInformationAccessRequest.builder()
                 .redirectUri(creationQuery.getRedirectURI())
                 .consentReference(creationQuery.getConsentReference())
                 .requestedAccountReferences(creationQuery.getRequestedAccountReferences())
                 .locale(creationQuery.getLocale())
                 .customerIpAddress(creationQuery.getCustomerIpAddress())
+                .build();
+        return RequestApiModel.builder()
+                .data(
+                        RequestApiModel.RequestDataApiModel.builder()
+                                .attributes(accessRequest)
+                                .type(AccountInformationAccessRequest.RESOURCE_TYPE)
+                                .build()
+                )
                 .build();
     }
 

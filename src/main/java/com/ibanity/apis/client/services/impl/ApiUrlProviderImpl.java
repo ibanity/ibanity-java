@@ -5,6 +5,8 @@ import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.network.http.client.IbanityHttpUtils;
 import com.ibanity.apis.client.services.ApiUrlProvider;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,6 +17,8 @@ import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.removeEnd;
 
 public class ApiUrlProviderImpl implements ApiUrlProvider {
+
+    private static final Logger LOGGER = LogManager.getLogger(ApiUrlProviderImpl.class);
 
     private JsonNode apiUrls;
     private final IbanityHttpClient ibanityHttpClient;
@@ -39,10 +43,12 @@ public class ApiUrlProviderImpl implements ApiUrlProvider {
 
     @Override
     public void loadApiSchema() {
+        LOGGER.debug("loading schema");
         String ibanityApiUrl = removeEnd(IbanityConfiguration.getConfiguration(IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY), "/");
         try {
             String schema = ibanityHttpClient.get(new URI(ibanityApiUrl + "/xs2a"), null);
             apiUrls = mapJsonToMap(schema);
+            LOGGER.debug("schema loaded");
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(format("Cannot create api schema URI for string %s", ibanityApiUrl), e);
         } catch (IOException e) {

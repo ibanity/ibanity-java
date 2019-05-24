@@ -1,5 +1,6 @@
 package com.ibanity.samples.sandbox;
 
+import com.ibanity.apis.client.helpers.IbanityService;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
@@ -15,7 +16,7 @@ import org.iban4j.Iban;
 import java.util.UUID;
 
 public class FinancialInstitutionAccountSample {
-    private final FinancialInstitutionAccountsService financialInstitutionAccountsService = new FinancialInstitutionAccountsServiceImpl(null, null);
+    private final FinancialInstitutionAccountsService financialInstitutionAccountsService = new FinancialInstitutionAccountsServiceImpl(IbanityService.apiUrlProvider(), IbanityService.ibanityHttpClient());
 
     public FinancialInstitutionAccount create(FinancialInstitution financialInstitution, FinancialInstitutionUser financialInstitutionUser){
         FinancialInstitutionAccountCreationQuery accountCreationQuery =
