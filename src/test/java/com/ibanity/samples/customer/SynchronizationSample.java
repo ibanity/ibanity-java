@@ -11,7 +11,11 @@ import java.util.UUID;
 
 public class SynchronizationSample {
 
-    private SynchronizationService synchronizationService = new SynchronizationServiceImpl(IbanityService.apiUrlProvider(), IbanityService.ibanityHttpClient());
+    private SynchronizationService synchronizationService;
+
+    public SynchronizationSample(IbanityService ibanityService) {
+        this.synchronizationService = new SynchronizationServiceImpl(ibanityService.apiUrlProvider(), ibanityService.ibanityHttpClient());
+    }
 
     public Synchronization create(CustomerAccessToken customerAccessToken, UUID accountId) {
         SynchronizationReadQuery synchronizationReadQuery =

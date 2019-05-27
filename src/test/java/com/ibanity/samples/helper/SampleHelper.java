@@ -7,12 +7,18 @@ import com.ibanity.apis.client.models.factory.create.PaymentInitiationRequestCre
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
 import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionTransactionCreationQuery;
+import com.ibanity.apis.client.utils.KeyToolHelper;
 import org.apache.commons.math3.util.Precision;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 
+import java.io.IOException;
+import java.security.PrivateKey;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Random;
@@ -28,7 +34,7 @@ public class SampleHelper {
         int randomDebitCreditSign = random.nextBoolean() ? -1 : 1;
 
         return Precision.round(
-                random.doubles(10,100)
+                random.doubles(10, 100)
                         .findFirst().getAsDouble() * randomDebitCreditSign, 2);
     }
 
@@ -97,4 +103,22 @@ public class SampleHelper {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
+    public static Certificate loadCa(String certificatePath) throws CertificateException {
+        if (certificatePath == null) {
+            return null;
+        } else {
+            return KeyToolHelper.loadCertificate(certificatePath);
+        }
+    }
+
+    public static PrivateKey loadPrivateKey(String path, String passphrase) throws IOException {
+        return KeyToolHelper.loadPrivateKey(
+                path,
+                passphrase);
+    }
+
+    public static X509Certificate loadCertificate(String path) throws CertificateException {
+        return (X509Certificate) KeyToolHelper.loadCertificate(
+                path);
+    }
 }

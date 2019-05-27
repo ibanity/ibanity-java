@@ -7,7 +7,12 @@ import com.ibanity.apis.client.services.CustomerAccessTokensService;
 import com.ibanity.apis.client.services.impl.CustomerAccessTokensServiceImpl;
 
 public class CustomerAccessTokenSample {
-    private final CustomerAccessTokensService customerAccessTokensService = new CustomerAccessTokensServiceImpl(IbanityService.apiUrlProvider(), IbanityService.ibanityHttpClient());
+
+    private final CustomerAccessTokensService customerAccessTokensService;
+
+    public CustomerAccessTokenSample(IbanityService ibanityService) {
+        customerAccessTokensService = new CustomerAccessTokensServiceImpl(ibanityService.apiUrlProvider(), ibanityService.ibanityHttpClient());
+    }
 
     public CustomerAccessToken create(String consentReference) {
         CustomerAccessTokenCreationQuery customerAccessTokenCreationQuery =

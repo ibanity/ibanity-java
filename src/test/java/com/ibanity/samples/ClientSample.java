@@ -1,5 +1,8 @@
 package com.ibanity.samples;
 
+import com.ibanity.apis.client.builders.IbanityServiceBuilder;
+import com.ibanity.apis.client.builders.OptionalPropertiesBuilder;
+import com.ibanity.apis.client.configuration.IbanityClientSecuritySignaturePropertiesKeys;
 import com.ibanity.apis.client.helpers.IbanityService;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
@@ -19,30 +22,74 @@ import com.ibanity.samples.helper.SampleHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
+import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.UUID;
 
+import static com.ibanity.apis.client.configuration.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CA_CERTIFICATE_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.configuration.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_CERTIFICATE_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.configuration.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY;
+import static com.ibanity.apis.client.configuration.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_PRIVATE_KEY_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.configuration.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY;
+import static com.ibanity.apis.client.configuration.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.configuration.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY;
+import static com.ibanity.apis.client.configuration.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.configuration.IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY;
 import static com.ibanity.apis.client.configuration.IbanityConfiguration.getConfiguration;
+import static com.ibanity.samples.helper.SampleHelper.loadCa;
+import static com.ibanity.samples.helper.SampleHelper.loadCertificate;
+import static com.ibanity.samples.helper.SampleHelper.loadPrivateKey;
 
 public class ClientSample {
+
     private static final Logger LOGGER = LogManager.getLogger(ClientSample.class);
 
-    // Sample services
-    private final CustomerAccessTokenSample customerAccessTokenSample = new CustomerAccessTokenSample();
-    private final FinancialInstitutionSample financialInstitutionSample = new FinancialInstitutionSample();
-    private final AccountInformationAccessRequestSample accountInformationAccessRequestSample = new AccountInformationAccessRequestSample();
-    private final AccountSample accountSample = new AccountSample();
-    private final TransactionSample transactionSample = new TransactionSample();
-    private final PaymentInitiationRequestSample paymentInitiationRequestSample = new PaymentInitiationRequestSample();
-    private final SynchronizationSample synchronizationSample = new SynchronizationSample();
+    private final CustomerAccessTokenSample customerAccessTokenSample;
+    private final FinancialInstitutionSample financialInstitutionSample;
+    private final AccountInformationAccessRequestSample accountInformationAccessRequestSample;
+    private final AccountSample accountSample;
+    private final TransactionSample transactionSample;
+    private final PaymentInitiationRequestSample paymentInitiationRequestSample;
+    private final SynchronizationSample synchronizationSample;
 
     // Configurations
     private final String fakeTppAccountInformationAccessRedirectUrl = getConfiguration("tpp.accounts.information.access.result.redirect.url");
     private final String fakeTppPaymentInitiationRedirectUrl = getConfiguration("tpp.payments.initiation.result.redirect.url");
 
-    public static void main(String[] args) {
-        IbanityService.apiUrlProvider().loadApiSchema();
-        ClientSample clientSample = new ClientSample();
+    public ClientSample(IbanityService ibanityService) {
+        customerAccessTokenSample = new CustomerAccessTokenSample(ibanityService);
+        financialInstitutionSample = new FinancialInstitutionSample(ibanityService);
+        accountInformationAccessRequestSample = new AccountInformationAccessRequestSample(ibanityService);
+        accountSample = new AccountSample(ibanityService);
+        transactionSample = new TransactionSample(ibanityService);
+        paymentInitiationRequestSample = new PaymentInitiationRequestSample(ibanityService);
+        synchronizationSample = new SynchronizationSample(ibanityService);
+    }
+
+    public static void main(String[] args) throws CertificateException, IOException {
+        String passphrase = getConfiguration(IBANITY_CLIENT_SSL_CLIENT_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY);
+        OptionalPropertiesBuilder ibanityServiceBuilder = IbanityServiceBuilder.builder()
+                .ibanityApiEndpoint(getConfiguration(IBANITY_API_ENDPOINT_PROPERTY_KEY))
+                .applicationPrivateKey(loadPrivateKey(getConfiguration(IBANITY_CLIENT_SSL_CLIENT_PRIVATE_KEY_PATH_PROPERTY_KEY), passphrase))
+                .passphrase(passphrase)
+                .applicationCertificate(loadCertificate(getConfiguration(IBANITY_CLIENT_SSL_CLIENT_CERTIFICATE_PATH_PROPERTY_KEY)))
+                .caCertificate(loadCa(getConfiguration(IBANITY_CLIENT_SSL_CA_CERTIFICATE_PATH_PROPERTY_KEY)));
+
+        if (getConfiguration(IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY) != null) {
+            String signaturePassphrase = getConfiguration(IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY, "");
+            ibanityServiceBuilder
+                    .requestSignaturePrivateKey(loadPrivateKey(getConfiguration(IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PATH_PROPERTY_KEY), signaturePassphrase))
+                    .requestSignaturePassphrase(signaturePassphrase)
+                    .requestSignatureCertificate(loadCertificate(getConfiguration(IBANITY_CLIENT_SIGNATURE_CERTIFICATE_PATH_PROPERTY_KEY)))
+                    .signatureCertificateId(getConfiguration(IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY));
+        }
+
+        IbanityService ibanityService = ibanityServiceBuilder.build();
+
+
+        ibanityService.apiUrlProvider().loadApiSchema();
+        ClientSample clientSample = new ClientSample(ibanityService);
 
         CustomerAccessToken customerAccessToken = clientSample.customerAccessTokenSamples();
         List<FinancialInstitution> financialInstitutions = clientSample.financialInstitutionSamples();

@@ -11,12 +11,17 @@ import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionUsersSe
 import java.util.UUID;
 
 public class FinancialInstitutionUserSample {
-    private final FinancialInstitutionUsersService financialInstitutionUsersService = new FinancialInstitutionUsersServiceImpl(IbanityService.apiUrlProvider(), IbanityService.ibanityHttpClient());
 
-    public FinancialInstitutionUser create(){
+    private final FinancialInstitutionUsersService financialInstitutionUsersService;
+
+    public FinancialInstitutionUserSample(IbanityService ibanityService) {
+        financialInstitutionUsersService = new FinancialInstitutionUsersServiceImpl(ibanityService.apiUrlProvider(), ibanityService.ibanityHttpClient());
+    }
+
+    public FinancialInstitutionUser create() {
         FinancialInstitutionUserUpdateQuery userCreationQuery =
                 FinancialInstitutionUserUpdateQuery.builder()
-                        .login("Login-"+ UUID.randomUUID().toString())
+                        .login("Login-" + UUID.randomUUID().toString())
                         .password("Password")
                         .lastName("Lastname")
                         .firstName("First name")
@@ -43,7 +48,7 @@ public class FinancialInstitutionUserSample {
         return financialInstitutionUsersService.find(financialInstitutionUserReadQuery);
     }
 
-    public void delete(FinancialInstitutionUser financialInstitutionUser){
+    public void delete(FinancialInstitutionUser financialInstitutionUser) {
         FinancialInstitutionUserDeleteQuery financialInstitutionUserDeleteQuery =
                 FinancialInstitutionUserDeleteQuery.builder()
                         .financialInstitutionUserId(financialInstitutionUser.getId())

@@ -1,7 +1,6 @@
 package com.ibanity.apis.client.services.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.network.http.client.IbanityHttpUtils;
 import com.ibanity.apis.client.services.ApiUrlProvider;
@@ -19,18 +18,20 @@ import static org.apache.commons.lang3.StringUtils.removeEnd;
 public class ApiUrlProviderImpl implements ApiUrlProvider {
 
     private static final Logger LOGGER = LogManager.getLogger(ApiUrlProviderImpl.class);
+    private final String ibanityEndpoint;
 
     private JsonNode apiUrls;
     private final IbanityHttpClient ibanityHttpClient;
 
-    public ApiUrlProviderImpl(IbanityHttpClient ibanityHttpClient) {
+    public ApiUrlProviderImpl(IbanityHttpClient ibanityHttpClient, String ibanityEndpoint) {
         this.ibanityHttpClient = ibanityHttpClient;
+        this.ibanityEndpoint = ibanityEndpoint;
     }
 
     @Override
     public String find(String... paths) {
         if (apiUrls == null) {
-            throw new IllegalStateException("Api schema hasn't been loaded");
+            loadApiSchema();
         }
         try {
             return Stream.of(paths)
@@ -44,7 +45,7 @@ public class ApiUrlProviderImpl implements ApiUrlProvider {
     @Override
     public void loadApiSchema() {
         LOGGER.debug("loading schema");
-        String ibanityApiUrl = removeEnd(IbanityConfiguration.getConfiguration(IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY), "/");
+        String ibanityApiUrl = removeEnd(ibanityEndpoint, "/");
         try {
             String schema = ibanityHttpClient.get(new URI(ibanityApiUrl + "/xs2a"), null);
             apiUrls = mapJsonToMap(schema);

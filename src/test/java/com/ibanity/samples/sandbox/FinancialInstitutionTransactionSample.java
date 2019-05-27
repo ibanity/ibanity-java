@@ -15,11 +15,15 @@ import com.ibanity.samples.helper.SampleHelper;
 import java.util.UUID;
 
 public class FinancialInstitutionTransactionSample {
-    private final FinancialInstitutionTransactionsService financialInstitutionTransactionsService = new FinancialInstitutionTransactionsServiceImpl(IbanityService.apiUrlProvider(), IbanityService.ibanityHttpClient());
+    private final FinancialInstitutionTransactionsService financialInstitutionTransactionsService;
+
+    public FinancialInstitutionTransactionSample(IbanityService ibanityService) {
+        financialInstitutionTransactionsService = new FinancialInstitutionTransactionsServiceImpl(ibanityService.apiUrlProvider(), ibanityService.ibanityHttpClient());
+    }
 
     public FinancialInstitutionTransaction create(FinancialInstitution financialInstitution,
                                                   FinancialInstitutionUser financialInstitutionUser,
-                                                  FinancialInstitutionAccount financialInstitutionAccount){
+                                                  FinancialInstitutionAccount financialInstitutionAccount) {
 
         FinancialInstitutionTransactionCreationQuery transactionCreationQuery =
                 SampleHelper.generateRandomTransactionCreationQuery(financialInstitution, financialInstitutionUser, financialInstitutionAccount);
@@ -28,9 +32,9 @@ public class FinancialInstitutionTransactionSample {
     }
 
     public FinancialInstitutionTransaction find(FinancialInstitution financialInstitution,
-                                            FinancialInstitutionUser financialInstitutionUser,
-                                            FinancialInstitutionAccount financialInstitutionAccount,
-                                            UUID financialInstitutionTransactionId) {
+                                                FinancialInstitutionUser financialInstitutionUser,
+                                                FinancialInstitutionAccount financialInstitutionAccount,
+                                                UUID financialInstitutionTransactionId) {
         FinancialInstitutionTransactionReadQuery transactionReadQuery =
                 FinancialInstitutionTransactionReadQuery.builder()
                         .financialInstitutionId(financialInstitution.getId())
@@ -45,7 +49,7 @@ public class FinancialInstitutionTransactionSample {
     public void delete(FinancialInstitution financialInstitution,
                        FinancialInstitutionUser financialInstitutionUser,
                        FinancialInstitutionAccount financialInstitutionAccount,
-                       FinancialInstitutionTransaction financialInstitutionTransaction){
+                       FinancialInstitutionTransaction financialInstitutionTransaction) {
         FinancialInstitutionTransactionDeleteQuery transactionDeleteQuery =
                 FinancialInstitutionTransactionDeleteQuery.builder()
                         .financialInstitutionId(financialInstitution.getId())
