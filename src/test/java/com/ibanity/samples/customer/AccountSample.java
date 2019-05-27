@@ -13,7 +13,12 @@ import com.ibanity.apis.client.services.impl.AccountsServiceImpl;
 import java.util.UUID;
 
 public class AccountSample {
-    private final AccountsService accountsService = new AccountsServiceImpl(IbanityService.apiUrlProvider(), IbanityService.ibanityHttpClient());
+
+    private final AccountsService accountsService;
+
+    public AccountSample(IbanityService ibanityService) {
+        accountsService = new AccountsServiceImpl(ibanityService.apiUrlProvider(), ibanityService.ibanityHttpClient());
+    }
 
     public IbanityCollection<Account> list(CustomerAccessToken customerAccessToken, FinancialInstitution financialInstitution) {
         AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()

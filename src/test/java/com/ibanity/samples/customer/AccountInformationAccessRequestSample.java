@@ -9,10 +9,15 @@ import com.ibanity.apis.client.services.AccountInformationAccessRequestsService;
 import com.ibanity.apis.client.services.impl.AccountInformationAccessRequestsServiceImpl;
 
 public class AccountInformationAccessRequestSample {
-    private final AccountInformationAccessRequestsService accountInformationAccessRequestsService = new AccountInformationAccessRequestsServiceImpl(IbanityService.apiUrlProvider(), IbanityService.ibanityHttpClient());
+
+    private final AccountInformationAccessRequestsService accountInformationAccessRequestsService;
+
+    public AccountInformationAccessRequestSample(IbanityService ibanityService) {
+        accountInformationAccessRequestsService = new AccountInformationAccessRequestsServiceImpl(ibanityService.apiUrlProvider(), ibanityService.ibanityHttpClient());
+    }
 
     public AccountInformationAccessRequest create(FinancialInstitution financialInstitution, CustomerAccessToken customerAccessToken,
-                                                  String consentReference, String redirectUrl){
+                                                  String consentReference, String redirectUrl) {
         AccountInformationAccessRequestCreationQuery accountInformationAccessRequestCreationQuery =
                 AccountInformationAccessRequestCreationQuery.builder()
                         .customerAccessToken(customerAccessToken.getToken())

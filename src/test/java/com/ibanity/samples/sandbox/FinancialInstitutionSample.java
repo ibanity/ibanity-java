@@ -12,7 +12,12 @@ import com.ibanity.apis.client.sandbox.services.impl.SandboxFinancialInstitution
 import java.util.UUID;
 
 public class FinancialInstitutionSample {
-    private final SandboxFinancialInstitutionsService sandBoxFinancialInstitutionsService = new SandboxFinancialInstitutionsServiceImpl(IbanityService.apiUrlProvider(), IbanityService.ibanityHttpClient());
+
+    private final SandboxFinancialInstitutionsService sandBoxFinancialInstitutionsService;
+
+    public FinancialInstitutionSample(IbanityService ibanityService) {
+        sandBoxFinancialInstitutionsService = new SandboxFinancialInstitutionsServiceImpl(ibanityService.apiUrlProvider(), ibanityService.ibanityHttpClient());
+    }
 
     public FinancialInstitution create(){
         FinancialInstitutionCreationQuery financialInstitutionCreationQuery =

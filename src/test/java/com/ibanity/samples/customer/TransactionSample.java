@@ -15,7 +15,11 @@ import java.util.UUID;
 
 public class TransactionSample {
 
-    private final TransactionsService transactionsService = new TransactionsServiceImpl(IbanityService.apiUrlProvider(), IbanityService.ibanityHttpClient());
+    private final TransactionsService transactionsService;
+
+    public TransactionSample(IbanityService ibanityService) {
+        transactionsService = new TransactionsServiceImpl(ibanityService.apiUrlProvider(), ibanityService.ibanityHttpClient());
+    }
 
     public List<Transaction> list(CustomerAccessToken customerAccessToken, FinancialInstitution financialInstitution, Account account) {
         TransactionsReadQuery transactionsReadQuery = TransactionsReadQuery.builder()

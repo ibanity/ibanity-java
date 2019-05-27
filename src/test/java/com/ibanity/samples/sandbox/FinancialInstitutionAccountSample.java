@@ -16,7 +16,11 @@ import org.iban4j.Iban;
 import java.util.UUID;
 
 public class FinancialInstitutionAccountSample {
-    private final FinancialInstitutionAccountsService financialInstitutionAccountsService = new FinancialInstitutionAccountsServiceImpl(IbanityService.apiUrlProvider(), IbanityService.ibanityHttpClient());
+    private final FinancialInstitutionAccountsService financialInstitutionAccountsService;
+
+    public FinancialInstitutionAccountSample(IbanityService ibanityService) {
+        financialInstitutionAccountsService = new FinancialInstitutionAccountsServiceImpl(ibanityService.apiUrlProvider(), ibanityService.ibanityHttpClient());
+    }
 
     public FinancialInstitutionAccount create(FinancialInstitution financialInstitution, FinancialInstitutionUser financialInstitutionUser){
         FinancialInstitutionAccountCreationQuery accountCreationQuery =

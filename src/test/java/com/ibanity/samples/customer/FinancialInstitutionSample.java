@@ -9,7 +9,12 @@ import com.ibanity.apis.client.services.impl.FinancialInstitutionsServiceImpl;
 import java.util.List;
 
 public class FinancialInstitutionSample {
-    private final FinancialInstitutionsService financialInstitutionsService = new FinancialInstitutionsServiceImpl(IbanityService.apiUrlProvider(), IbanityService.ibanityHttpClient());
+
+    private final FinancialInstitutionsService financialInstitutionsService;
+
+    public FinancialInstitutionSample(IbanityService ibanityService) {
+        financialInstitutionsService = new FinancialInstitutionsServiceImpl(ibanityService.apiUrlProvider(), ibanityService.ibanityHttpClient());
+    }
 
     public List<FinancialInstitution> list() {
         return financialInstitutionsService.list(FinancialInstitutionsReadQuery.builder().build()).getItems();
