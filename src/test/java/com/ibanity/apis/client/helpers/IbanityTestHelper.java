@@ -13,7 +13,6 @@ public class IbanityTestHelper {
 
     public static String loadFile(String filePath) throws IOException {
         return IOUtils.toString(
-                requireNonNull(ClassLoader.getSystemClassLoader().getResourceAsStream(filePath)), UTF8_ENCODING
-        );
+                requireNonNull(IbanityTestHelper.class.getClassLoader().getResourceAsStream(filePath)), UTF8_ENCODING);
     }
 }

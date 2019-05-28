@@ -15,16 +15,14 @@ import com.ibanity.apis.client.products.xs2a.models.factory.read.AccountReadQuer
 import com.ibanity.apis.client.products.xs2a.models.factory.read.AccountsReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.AccountsService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
-import com.ibanity.apis.client.utils.URIHelper;
 import org.apache.commons.lang3.StringUtils;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.UUID;
 import java.util.function.Function;
 
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.toIbanityModel;
 import static com.ibanity.apis.client.paging.IbanityPagingSpec.DEFAULT_PAGING_SPEC;
+import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 
 public class AccountsServiceImpl implements AccountsService {
 
@@ -38,16 +36,11 @@ public class AccountsServiceImpl implements AccountsService {
 
     @Override
     public Account find(final AccountReadQuery accountReadQuery) {
-        try {
             String url = getUrl(accountReadQuery.getFinancialInstitutionId(), null)
                     + "/"
                     + accountReadQuery.getAccountId();
-            String response = ibanityHttpClient.get(new URI(url), accountReadQuery.getCustomerAccessToken());
+            String response = ibanityHttpClient.get(buildUri(url), accountReadQuery.getCustomerAccessToken());
             return IbanityModelMapper.mapResource(response, customMappingFunction());
-        } catch (
-                URISyntaxException e) {
-            throw new IllegalStateException("URL cannot be build", e);
-        }
     }
 
     @Override
@@ -59,7 +52,7 @@ public class AccountsServiceImpl implements AccountsService {
         }
 
         String url = getUrl(accountsReadQuery.getFinancialInstitutionId(), accountsReadQuery.getAccountInformationAccessRequestId());
-        String response = ibanityHttpClient.get(URIHelper.buildUri(url, pagingSpec), accountsReadQuery.getCustomerAccessToken());
+        String response = ibanityHttpClient.get(buildUri(url, pagingSpec), accountsReadQuery.getCustomerAccessToken());
         return IbanityModelMapper.mapCollection(response, customMappingFunction());
     }
 

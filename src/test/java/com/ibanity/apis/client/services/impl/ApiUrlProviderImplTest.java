@@ -2,6 +2,7 @@ package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,31 +24,22 @@ class ApiUrlProviderImplTest {
     @InjectMocks
     private ApiUrlProviderImpl apiUrlProvider;
 
+    @BeforeEach
+    void setUp() {
+        when(ibanityHttpClient.get(any(), eq(null))).thenReturn(getSchema());
+    }
+
     @Test
     void find() {
-        loadSchema();
         String actual = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "accountInformationAccessRequest", "accounts");
         assertThat(actual).isEqualTo("https://api.ibanity.localhost/xs2a/customer/financial-institutions/{financialInstitutionId}/account-information-access-requests/{accountInformationAccessRequestId}/accounts");
     }
 
     @Test
     void find_whenPathNotFound_throwIllegalArgumentException() {
-        loadSchema();
         assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> {
             apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financiulInstitution", "accountInformationAccessRequest", "accounts");
         });
-    }
-
-    @Test
-    void find_whenSchemaNotLoaded_throwAnError() {
-        assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
-            apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "accountInformationAccessRequest", "accounts");
-        });
-    }
-
-    private void loadSchema() {
-        when(ibanityHttpClient.get(any(), eq(null))).thenReturn(getSchema());
-        apiUrlProvider.loadApiSchema();
     }
 
     private String getSchema() {

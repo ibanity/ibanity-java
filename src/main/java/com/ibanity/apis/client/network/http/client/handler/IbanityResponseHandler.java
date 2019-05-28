@@ -35,8 +35,8 @@ public class IbanityResponseHandler implements ResponseHandler<String> {
         try {
             String payload = readResponseContent(httpResponse.getEntity());
             return objectMapper().readValue(payload, ErrorResourceApiModel.class).getErrors();
-        } catch (Exception e) {
-            throw new RuntimeException("Invalid payload", e);
+        } catch (Exception exception) {
+            throw new RuntimeException("Invalid payload", exception);
         }
     }
 
