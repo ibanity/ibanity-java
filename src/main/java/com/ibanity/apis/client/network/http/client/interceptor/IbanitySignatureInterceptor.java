@@ -18,9 +18,11 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.ibanity.apis.client.network.http.client.IbanityHttpClient.DEFAULT_ENCODING;
+
 public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
 
-    private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
+    private static final Charset DEFAULT_CHARSET = Charset.forName(DEFAULT_ENCODING);
     private final IbanityHttpSignatureService httpSignatureService;
     private final String host;
 
@@ -37,7 +39,7 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
             if (requestWrapper.getOriginal() instanceof HttpEntityEnclosingRequestBase) {
                 payload = IOUtils.toString(
                         ((HttpEntityEnclosingRequestBase) requestWrapper.getOriginal())
-                                .getEntity().getContent(), UTF8_CHARSET);
+                                .getEntity().getContent(), DEFAULT_CHARSET);
             }
 
             httpSignatureService.getHttpSignatureHeaders(

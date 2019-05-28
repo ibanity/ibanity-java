@@ -1,10 +1,11 @@
 package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
-import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.IbanityProduct;
-import com.ibanity.apis.client.models.factory.create.CustomerAccessTokenCreationQuery;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
+import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
+import com.ibanity.apis.client.products.xs2a.models.factory.create.CustomerAccessTokenCreationQuery;
+import com.ibanity.apis.client.products.xs2a.services.impl.CustomerAccessTokensServiceImpl;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,13 +1,14 @@
 package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.helpers.IbanityTestHelper;
-import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityProduct;
-import com.ibanity.apis.client.models.factory.read.FinancialInstitutionReadQuery;
-import com.ibanity.apis.client.models.factory.read.FinancialInstitutionsReadQuery;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
+import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
+import com.ibanity.apis.client.products.xs2a.models.factory.read.FinancialInstitutionReadQuery;
+import com.ibanity.apis.client.products.xs2a.models.factory.read.FinancialInstitutionsReadQuery;
+import com.ibanity.apis.client.products.xs2a.services.impl.FinancialInstitutionsServiceImpl;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

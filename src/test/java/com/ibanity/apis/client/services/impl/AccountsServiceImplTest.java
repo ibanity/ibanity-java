@@ -1,12 +1,13 @@
 package com.ibanity.apis.client.services.impl;
 
-import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityProduct;
-import com.ibanity.apis.client.models.Synchronization;
-import com.ibanity.apis.client.models.factory.read.AccountReadQuery;
-import com.ibanity.apis.client.models.factory.read.AccountsReadQuery;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
+import com.ibanity.apis.client.products.xs2a.models.Account;
+import com.ibanity.apis.client.products.xs2a.models.Synchronization;
+import com.ibanity.apis.client.products.xs2a.models.factory.read.AccountReadQuery;
+import com.ibanity.apis.client.products.xs2a.models.factory.read.AccountsReadQuery;
+import com.ibanity.apis.client.products.xs2a.services.impl.AccountsServiceImpl;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,15 +1,15 @@
 package com.ibanity.samples.sandbox;
 
 import com.ibanity.apis.client.helpers.IbanityService;
-import com.ibanity.apis.client.models.FinancialInstitution;
-import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
-import com.ibanity.apis.client.sandbox.models.FinancialInstitutionTransaction;
-import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
-import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionTransactionCreationQuery;
-import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionTransactionDeleteQuery;
-import com.ibanity.apis.client.sandbox.models.factory.read.FinancialInstitutionTransactionReadQuery;
-import com.ibanity.apis.client.sandbox.services.FinancialInstitutionTransactionsService;
-import com.ibanity.apis.client.sandbox.services.impl.FinancialInstitutionTransactionsServiceImpl;
+import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
+import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitutionAccount;
+import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitutionTransaction;
+import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitutionUser;
+import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.create.FinancialInstitutionTransactionCreationQuery;
+import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.delete.FinancialInstitutionTransactionDeleteQuery;
+import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.read.FinancialInstitutionTransactionReadQuery;
+import com.ibanity.apis.client.products.xs2a.sandbox.services.FinancialInstitutionTransactionsService;
+import com.ibanity.apis.client.products.xs2a.sandbox.services.impl.FinancialInstitutionTransactionsServiceImpl;
 import com.ibanity.samples.helper.SampleHelper;
 
 import java.util.UUID;
