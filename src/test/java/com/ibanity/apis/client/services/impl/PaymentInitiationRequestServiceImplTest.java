@@ -2,12 +2,13 @@ package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.IbanityProduct;
-import com.ibanity.apis.client.models.PaymentInitiationRequest;
-import com.ibanity.apis.client.models.factory.create.PaymentInitiationRequestCreationQuery;
-import com.ibanity.apis.client.models.factory.read.PaymentInitiationRequestReadQuery;
-import com.ibanity.apis.client.models.links.FinancialInstitutionLinks;
-import com.ibanity.apis.client.models.links.PaymentAccessLinks;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
+import com.ibanity.apis.client.products.xs2a.models.PaymentInitiationRequest;
+import com.ibanity.apis.client.products.xs2a.models.factory.create.PaymentInitiationRequestCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.factory.read.PaymentInitiationRequestReadQuery;
+import com.ibanity.apis.client.products.xs2a.models.links.FinancialInstitutionLinks;
+import com.ibanity.apis.client.products.xs2a.models.links.PaymentAccessLinks;
+import com.ibanity.apis.client.products.xs2a.services.impl.PaymentInitiationRequestServiceImpl;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,13 +1,13 @@
 package com.ibanity.samples.helper;
 
 import com.ibanity.apis.client.helpers.KeyToolHelper;
-import com.ibanity.apis.client.models.AccountInformationAccessRequest;
-import com.ibanity.apis.client.models.CustomerAccessToken;
-import com.ibanity.apis.client.models.FinancialInstitution;
-import com.ibanity.apis.client.models.factory.create.PaymentInitiationRequestCreationQuery;
-import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
-import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
-import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionTransactionCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest;
+import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
+import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
+import com.ibanity.apis.client.products.xs2a.models.factory.create.PaymentInitiationRequestCreationQuery;
+import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitutionAccount;
+import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitutionUser;
+import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.create.FinancialInstitutionTransactionCreationQuery;
 import org.apache.commons.math3.util.Precision;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

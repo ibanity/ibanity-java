@@ -1,12 +1,12 @@
 package com.ibanity.samples.customer;
 
 import com.ibanity.apis.client.helpers.IbanityService;
-import com.ibanity.apis.client.models.AccountInformationAccessRequest;
-import com.ibanity.apis.client.models.CustomerAccessToken;
-import com.ibanity.apis.client.models.FinancialInstitution;
-import com.ibanity.apis.client.models.factory.create.AccountInformationAccessRequestCreationQuery;
-import com.ibanity.apis.client.services.AccountInformationAccessRequestsService;
-import com.ibanity.apis.client.services.impl.AccountInformationAccessRequestsServiceImpl;
+import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest;
+import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
+import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
+import com.ibanity.apis.client.products.xs2a.models.factory.create.AccountInformationAccessRequestCreationQuery;
+import com.ibanity.apis.client.products.xs2a.services.AccountInformationAccessRequestsService;
+import com.ibanity.apis.client.products.xs2a.services.impl.AccountInformationAccessRequestsServiceImpl;
 
 public class AccountInformationAccessRequestSample {
 

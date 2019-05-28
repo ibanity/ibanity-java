@@ -1,10 +1,10 @@
 package com.ibanity.samples.customer;
 
 import com.ibanity.apis.client.helpers.IbanityService;
-import com.ibanity.apis.client.models.CustomerAccessToken;
-import com.ibanity.apis.client.models.factory.create.CustomerAccessTokenCreationQuery;
-import com.ibanity.apis.client.services.CustomerAccessTokensService;
-import com.ibanity.apis.client.services.impl.CustomerAccessTokensServiceImpl;
+import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
+import com.ibanity.apis.client.products.xs2a.models.factory.create.CustomerAccessTokenCreationQuery;
+import com.ibanity.apis.client.products.xs2a.services.CustomerAccessTokensService;
+import com.ibanity.apis.client.products.xs2a.services.impl.CustomerAccessTokensServiceImpl;
 
 public class CustomerAccessTokenSample {
 

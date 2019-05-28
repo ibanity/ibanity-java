@@ -5,6 +5,8 @@ import java.util.Map;
 
 public interface IbanityHttpClient {
 
+    String DEFAULT_ENCODING = "UTF-8";
+
     String get(URI path);
 
     String get(URI path, String customerAccessToken);

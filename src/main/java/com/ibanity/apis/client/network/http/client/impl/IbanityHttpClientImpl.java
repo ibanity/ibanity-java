@@ -26,8 +26,6 @@ import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
 public class IbanityHttpClientImpl implements IbanityHttpClient {
 
-    private static final String DEFAULT_ENCODING = "UTF-8";
-
     private final HttpClient httpClient;
     private final IbanityResponseHandler ibanityResponseHandler;
 

@@ -8,15 +8,13 @@ import java.util.UUID;
 
 public class IdempotencyInterceptor implements HttpRequestInterceptor {
 
-    private static final String IDEMPOTENCY_HTTP_HEADER_KEY = "Ibanity-Idempotency-Key";
+    private static final String IDEMPOTENCY_HTTP_HEADER_KEY = "ibanity-idempotency-key";
 
     @Override
     public void process(final HttpRequest httpRequest, final HttpContext httpContext) {
-        if (!httpRequest.getRequestLine().getMethod().equalsIgnoreCase("post")
-                && !httpRequest.getRequestLine().getMethod().equalsIgnoreCase("patch")
-        ) {
-            return;
+        if (httpRequest.getRequestLine().getMethod().equalsIgnoreCase("post")
+                || httpRequest.getRequestLine().getMethod().equalsIgnoreCase("patch")) {
+            httpRequest.addHeader(IDEMPOTENCY_HTTP_HEADER_KEY, UUID.randomUUID().toString());
         }
-        httpRequest.addHeader(IDEMPOTENCY_HTTP_HEADER_KEY, UUID.randomUUID().toString());
     }
 }

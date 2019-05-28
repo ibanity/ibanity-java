@@ -1,14 +1,14 @@
 package com.ibanity.samples.customer;
 
 import com.ibanity.apis.client.helpers.IbanityService;
-import com.ibanity.apis.client.models.Account;
-import com.ibanity.apis.client.models.CustomerAccessToken;
-import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.IbanityCollection;
-import com.ibanity.apis.client.models.factory.read.AccountReadQuery;
-import com.ibanity.apis.client.models.factory.read.AccountsReadQuery;
-import com.ibanity.apis.client.services.AccountsService;
-import com.ibanity.apis.client.services.impl.AccountsServiceImpl;
+import com.ibanity.apis.client.products.xs2a.models.Account;
+import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
+import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
+import com.ibanity.apis.client.products.xs2a.models.factory.read.AccountReadQuery;
+import com.ibanity.apis.client.products.xs2a.models.factory.read.AccountsReadQuery;
+import com.ibanity.apis.client.products.xs2a.services.AccountsService;
+import com.ibanity.apis.client.products.xs2a.services.impl.AccountsServiceImpl;
 
 import java.util.UUID;
 
