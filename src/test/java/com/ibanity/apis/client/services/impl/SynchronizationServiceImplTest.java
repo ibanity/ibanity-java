@@ -2,6 +2,7 @@ package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.helpers.IbanityTestHelper;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
+import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.Synchronization;
 import com.ibanity.apis.client.models.factory.read.SynchronizationReadQuery;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
@@ -40,7 +41,7 @@ class SynchronizationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        when(apiUrlProvider.find("customer", "synchronizations")).thenReturn(SYNCHRONIZATION_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "synchronizations")).thenReturn(SYNCHRONIZATION_ENDPOINT);
     }
 
     @Test

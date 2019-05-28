@@ -2,6 +2,7 @@ package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.IbanityCollection;
+import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.Synchronization;
 import com.ibanity.apis.client.models.factory.read.AccountReadQuery;
 import com.ibanity.apis.client.models.factory.read.AccountsReadQuery;
@@ -50,9 +51,9 @@ class AccountsServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        when(apiUrlProvider.find("customer", "accounts")).thenReturn(ACCOUNT_ENDPOINT);
-        when(apiUrlProvider.find("customer", "financialInstitution", "accounts")).thenReturn(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT);
-        when(apiUrlProvider.find("customer", "financialInstitution", "accountInformationAccessRequest", "accounts")).thenReturn(ACCOUNT_BY_AIAR_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "accounts")).thenReturn(ACCOUNT_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "accounts")).thenReturn(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "accountInformationAccessRequest", "accounts")).thenReturn(ACCOUNT_BY_AIAR_ENDPOINT);
     }
 
     @Test

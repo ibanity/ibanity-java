@@ -1,6 +1,7 @@
 package com.ibanity.apis.client.services.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.network.http.client.IbanityHttpUtils;
 import com.ibanity.apis.client.services.ApiUrlProvider;
@@ -29,7 +30,7 @@ public class ApiUrlProviderImpl implements ApiUrlProvider {
     }
 
     @Override
-    public String find(String... paths) {
+    public String find(IbanityProduct ibanityProduct, String... paths) {
         if (apiUrls == null) {
             loadApiSchema();
         }

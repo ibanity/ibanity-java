@@ -7,6 +7,7 @@ import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.IbanityCollection;
+import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.Synchronization;
 import com.ibanity.apis.client.models.factory.read.AccountReadQuery;
 import com.ibanity.apis.client.models.factory.read.AccountsReadQuery;
@@ -78,16 +79,16 @@ public class AccountsServiceImpl implements AccountsService {
     private String getUrl(UUID financialInstitutionId, UUID accountInformationAccessRequestId) {
         String url;
         if (accountInformationAccessRequestId != null && financialInstitutionId != null) {
-            url = apiUrlProvider.find("customer", "financialInstitution", "accountInformationAccessRequest", "accounts")
+            url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "accountInformationAccessRequest", "accounts")
                     .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
                     .replace(AccountInformationAccessRequest.API_URL_TAG_ID, accountInformationAccessRequestId.toString())
                     .replace(Account.API_URL_TAG_ID, "");
         } else if (financialInstitutionId != null) {
-            url = apiUrlProvider.find("customer", "financialInstitution", "accounts")
+            url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "accounts")
                     .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
                     .replace(Account.API_URL_TAG_ID, "");
         } else {
-            url = apiUrlProvider.find("customer", "accounts")
+            url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "accounts")
                     .replace(Account.API_URL_TAG_ID, "");
         }
 

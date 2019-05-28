@@ -3,6 +3,7 @@ package com.ibanity.apis.client.services.impl;
 import com.ibanity.apis.client.mappers.IbanityModelMapper;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.IbanityCollection;
+import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.factory.read.FinancialInstitutionReadQuery;
 import com.ibanity.apis.client.models.factory.read.FinancialInstitutionsReadQuery;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
@@ -57,9 +58,9 @@ public class FinancialInstitutionsServiceImpl implements FinancialInstitutionsSe
 
     private String getUrl(String customerAccessToken) {
         if (isBlank(customerAccessToken)) {
-            return apiUrlProvider.find("financialInstitutions");
+            return apiUrlProvider.find(IbanityProduct.Xs2a, "financialInstitutions");
         } else {
-            return apiUrlProvider.find("customer", "financialInstitutions");
+            return apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitutions");
         }
     }
 }

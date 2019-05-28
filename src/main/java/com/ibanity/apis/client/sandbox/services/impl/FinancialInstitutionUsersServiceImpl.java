@@ -2,6 +2,7 @@ package com.ibanity.apis.client.sandbox.services.impl;
 
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.IbanityCollection;
+import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
 import com.ibanity.apis.client.sandbox.models.factory.delete.FinancialInstitutionUserDeleteQuery;
@@ -78,7 +79,7 @@ public class FinancialInstitutionUsersServiceImpl implements FinancialInstitutio
     }
 
     private String getUrl(String financialInstitutionUserId) {
-        return apiUrlProvider.find("sandbox", "financialInstitutionUsers")
+        return apiUrlProvider.find(IbanityProduct.Xs2a, "sandbox", "financialInstitutionUsers")
                 .replace(FinancialInstitutionUser.API_URL_TAG_ID, financialInstitutionUserId);
     }
 }

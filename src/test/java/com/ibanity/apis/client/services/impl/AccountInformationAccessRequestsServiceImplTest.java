@@ -2,6 +2,7 @@ package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
+import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.factory.create.AccountInformationAccessRequestCreationQuery;
 import com.ibanity.apis.client.models.links.AccountInformationAccessLinks;
 import com.ibanity.apis.client.models.links.AccountLinks;
@@ -49,7 +50,7 @@ class AccountInformationAccessRequestsServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        when(apiUrlProvider.find("customer", "financialInstitution", "accountInformationAccessRequests"))
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "accountInformationAccessRequests"))
                 .thenReturn(AIAR_ENDPOINT);
     }
 

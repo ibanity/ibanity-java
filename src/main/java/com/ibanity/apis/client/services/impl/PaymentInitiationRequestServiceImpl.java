@@ -2,6 +2,7 @@ package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.FinancialInstitution;
+import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.PaymentInitiationRequest;
 import com.ibanity.apis.client.models.factory.create.PaymentInitiationRequestCreationQuery;
 import com.ibanity.apis.client.models.factory.read.PaymentInitiationRequestReadQuery;
@@ -61,7 +62,7 @@ public class PaymentInitiationRequestServiceImpl implements PaymentInitiationReq
 
     private String getUrl(String financialInstitutionId, String paymentInitiationRequestId) {
         return removeEnd(
-                apiUrlProvider.find("customer", "financialInstitution", "paymentInitiationRequests")
+                apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "paymentInitiationRequests")
                         .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId)
                         .replace(PaymentInitiationRequest.API_URL_TAG_ID, paymentInitiationRequestId),
                 "/");

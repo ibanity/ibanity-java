@@ -11,8 +11,8 @@ import java.security.cert.X509Certificate;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class IbanityServiceBuilder implements
-        IbanityApiEndpointBuilder,
         OptionalPropertiesBuilder,
+        IbanityApiEndpointBuilder,
         ApplicationPrivateKeyBuilder,
         ApplicationPassphraseBuilder,
         ApplicationCertificateBuilder,

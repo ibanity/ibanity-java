@@ -5,6 +5,7 @@ import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.mappers.IbanityModelMapper;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.FinancialInstitution;
+import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.factory.create.AccountInformationAccessRequestCreationQuery;
 import com.ibanity.apis.client.models.links.AccountInformationAccessLinks;
 import com.ibanity.apis.client.models.links.AccountLinks;
@@ -55,7 +56,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
     }
 
     private URI getUri(String financialInstitutionId, String accountInformationAccessRequestId) {
-        String url = apiUrlProvider.find("customer", "financialInstitution", "accountInformationAccessRequests");
+        String url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "accountInformationAccessRequests");
         return buildUri(removeEnd(
                 url
                         .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId)

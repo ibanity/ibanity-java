@@ -2,6 +2,7 @@ package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.helpers.IbanityTestHelper;
 import com.ibanity.apis.client.models.IbanityCollection;
+import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.Transaction;
 import com.ibanity.apis.client.models.factory.read.TransactionReadQuery;
 import com.ibanity.apis.client.models.factory.read.TransactionsReadQuery;
@@ -45,7 +46,7 @@ public class TransactionsServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        when(apiUrlProvider.find("customer", "financialInstitution", "transactions")).thenReturn(TRANSACTION_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "transactions")).thenReturn(TRANSACTION_ENDPOINT);
     }
 
     @Test
