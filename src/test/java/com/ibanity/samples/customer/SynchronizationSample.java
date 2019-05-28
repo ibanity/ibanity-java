@@ -5,7 +5,6 @@ import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
 import com.ibanity.apis.client.products.xs2a.models.factory.read.SynchronizationReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.SynchronizationService;
-import com.ibanity.apis.client.products.xs2a.services.impl.SynchronizationServiceImpl;
 
 import java.util.UUID;
 
@@ -14,7 +13,7 @@ public class SynchronizationSample {
     private SynchronizationService synchronizationService;
 
     public SynchronizationSample(IbanityService ibanityService) {
-        this.synchronizationService = new SynchronizationServiceImpl(ibanityService.apiUrlProvider(), ibanityService.ibanityHttpClient());
+        this.synchronizationService = ibanityService.xs2aService().synchronizationService();
     }
 
     public Synchronization create(CustomerAccessToken customerAccessToken, UUID accountId) {

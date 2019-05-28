@@ -8,7 +8,6 @@ import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.products.xs2a.models.factory.read.AccountReadQuery;
 import com.ibanity.apis.client.products.xs2a.models.factory.read.AccountsReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.AccountsService;
-import com.ibanity.apis.client.products.xs2a.services.impl.AccountsServiceImpl;
 
 import java.util.UUID;
 
@@ -17,7 +16,7 @@ public class AccountSample {
     private final AccountsService accountsService;
 
     public AccountSample(IbanityService ibanityService) {
-        accountsService = new AccountsServiceImpl(ibanityService.apiUrlProvider(), ibanityService.ibanityHttpClient());
+        accountsService = ibanityService.xs2aService().accountsService();
     }
 
     public IbanityCollection<Account> list(CustomerAccessToken customerAccessToken, FinancialInstitution financialInstitution) {
