@@ -3,6 +3,7 @@ package com.ibanity.apis.client.sandbox.services.impl;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.IbanityCollection;
+import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionTransaction;
@@ -84,7 +85,7 @@ public class FinancialInstitutionTransactionsServiceImpl implements FinancialIns
             String financialInstitutionUserId,
             String financialInstitutionAccountId,
             String financialInstitutionTransactionId) {
-        return apiUrlProvider.find("sandbox", "financialInstitution", "financialInstitutionAccount", "financialInstitutionTransactions")
+        return apiUrlProvider.find(IbanityProduct.Xs2a, "sandbox", "financialInstitution", "financialInstitutionAccount", "financialInstitutionTransactions")
                 .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId)
                 .replace(FinancialInstitutionUser.API_URL_TAG_ID, financialInstitutionUserId)
                 .replace(FinancialInstitutionAccount.API_URL_TAG_ID, financialInstitutionAccountId)

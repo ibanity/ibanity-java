@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.services.impl;
 
+import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +26,7 @@ class ApiUrlProviderImplTest {
     @Test
     void find() {
         loadSchema();
-        String actual = apiUrlProvider.find("customer", "financialInstitution", "accountInformationAccessRequest", "accounts");
+        String actual = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "accountInformationAccessRequest", "accounts");
         assertThat(actual).isEqualTo("https://api.ibanity.localhost/xs2a/customer/financial-institutions/{financialInstitutionId}/account-information-access-requests/{accountInformationAccessRequestId}/accounts");
     }
 
@@ -33,14 +34,14 @@ class ApiUrlProviderImplTest {
     void find_whenPathNotFound_throwIllegalArgumentException() {
         loadSchema();
         assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> {
-            apiUrlProvider.find("customer", "financiulInstitution", "accountInformationAccessRequest", "accounts");
+            apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financiulInstitution", "accountInformationAccessRequest", "accounts");
         });
     }
 
     @Test
     void find_whenSchemaNotLoaded_throwAnError() {
         assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
-            apiUrlProvider.find("customer", "financialInstitution", "accountInformationAccessRequest", "accounts");
+            apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "accountInformationAccessRequest", "accounts");
         });
     }
 

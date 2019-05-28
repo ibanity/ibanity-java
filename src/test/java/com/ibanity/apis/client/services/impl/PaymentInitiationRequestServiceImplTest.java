@@ -1,6 +1,7 @@
 package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
+import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.PaymentInitiationRequest;
 import com.ibanity.apis.client.models.factory.create.PaymentInitiationRequestCreationQuery;
 import com.ibanity.apis.client.models.factory.read.PaymentInitiationRequestReadQuery;
@@ -47,7 +48,7 @@ class PaymentInitiationRequestServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        when(apiUrlProvider.find("customer", "financialInstitution", "paymentInitiationRequests"))
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "paymentInitiationRequests"))
                 .thenReturn(PIR_ENDPOINT);
     }
 

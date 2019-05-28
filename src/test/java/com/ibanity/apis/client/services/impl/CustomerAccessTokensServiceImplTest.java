@@ -2,6 +2,7 @@ package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.CustomerAccessToken;
+import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.factory.create.CustomerAccessTokenCreationQuery;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.services.ApiUrlProvider;
@@ -40,7 +41,7 @@ class CustomerAccessTokensServiceImplTest {
                         .applicationCustomerReference(APPLICATION_REFERENCE)
                         .build();
 
-        when(apiUrlProvider.find("customerAccessTokens")).thenReturn(CUSTOMER_ACCESS_TOKEN_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customerAccessTokens")).thenReturn(CUSTOMER_ACCESS_TOKEN_ENDPOINT);
         when(httpClient.post(new URI(CUSTOMER_ACCESS_TOKEN_ENDPOINT), buildRequest(), null)).thenReturn(loadFile("json/customerAccessToken.json"));
 
         CustomerAccessToken actual = customerAccessTokensService.create(creationQuery);

@@ -2,6 +2,7 @@ package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.mappers.IbanityModelMapper;
+import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.Synchronization;
 import com.ibanity.apis.client.models.factory.read.SynchronizationReadQuery;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
@@ -54,7 +55,7 @@ public class SynchronizationServiceImpl implements SynchronizationService {
     }
 
     private String getUrl() {
-        String url = apiUrlProvider.find("customer", "synchronizations");
+        String url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "synchronizations");
         return removeEnd(url.replace(Synchronization.API_URL_TAG_ID, ""), "/");
     }
 }

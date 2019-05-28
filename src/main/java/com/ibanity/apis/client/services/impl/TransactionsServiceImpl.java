@@ -3,6 +3,7 @@ package com.ibanity.apis.client.services.impl;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.IbanityCollection;
+import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.Transaction;
 import com.ibanity.apis.client.models.factory.read.TransactionReadQuery;
 import com.ibanity.apis.client.models.factory.read.TransactionsReadQuery;
@@ -58,7 +59,7 @@ public class TransactionsServiceImpl implements TransactionsService {
     }
 
     private String getUrl(UUID financialInstitutionId, UUID accountId) {
-        String url = apiUrlProvider.find("customer", "financialInstitution", "transactions");
+        String url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "transactions");
         return StringUtils.removeEnd(url
                         .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
                         .replace(Account.API_URL_TAG_ID, accountId.toString())

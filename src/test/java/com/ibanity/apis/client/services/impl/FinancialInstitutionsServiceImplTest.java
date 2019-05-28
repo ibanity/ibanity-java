@@ -3,6 +3,7 @@ package com.ibanity.apis.client.services.impl;
 import com.ibanity.apis.client.helpers.IbanityTestHelper;
 import com.ibanity.apis.client.models.FinancialInstitution;
 import com.ibanity.apis.client.models.IbanityCollection;
+import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.factory.read.FinancialInstitutionReadQuery;
 import com.ibanity.apis.client.models.factory.read.FinancialInstitutionsReadQuery;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
@@ -44,8 +45,8 @@ class FinancialInstitutionsServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        when(apiUrlProvider.find("financialInstitutions")).thenReturn(FINANCIAL_INSTITUTION_ENDPOINT);
-        when(apiUrlProvider.find("customer", "financialInstitutions")).thenReturn(FINANCIAL_INSTITUTION_CUSTOMER_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "financialInstitutions")).thenReturn(FINANCIAL_INSTITUTION_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitutions")).thenReturn(FINANCIAL_INSTITUTION_CUSTOMER_ENDPOINT);
     }
 
 
