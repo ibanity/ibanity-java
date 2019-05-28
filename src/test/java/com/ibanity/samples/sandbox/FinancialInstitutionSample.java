@@ -7,7 +7,6 @@ import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.create.Finan
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.delete.FinancialInstitutionDeleteQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.update.FinancialInstitutionUpdateQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.services.SandboxFinancialInstitutionsService;
-import com.ibanity.apis.client.products.xs2a.sandbox.services.impl.SandboxFinancialInstitutionsServiceImpl;
 
 import java.util.UUID;
 
@@ -16,7 +15,7 @@ public class FinancialInstitutionSample {
     private final SandboxFinancialInstitutionsService sandBoxFinancialInstitutionsService;
 
     public FinancialInstitutionSample(IbanityService ibanityService) {
-        sandBoxFinancialInstitutionsService = new SandboxFinancialInstitutionsServiceImpl(ibanityService.apiUrlProvider(), ibanityService.ibanityHttpClient());
+        sandBoxFinancialInstitutionsService = ibanityService.xs2aService().sandbox().sandboxFinancialInstitutionsService();
     }
 
     public FinancialInstitution create(){

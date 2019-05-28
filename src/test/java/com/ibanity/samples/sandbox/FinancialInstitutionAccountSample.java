@@ -8,7 +8,6 @@ import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.create.Finan
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.delete.FinancialInstitutionAccountDeleteQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.read.FinancialInstitutionAccountReadQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.services.FinancialInstitutionAccountsService;
-import com.ibanity.apis.client.products.xs2a.sandbox.services.impl.FinancialInstitutionAccountsServiceImpl;
 import com.ibanity.samples.helper.SampleHelper;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
@@ -19,7 +18,7 @@ public class FinancialInstitutionAccountSample {
     private final FinancialInstitutionAccountsService financialInstitutionAccountsService;
 
     public FinancialInstitutionAccountSample(IbanityService ibanityService) {
-        financialInstitutionAccountsService = new FinancialInstitutionAccountsServiceImpl(ibanityService.apiUrlProvider(), ibanityService.ibanityHttpClient());
+        financialInstitutionAccountsService = ibanityService.xs2aService().sandbox().financialInstitutionAccountsService();
     }
 
     public FinancialInstitutionAccount create(FinancialInstitution financialInstitution, FinancialInstitutionUser financialInstitutionUser){

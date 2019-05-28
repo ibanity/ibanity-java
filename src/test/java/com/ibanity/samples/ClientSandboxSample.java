@@ -36,7 +36,6 @@ import static com.ibanity.samples.helper.SampleHelper.loadPrivateKey;
 public class ClientSandboxSample {
     private static final Logger LOGGER = LogManager.getLogger(ClientSandboxSample.class);
 
-    // Sample services
     private final FinancialInstitutionSample financialInstitutionSample;
     private final FinancialInstitutionUserSample financialInstitutionUserSample;
     private final FinancialInstitutionAccountSample financialInstitutionAccountSample;
