@@ -38,7 +38,7 @@ public class ApiUrlProviderImpl implements ApiUrlProvider {
             return Stream.of(paths)
                     .reduce(apiUrls, JsonNode::get, (jsonNode1, jsonNode2) -> jsonNode2)
                     .textValue();
-        } catch (Exception e) {
+        } catch (Exception exception) {
             throw new IllegalArgumentException("Url cannot be found");
         }
     }
@@ -51,10 +51,10 @@ public class ApiUrlProviderImpl implements ApiUrlProvider {
             String schema = ibanityHttpClient.get(new URI(ibanityApiUrl + "/xs2a"), null);
             apiUrls = mapJsonToMap(schema);
             LOGGER.debug("schema loaded");
-        } catch (URISyntaxException e) {
-            throw new IllegalArgumentException(format("Cannot create api schema URI for string %s", ibanityApiUrl), e);
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Cannot parse api schema", e);
+        } catch (URISyntaxException exception) {
+            throw new IllegalArgumentException(format("Cannot create api schema URI for string %s", ibanityApiUrl), exception);
+        } catch (IOException exception) {
+            throw new IllegalArgumentException("Cannot parse api schema", exception);
         }
     }
 

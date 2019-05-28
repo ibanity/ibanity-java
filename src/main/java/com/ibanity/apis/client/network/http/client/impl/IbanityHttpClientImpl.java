@@ -1,9 +1,7 @@
 package com.ibanity.apis.client.network.http.client.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.network.http.client.handler.IbanityResponseHandler;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
@@ -50,8 +48,8 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
             HttpGet httpGet = new HttpGet(path);
             addHeaders(customerAccessToken, additionalHeaders, httpGet);
             return httpClient.execute(httpGet, ibanityResponseHandler);
-        } catch (IOException e) {
-            throw new RuntimeException("An error occurred while connecting to Ibanity", e);
+        } catch (IOException exception) {
+            throw new RuntimeException("An error occurred while connecting to Ibanity", exception);
         }
     }
 
@@ -72,8 +70,8 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
             addHeaders(customerAccessToken, additionalHeaders, httpPost);
             httpPost.setEntity(createEntityRequest(objectMapper().writeValueAsString(requestApiModel)));
             return httpClient.execute(httpPost, ibanityResponseHandler);
-        } catch (IOException e) {
-            throw new RuntimeException("An error occurred while connecting to Ibanity", e);
+        } catch (IOException exception) {
+            throw new RuntimeException("An error occurred while connecting to Ibanity", exception);
         }
     }
 
@@ -93,17 +91,13 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
             HttpDelete httpDelete = new HttpDelete(path);
             addHeaders(customerAccessToken, additionalHeaders, httpDelete);
             return httpClient.execute(httpDelete, ibanityResponseHandler);
-        } catch (IOException e) {
-            throw new RuntimeException("An error occurred while connecting to Ibanity", e);
+        } catch (IOException exception) {
+            throw new RuntimeException("An error occurred while connecting to Ibanity", exception);
         }
     }
 
-    private HttpEntity createEntityRequest(String baseRequest) throws JsonProcessingException {
+    private HttpEntity createEntityRequest(String baseRequest) {
         return new StringEntity(baseRequest, APPLICATION_JSON);
-    }
-
-    private String readResponseContent(HttpEntity entity) throws IOException {
-        return IOUtils.toString(entity.getContent(), DEFAULT_ENCODING);
     }
 
     private void addHeaders(String customerAccessToken, Map<String, String> additionalHeaders, HttpRequestBase httpRequestBase) {

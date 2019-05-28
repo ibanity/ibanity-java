@@ -30,8 +30,8 @@ public class FinancialInstitutionsServiceImpl implements FinancialInstitutionsSe
     @Override
     public IbanityCollection<FinancialInstitution> list(final FinancialInstitutionsReadQuery financialInstitutionsReadQuery) {
         IbanityPagingSpec pagingSpec =
-                financialInstitutionsReadQuery.getPagingSpec() == null ?
-                        IbanityPagingSpec.DEFAULT_PAGING_SPEC : financialInstitutionsReadQuery.getPagingSpec();
+                financialInstitutionsReadQuery.getPagingSpec() == null
+                        ? IbanityPagingSpec.DEFAULT_PAGING_SPEC : financialInstitutionsReadQuery.getPagingSpec();
 
         String customerAccessToken = financialInstitutionsReadQuery.getCustomerAccessToken();
         URI uri = buildUri(

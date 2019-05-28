@@ -6,9 +6,9 @@ import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpRequestWrapper;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HttpContext;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -29,7 +29,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class IbanitySignatureInterceptorTest {
 
-    @InjectMocks
     private IbanitySignatureInterceptor ibanitySignatureInterceptor;
 
     @Mock
@@ -43,6 +42,11 @@ class IbanitySignatureInterceptorTest {
 
     @Mock
     private HttpContext httpContext;
+
+    @BeforeEach
+    void setUp() {
+        ibanitySignatureInterceptor = new IbanitySignatureInterceptor(ibanityHttpSignatureService, "https://api.ibanity.localhost");
+    }
 
     @Test
     void process() throws IOException, URISyntaxException {

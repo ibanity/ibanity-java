@@ -53,8 +53,8 @@ public final class IbanityHttpUtils {
             HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
             configureHttpClient(sslContext, httpClientBuilder, signatureCertificate, host);
             return httpClientBuilder.build();
-        } catch (Exception e) {
-            throw new IllegalArgumentException("An exception occurred while creating IbanityHttpClient", e);
+        } catch (Exception exception) {
+            throw new IllegalArgumentException("An exception occurred while creating IbanityHttpClient", exception);
         }
     }
 

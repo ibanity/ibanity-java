@@ -19,16 +19,16 @@ public class URIHelper {
             addIfNotNull(uriBuilder, "after", pagingSpec.getAfter());
             addIfNotNull(uriBuilder, "limit", pagingSpec.getLimit());
             return uriBuilder.build();
-        } catch (URISyntaxException e) {
-            throw new IllegalStateException("URL cannot be build", e);
+        } catch (URISyntaxException exception) {
+            throw new IllegalStateException("URL cannot be build", exception);
         }
     }
 
     public static URI buildUri(@NonNull String url) {
         try {
             return new URIBuilder(url).build();
-        } catch (URISyntaxException e) {
-            throw new IllegalStateException("URL cannot be build", e);
+        } catch (URISyntaxException exception) {
+            throw new IllegalStateException("URL cannot be build", exception);
         }
     }
 

@@ -20,17 +20,17 @@ public class IbanityModelMapper {
         return mapResource(jsonPayload, dataApiModel -> toIbanityModel(dataApiModel, classType));
     }
 
-    public static <T extends IbanityModel> IbanityCollection<T> mapCollection(String jsonPayload, Class<T> classType) {
-        return mapCollection(jsonPayload, dataApiModel -> toIbanityModel(dataApiModel, classType));
-    }
-
     public static <T extends IbanityModel> T mapResource(String jsonPayload, Function<DataApiModel, T> customMapping) {
         try {
             DataApiModel dataApiModel = IbanityHttpUtils.objectMapper().readValue(jsonPayload, ResourceApiModel.class).getData();
             return customMapping.apply(dataApiModel);
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Response cannot be parsed", e);
+        } catch (IOException exception) {
+            throw new IllegalArgumentException("Response cannot be parsed", exception);
         }
+    }
+
+    public static <T extends IbanityModel> IbanityCollection<T> mapCollection(String jsonPayload, Class<T> classType) {
+        return mapCollection(jsonPayload, dataApiModel -> toIbanityModel(dataApiModel, classType));
     }
 
     public static <T extends IbanityModel> IbanityCollection<T> mapCollection(String jsonPayload, Function<DataApiModel, T> customMapping) {
@@ -44,8 +44,8 @@ public class IbanityModelMapper {
                                     .collect(Collectors.toList())
                     )
                     .build();
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Response cannot be parsed", e);
+        } catch (IOException exception) {
+            throw new IllegalArgumentException("Response cannot be parsed", exception);
         }
     }
 
@@ -61,8 +61,8 @@ public class IbanityModelMapper {
             }
 
             return clientObject;
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(format("Instantiation of class %s is impossible for default constructor", classType), e);
+        } catch (InstantiationException | IllegalAccessException exception) {
+            throw new RuntimeException(format("Instantiation of class %s is impossible for default constructor", classType), exception);
         }
     }
 
