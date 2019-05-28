@@ -1,6 +1,5 @@
 package com.ibanity.apis.client.sandbox.models;
 
-import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.models.Account;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +17,7 @@ import java.time.Instant;
 public class FinancialInstitutionAccount extends Account {
 
     public static final String RESOURCE_TYPE    = "financialInstitutionAccount";
-    public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
+    public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + URL_PARAMETER_ID_POSTFIX + "}";
 
     private Instant createdAt;
     private Instant updatedAt;

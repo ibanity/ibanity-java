@@ -1,6 +1,6 @@
 package com.ibanity.apis.client.helpers;
 
-import com.ibanity.apis.client.holders.CertificateHolder;
+import com.ibanity.apis.client.holders.ApplicationCertificateHolder;
 import com.ibanity.apis.client.holders.SignatureCertificateHolder;
 import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.network.http.client.factory.IbanityHttpClientFactory;
@@ -11,18 +11,11 @@ import java.security.cert.Certificate;
 
 public class IbanityService {
 
-    private final Certificate caCertificate;
-    private final CertificateHolder applicationCertificate;
-    private final SignatureCertificateHolder signatureCertificate;
-
     private final ApiUrlProvider apiUrlProvider;
     private final IbanityHttpClient ibanityHttpClient;
 
-    public IbanityService(String apiEndpoint, Certificate caCertificate, CertificateHolder applicationCertificate, SignatureCertificateHolder signatureCertificate) {
-        this.caCertificate = caCertificate;
-        this.applicationCertificate = applicationCertificate;
-        this.signatureCertificate = signatureCertificate;
-        this.ibanityHttpClient = new IbanityHttpClientFactory().create(caCertificate, applicationCertificate, signatureCertificate);
+    public IbanityService(String apiEndpoint, Certificate caCertificate, ApplicationCertificateHolder applicationCertificate, SignatureCertificateHolder signatureCertificate) {
+        this.ibanityHttpClient = new IbanityHttpClientFactory().create(caCertificate, applicationCertificate, signatureCertificate, apiEndpoint);
         this.apiUrlProvider = new ApiUrlProviderImpl(ibanityHttpClient, apiEndpoint);
     }
 

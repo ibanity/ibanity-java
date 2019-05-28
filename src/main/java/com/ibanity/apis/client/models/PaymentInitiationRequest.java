@@ -1,6 +1,5 @@
 package com.ibanity.apis.client.models;
 
-import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.models.links.FinancialInstitutionLinks;
 import com.ibanity.apis.client.models.links.PaymentAccessLinks;
 import lombok.AllArgsConstructor;
@@ -19,7 +18,7 @@ public class PaymentInitiationRequest implements IbanityModel {
 
     public static final String RESOURCE_TYPE    = "paymentInitiationRequest";
     public static final String RESOURCE_PATH    = "payment-initiation-requests";
-    public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
+    public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + URL_PARAMETER_ID_POSTFIX + "}";
 
     private UUID id;
     private UUID financialInstitutionId;

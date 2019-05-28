@@ -1,5 +1,6 @@
 package com.ibanity.samples.helper;
 
+import com.ibanity.apis.client.helpers.KeyToolHelper;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.models.CustomerAccessToken;
 import com.ibanity.apis.client.models.FinancialInstitution;
@@ -7,7 +8,6 @@ import com.ibanity.apis.client.models.factory.create.PaymentInitiationRequestCre
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionAccount;
 import com.ibanity.apis.client.sandbox.models.FinancialInstitutionUser;
 import com.ibanity.apis.client.sandbox.models.factory.create.FinancialInstitutionTransactionCreationQuery;
-import com.ibanity.apis.client.utils.KeyToolHelper;
 import org.apache.commons.math3.util.Precision;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

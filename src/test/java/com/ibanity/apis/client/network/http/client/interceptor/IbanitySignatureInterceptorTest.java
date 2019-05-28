@@ -21,8 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
-import static com.ibanity.apis.client.configuration.IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY;
-import static com.ibanity.apis.client.configuration.IbanityConfiguration.getConfiguration;
+import static com.ibanity.apis.client.helpers.IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY;
+import static com.ibanity.apis.client.helpers.IbanityConfiguration.getConfiguration;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

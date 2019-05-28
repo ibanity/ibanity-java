@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.configuration;
+package com.ibanity.apis.client.helpers;
 
 public interface IbanityClientSecurityAuthenticationPropertiesKeys {
 

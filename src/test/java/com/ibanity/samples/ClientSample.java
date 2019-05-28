@@ -2,7 +2,7 @@ package com.ibanity.samples;
 
 import com.ibanity.apis.client.builders.IbanityServiceBuilder;
 import com.ibanity.apis.client.builders.OptionalPropertiesBuilder;
-import com.ibanity.apis.client.configuration.IbanityClientSecuritySignaturePropertiesKeys;
+import com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys;
 import com.ibanity.apis.client.helpers.IbanityService;
 import com.ibanity.apis.client.models.Account;
 import com.ibanity.apis.client.models.AccountInformationAccessRequest;
@@ -27,16 +27,16 @@ import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.UUID;
 
-import static com.ibanity.apis.client.configuration.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CA_CERTIFICATE_PATH_PROPERTY_KEY;
-import static com.ibanity.apis.client.configuration.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_CERTIFICATE_PATH_PROPERTY_KEY;
-import static com.ibanity.apis.client.configuration.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY;
-import static com.ibanity.apis.client.configuration.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_PRIVATE_KEY_PATH_PROPERTY_KEY;
-import static com.ibanity.apis.client.configuration.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY;
-import static com.ibanity.apis.client.configuration.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_PATH_PROPERTY_KEY;
-import static com.ibanity.apis.client.configuration.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY;
-import static com.ibanity.apis.client.configuration.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PATH_PROPERTY_KEY;
-import static com.ibanity.apis.client.configuration.IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY;
-import static com.ibanity.apis.client.configuration.IbanityConfiguration.getConfiguration;
+import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CA_CERTIFICATE_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_CERTIFICATE_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY;
+import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_SSL_CLIENT_PRIVATE_KEY_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY;
+import static com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY;
+import static com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.helpers.IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY;
+import static com.ibanity.apis.client.helpers.IbanityConfiguration.getConfiguration;
 import static com.ibanity.samples.helper.SampleHelper.loadCa;
 import static com.ibanity.samples.helper.SampleHelper.loadCertificate;
 import static com.ibanity.samples.helper.SampleHelper.loadPrivateKey;
@@ -87,8 +87,6 @@ public class ClientSample {
 
         IbanityService ibanityService = ibanityServiceBuilder.build();
 
-
-        ibanityService.apiUrlProvider().loadApiSchema();
         ClientSample clientSample = new ClientSample(ibanityService);
 
         CustomerAccessToken customerAccessToken = clientSample.customerAccessTokenSamples();

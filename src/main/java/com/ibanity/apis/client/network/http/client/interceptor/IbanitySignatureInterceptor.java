@@ -18,16 +18,15 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.ibanity.apis.client.configuration.IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY;
-import static com.ibanity.apis.client.configuration.IbanityConfiguration.getConfiguration;
-
 public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
 
     private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
     private final IbanityHttpSignatureService httpSignatureService;
+    private final String host;
 
-    public IbanitySignatureInterceptor(IbanityHttpSignatureService httpSignatureService) {
+    public IbanitySignatureInterceptor(IbanityHttpSignatureService httpSignatureService, String host) {
         this.httpSignatureService = httpSignatureService;
+        this.host = host;
     }
 
     @Override
@@ -54,7 +53,6 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
     }
 
     private URL getUrl(HttpRequestWrapper requestWrapper) throws MalformedURLException {
-        String host = getConfiguration(IBANITY_API_ENDPOINT_PROPERTY_KEY);
         return new URL(host + requestWrapper.getURI().toString());
     }
 
