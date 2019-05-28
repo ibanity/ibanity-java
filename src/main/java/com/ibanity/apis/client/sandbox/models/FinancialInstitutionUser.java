@@ -1,6 +1,5 @@
 package com.ibanity.apis.client.sandbox.models;
 
-import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.models.IbanityModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +16,7 @@ import java.util.UUID;
 public class FinancialInstitutionUser implements IbanityModel {
 
     public static final String RESOURCE_TYPE = "financialInstitutionUser";
-    public static final String API_URL_TAG_ID = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
+    public static final String API_URL_TAG_ID = "{" + RESOURCE_TYPE + URL_PARAMETER_ID_POSTFIX + "}";
 
     private UUID id;
 

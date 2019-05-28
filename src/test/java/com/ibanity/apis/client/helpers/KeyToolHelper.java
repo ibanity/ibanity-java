@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.utils;
+package com.ibanity.apis.client.helpers;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -15,8 +15,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.security.GeneralSecurityException;
-import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.Security;
 import java.security.cert.Certificate;
@@ -37,21 +35,6 @@ public final class KeyToolHelper {
             CERTIFICATE_FACTORY_INSTANCE = CertificateFactory.getInstance(CERTIFICATE_FACTORY_X509_TYPE);
         } catch (CertificateException exception) {
             throw new IllegalStateException("Unable to create CERTIFICATE_FACTORY_INSTANCE");
-        }
-    }
-
-    public static KeyStore createKeyStore() throws GeneralSecurityException, IOException {
-        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        keyStore.load(null);
-        return keyStore;
-    }
-
-    public static void addEntryIfNotPresent(final KeyStore keyStore, final String alias,
-                                            final PrivateKey privateKey, String privateKeyPassphrase, final Certificate[] certChain)
-            throws GeneralSecurityException {
-
-        if (!keyStore.containsAlias(alias)) {
-            keyStore.setKeyEntry(alias, privateKey, privateKeyPassphrase.toCharArray(), certChain);
         }
     }
 

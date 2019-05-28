@@ -1,7 +1,7 @@
 package com.ibanity.apis.client.builders;
 
 import com.ibanity.apis.client.helpers.IbanityService;
-import com.ibanity.apis.client.holders.CertificateHolder;
+import com.ibanity.apis.client.holders.ApplicationCertificateHolder;
 import com.ibanity.apis.client.holders.SignatureCertificateHolder;
 
 import java.security.PrivateKey;
@@ -22,6 +22,7 @@ public class IbanityServiceBuilder implements
         RequestSignatureCertificateIdBuilder {
 
     private String apiEndpoint;
+    private String sslProtocol = "TLS";
 
     private Certificate caCertificate;
 
@@ -44,12 +45,18 @@ public class IbanityServiceBuilder implements
             signatureCertificate = new SignatureCertificateHolder(signaturePublicKey, signaturePrivateKey, signaturePrivateKeyPassphrase, signatureCertificateId);
         }
 
-        CertificateHolder applicationCertificate = new CertificateHolder(publicKey, privateKey, privateKeyPassphrase);
+        ApplicationCertificateHolder applicationCertificate = new ApplicationCertificateHolder(publicKey, privateKey, privateKeyPassphrase, sslProtocol);
         return new IbanityService(apiEndpoint, caCertificate, applicationCertificate, signatureCertificate);
     }
 
     public OptionalPropertiesBuilder caCertificate(Certificate certificate) {
         this.caCertificate = certificate;
+        return this;
+    }
+
+    @Override
+    public OptionalPropertiesBuilder sslProtocol(String sslProtocol) {
+        this.sslProtocol = sslProtocol;
         return this;
     }
 

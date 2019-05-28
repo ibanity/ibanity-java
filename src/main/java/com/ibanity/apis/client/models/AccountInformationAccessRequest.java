@@ -1,6 +1,5 @@
 package com.ibanity.apis.client.models;
 
-import com.ibanity.apis.client.configuration.IbanityConfiguration;
 import com.ibanity.apis.client.models.links.AccountInformationAccessLinks;
 import com.ibanity.apis.client.models.links.AccountLinks;
 import lombok.AllArgsConstructor;
@@ -19,7 +18,7 @@ import java.util.UUID;
 public class AccountInformationAccessRequest implements IbanityModel {
 
     public static final String RESOURCE_TYPE = "accountInformationAccessRequest";
-    public static final String API_URL_TAG_ID = "{" + RESOURCE_TYPE + IbanityConfiguration.URL_PARAMETER_ID_POSTFIX + "}";
+    public static final String API_URL_TAG_ID = "{" + RESOURCE_TYPE + URL_PARAMETER_ID_POSTFIX + "}";
 
     private UUID id;
     private String selfLink;

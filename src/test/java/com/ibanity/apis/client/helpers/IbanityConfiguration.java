@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.configuration;
+package com.ibanity.apis.client.helpers;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
@@ -19,7 +19,6 @@ public final class IbanityConfiguration {
 
     public static final String IBANITY_PROPERTIES_PREFIX = "ibanity.";
     public static final String IBANITY_API_ENDPOINT_PROPERTY_KEY = "api.endpoint";
-    public static final String URL_PARAMETER_ID_POSTFIX = "Id";
 
     private static final String PROPERTIES_FILE = "ibanity.properties";
 

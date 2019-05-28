@@ -11,5 +11,7 @@ public interface OptionalPropertiesBuilder {
 
     OptionalPropertiesBuilder caCertificate(Certificate certificate);
 
+    OptionalPropertiesBuilder sslProtocol(String sslProtocol);
+
     RequestSignaturePassphraseBuilder requestSignaturePrivateKey(PrivateKey privateKey);
 }
