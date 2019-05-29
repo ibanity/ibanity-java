@@ -113,7 +113,7 @@ class AccountInformationAccessRequestsServiceImplTest {
     private AccountInformationAccessRequest expectedForFind() {
         return AccountInformationAccessRequest.builder()
                 .id(ACCOUNT_INFORMATION_ACCESS_REQUEST_ID)
-                .requestedAccountReferences("BE9386908098818901")
+                .requestedAccountReferences(newArrayList("BE9386908098818901"))
                 .status("received")
                 .build();
     }
@@ -122,7 +122,7 @@ class AccountInformationAccessRequestsServiceImplTest {
         return AccountInformationAccessRequest.builder()
                 .id(ACCOUNT_INFORMATION_ACCESS_REQUEST_ID)
                 .status("received")
-                .requestedAccountReferences("BE9386908098818901")
+                .requestedAccountReferences(newArrayList("BE9386908098818901"))
                 .accountInformationAccessLinks(AccountInformationAccessLinks.builder()
                         .redirect(CALLBACK)
                         .build())

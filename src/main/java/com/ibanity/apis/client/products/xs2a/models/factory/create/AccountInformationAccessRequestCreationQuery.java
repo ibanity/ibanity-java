@@ -3,8 +3,8 @@ package com.ibanity.apis.client.products.xs2a.models.factory.create;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Singular;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,7 +20,7 @@ public final class AccountInformationAccessRequestCreationQuery {
     private String locale;
     private String customerIpAddress;
 
-    @Singular
-    private List<String> requestedAccountReferences;
+    @Builder.Default
+    private List<String> requestedAccountReferences = Collections.emptyList();
     private IbanityPagingSpec pagingSpec;
 }
