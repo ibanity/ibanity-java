@@ -207,6 +207,7 @@ public class CustomHttpRequestRetryHandler implements HttpRequestRetryHandler {
      * @since 4.2
      *
      * @param request the request to verify
+     * @return is the request handle as idempotent
      */
     protected boolean handleAsIdempotent(final HttpRequest request) {
         return !(request instanceof HttpEntityEnclosingRequest);
@@ -218,6 +219,7 @@ public class CustomHttpRequestRetryHandler implements HttpRequestRetryHandler {
      * @deprecated (4.3)
      *
      * @param request the request to check if aborted
+     * @return is the request aborted
      */
     @Deprecated
     protected boolean requestIsAborted(final HttpRequest request) {

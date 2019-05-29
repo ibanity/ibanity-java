@@ -7,7 +7,7 @@ public interface IbanityHttpSignatureService {
 
     /**
      * Alias to be used when the request has no payload.
-     * @see IbanityHttpSignatureService#getHttpSignatureHeaders(String, URL, Map<String, String>, String)
+     * @see IbanityHttpSignatureService#getHttpSignatureHeaders(String, URL, Map, String)
      * Allows you to create the needed headers to sign an http request following draft http signature
      * @see <a href="https://tools.ietf.org/html/draft-cavage-http-signatures-09">https://tools.ietf.org/html/draft-cavage-http-signatures-09</a>
      * @param httpMethod the http method of the current request.
