@@ -6,9 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Singular;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,8 +22,8 @@ public class Synchronization implements IbanityModel {
     public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + URL_PARAMETER_ID_POSTFIX + "}";
 
     private UUID id;
-    @Singular
-    private List<String> errors;
+    @Builder.Default
+    private List<String> errors = Collections.emptyList();
     private String status;
     @JsonProperty("subtype")
     private String subType;

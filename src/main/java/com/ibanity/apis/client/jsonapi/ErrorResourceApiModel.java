@@ -6,9 +6,9 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Singular;
 import lombok.ToString;
 
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -19,6 +19,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ErrorResourceApiModel {
 
-    @Singular
-    private List<IbanityError> errors;
+    @Builder.Default
+    private List<IbanityError> errors = Collections.emptyList();
 }

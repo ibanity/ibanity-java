@@ -7,8 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Singular;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,8 +30,8 @@ public class AccountInformationAccessRequest implements IbanityModel {
     private String locale;
     private String customerIpAddress;
 
-    @Singular("requestedAccountReferences")
-    private List<String> requestedAccountReferences;
+    @Builder.Default
+    private List<String> requestedAccountReferences = Collections.emptyList();
 
     private AccountInformationAccessLinks accountInformationAccessLinks;
     private AccountLinks accountLinks;
