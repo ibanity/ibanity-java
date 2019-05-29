@@ -17,6 +17,9 @@ import java.util.List;
 @AllArgsConstructor
 public class CollectionApiModel {
 
-    private MetaApiModel meta;
+    @Builder.Default
+    private MetaApiModel meta = new MetaApiModel();
+    @Builder.Default
+    private LinksApiModel links = new LinksApiModel();
     private List<DataApiModel> data;
 }

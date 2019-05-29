@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.services.impl;
+package com.ibanity.apis.client.products.xs2a.services.impl;
 
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityProduct;
@@ -7,7 +7,6 @@ import com.ibanity.apis.client.products.xs2a.models.Account;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
 import com.ibanity.apis.client.products.xs2a.models.factory.read.AccountReadQuery;
 import com.ibanity.apis.client.products.xs2a.models.factory.read.AccountsReadQuery;
-import com.ibanity.apis.client.products.xs2a.services.impl.AccountsServiceImpl;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -128,6 +127,7 @@ class AccountsServiceImplTest {
                 .currentBalance(0.0)
                 .currency("EUR")
                 .availableBalance(0.0)
+                .subType("checking")
                 .synchronizedAt(parse("2019-05-09T09:19:37.683Z"))
                 .lastSynchronization(createSynchronization())
                 .build();

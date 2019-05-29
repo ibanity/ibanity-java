@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.services.impl;
+package com.ibanity.apis.client.products.xs2a.services.impl;
 
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.IbanityProduct;
@@ -7,7 +7,6 @@ import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequ
 import com.ibanity.apis.client.products.xs2a.models.factory.create.AccountInformationAccessRequestCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountInformationAccessLinks;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountLinks;
-import com.ibanity.apis.client.products.xs2a.services.impl.AccountInformationAccessRequestsServiceImpl;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -15,5 +15,6 @@ import lombok.ToString;
 @AllArgsConstructor
 public class MetaApiModel {
 
-    private PagingApiModel paging;
+    @Builder.Default
+    private PagingApiModel paging = new PagingApiModel();
 }

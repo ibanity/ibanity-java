@@ -1,0 +1,34 @@
+{
+  "data": [
+    {
+      "attributes": {
+        "createdAt": "2019-05-09T09:20:00.140764Z",
+        "firstName": "Elmer",
+        "lastName": "Lynch",
+        "login": "elynch",
+        "password": "password",
+        "updatedAt": "2019-05-09T09:20:00.140764Z"
+      },
+      "id": "868af9c1-8fa8-485a-b798-dfb1f5ae1142",
+      "links": {
+        "self": "https://api.ibanity.com/sandbox/financial-institution-users/868af9c1-8fa8-485a-b798-dfb1f5ae1142"
+      },
+      "type": "financialInstitutionUser"
+    }
+  ],
+  "links": {
+    "first": "https://api.ibanity.com/sandbox/financial-institution-users"
+  },
+  "links": {
+    "first": "https://api.ibanity.com/sandbox/financial-institution-users",
+    "prev": "https://api.ibanity.com/sandbox/financial-institution-users?before=9089414a-77f8-46b2-b979-edcfad5c2218",
+    "next": "https://api.ibanity.com/sandbox/financial-institution-users?after=d500ddac-27e8-447b-b0a1-dbca8c181b99"
+  },
+  "meta": {
+    "paging": {
+      "limit": 10,
+      "before": "868af9c1-8fa8-485a-b798-dfb1f5ae1141",
+      "after": "868af9c1-8fa8-485a-b798-dfb1f5ae1143"
+    }
+  }
+}

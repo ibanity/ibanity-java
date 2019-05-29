@@ -16,6 +16,7 @@ import static com.ibanity.apis.client.mappers.IbanityModelMapper.buildRequest;
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapCollection;
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
+import static org.apache.commons.lang3.StringUtils.removeEnd;
 
 public class FinancialInstitutionUsersServiceImpl implements FinancialInstitutionUsersService {
 
@@ -70,7 +71,6 @@ public class FinancialInstitutionUsersServiceImpl implements FinancialInstitutio
 
     private FinancialInstitutionUser mapRequest(FinancialInstitutionUserUpdateQuery userUpdateQuery) {
         FinancialInstitutionUser financialInstitutionUser = new FinancialInstitutionUser();
-        financialInstitutionUser.setId(userUpdateQuery.getFinancialInstitutionUserId());
         financialInstitutionUser.setLogin(userUpdateQuery.getLogin());
         financialInstitutionUser.setPassword(userUpdateQuery.getPassword());
         financialInstitutionUser.setFirstName(userUpdateQuery.getFirstName());
@@ -79,7 +79,9 @@ public class FinancialInstitutionUsersServiceImpl implements FinancialInstitutio
     }
 
     private String getUrl(String financialInstitutionUserId) {
-        return apiUrlProvider.find(IbanityProduct.Xs2a, "sandbox", "financialInstitutionUsers")
-                .replace(FinancialInstitutionUser.API_URL_TAG_ID, financialInstitutionUserId);
+        return removeEnd(apiUrlProvider.find(IbanityProduct.Xs2a, "sandbox", "financialInstitutionUsers")
+                        .replace(FinancialInstitutionUser.API_URL_TAG_ID, financialInstitutionUserId),
+                "/");
+
     }
 }
