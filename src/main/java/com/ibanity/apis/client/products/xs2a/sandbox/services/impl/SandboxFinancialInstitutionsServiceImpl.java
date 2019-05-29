@@ -34,7 +34,7 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
         financialInstitution.setName(financialInstitutionCreationQuery.getName());
         RequestApiModel request = buildRequest(FinancialInstitution.RESOURCE_TYPE, financialInstitution);
 
-        String url = getUrl("");
+        String url = getSandboxUrl("");
 
         String response = ibanityHttpClient.post(buildUri(url), request);
         return mapResource(response, FinancialInstitution.class);
@@ -47,19 +47,19 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
         financialInstitution.setSandbox(true);
         RequestApiModel request = buildRequest(FinancialInstitution.RESOURCE_TYPE, financialInstitution);
 
-        String url = getUrl(financialInstitutionUpdateQuery.getFinancialInstitutionId().toString());
+        String url = getSandboxUrl(financialInstitutionUpdateQuery.getFinancialInstitutionId().toString());
         String response = ibanityHttpClient.post(buildUri(url), request);
         return mapResource(response, FinancialInstitution.class);
     }
 
     @Override
     public FinancialInstitution delete(final FinancialInstitutionDeleteQuery financialInstitutionDeleteQuery) {
-        String url = getUrl(financialInstitutionDeleteQuery.getFinancialInstitutionId().toString());
+        String url = getSandboxUrl(financialInstitutionDeleteQuery.getFinancialInstitutionId().toString());
         String response = ibanityHttpClient.delete(buildUri(url));
         return mapResource(response, FinancialInstitution.class);
     }
 
-    private String getUrl(String financialInstitutionId) {
+    private String getSandboxUrl(String financialInstitutionId) {
         return removeEnd(apiUrlProvider.find(IbanityProduct.Xs2a, "sandbox", "financialInstitutions")
                         .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId),
                 "/");
