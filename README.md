@@ -12,17 +12,36 @@
 
 This Java Client library offers various Services you can use in order to submit requests towards the Ibanity Platform.
 
-## /!\ Disclaimer /!\
 
-This library does not support all Ibanity endpoints and flow. We will work on it soon...
+## Quick start
 
-## Configuration
-* Adapt the ibanity.properties data based on your Ibanity environment.
-(See comments inside the properties file)
-## Crnk: JSON API library
-For the implementation of this Ibanity APIs Client library, we rely heavily on the CRNK library that follows the JSON API specification and recommendations.
+Configure the library using IbanityServiceBuilder.builder().
 
-More details about CRNK can be found here: [http://www.crnk.io](http://www.crnk.io)
+Minimal configuration values are:
+
+* The ibanity url
+* Your application private key
+* the passphrase for the private key
+* the application public certificate
+
+```java
+IbanityService ibanityService = IbanityServiceBuilder.builder()
+                .ibanityApiEndpoint("https://api.ibanity.com")
+                .applicationPrivateKey(myPrivateKey)
+                .passphrase("aPassphrase")
+                .applicationCertificate(myCertificate)
+                .build()
+                
+```
+
+You can then make use of Xs2a services through your IbanityService instance.
+
+```java
+CustomerAccessTokenService customerAccessTokensService = ibanityService.xs2aService().customerAccessTokensService();
+```
+See ClientSample class for extended examples.
+
+All services are thread safe and can be configured as singleton if you want to leverage frameworks like Spring.
 ## Requirements
 * Java 8 (or above)
 * Maven (for compilation)
@@ -30,12 +49,3 @@ More details about CRNK can be found here: [http://www.crnk.io](http://www.crnk.
 ### JCE Unlimited Strength Jurisdiction Policy Files
 
 https://golb.hplar.ch/2017/10/JCE-policy-changes-in-Java-SE-8u151-and-8u152.html
-
-## Non Production Environment Tests
-In order to run the tests within a local or non production environment, you need to add the following properties in the ibanity.properties file:
-
-  * **ibanity.client.ssl.ca.certificates.folder=**(Full path of the folder containing the root_ca.crt and XXX_domain_ca.crt CA Certificates (XXX being the environment name) of the self signed certificates)
-  * **ibanity.client.docker.extrahost.callback.name=**(callback hostname)
-  * **ibanity.client.docker.extrahost.callback.ip=**(Docker environment IP address)
-  * **ibanity.client.docker.extrahost.sandbox.authorization.name=**(sandbox-authorization hostname)
-  * **ibanity.client.docker.extrahost.sandbox.authorization.ip=**(Docker environment IP address)
