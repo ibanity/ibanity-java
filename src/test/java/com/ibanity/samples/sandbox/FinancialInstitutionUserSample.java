@@ -30,7 +30,11 @@ public class FinancialInstitutionUserSample {
 
     public FinancialInstitutionUser update(FinancialInstitutionUser financialInstitutionUser) {
         FinancialInstitutionUserUpdateQuery financialInstitutionUserUpdateQuery =
-                FinancialInstitutionUserUpdateQuery.from(financialInstitutionUser)
+                FinancialInstitutionUserUpdateQuery.builder()
+                        .login(financialInstitutionUser.getLogin())
+                        .lastName(financialInstitutionUser.getLastName())
+                        .firstName(financialInstitutionUser.getFirstName())
+                        .financialInstitutionUserId(financialInstitutionUser.getId())
                         .password("new password")
                         .build();
 
