@@ -1,0 +1,45 @@
+{
+  "data": {
+    "attributes": {
+      "availableBalance": 0,
+      "createdAt": "2019-05-09T09:18:06.271096Z",
+      "currency": "EUR",
+      "currentBalance": 0,
+      "description": "Checking account",
+      "reference": "BE6621814485468913",
+      "referenceType": "IBAN",
+      "subtype": "checking",
+      "updatedAt": "2019-05-09T09:18:06.271096Z"
+    },
+    "id": "1bcb2b9e-176d-42fb-9bbb-cc9c7744d573",
+    "links": {
+      "self": "https://api.ibanity.com/sandbox/financial-institutions/c96751a0-d43f-4f15-861e-d79ee49f152f/financial-institution-users/51e863e8-5213-4c3f-8303-430e83ca49fc/financial-institution-accounts/1bcb2b9e-176d-42fb-9bbb-cc9c7744d573"
+    },
+    "relationships": {
+      "financialInstitution": {
+        "data": {
+          "id": "c96751a0-d43f-4f15-861e-d79ee49f152f",
+          "type": "financialInstitution"
+        }
+      },
+      "financialInstitutionTransactions": {
+        "links": {
+          "meta": {
+            "type": "financialInstitutionTransaction"
+          },
+          "related": "https://api.ibanity.com/sandbox/financial-institutions/c96751a0-d43f-4f15-861e-d79ee49f152f/financial-institution-users/51e863e8-5213-4c3f-8303-430e83ca49fc/financial-institution-accounts/1bcb2b9e-176d-42fb-9bbb-cc9c7744d573/financial-institution-transactions"
+        }
+      },
+      "financialInstitutionUser": {
+        "data": {
+          "id": "51e863e8-5213-4c3f-8303-430e83ca49fc",
+          "type": "financialInstitutionUser"
+        },
+        "links": {
+          "related": "https://api.ibanity.com/sandbox/financial-institution-users/51e863e8-5213-4c3f-8303-430e83ca49fc"
+        }
+      }
+    },
+    "type": "financialInstitutionAccount"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "data": {
+    "attributes": {
+      "amount": 6.99,
+      "counterpartName": "ALLIED BANK PHILIPPINES (UK) PLC",
+      "counterpartReference": "BE4325885699707387",
+      "createdAt": "2019-05-09T09:18:13.024220Z",
+      "currency": "EUR",
+      "description": "Small Cotton Shoes",
+      "executionDate": "2018-10-25T00:00:00Z",
+      "remittanceInformation": "NEW SHOES",
+      "remittanceInformationType": "unstructured",
+      "updatedAt": "2019-05-09T09:18:13.024220Z",
+      "valueDate": "2018-10-22T00:00:00Z"
+    },
+    "id": "6411162a-fe6f-428e-ae52-850291497f6b",
+    "links": {
+      "self": "https://api.ibanity.com/sandbox/financial-institutions/eb4aca94-136d-4077-bce0-220daeb50a4e/financial-institution-users/d2c3aaf0-e617-44e6-9da8-e28bed46d9d4/financial-institution-accounts/63b35ad7-5af7-47b7-b27c-da4791320d21/financial-institution-transactions/6411162a-fe6f-428e-ae52-850291497f6b"
+    },
+    "relationships": {
+      "financialInstitutionAccount": {
+        "data": {
+          "id": "63b35ad7-5af7-47b7-b27c-da4791320d21",
+          "type": "financialInstitutionAccount"
+        },
+        "links": {
+          "related": "https://api.ibanity.com/sandbox/financial-institutions/8465220e-55c9-446d-a717-2196fd934555/financial-institution-users/21178928-3cbb-4e81-91b6-f8f23238cfe3/financial-institution-accounts/b865968d-c08a-49e8-a8f9-5883416d73f5"
+        }
+      }
+    },
+    "type": "financialInstitutionTransaction"
+  }
+}

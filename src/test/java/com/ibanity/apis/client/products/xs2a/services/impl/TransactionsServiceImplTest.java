@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.services.impl;
+package com.ibanity.apis.client.products.xs2a.services.impl;
 
 import com.ibanity.apis.client.helpers.IbanityTestHelper;
 import com.ibanity.apis.client.models.IbanityCollection;
@@ -7,7 +7,6 @@ import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.products.xs2a.models.Transaction;
 import com.ibanity.apis.client.products.xs2a.models.factory.read.TransactionReadQuery;
 import com.ibanity.apis.client.products.xs2a.models.factory.read.TransactionsReadQuery;
-import com.ibanity.apis.client.products.xs2a.services.impl.TransactionsServiceImpl;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,6 +34,7 @@ public class TransactionsServiceImplTest {
     private static final String TRANSACTION_ENDPOINT = "https://api.ibanity.com/xs2a/customer/financial-institutions/{financialInstitutionId}/accounts/{accountId}/transactions/{transactionId}";
     private static final String TRANSACTION_URI = "https://api.ibanity.com/xs2a/customer/financial-institutions/99477654-a061-414c-afb4-19e37d13c5a3/accounts/1c020714-759c-4ee6-ae87-5ce667937e77/transactions/eb535c31-f619-4092-9db2-4db84149ddcb";
     private static final String TRANSACTIONS_URI = "https://api.ibanity.com/xs2a/customer/financial-institutions/99477654-a061-414c-afb4-19e37d13c5a3/accounts/1c020714-759c-4ee6-ae87-5ce667937e77/transactions?limit=10";
+    private static final String FIRST_LINK = "https://api.ibanity.com/xs2a/customer/financial-institutions/99477654-a061-414c-afb4-19e37d13c5a3/accounts/1c020714-759c-4ee6-ae87-5ce667937e77/transactions";
 
     @Mock
     private ApiUrlProvider apiUrlProvider;
@@ -73,6 +73,7 @@ public class TransactionsServiceImplTest {
         IbanityCollection<Transaction> expected =
                 IbanityCollection.<Transaction>builder()
                         .pageLimit(10)
+                        .firstLink(FIRST_LINK)
                         .items(newArrayList(createExpected()))
                         .build();
 

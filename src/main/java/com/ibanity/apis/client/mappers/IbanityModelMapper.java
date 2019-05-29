@@ -38,6 +38,11 @@ public class IbanityModelMapper {
             CollectionApiModel collectionApiModel = IbanityHttpUtils.objectMapper().readValue(jsonPayload, CollectionApiModel.class);
             return IbanityCollection.<T>builder()
                     .pageLimit(collectionApiModel.getMeta().getPaging().getLimit())
+                    .afterCursor(collectionApiModel.getMeta().getPaging().getAfter())
+                    .beforeCursor(collectionApiModel.getMeta().getPaging().getBefore())
+                    .firstLink(collectionApiModel.getLinks().getFirst())
+                    .previousLink(collectionApiModel.getLinks().getPrev())
+                    .nextLink(collectionApiModel.getLinks().getNext())
                     .items(
                             collectionApiModel.getData().stream()
                                     .map(customMapping)

@@ -1,0 +1,17 @@
+{
+  "data": {
+    "attributes": {
+      "createdAt": "2019-05-09T09:20:00.140764Z",
+      "firstName": "Elmer",
+      "lastName": "Lynch",
+      "login": "elynch",
+      "password": "password",
+      "updatedAt": "2019-05-09T09:20:00.140764Z"
+    },
+    "id": "868af9c1-8fa8-485a-b798-dfb1f5ae1142",
+    "links": {
+      "self": "https://api.ibanity.com/sandbox/financial-institution-users/868af9c1-8fa8-485a-b798-dfb1f5ae1142"
+    },
+    "type": "financialInstitutionUser"
+  }
+}

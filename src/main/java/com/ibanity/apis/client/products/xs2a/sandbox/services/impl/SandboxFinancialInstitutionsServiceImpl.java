@@ -14,6 +14,7 @@ import com.ibanity.apis.client.services.ApiUrlProvider;
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.buildRequest;
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
+import static org.apache.commons.lang3.StringUtils.removeEnd;
 
 public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutionsServiceImpl implements SandboxFinancialInstitutionsService {
 
@@ -42,8 +43,8 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
     @Override
     public FinancialInstitution update(FinancialInstitutionUpdateQuery financialInstitutionUpdateQuery) {
         FinancialInstitution financialInstitution = new FinancialInstitution();
-        financialInstitution.setId(financialInstitutionUpdateQuery.getFinancialInstitutionId());
         financialInstitution.setName(financialInstitutionUpdateQuery.getName());
+        financialInstitution.setSandbox(true);
         RequestApiModel request = buildRequest(FinancialInstitution.RESOURCE_TYPE, financialInstitution);
 
         String url = getUrl(financialInstitutionUpdateQuery.getFinancialInstitutionId().toString());
@@ -59,7 +60,8 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
     }
 
     private String getUrl(String financialInstitutionId) {
-        return apiUrlProvider.find(IbanityProduct.Xs2a, "sandbox", "financialInstitutions")
-                .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId);
+        return removeEnd(apiUrlProvider.find(IbanityProduct.Xs2a, "sandbox", "financialInstitutions")
+                        .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId),
+                "/");
     }
 }

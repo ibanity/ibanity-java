@@ -15,6 +15,7 @@ public class IbanityPagingSpec {
 
     public static final IbanityPagingSpec DEFAULT_PAGING_SPEC = new IbanityPagingSpec();
 
+    @Builder.Default
     private long limit = 10L;
     private UUID before;
     private UUID after;
