@@ -14,7 +14,7 @@ import java.security.cert.X509Certificate;
 @AllArgsConstructor
 public class CertificateHolder {
 
-    private final X509Certificate publicKey;
+    private final X509Certificate certificate;
     private final PrivateKey privateKey;
     private final String privateKeyPassphrase;
 }
