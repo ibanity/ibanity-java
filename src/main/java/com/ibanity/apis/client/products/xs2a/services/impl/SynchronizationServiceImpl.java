@@ -33,14 +33,14 @@ public class SynchronizationServiceImpl implements SynchronizationService {
                 .build();
         String url = getUrl();
         RequestApiModel request = IbanityModelMapper.buildRequest(Synchronization.RESOURCE_TYPE, synchronization);
-        String response = ibanityHttpClient.post(buildUri(url), request, synchronizationReadQuery.getCustomerAccessToken());
+        String response = ibanityHttpClient.post(buildUri(url), request, synchronizationReadQuery.getCustomerAccessToken(), synchronizationReadQuery.getAdditionalHeaders());
         return mapResource(response, Synchronization.class);
     }
 
     @Override
     public Synchronization find(SynchronizationReadQuery synchronizationReadQuery) {
             String url = getUrl() + "/" + synchronizationReadQuery.getSynchronizationId();
-            String response = ibanityHttpClient.get(buildUri(url), synchronizationReadQuery.getCustomerAccessToken());
+            String response = ibanityHttpClient.get(buildUri(url), synchronizationReadQuery.getCustomerAccessToken(), synchronizationReadQuery.getAdditionalHeaders());
             return mapResource(response, Synchronization.class);
     }
 

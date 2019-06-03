@@ -28,7 +28,7 @@ public class FinancialInstitutionsServiceImpl implements FinancialInstitutionsSe
     }
 
     @Override
-    public IbanityCollection<FinancialInstitution> list(final FinancialInstitutionsReadQuery financialInstitutionsReadQuery) {
+    public IbanityCollection<FinancialInstitution> list(FinancialInstitutionsReadQuery financialInstitutionsReadQuery) {
         IbanityPagingSpec pagingSpec =
                 financialInstitutionsReadQuery.getPagingSpec() == null
                         ? IbanityPagingSpec.DEFAULT_PAGING_SPEC : financialInstitutionsReadQuery.getPagingSpec();
@@ -40,19 +40,19 @@ public class FinancialInstitutionsServiceImpl implements FinancialInstitutionsSe
                         "/"
                 ),
                 pagingSpec);
-        String response = ibanityHttpClient.get(uri, customerAccessToken);
+        String response = ibanityHttpClient.get(uri, customerAccessToken, financialInstitutionsReadQuery.getAdditionalHeaders());
         return IbanityModelMapper.mapCollection(response, FinancialInstitution.class);
     }
 
     @Override
-    public FinancialInstitution find(final FinancialInstitutionReadQuery financialInstitutionReadQuery) {
+    public FinancialInstitution find(FinancialInstitutionReadQuery financialInstitutionReadQuery) {
         String customerAccessToken = financialInstitutionReadQuery.getCustomerAccessToken();
         URI uri = buildUri(
                 removeEnd(
                         getUrl(customerAccessToken)
                                 .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionReadQuery.getFinancialInstitutionId().toString()),
                         "/"));
-        String response = ibanityHttpClient.get(uri, customerAccessToken);
+        String response = ibanityHttpClient.get(uri, customerAccessToken, financialInstitutionReadQuery.getAdditionalHeaders());
         return IbanityModelMapper.mapResource(response, FinancialInstitution.class);
     }
 

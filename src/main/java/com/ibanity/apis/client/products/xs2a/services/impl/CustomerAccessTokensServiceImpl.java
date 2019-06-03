@@ -30,7 +30,7 @@ public class CustomerAccessTokensServiceImpl implements CustomerAccessTokensServ
 
         String url = apiUrlProvider.find(IbanityProduct.Xs2a, "customerAccessTokens");
         RequestApiModel request = buildRequest(CustomerAccessToken.RESOURCE_TYPE, customerAccessToken);
-        String response = ibanityHttpClient.post(buildUri(url), request, null);
+        String response = ibanityHttpClient.post(buildUri(url), request, null, customerAccessTokenCreationQuery.getAdditionalHeaders());
         return IbanityModelMapper.mapResource(response, CustomerAccessToken.class);
     }
 }

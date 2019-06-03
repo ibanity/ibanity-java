@@ -32,7 +32,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
 
     @Override
     public AccountInformationAccessRequest create(
-            final AccountInformationAccessRequestCreationQuery accountInformationAccessRequestCreationQuery) {
+            AccountInformationAccessRequestCreationQuery accountInformationAccessRequestCreationQuery) {
 
         String financialInstitutionId = accountInformationAccessRequestCreationQuery.getFinancialInstitutionId().toString();
 
@@ -40,7 +40,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
 
         AccountInformationAccessRequest ibanityModel = mapRequest(accountInformationAccessRequestCreationQuery);
         RequestApiModel request = buildRequest(AccountInformationAccessRequest.RESOURCE_TYPE, ibanityModel);
-        String response = ibanityHttpClient.post(uri, request, accountInformationAccessRequestCreationQuery.getCustomerAccessToken());
+        String response = ibanityHttpClient.post(uri, request, accountInformationAccessRequestCreationQuery.getCustomerAccessToken(), accountInformationAccessRequestCreationQuery.getAdditionalHeaders());
         return IbanityModelMapper.mapResource(response, responseMapping());
     }
 
@@ -51,7 +51,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
 
         URI uri = getUri(financialInstitutionId, resourceId);
 
-        String response = ibanityHttpClient.get(uri, accountInformationAccessRequestCreationQuery.getCustomerAccessToken());
+        String response = ibanityHttpClient.get(uri, accountInformationAccessRequestCreationQuery.getCustomerAccessToken(), accountInformationAccessRequestCreationQuery.getAdditionalHeaders());
         return IbanityModelMapper.mapResource(response, AccountInformationAccessRequest.class);
     }
 

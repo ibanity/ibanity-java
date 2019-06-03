@@ -5,7 +5,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.Map;
 import java.util.UUID;
+
+import static java.util.Collections.emptyMap;
 
 @Getter
 @Builder
@@ -18,4 +21,7 @@ public class SynchronizationReadQuery {
     private String resourceType;
     private UUID synchronizationId;
     private String customerAccessToken;
+
+    @Builder.Default
+    private Map<String, String> additionalHeaders = emptyMap();
 }

@@ -21,6 +21,7 @@ import java.util.UUID;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
+import static java.util.Collections.emptyMap;
 import static java.util.UUID.fromString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -67,7 +68,7 @@ class AccountInformationAccessRequestsServiceImplTest {
                         .customerIpAddress("0.0.0.0")
                         .build();
 
-        when(ibanityHttpClient.post(buildUri(AIAR_ENDPOINT_FOR_CREATE), toIbanityModel(creationQuery), creationQuery.getCustomerAccessToken()))
+        when(ibanityHttpClient.post(buildUri(AIAR_ENDPOINT_FOR_CREATE), toIbanityModel(creationQuery), creationQuery.getCustomerAccessToken(), emptyMap()))
                 .thenReturn(loadFile("json/createAccountInformationAccessRequest.json"));
 
         AccountInformationAccessRequest actual = accountInformationAccessRequestsService.create(creationQuery);
@@ -84,7 +85,7 @@ class AccountInformationAccessRequestsServiceImplTest {
                         .accountInformationAccessRequestId(ACCOUNT_INFORMATION_ACCESS_REQUEST_ID)
                         .build();
 
-        when(ibanityHttpClient.get(buildUri(AIAR_ENDPOINT_FOR_FIND), creationQuery.getCustomerAccessToken()))
+        when(ibanityHttpClient.get(buildUri(AIAR_ENDPOINT_FOR_FIND), creationQuery.getCustomerAccessToken(), emptyMap()))
                 .thenReturn(loadFile("json/accountInformationAccessRequest.json"));
 
         AccountInformationAccessRequest actual = accountInformationAccessRequestsService.find(creationQuery);
