@@ -37,18 +37,18 @@ public class TransactionsServiceImpl implements TransactionsService {
         }
 
         String url = getUrl(transactionsReadQuery.getFinancialInstitutionId(), transactionsReadQuery.getAccountId());
-        String response = ibanityHttpClient.get(buildUri(url, pagingSpec), transactionsReadQuery.getCustomerAccessToken());
+        String response = ibanityHttpClient.get(buildUri(url, pagingSpec), transactionsReadQuery.getCustomerAccessToken(), transactionsReadQuery.getAdditionalHeaders());
 
         return mapCollection(response, Transaction.class);
     }
 
     @Override
-    public Transaction find(final TransactionReadQuery transactionReadQuery) {
+    public Transaction find(TransactionReadQuery transactionReadQuery) {
         String url =
                 getUrl(transactionReadQuery.getFinancialInstitutionId(), transactionReadQuery.getAccountId())
                         + "/"
                         + transactionReadQuery.getTransactionId().toString();
-        String response = ibanityHttpClient.get(buildUri(url), transactionReadQuery.getCustomerAccessToken());
+        String response = ibanityHttpClient.get(buildUri(url), transactionReadQuery.getCustomerAccessToken(), transactionReadQuery.getAdditionalHeaders());
         return mapResource(response, Transaction.class);
     }
 

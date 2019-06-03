@@ -22,6 +22,7 @@ import java.util.UUID;
 
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
+import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -60,7 +61,7 @@ class PaymentInitiationRequestServiceImplTest {
                         .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                         .build();
 
-        when(ibanityHttpClient.post(buildUri(PIR_ENDPOINT_FOR_CREATE), mapRequest(requestCreationQuery), CUSTOMER_TOKEN_REFERENCE))
+        when(ibanityHttpClient.post(buildUri(PIR_ENDPOINT_FOR_CREATE), mapRequest(requestCreationQuery), CUSTOMER_TOKEN_REFERENCE, emptyMap()))
                 .thenReturn(loadFile("json/createPir.json"));
 
         PaymentInitiationRequest actual = paymentInitiationRequestService.create(requestCreationQuery);
@@ -76,7 +77,7 @@ class PaymentInitiationRequestServiceImplTest {
                         .paymentInitiationRequestId(PAYMENT_INITIATION_REQUEST_ID)
                         .build();
 
-        when(ibanityHttpClient.delete(buildUri(PIR_ENDPOINT_WITH_ID), CUSTOMER_TOKEN_REFERENCE))
+        when(ibanityHttpClient.delete(buildUri(PIR_ENDPOINT_WITH_ID), CUSTOMER_TOKEN_REFERENCE, emptyMap()))
                 .thenReturn(loadFile("json/deletePir.json"));
 
         PaymentInitiationRequest actual = paymentInitiationRequestService.delete(requestReadQuery);
@@ -92,7 +93,7 @@ class PaymentInitiationRequestServiceImplTest {
                         .customerAccessToken(CUSTOMER_TOKEN_REFERENCE)
                         .build();
 
-        when(ibanityHttpClient.get(buildUri(PIR_ENDPOINT_WITH_ID), CUSTOMER_TOKEN_REFERENCE))
+        when(ibanityHttpClient.get(buildUri(PIR_ENDPOINT_WITH_ID), CUSTOMER_TOKEN_REFERENCE, emptyMap()))
                 .thenReturn(loadFile("json/pir.json"));
 
         PaymentInitiationRequest actual = paymentInitiationRequestService.find(readQuery);

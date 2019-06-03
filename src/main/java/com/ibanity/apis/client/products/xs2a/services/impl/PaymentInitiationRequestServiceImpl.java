@@ -28,34 +28,34 @@ public class PaymentInitiationRequestServiceImpl implements PaymentInitiationReq
     }
 
     @Override
-    public PaymentInitiationRequest create(final PaymentInitiationRequestCreationQuery query) {
+    public PaymentInitiationRequest create(PaymentInitiationRequestCreationQuery query) {
         PaymentInitiationRequest paymentInitiationRequest = getRequestMapping(query);
         RequestApiModel request = buildRequest(PaymentInitiationRequest.RESOURCE_TYPE, paymentInitiationRequest);
 
         String url = getUrl(query.getFinancialInstitutionId().toString(), "");
-        String response = ibanityHttpClient.post(buildUri(url), request, query.getCustomerAccessToken());
+        String response = ibanityHttpClient.post(buildUri(url), request, query.getCustomerAccessToken(), query.getAdditionalHeaders());
 
         return mapResource(response, getResponseMapping());
     }
 
     @Override
-    public PaymentInitiationRequest delete(final PaymentInitiationRequestReadQuery paymentInitiationRequestReadQuery) {
+    public PaymentInitiationRequest delete(PaymentInitiationRequestReadQuery paymentInitiationRequestReadQuery) {
         String financialInstitutionId = paymentInitiationRequestReadQuery.getFinancialInstitutionId().toString();
         String paymentInitiationRequestId = paymentInitiationRequestReadQuery.getPaymentInitiationRequestId().toString();
 
         String url = getUrl(financialInstitutionId, paymentInitiationRequestId);
-        String response = ibanityHttpClient.delete(buildUri(url), paymentInitiationRequestReadQuery.getCustomerAccessToken());
+        String response = ibanityHttpClient.delete(buildUri(url), paymentInitiationRequestReadQuery.getCustomerAccessToken(), paymentInitiationRequestReadQuery.getAdditionalHeaders());
 
         return mapResource(response, getResponseMapping());
     }
 
     @Override
-    public PaymentInitiationRequest find(final PaymentInitiationRequestReadQuery paymentInitiationRequestReadQuery) {
+    public PaymentInitiationRequest find(PaymentInitiationRequestReadQuery paymentInitiationRequestReadQuery) {
         String financialInstitutionId = paymentInitiationRequestReadQuery.getFinancialInstitutionId().toString();
         String paymentInitiationRequestId = paymentInitiationRequestReadQuery.getPaymentInitiationRequestId().toString();
 
         String url = getUrl(financialInstitutionId, paymentInitiationRequestId);
-        String response = ibanityHttpClient.get(buildUri(url), paymentInitiationRequestReadQuery.getCustomerAccessToken());
+        String response = ibanityHttpClient.get(buildUri(url), paymentInitiationRequestReadQuery.getCustomerAccessToken(), paymentInitiationRequestReadQuery.getAdditionalHeaders());
 
         return mapResource(response, getResponseMapping());
     }

@@ -18,6 +18,7 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.UUID;
 
+import static java.util.Collections.emptyMap;
 import static java.util.UUID.fromString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -54,7 +55,8 @@ class SynchronizationServiceImplTest {
                         .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                         .build();
 
-        when(ibanityHttpClient.post(new URI(SYNCHRONIZATION_ENDPOINT), createRequest(synchronizationReadQuery), CUSTOMER_ACCESS_TOKEN)).thenReturn(IbanityTestHelper.loadFile("json/create_synchronization.json"));
+        when(ibanityHttpClient.post(new URI(SYNCHRONIZATION_ENDPOINT), createRequest(synchronizationReadQuery), CUSTOMER_ACCESS_TOKEN, emptyMap()))
+                .thenReturn(IbanityTestHelper.loadFile("json/create_synchronization.json"));
 
         Synchronization actual = synchronizationService.create(synchronizationReadQuery);
 
@@ -69,7 +71,8 @@ class SynchronizationServiceImplTest {
                         .synchronizationId(SYNCHRONIZATION_ID)
                         .build();
 
-        when(ibanityHttpClient.get(new URI(SYNCHRONIZATION_ENDPOINT + "/" + SYNCHRONIZATION_ID), CUSTOMER_ACCESS_TOKEN)).thenReturn(IbanityTestHelper.loadFile("json/synchronization.json"));
+        when(ibanityHttpClient.get(new URI(SYNCHRONIZATION_ENDPOINT + "/" + SYNCHRONIZATION_ID), CUSTOMER_ACCESS_TOKEN, emptyMap()))
+                .thenReturn(IbanityTestHelper.loadFile("json/synchronization.json"));
 
         Synchronization actual = synchronizationService.find(synchronizationReadQuery);
 

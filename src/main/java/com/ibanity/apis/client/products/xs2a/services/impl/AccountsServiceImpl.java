@@ -35,16 +35,16 @@ public class AccountsServiceImpl implements AccountsService {
     }
 
     @Override
-    public Account find(final AccountReadQuery accountReadQuery) {
+    public Account find(AccountReadQuery accountReadQuery) {
             String url = getUrl(accountReadQuery.getFinancialInstitutionId(), null)
                     + "/"
                     + accountReadQuery.getAccountId();
-            String response = ibanityHttpClient.get(buildUri(url), accountReadQuery.getCustomerAccessToken());
+            String response = ibanityHttpClient.get(buildUri(url), accountReadQuery.getCustomerAccessToken(), accountReadQuery.getAdditionalHeaders());
             return IbanityModelMapper.mapResource(response, customMappingFunction());
     }
 
     @Override
-    public IbanityCollection<Account> list(final AccountsReadQuery accountsReadQuery) {
+    public IbanityCollection<Account> list(AccountsReadQuery accountsReadQuery) {
         IbanityPagingSpec pagingSpec = accountsReadQuery.getPagingSpec();
 
         if (pagingSpec == null) {
@@ -52,7 +52,7 @@ public class AccountsServiceImpl implements AccountsService {
         }
 
         String url = getUrl(accountsReadQuery.getFinancialInstitutionId(), accountsReadQuery.getAccountInformationAccessRequestId());
-        String response = ibanityHttpClient.get(buildUri(url, pagingSpec), accountsReadQuery.getCustomerAccessToken());
+        String response = ibanityHttpClient.get(buildUri(url, pagingSpec), accountsReadQuery.getCustomerAccessToken(), accountsReadQuery.getAdditionalHeaders());
         return IbanityModelMapper.mapCollection(response, customMappingFunction());
     }
 

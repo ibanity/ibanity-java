@@ -3,11 +3,15 @@ package com.ibanity.apis.client.products.xs2a.models.factory.create;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Map;
 import java.util.UUID;
+
+import static java.util.Collections.emptyMap;
 
 @Getter
 @Builder
 public final class PaymentInitiationRequestCreationQuery {
+
     private String customerAccessToken;
     private UUID financialInstitutionId;
     private UUID idempotencyKey;
@@ -33,4 +37,7 @@ public final class PaymentInitiationRequestCreationQuery {
     private String creditorAgentType;
 
     private String redirectUri;
+
+    @Builder.Default
+    private Map<String, String> additionalHeaders = emptyMap();
 }

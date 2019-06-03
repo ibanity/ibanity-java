@@ -20,6 +20,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -61,7 +62,8 @@ public class TransactionsServiceImplTest {
                         .build();
 
 
-        when(ibanityHttpClient.get(new URI(TRANSACTION_URI), CUSTOMER_ACCESS_TOKEN)).thenReturn(IbanityTestHelper.loadFile("json/transaction.json"));
+        when(ibanityHttpClient.get(new URI(TRANSACTION_URI), CUSTOMER_ACCESS_TOKEN, emptyMap()))
+                .thenReturn(IbanityTestHelper.loadFile("json/transaction.json"));
 
         Transaction actual = transactionsService.find(transactionReadQuery);
 
@@ -84,7 +86,8 @@ public class TransactionsServiceImplTest {
                         .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                         .build();
 
-        when(ibanityHttpClient.get(new URI(TRANSACTIONS_URI), CUSTOMER_ACCESS_TOKEN)).thenReturn(IbanityTestHelper.loadFile("json/transactions.json"));
+        when(ibanityHttpClient.get(new URI(TRANSACTIONS_URI), CUSTOMER_ACCESS_TOKEN, emptyMap()))
+                .thenReturn(IbanityTestHelper.loadFile("json/transactions.json"));
 
         IbanityCollection<Transaction> actual = transactionsService.list(transactionReadQuery);
 
