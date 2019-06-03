@@ -1,7 +1,7 @@
 package com.ibanity.apis.client.services.impl;
 
+import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityProduct;
-import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

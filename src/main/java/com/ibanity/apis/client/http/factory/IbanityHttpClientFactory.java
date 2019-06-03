@@ -1,10 +1,10 @@
-package com.ibanity.apis.client.network.http.client.factory;
+package com.ibanity.apis.client.http.factory;
 
 import com.ibanity.apis.client.holders.ApplicationCertificateHolder;
 import com.ibanity.apis.client.holders.SignatureCertificateHolder;
-import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
-import com.ibanity.apis.client.network.http.client.IbanityHttpUtils;
-import com.ibanity.apis.client.network.http.client.impl.IbanityHttpClientImpl;
+import com.ibanity.apis.client.http.IbanityHttpClient;
+import com.ibanity.apis.client.http.IbanityHttpUtils;
+import com.ibanity.apis.client.http.impl.IbanityHttpClientImpl;
 
 import java.security.cert.Certificate;
 

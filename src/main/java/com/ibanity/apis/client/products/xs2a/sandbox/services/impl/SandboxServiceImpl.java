@@ -1,6 +1,6 @@
 package com.ibanity.apis.client.products.xs2a.sandbox.services.impl;
 
-import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
+import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.products.xs2a.sandbox.services.FinancialInstitutionAccountsService;
 import com.ibanity.apis.client.products.xs2a.sandbox.services.FinancialInstitutionTransactionsService;
 import com.ibanity.apis.client.products.xs2a.sandbox.services.FinancialInstitutionUsersService;

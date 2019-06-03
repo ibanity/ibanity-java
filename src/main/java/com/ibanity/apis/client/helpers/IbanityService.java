@@ -2,8 +2,8 @@ package com.ibanity.apis.client.helpers;
 
 import com.ibanity.apis.client.holders.ApplicationCertificateHolder;
 import com.ibanity.apis.client.holders.SignatureCertificateHolder;
-import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
-import com.ibanity.apis.client.network.http.client.factory.IbanityHttpClientFactory;
+import com.ibanity.apis.client.http.IbanityHttpClient;
+import com.ibanity.apis.client.http.factory.IbanityHttpClientFactory;
 import com.ibanity.apis.client.products.xs2a.services.Xs2aService;
 import com.ibanity.apis.client.products.xs2a.services.impl.Xs2aServiceImpl;
 import com.ibanity.apis.client.services.ApiUrlProvider;

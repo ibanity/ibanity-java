@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.network.http.client.interceptor;
+package com.ibanity.apis.client.http.interceptor;
 
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;

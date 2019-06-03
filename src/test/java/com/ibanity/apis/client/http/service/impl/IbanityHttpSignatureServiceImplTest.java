@@ -1,7 +1,6 @@
-package com.ibanity.apis.client.network.http.client;
+package com.ibanity.apis.client.http.service.impl;
 
 import com.ibanity.apis.client.helpers.KeyToolHelper;
-import com.ibanity.apis.client.services.impl.IbanityHttpSignatureServiceImpl;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.bouncycastle.util.io.pem.PemReader;

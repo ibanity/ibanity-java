@@ -1,12 +1,12 @@
 package com.ibanity.apis.client.mappers;
 
+import com.ibanity.apis.client.http.IbanityHttpUtils;
 import com.ibanity.apis.client.jsonapi.CollectionApiModel;
 import com.ibanity.apis.client.jsonapi.DataApiModel;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.jsonapi.ResourceApiModel;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityModel;
-import com.ibanity.apis.client.network.http.client.IbanityHttpUtils;
 
 import java.io.IOException;
 import java.util.function.Function;
