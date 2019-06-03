@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.network.http.client;
+package com.ibanity.apis.client.http;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -9,9 +9,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ibanity.apis.client.holders.ApplicationCertificateHolder;
 import com.ibanity.apis.client.holders.CertificateHolder;
 import com.ibanity.apis.client.holders.SignatureCertificateHolder;
-import com.ibanity.apis.client.network.http.client.interceptor.IbanitySignatureInterceptor;
-import com.ibanity.apis.client.network.http.client.interceptor.IdempotencyInterceptor;
-import com.ibanity.apis.client.services.impl.IbanityHttpSignatureServiceImpl;
+import com.ibanity.apis.client.http.interceptor.IbanitySignatureInterceptor;
+import com.ibanity.apis.client.http.interceptor.IdempotencyInterceptor;
+import com.ibanity.apis.client.http.service.impl.IbanityHttpSignatureServiceImpl;
 import com.ibanity.apis.client.utils.CustomHttpRequestRetryHandler;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;

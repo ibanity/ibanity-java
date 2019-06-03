@@ -1,7 +1,7 @@
-package com.ibanity.apis.client.network.http.client.impl;
+package com.ibanity.apis.client.http.impl;
 
-import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
-import com.ibanity.apis.client.network.http.client.handler.IbanityResponseHandler;
+import com.ibanity.apis.client.http.IbanityHttpClient;
+import com.ibanity.apis.client.http.handler.IbanityResponseHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
-import static com.ibanity.apis.client.network.http.client.IbanityHttpUtils.objectMapper;
+import static com.ibanity.apis.client.http.IbanityHttpUtils.objectMapper;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 

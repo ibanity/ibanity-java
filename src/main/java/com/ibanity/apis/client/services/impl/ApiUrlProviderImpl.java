@@ -1,9 +1,9 @@
 package com.ibanity.apis.client.services.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.ibanity.apis.client.http.IbanityHttpClient;
+import com.ibanity.apis.client.http.IbanityHttpUtils;
 import com.ibanity.apis.client.models.IbanityProduct;
-import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
-import com.ibanity.apis.client.network.http.client.IbanityHttpUtils;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

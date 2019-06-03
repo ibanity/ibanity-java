@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.network.http.client.handler;
+package com.ibanity.apis.client.http.handler;
 
 import com.ibanity.apis.client.exceptions.IbanityClientSideException;
 import com.ibanity.apis.client.exceptions.IbanityServerSideException;

@@ -1,6 +1,6 @@
-package com.ibanity.apis.client.network.http.client.interceptor;
+package com.ibanity.apis.client.http.interceptor;
 
-import com.ibanity.apis.client.services.IbanityHttpSignatureService;
+import com.ibanity.apis.client.http.service.IbanityHttpSignatureService;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpRequestWrapper;

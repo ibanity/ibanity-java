@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.network.http.client;
+package com.ibanity.apis.client.http;
 
 import java.net.URI;
 import java.util.Map;

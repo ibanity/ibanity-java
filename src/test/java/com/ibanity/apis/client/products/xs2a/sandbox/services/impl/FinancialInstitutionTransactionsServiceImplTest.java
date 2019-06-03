@@ -1,8 +1,8 @@
 package com.ibanity.apis.client.products.xs2a.sandbox.services.impl;
 
+import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.IbanityCollection;
-import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitutionTransaction;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.create.FinancialInstitutionTransactionCreationQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.delete.FinancialInstitutionTransactionDeleteQuery;

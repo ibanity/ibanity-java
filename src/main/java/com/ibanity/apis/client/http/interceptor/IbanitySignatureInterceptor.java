@@ -1,6 +1,6 @@
-package com.ibanity.apis.client.network.http.client.interceptor;
+package com.ibanity.apis.client.http.interceptor;
 
-import com.ibanity.apis.client.services.IbanityHttpSignatureService;
+import com.ibanity.apis.client.http.service.IbanityHttpSignatureService;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpRequest;
@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.ibanity.apis.client.network.http.client.IbanityHttpClient.DEFAULT_ENCODING;
+import static com.ibanity.apis.client.http.IbanityHttpClient.DEFAULT_ENCODING;
 
 public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
 

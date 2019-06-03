@@ -1,8 +1,8 @@
 package com.ibanity.apis.client.products.xs2a.services.impl;
 
+import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.IbanityProduct;
-import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
 import com.ibanity.apis.client.products.xs2a.models.factory.create.CustomerAccessTokenCreationQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;

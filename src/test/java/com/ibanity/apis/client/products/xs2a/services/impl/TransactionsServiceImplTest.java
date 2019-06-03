@@ -1,9 +1,9 @@
 package com.ibanity.apis.client.products.xs2a.services.impl;
 
 import com.ibanity.apis.client.helpers.IbanityTestHelper;
+import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityProduct;
-import com.ibanity.apis.client.network.http.client.IbanityHttpClient;
 import com.ibanity.apis.client.products.xs2a.models.Transaction;
 import com.ibanity.apis.client.products.xs2a.models.factory.read.TransactionReadQuery;
 import com.ibanity.apis.client.products.xs2a.models.factory.read.TransactionsReadQuery;

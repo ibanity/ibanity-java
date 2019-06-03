@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.network.http.client.handler;
+package com.ibanity.apis.client.http.handler;
 
 import com.ibanity.apis.client.exceptions.IbanityClientSideException;
 import com.ibanity.apis.client.exceptions.IbanityServerSideException;
@@ -12,7 +12,7 @@ import org.apache.http.client.ResponseHandler;
 import java.io.IOException;
 import java.util.List;
 
-import static com.ibanity.apis.client.network.http.client.IbanityHttpUtils.objectMapper;
+import static com.ibanity.apis.client.http.IbanityHttpUtils.objectMapper;
 
 public class IbanityResponseHandler implements ResponseHandler<String> {
 

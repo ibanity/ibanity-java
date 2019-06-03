@@ -1,7 +1,7 @@
-package com.ibanity.apis.client.services.impl;
+package com.ibanity.apis.client.http.service.impl;
 
 import com.google.common.collect.Maps;
-import com.ibanity.apis.client.services.IbanityHttpSignatureService;
+import com.ibanity.apis.client.http.service.IbanityHttpSignatureService;
 import lombok.NonNull;
 import org.apache.commons.codec.digest.MessageDigestAlgorithms;
 
