@@ -128,7 +128,7 @@ public final class IbanityHttpUtils {
                 KEY_ENTRY_NAME,
                 applicationCertificate.getPrivateKey(),
                 applicationCertificate.getPrivateKeyPassphrase(),
-                new Certificate[]{applicationCertificate.getPublicKey()});
+                new Certificate[]{applicationCertificate.getCertificate()});
 
         return keyStore;
     }
@@ -136,7 +136,7 @@ public final class IbanityHttpUtils {
     private static IbanityHttpSignatureServiceImpl getIbanityHttpSignatureService(SignatureCertificateHolder signatureCertificate) {
         return new IbanityHttpSignatureServiceImpl(
                 signatureCertificate.getPrivateKey(),
-                signatureCertificate.getPublicKey(),
+                signatureCertificate.getCertificate(),
                 signatureCertificate.getCertificateId());
     }
 

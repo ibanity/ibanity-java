@@ -14,11 +14,11 @@ public class ApplicationCertificateHolder extends CertificateHolder {
 
     private final String sslProtocol;
 
-    public ApplicationCertificateHolder(X509Certificate publicKey,
+    public ApplicationCertificateHolder(X509Certificate certificate,
                                         PrivateKey privateKey,
                                         String privateKeyPassphrase,
                                         String sslProtocol) {
-        super(publicKey, privateKey, privateKeyPassphrase);
+        super(certificate, privateKey, privateKeyPassphrase);
         this.sslProtocol = sslProtocol;
     }
 }

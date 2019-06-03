@@ -26,11 +26,11 @@ public class IbanityServiceBuilder implements
 
     private Certificate caCertificate;
 
-    private X509Certificate publicKey;
+    private X509Certificate certificate;
     private PrivateKey privateKey;
     private String privateKeyPassphrase;
 
-    private X509Certificate signaturePublicKey;
+    private X509Certificate signatureCertificate;
     private PrivateKey signaturePrivateKey;
     private String signaturePrivateKeyPassphrase;
     private String signatureCertificateId;
@@ -42,10 +42,10 @@ public class IbanityServiceBuilder implements
     public IbanityService build() {
         SignatureCertificateHolder signatureCertificate = null;
         if (signaturePrivateKey != null) {
-            signatureCertificate = new SignatureCertificateHolder(signaturePublicKey, signaturePrivateKey, signaturePrivateKeyPassphrase, signatureCertificateId);
+            signatureCertificate = new SignatureCertificateHolder(this.signatureCertificate, signaturePrivateKey, signaturePrivateKeyPassphrase, signatureCertificateId);
         }
 
-        ApplicationCertificateHolder applicationCertificate = new ApplicationCertificateHolder(publicKey, privateKey, privateKeyPassphrase, sslProtocol);
+        ApplicationCertificateHolder applicationCertificate = new ApplicationCertificateHolder(certificate, privateKey, privateKeyPassphrase, sslProtocol);
         return new IbanityService(apiEndpoint, caCertificate, applicationCertificate, signatureCertificate);
     }
 
@@ -72,13 +72,13 @@ public class IbanityServiceBuilder implements
 
     @Override
     public OptionalPropertiesBuilder applicationCertificate(X509Certificate certificate) {
-        this.publicKey = certificate;
+        this.certificate = certificate;
         return this;
     }
 
     @Override
     public IbanityServiceBuilder requestSignatureCertificate(X509Certificate certificate) {
-        this.signaturePublicKey = certificate;
+        this.signatureCertificate = certificate;
         return this;
     }
 

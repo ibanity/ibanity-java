@@ -14,11 +14,11 @@ public class SignatureCertificateHolder extends CertificateHolder {
 
     private final String certificateId;
 
-    public SignatureCertificateHolder(X509Certificate signaturePublicKey,
-                                      PrivateKey signaturePrivateKey,
-                                      String signaturePrivateKeyPassphrase,
+    public SignatureCertificateHolder(X509Certificate certificate,
+                                      PrivateKey privateKey,
+                                      String privateKeyPassphrase,
                                       String certificateId) {
-        super(signaturePublicKey, signaturePrivateKey, signaturePrivateKeyPassphrase);
+        super(certificate, privateKey, privateKeyPassphrase);
         this.certificateId = certificateId;
     }
 }
