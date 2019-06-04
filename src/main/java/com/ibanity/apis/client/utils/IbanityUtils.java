@@ -27,7 +27,6 @@ import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 
@@ -123,12 +122,13 @@ public final class IbanityUtils {
         KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
         keyStore.load(null);
 
-        addEntryIfNotPresent(
-                keyStore,
-                ALIAS_KEY_STORE,
-                applicationCredentials.getPrivateKey(),
-                applicationCredentials.getPrivateKeyPassphrase(),
-                new Certificate[]{applicationCredentials.getCertificate()});
+        if (!keyStore.containsAlias(ALIAS_KEY_STORE)) {
+            keyStore.setKeyEntry(
+                    ALIAS_KEY_STORE,
+                    applicationCredentials.getPrivateKey(),
+                    applicationCredentials.getPrivateKeyPassphrase().toCharArray(),
+                    new Certificate[]{applicationCredentials.getCertificate()});
+        }
 
         return keyStore;
     }
@@ -144,17 +144,5 @@ public final class IbanityUtils {
         KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         kmf.init(keyStore, passphrase.toCharArray());
         return kmf.getKeyManagers();
-    }
-
-    private static void addEntryIfNotPresent(KeyStore keyStore,
-                                             String alias,
-                                             PrivateKey privateKey,
-                                             String privateKeyPassphrase,
-                                             Certificate[] certChain)
-            throws GeneralSecurityException {
-
-        if (!keyStore.containsAlias(alias)) {
-            keyStore.setKeyEntry(alias, privateKey, privateKeyPassphrase.toCharArray(), certChain);
-        }
     }
 }
