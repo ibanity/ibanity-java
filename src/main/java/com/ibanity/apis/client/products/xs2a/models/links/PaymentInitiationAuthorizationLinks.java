@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.products.xs2a.models.links;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -11,9 +12,9 @@ import lombok.ToString;
 @Builder
 @EqualsAndHashCode
 @ToString
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
-public class PaymentAccessLinks {
+public class PaymentInitiationAuthorizationLinks {
 
     private String redirect;
 

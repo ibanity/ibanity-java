@@ -54,8 +54,8 @@ public class ClientSample {
     private final SynchronizationSample synchronizationSample;
 
     // Configurations
-    private final String fakeTppAccountInformationAccessRedirectUrl = getConfiguration("tpp.accounts.information.access.result.redirect.url");
-    private final String fakeTppPaymentInitiationRedirectUrl = getConfiguration("tpp.payments.initiation.result.redirect.url");
+    private final String fakeTppAccountInformationAccessRedirectUrl = getConfiguration("tpp.account-information-access-result.redirect-url");
+    private final String fakeTppPaymentInitiationRedirectUrl = getConfiguration("tpp.payment-initiation-result.redirect-url");
 
     public ClientSample(IbanityService ibanityService) {
         customerAccessTokenSample = new CustomerAccessTokenSample(ibanityService);

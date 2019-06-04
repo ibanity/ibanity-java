@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.jsonapi;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -14,7 +15,7 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PagingApiModel {
 
     private long limit;

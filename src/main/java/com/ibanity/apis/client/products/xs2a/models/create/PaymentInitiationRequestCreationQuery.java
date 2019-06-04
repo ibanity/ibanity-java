@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.products.xs2a.models.factory.create;
+package com.ibanity.apis.client.products.xs2a.models.create;
 
 import lombok.Builder;
 import lombok.Getter;

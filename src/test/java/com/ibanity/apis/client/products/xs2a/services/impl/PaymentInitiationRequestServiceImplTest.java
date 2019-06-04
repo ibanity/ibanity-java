@@ -4,10 +4,10 @@ import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.PaymentInitiationRequest;
-import com.ibanity.apis.client.products.xs2a.models.factory.create.PaymentInitiationRequestCreationQuery;
-import com.ibanity.apis.client.products.xs2a.models.factory.read.PaymentInitiationRequestReadQuery;
+import com.ibanity.apis.client.products.xs2a.models.create.PaymentInitiationRequestCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.links.FinancialInstitutionLinks;
-import com.ibanity.apis.client.products.xs2a.models.links.PaymentAccessLinks;
+import com.ibanity.apis.client.products.xs2a.models.links.PaymentInitiationAuthorizationLinks;
+import com.ibanity.apis.client.products.xs2a.models.read.PaymentInitiationRequestReadQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,7 +61,7 @@ class PaymentInitiationRequestServiceImplTest {
                         .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                         .build();
 
-        when(ibanityHttpClient.post(buildUri(PIR_ENDPOINT_FOR_CREATE), mapRequest(requestCreationQuery), CUSTOMER_TOKEN_REFERENCE, emptyMap()))
+        when(ibanityHttpClient.post(buildUri(PIR_ENDPOINT_FOR_CREATE), mapRequest(requestCreationQuery), emptyMap(), CUSTOMER_TOKEN_REFERENCE))
                 .thenReturn(loadFile("json/createPir.json"));
 
         PaymentInitiationRequest actual = paymentInitiationRequestService.create(requestCreationQuery);
@@ -77,7 +77,7 @@ class PaymentInitiationRequestServiceImplTest {
                         .paymentInitiationRequestId(PAYMENT_INITIATION_REQUEST_ID)
                         .build();
 
-        when(ibanityHttpClient.delete(buildUri(PIR_ENDPOINT_WITH_ID), CUSTOMER_TOKEN_REFERENCE, emptyMap()))
+        when(ibanityHttpClient.delete(buildUri(PIR_ENDPOINT_WITH_ID), emptyMap(), CUSTOMER_TOKEN_REFERENCE))
                 .thenReturn(loadFile("json/deletePir.json"));
 
         PaymentInitiationRequest actual = paymentInitiationRequestService.delete(requestReadQuery);
@@ -93,7 +93,7 @@ class PaymentInitiationRequestServiceImplTest {
                         .customerAccessToken(CUSTOMER_TOKEN_REFERENCE)
                         .build();
 
-        when(ibanityHttpClient.get(buildUri(PIR_ENDPOINT_WITH_ID), CUSTOMER_TOKEN_REFERENCE, emptyMap()))
+        when(ibanityHttpClient.get(buildUri(PIR_ENDPOINT_WITH_ID), emptyMap(), CUSTOMER_TOKEN_REFERENCE))
                 .thenReturn(loadFile("json/pir.json"));
 
         PaymentInitiationRequest actual = paymentInitiationRequestService.find(readQuery);
@@ -108,25 +108,25 @@ class PaymentInitiationRequestServiceImplTest {
     }
 
     private RequestApiModel mapRequest(PaymentInitiationRequestCreationQuery query) {
-        PaymentInitiationRequest paymentInitiationRequest = new PaymentInitiationRequest();
-
-        paymentInitiationRequest.setFinancialInstitutionId(query.getFinancialInstitutionId());
-        paymentInitiationRequest.setAmount(query.getAmount());
-        paymentInitiationRequest.setConsentReference(query.getConsentReference());
-        paymentInitiationRequest.setCreditorAccountReference(query.getCreditorAccountReference());
-        paymentInitiationRequest.setCreditorAccountReferenceType(query.getCreditorAccountReferenceType());
-        paymentInitiationRequest.setCreditorName(query.getCreditorName());
-        paymentInitiationRequest.setCurrency(query.getCurrency());
-        paymentInitiationRequest.setEndToEndId(query.getEndToEndId());
-        paymentInitiationRequest.setProductType(query.getProductType());
-        paymentInitiationRequest.setRedirectUri(query.getRedirectUri());
-        paymentInitiationRequest.setRemittanceInformation(query.getRemittanceInformation());
-        paymentInitiationRequest.setRemittanceInformationType(query.getRemittanceInformationType());
-        paymentInitiationRequest.setCreditorAgent(query.getCreditorAgent());
-        paymentInitiationRequest.setCreditorAgentType(query.getCreditorAgentType());
-        paymentInitiationRequest.setDebtorAccountReference(query.getDebtorAccountReference());
-        paymentInitiationRequest.setDebtorAccountReferenceType(query.getDebtorAccountReferenceType());
-        paymentInitiationRequest.setDebtorName(query.getDebtorName());
+        PaymentInitiationRequest paymentInitiationRequest = PaymentInitiationRequest.builder()
+                .financialInstitutionId(query.getFinancialInstitutionId())
+                .amount(query.getAmount())
+                .consentReference(query.getConsentReference())
+                .creditorAccountReference(query.getCreditorAccountReference())
+                .creditorAccountReferenceType(query.getCreditorAccountReferenceType())
+                .creditorName(query.getCreditorName())
+                .currency(query.getCurrency())
+                .endToEndId(query.getEndToEndId())
+                .productType(query.getProductType())
+                .redirectUri(query.getRedirectUri())
+                .remittanceInformation(query.getRemittanceInformation())
+                .remittanceInformationType(query.getRemittanceInformationType())
+                .creditorAgent(query.getCreditorAgent())
+                .creditorAgentType(query.getCreditorAgentType())
+                .debtorAccountReference(query.getDebtorAccountReference())
+                .debtorAccountReferenceType(query.getDebtorAccountReferenceType())
+                .debtorName(query.getDebtorName())
+                .build();
         return RequestApiModel.builder()
                 .data(
                         RequestApiModel.RequestDataApiModel.builder()
@@ -180,7 +180,7 @@ class PaymentInitiationRequestServiceImplTest {
                 .creditorAgent("NBBEBEBB203")
                 .creditorAgentType("BIC")
                 .endToEndId("f4fdab3742af4a1386df4ca82c05ced6")
-                .links(PaymentAccessLinks.builder().redirect(REDIRECT_LINK).build())
+                .links(PaymentInitiationAuthorizationLinks.builder().redirect(REDIRECT_LINK).build())
                 .financialInstitutionLink(FinancialInstitutionLinks.builder().related(FINANCIAL_INSTITUTION_RELATED_LINK).build())
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                 .build();

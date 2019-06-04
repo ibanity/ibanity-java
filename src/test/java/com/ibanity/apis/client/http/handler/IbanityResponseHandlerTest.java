@@ -1,7 +1,7 @@
 package com.ibanity.apis.client.http.handler;
 
-import com.ibanity.apis.client.exceptions.IbanityClientSideException;
-import com.ibanity.apis.client.exceptions.IbanityServerSideException;
+import com.ibanity.apis.client.exceptions.IbanityClientException;
+import com.ibanity.apis.client.exceptions.IbanityServerException;
 import com.ibanity.apis.client.models.IbanityError;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
@@ -49,11 +49,11 @@ class IbanityResponseHandlerTest {
         when(httpResponse.getEntity()).thenReturn(EntityBuilder.create().setText(expected).build());
         when(httpResponse.getStatusLine()).thenReturn(new BasicStatusLine(dummyProtocolVersion(), 500, ""));
 
-        IbanityServerSideException actual = assertThrows(IbanityServerSideException.class, () -> {
+        IbanityServerException actual = assertThrows(IbanityServerException.class, () -> {
             ibanityResponseHandler.handleResponse(httpResponse);
         });
 
-        assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerSideException(createExpectedErrors()));
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerException(createExpectedErrors()));
     }
 
     @Test
@@ -64,11 +64,11 @@ class IbanityResponseHandlerTest {
         when(httpResponse.getEntity()).thenReturn(EntityBuilder.create().setText(expected).build());
         when(httpResponse.getStatusLine()).thenReturn(new BasicStatusLine(dummyProtocolVersion(), 404, ""));
 
-        IbanityClientSideException actual = assertThrows(IbanityClientSideException.class, () -> {
+        IbanityClientException actual = assertThrows(IbanityClientException.class, () -> {
             ibanityResponseHandler.handleResponse(httpResponse);
         });
 
-        assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerSideException(createExpectedErrors()));
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerException(createExpectedErrors()));
     }
 
     private List<IbanityError> createExpectedErrors() {

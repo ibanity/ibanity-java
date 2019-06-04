@@ -4,7 +4,7 @@ import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
-import com.ibanity.apis.client.products.xs2a.models.factory.create.CustomerAccessTokenCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.create.CustomerAccessTokenCreationQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,7 +43,7 @@ class CustomerAccessTokensServiceImplTest {
                         .build();
 
         when(apiUrlProvider.find(IbanityProduct.Xs2a, "customerAccessTokens")).thenReturn(CUSTOMER_ACCESS_TOKEN_ENDPOINT);
-        when(httpClient.post(new URI(CUSTOMER_ACCESS_TOKEN_ENDPOINT), buildRequest(), null, emptyMap()))
+        when(httpClient.post(new URI(CUSTOMER_ACCESS_TOKEN_ENDPOINT), buildRequest(), emptyMap(), null))
                 .thenReturn(loadFile("json/customerAccessToken.json"));
 
         CustomerAccessToken actual = customerAccessTokensService.create(creationQuery);

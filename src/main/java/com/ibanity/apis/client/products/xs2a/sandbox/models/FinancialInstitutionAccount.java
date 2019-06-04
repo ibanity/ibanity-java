@@ -1,6 +1,7 @@
 package com.ibanity.apis.client.products.xs2a.sandbox.models;
 
 import com.ibanity.apis.client.products.xs2a.models.Account;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,7 +14,7 @@ import java.util.UUID;
 @Data
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode(callSuper = true)
 public class FinancialInstitutionAccount extends Account {
 

@@ -2,8 +2,8 @@ package com.ibanity.apis.client.products.xs2a.services;
 
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.products.xs2a.models.Account;
-import com.ibanity.apis.client.products.xs2a.models.factory.read.AccountReadQuery;
-import com.ibanity.apis.client.products.xs2a.models.factory.read.AccountsReadQuery;
+import com.ibanity.apis.client.products.xs2a.models.read.AccountReadQuery;
+import com.ibanity.apis.client.products.xs2a.models.read.AccountsReadQuery;
 
 public interface AccountsService {
 

@@ -1,6 +1,7 @@
 package com.ibanity.apis.client.products.xs2a.models;
 
 import com.ibanity.apis.client.models.IbanityModel;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.UUID;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Transaction implements IbanityModel {
 
     public static final String RESOURCE_TYPE = "transaction";

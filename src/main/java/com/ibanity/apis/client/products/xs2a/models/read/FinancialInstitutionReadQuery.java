@@ -1,19 +1,19 @@
-package com.ibanity.apis.client.products.xs2a.models.factory.read;
+package com.ibanity.apis.client.products.xs2a.models.read;
 
-import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.util.Map;
+import java.util.UUID;
 
 import static java.util.Collections.emptyMap;
 
 @Getter
 @Builder
-public final class FinancialInstitutionsReadQuery {
+public final class FinancialInstitutionReadQuery {
 
     private String customerAccessToken;
-    private IbanityPagingSpec pagingSpec;
+    private UUID financialInstitutionId;
 
     @Builder.Default
     private Map<String, String> additionalHeaders = emptyMap();

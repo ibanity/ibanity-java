@@ -83,15 +83,15 @@ public class FinancialInstitutionAccountsServiceImpl implements FinancialInstitu
     }
 
     private FinancialInstitutionAccount mapRequest(FinancialInstitutionAccountCreationQuery query) {
-        FinancialInstitutionAccount financialInstitutionAccount = new FinancialInstitutionAccount();
-        financialInstitutionAccount.setDescription(query.getDescription());
-        financialInstitutionAccount.setReference(query.getReference());
-        financialInstitutionAccount.setReferenceType(query.getReferenceType());
-        financialInstitutionAccount.setAvailableBalance(query.getAvailableBalance());
-        financialInstitutionAccount.setCurrentBalance(query.getCurrentBalance());
-        financialInstitutionAccount.setCurrency(query.getCurrency());
-        financialInstitutionAccount.setSubType(query.getSubType());
-        return financialInstitutionAccount;
+        return FinancialInstitutionAccount.builder()
+                .description(query.getDescription())
+                .reference(query.getReference())
+                .referenceType(query.getReferenceType())
+                .availableBalance(query.getAvailableBalance())
+                .currentBalance(query.getCurrentBalance())
+                .currency(query.getCurrency())
+                .subType(query.getSubType())
+                .build();
     }
 
     private String getUrl(String financialInstitutionId, String financialInstitutionUserId, String financialInstutionAccountId) {

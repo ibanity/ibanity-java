@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.paging;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +11,7 @@ import java.util.UUID;
 @Data
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class IbanityPagingSpec {
 
     public static final IbanityPagingSpec DEFAULT_PAGING_SPEC = new IbanityPagingSpec();

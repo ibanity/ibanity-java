@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.products.xs2a.models.factory.read;
+package com.ibanity.apis.client.products.xs2a.models.read;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

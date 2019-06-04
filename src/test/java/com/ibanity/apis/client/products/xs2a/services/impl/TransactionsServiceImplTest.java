@@ -5,8 +5,8 @@ import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.Transaction;
-import com.ibanity.apis.client.products.xs2a.models.factory.read.TransactionReadQuery;
-import com.ibanity.apis.client.products.xs2a.models.factory.read.TransactionsReadQuery;
+import com.ibanity.apis.client.products.xs2a.models.read.TransactionReadQuery;
+import com.ibanity.apis.client.products.xs2a.models.read.TransactionsReadQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -62,7 +62,7 @@ public class TransactionsServiceImplTest {
                         .build();
 
 
-        when(ibanityHttpClient.get(new URI(TRANSACTION_URI), CUSTOMER_ACCESS_TOKEN, emptyMap()))
+        when(ibanityHttpClient.get(new URI(TRANSACTION_URI), emptyMap(), CUSTOMER_ACCESS_TOKEN))
                 .thenReturn(IbanityTestHelper.loadFile("json/transaction.json"));
 
         Transaction actual = transactionsService.find(transactionReadQuery);
@@ -86,7 +86,7 @@ public class TransactionsServiceImplTest {
                         .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                         .build();
 
-        when(ibanityHttpClient.get(new URI(TRANSACTIONS_URI), CUSTOMER_ACCESS_TOKEN, emptyMap()))
+        when(ibanityHttpClient.get(new URI(TRANSACTIONS_URI), emptyMap(), CUSTOMER_ACCESS_TOKEN))
                 .thenReturn(IbanityTestHelper.loadFile("json/transactions.json"));
 
         IbanityCollection<Transaction> actual = transactionsService.list(transactionReadQuery);

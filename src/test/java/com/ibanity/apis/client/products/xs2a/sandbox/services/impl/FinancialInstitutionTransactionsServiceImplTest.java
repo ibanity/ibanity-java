@@ -136,16 +136,17 @@ class FinancialInstitutionTransactionsServiceImplTest {
     }
 
     private RequestApiModel createRequest(FinancialInstitutionTransactionCreationQuery query) {
-        FinancialInstitutionTransaction transaction = new FinancialInstitutionTransaction();
-        transaction.setAmount(query.getAmount());
-        transaction.setCurrency(query.getCurrency());
-        transaction.setRemittanceInformation(query.getRemittanceInformation());
-        transaction.setRemittanceInformationType(query.getRemittanceInformationType());
-        transaction.setCounterpartName(query.getCounterpartName());
-        transaction.setCounterpartReference(query.getCounterpartReference());
-        transaction.setValueDate(query.getValueDate());
-        transaction.setExecutionDate(query.getExecutionDate());
-        transaction.setDescription(query.getDescription());
+        FinancialInstitutionTransaction transaction = FinancialInstitutionTransaction.builder()
+                .amount(query.getAmount())
+                .currency(query.getCurrency())
+                .remittanceInformation(query.getRemittanceInformation())
+                .remittanceInformationType(query.getRemittanceInformationType())
+                .counterpartName(query.getCounterpartName())
+                .counterpartReference(query.getCounterpartReference())
+                .valueDate(query.getValueDate())
+                .executionDate(query.getExecutionDate())
+                .description(query.getDescription())
+                .build();
         return RequestApiModel.builder()
                 .data(
                         RequestApiModel.RequestDataApiModel.builder()

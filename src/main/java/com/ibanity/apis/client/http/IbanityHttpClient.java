@@ -11,17 +11,17 @@ public interface IbanityHttpClient {
 
     String get(URI path, String customerAccessToken);
 
-    String get(URI path, String customerAccessToken, Map<String, String> additionalHeaders);
+    String get(URI path, Map<String, String> additionalHeaders, String customerAccessToken);
 
     String post(URI path, Object requestApiModel);
 
     String post(URI path, Object requestApiModel, String customerAccessToken);
 
-    String post(URI path, Object requestApiModel, String customerAccessToken, Map<String, String> additionalHeaders);
+    String post(URI path, Object requestApiModel, Map<String, String> additionalHeaders, String customerAccessToken);
 
     String delete(URI path);
 
     String delete(URI path, String customerAccessToken);
 
-    String delete(URI path, String customerAccessToken, Map<String, String> additionalHeaders);
+    String delete(URI path, Map<String, String> additionalHeaders, String customerAccessToken);
 }

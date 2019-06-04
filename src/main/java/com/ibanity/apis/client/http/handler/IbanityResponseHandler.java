@@ -1,7 +1,7 @@
 package com.ibanity.apis.client.http.handler;
 
-import com.ibanity.apis.client.exceptions.IbanityClientSideException;
-import com.ibanity.apis.client.exceptions.IbanityServerSideException;
+import com.ibanity.apis.client.exceptions.IbanityClientException;
+import com.ibanity.apis.client.exceptions.IbanityServerException;
 import com.ibanity.apis.client.jsonapi.ErrorResourceApiModel;
 import com.ibanity.apis.client.models.IbanityError;
 import org.apache.commons.io.IOUtils;
@@ -12,7 +12,7 @@ import org.apache.http.client.ResponseHandler;
 import java.io.IOException;
 import java.util.List;
 
-import static com.ibanity.apis.client.http.IbanityHttpUtils.objectMapper;
+import static com.ibanity.apis.client.utils.IbanityUtils.objectMapper;
 
 public class IbanityResponseHandler implements ResponseHandler<String> {
 
@@ -23,9 +23,9 @@ public class IbanityResponseHandler implements ResponseHandler<String> {
     @Override
     public String handleResponse(HttpResponse httpResponse) throws IOException {
         if (httpResponse.getStatusLine().getStatusCode() >= SERVER_ERROR) {
-            throw new IbanityServerSideException(parseErrors(httpResponse));
+            throw new IbanityServerException(parseErrors(httpResponse));
         } else if (httpResponse.getStatusLine().getStatusCode() >= CLIENT_ERROR) {
-            throw new IbanityClientSideException(parseErrors(httpResponse));
+            throw new IbanityClientException(parseErrors(httpResponse));
         }
 
         return readResponseContent(httpResponse.getEntity());

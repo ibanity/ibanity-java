@@ -5,8 +5,8 @@ import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.products.xs2a.models.Account;
 import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
-import com.ibanity.apis.client.products.xs2a.models.factory.read.AccountReadQuery;
-import com.ibanity.apis.client.products.xs2a.models.factory.read.AccountsReadQuery;
+import com.ibanity.apis.client.products.xs2a.models.read.AccountReadQuery;
+import com.ibanity.apis.client.products.xs2a.models.read.AccountsReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.AccountsService;
 
 import java.util.UUID;

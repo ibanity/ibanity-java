@@ -8,10 +8,9 @@ import java.util.List;
 
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class IbanityClientSideException extends IbanityException {
+public class IbanityServerException extends IbanityException {
 
-    public IbanityClientSideException(List<IbanityError> errors) {
-       super(errors);
+    public IbanityServerException(List<IbanityError> errors) {
+        super(errors);
     }
 }
-

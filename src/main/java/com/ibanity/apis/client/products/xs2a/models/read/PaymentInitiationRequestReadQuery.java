@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.products.xs2a.models.factory.create;
+package com.ibanity.apis.client.products.xs2a.models.read;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,10 +10,11 @@ import static java.util.Collections.emptyMap;
 
 @Getter
 @Builder
-public final class CustomerAccessTokenCreationQuery {
+public class PaymentInitiationRequestReadQuery {
 
-    private String applicationCustomerReference;
-    private UUID idempotencyKey;
+    private String customerAccessToken;
+    private UUID financialInstitutionId;
+    private UUID paymentInitiationRequestId;
 
     @Builder.Default
     private Map<String, String> additionalHeaders = emptyMap();

@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.jsonapi;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -9,17 +10,20 @@ import lombok.ToString;
 
 import java.util.List;
 
+import static java.util.Collections.emptyList;
+
 @Getter
 @Builder
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CollectionApiModel {
 
+    private MetaApiModel meta;
+    private LinksApiModel links;
+
     @Builder.Default
-    private MetaApiModel meta = new MetaApiModel();
-    @Builder.Default
-    private LinksApiModel links = new LinksApiModel();
-    private List<DataApiModel> data;
+    private List<DataApiModel> data = emptyList();
 }
+

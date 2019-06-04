@@ -5,7 +5,7 @@ import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
-import com.ibanity.apis.client.products.xs2a.models.factory.read.SynchronizationReadQuery;
+import com.ibanity.apis.client.products.xs2a.models.read.SynchronizationReadQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,7 +55,7 @@ class SynchronizationServiceImplTest {
                         .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                         .build();
 
-        when(ibanityHttpClient.post(new URI(SYNCHRONIZATION_ENDPOINT), createRequest(synchronizationReadQuery), CUSTOMER_ACCESS_TOKEN, emptyMap()))
+        when(ibanityHttpClient.post(new URI(SYNCHRONIZATION_ENDPOINT), createRequest(synchronizationReadQuery), emptyMap(), CUSTOMER_ACCESS_TOKEN))
                 .thenReturn(IbanityTestHelper.loadFile("json/create_synchronization.json"));
 
         Synchronization actual = synchronizationService.create(synchronizationReadQuery);
@@ -71,7 +71,7 @@ class SynchronizationServiceImplTest {
                         .synchronizationId(SYNCHRONIZATION_ID)
                         .build();
 
-        when(ibanityHttpClient.get(new URI(SYNCHRONIZATION_ENDPOINT + "/" + SYNCHRONIZATION_ID), CUSTOMER_ACCESS_TOKEN, emptyMap()))
+        when(ibanityHttpClient.get(new URI(SYNCHRONIZATION_ENDPOINT + "/" + SYNCHRONIZATION_ID), emptyMap(), CUSTOMER_ACCESS_TOKEN))
                 .thenReturn(IbanityTestHelper.loadFile("json/synchronization.json"));
 
         Synchronization actual = synchronizationService.find(synchronizationReadQuery);

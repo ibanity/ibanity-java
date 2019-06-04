@@ -34,7 +34,7 @@ public class URIHelper {
 
     private static void addIfNotNull(URIBuilder uriBuilder, String paramName, Object paramValue) {
         if (paramValue != null) {
-            uriBuilder.addParameter(paramName, "" + paramValue.toString());
+            uriBuilder.addParameter(paramName, paramValue.toString());
         }
     }
 }

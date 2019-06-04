@@ -1,12 +1,12 @@
 package com.ibanity.apis.client.mappers;
 
-import com.ibanity.apis.client.http.IbanityHttpUtils;
 import com.ibanity.apis.client.jsonapi.CollectionApiModel;
 import com.ibanity.apis.client.jsonapi.DataApiModel;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.jsonapi.ResourceApiModel;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityModel;
+import com.ibanity.apis.client.utils.IbanityUtils;
 
 import java.io.IOException;
 import java.util.function.Function;
@@ -22,7 +22,7 @@ public class IbanityModelMapper {
 
     public static <T extends IbanityModel> T mapResource(String jsonPayload, Function<DataApiModel, T> customMapping) {
         try {
-            DataApiModel dataApiModel = IbanityHttpUtils.objectMapper().readValue(jsonPayload, ResourceApiModel.class).getData();
+            DataApiModel dataApiModel = IbanityUtils.objectMapper().readValue(jsonPayload, ResourceApiModel.class).getData();
             return customMapping.apply(dataApiModel);
         } catch (IOException exception) {
             throw new IllegalArgumentException("Response cannot be parsed", exception);
@@ -35,7 +35,7 @@ public class IbanityModelMapper {
 
     public static <T extends IbanityModel> IbanityCollection<T> mapCollection(String jsonPayload, Function<DataApiModel, T> customMapping) {
         try {
-            CollectionApiModel collectionApiModel = IbanityHttpUtils.objectMapper().readValue(jsonPayload, CollectionApiModel.class);
+            CollectionApiModel collectionApiModel = IbanityUtils.objectMapper().readValue(jsonPayload, CollectionApiModel.class);
             return IbanityCollection.<T>builder()
                     .pageLimit(collectionApiModel.getMeta().getPaging().getLimit())
                     .afterCursor(collectionApiModel.getMeta().getPaging().getAfter())
@@ -56,7 +56,7 @@ public class IbanityModelMapper {
 
     public static <T extends IbanityModel> T toIbanityModel(DataApiModel data, Class<T> classType) {
         try {
-            T clientObject = IbanityHttpUtils.objectMapper().convertValue(data.getAttributes(), classType);
+            T clientObject = IbanityUtils.objectMapper().convertValue(data.getAttributes(), classType);
             if (clientObject == null) {
                 clientObject = classType.newInstance();
             }
