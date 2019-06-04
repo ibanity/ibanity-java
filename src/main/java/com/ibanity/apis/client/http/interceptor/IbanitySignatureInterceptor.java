@@ -24,22 +24,24 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
 
     private static final Charset DEFAULT_CHARSET = Charset.forName(DEFAULT_ENCODING);
     private final IbanityHttpSignatureService httpSignatureService;
-    private final String host;
+    private final String basePath;
 
-    public IbanitySignatureInterceptor(IbanityHttpSignatureService httpSignatureService, String host) {
+    public IbanitySignatureInterceptor(IbanityHttpSignatureService httpSignatureService, String basePath) {
         this.httpSignatureService = httpSignatureService;
-        this.host = host;
+        this.basePath = basePath;
     }
 
     @Override
     public void process(final HttpRequest httpRequest, final HttpContext httpContext) throws IOException {
         try {
             HttpRequestWrapper requestWrapper = (HttpRequestWrapper) httpRequest;
-            String payload = "";
+            String payload;
             if (requestWrapper.getOriginal() instanceof HttpEntityEnclosingRequestBase) {
                 payload = IOUtils.toString(
                         ((HttpEntityEnclosingRequestBase) requestWrapper.getOriginal())
                                 .getEntity().getContent(), DEFAULT_CHARSET);
+            } else {
+                payload = "";
             }
 
             httpSignatureService.getHttpSignatureHeaders(
@@ -55,7 +57,7 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
     }
 
     private URL getUrl(HttpRequestWrapper requestWrapper) throws MalformedURLException {
-        return new URL(host + requestWrapper.getURI().toString());
+        return new URL(basePath + requestWrapper.getURI().toString());
     }
 
     private Consumer<? super Map.Entry<String, String>> addHeaderToRequest(HttpRequest httpRequest) {

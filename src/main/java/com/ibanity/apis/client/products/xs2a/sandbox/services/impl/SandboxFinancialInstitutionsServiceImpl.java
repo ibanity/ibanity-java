@@ -29,9 +29,10 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
 
     @Override
     public FinancialInstitution create(FinancialInstitutionCreationQuery financialInstitutionCreationQuery) {
-        FinancialInstitution financialInstitution = new FinancialInstitution();
-        financialInstitution.setSandbox(Boolean.TRUE);
-        financialInstitution.setName(financialInstitutionCreationQuery.getName());
+        FinancialInstitution financialInstitution = FinancialInstitution.builder()
+                .sandbox(Boolean.TRUE)
+                .name(financialInstitutionCreationQuery.getName())
+                .build();
         RequestApiModel request = buildRequest(FinancialInstitution.RESOURCE_TYPE, financialInstitution);
 
         String url = getSandboxUrl("");
@@ -42,9 +43,10 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
 
     @Override
     public FinancialInstitution update(FinancialInstitutionUpdateQuery financialInstitutionUpdateQuery) {
-        FinancialInstitution financialInstitution = new FinancialInstitution();
-        financialInstitution.setName(financialInstitutionUpdateQuery.getName());
-        financialInstitution.setSandbox(true);
+        FinancialInstitution financialInstitution = FinancialInstitution.builder()
+                .name(financialInstitutionUpdateQuery.getName())
+                .sandbox(true)
+                .build();
         RequestApiModel request = buildRequest(FinancialInstitution.RESOURCE_TYPE, financialInstitution);
 
         String url = getSandboxUrl(financialInstitutionUpdateQuery.getFinancialInstitutionId().toString());

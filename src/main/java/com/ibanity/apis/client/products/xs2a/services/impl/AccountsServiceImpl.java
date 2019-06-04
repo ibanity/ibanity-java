@@ -11,8 +11,8 @@ import com.ibanity.apis.client.products.xs2a.models.Account;
 import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
-import com.ibanity.apis.client.products.xs2a.models.factory.read.AccountReadQuery;
-import com.ibanity.apis.client.products.xs2a.models.factory.read.AccountsReadQuery;
+import com.ibanity.apis.client.products.xs2a.models.read.AccountReadQuery;
+import com.ibanity.apis.client.products.xs2a.models.read.AccountsReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.AccountsService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.apache.commons.lang3.StringUtils;
@@ -39,7 +39,7 @@ public class AccountsServiceImpl implements AccountsService {
             String url = getUrl(accountReadQuery.getFinancialInstitutionId(), null)
                     + "/"
                     + accountReadQuery.getAccountId();
-            String response = ibanityHttpClient.get(buildUri(url), accountReadQuery.getCustomerAccessToken(), accountReadQuery.getAdditionalHeaders());
+            String response = ibanityHttpClient.get(buildUri(url), accountReadQuery.getAdditionalHeaders(), accountReadQuery.getCustomerAccessToken());
             return IbanityModelMapper.mapResource(response, customMappingFunction());
     }
 
@@ -52,7 +52,7 @@ public class AccountsServiceImpl implements AccountsService {
         }
 
         String url = getUrl(accountsReadQuery.getFinancialInstitutionId(), accountsReadQuery.getAccountInformationAccessRequestId());
-        String response = ibanityHttpClient.get(buildUri(url, pagingSpec), accountsReadQuery.getCustomerAccessToken(), accountsReadQuery.getAdditionalHeaders());
+        String response = ibanityHttpClient.get(buildUri(url, pagingSpec), accountsReadQuery.getAdditionalHeaders(), accountsReadQuery.getCustomerAccessToken());
         return IbanityModelMapper.mapCollection(response, customMappingFunction());
     }
 

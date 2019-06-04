@@ -4,7 +4,7 @@ import com.ibanity.apis.client.helpers.IbanityService;
 import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.products.xs2a.models.PaymentInitiationRequest;
-import com.ibanity.apis.client.products.xs2a.models.factory.create.PaymentInitiationRequestCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.create.PaymentInitiationRequestCreationQuery;
 import com.ibanity.apis.client.products.xs2a.services.PaymentInitiationRequestService;
 import com.ibanity.samples.helper.SampleHelper;
 

@@ -63,7 +63,7 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
             @NonNull String httpMethod,
             @NonNull URL url,
             @NonNull Map<String, String> requestHeaders) {
-        return getHttpSignatureHeaders(httpMethod, url, requestHeaders, "");
+        return getHttpSignatureHeaders(httpMethod, url, requestHeaders, null);
     }
 
 
@@ -72,7 +72,7 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
             @NonNull String httpMethod,
             @NonNull URL url,
             @NonNull Map<String, String> requestHeaders,
-            @NonNull String payload) {
+            String payload) {
         HashMap<String, String> httpSignatureHeaders = Maps.newHashMap();
 
         String dateHeaderValue = getDateHeader();
@@ -88,6 +88,10 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
 
     private String getDigestHeader(String payload) {
         try {
+            if(payload == null) {
+                payload = "";
+            }
+
             String digest = Base64.getEncoder().encodeToString(MessageDigest.getInstance(DIGEST_ALGORITHM).digest(payload.getBytes(UTF8_CHARSET)));
             return DIGEST_ALGORITHM + "=" + digest;
         } catch (NoSuchAlgorithmException exception) {

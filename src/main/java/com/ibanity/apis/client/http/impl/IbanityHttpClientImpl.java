@@ -2,6 +2,7 @@ package com.ibanity.apis.client.http.impl;
 
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.http.handler.IbanityResponseHandler;
+import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
@@ -18,7 +19,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
-import static com.ibanity.apis.client.http.IbanityHttpUtils.objectMapper;
+import static com.ibanity.apis.client.utils.IbanityUtils.objectMapper;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
@@ -33,17 +34,17 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
     }
 
     @Override
-    public String get(URI path) {
-        return get(path, null, newHashMap());
+    public String get(@NonNull URI path) {
+        return get(path, newHashMap(), null);
     }
 
     @Override
-    public String get(URI path, String customerAccessToken) {
-        return get(path, customerAccessToken, newHashMap());
+    public String get(@NonNull URI path, String customerAccessToken) {
+        return get(path, newHashMap(), customerAccessToken);
     }
 
     @Override
-    public String get(URI path, String customerAccessToken, Map<String, String> additionalHeaders) {
+    public String get(@NonNull URI path, @NonNull Map<String, String> additionalHeaders, String customerAccessToken) {
         try {
             HttpGet httpGet = new HttpGet(path);
             addHeaders(customerAccessToken, additionalHeaders, httpGet);
@@ -54,17 +55,17 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
     }
 
     @Override
-    public String post(URI path, Object requestApiModel) {
-        return post(path, requestApiModel, null, newHashMap());
+    public String post(@NonNull URI path, @NonNull Object requestApiModel) {
+        return post(path, requestApiModel, newHashMap(), null);
     }
 
     @Override
-    public String post(URI path, Object requestApiModel, String customerAccessToken) {
-        return post(path, requestApiModel, customerAccessToken, newHashMap());
+    public String post(@NonNull URI path, @NonNull Object requestApiModel, String customerAccessToken) {
+        return post(path, requestApiModel, newHashMap(), customerAccessToken);
     }
 
     @Override
-    public String post(URI path, Object requestApiModel, String customerAccessToken, Map<String, String> additionalHeaders) {
+    public String post(@NonNull URI path, @NonNull Object requestApiModel, @NonNull Map<String, String> additionalHeaders, String customerAccessToken) {
         try {
             HttpPost httpPost = new HttpPost(path);
             addHeaders(customerAccessToken, additionalHeaders, httpPost);
@@ -76,17 +77,17 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
     }
 
     @Override
-    public String delete(URI path) {
-        return delete(path, null, Collections.emptyMap());
+    public String delete(@NonNull URI path) {
+        return delete(path, Collections.emptyMap(), null);
     }
 
     @Override
-    public String delete(URI path, String customerAccessToken) {
-        return delete(path, customerAccessToken, Collections.emptyMap());
+    public String delete(@NonNull URI path, String customerAccessToken) {
+        return delete(path, Collections.emptyMap(), customerAccessToken);
     }
 
     @Override
-    public String delete(URI path, String customerAccessToken, Map<String, String> additionalHeaders) {
+    public String delete(@NonNull URI path, @NonNull Map<String, String> additionalHeaders, String customerAccessToken) {
         try {
             HttpDelete httpDelete = new HttpDelete(path);
             addHeaders(customerAccessToken, additionalHeaders, httpDelete);

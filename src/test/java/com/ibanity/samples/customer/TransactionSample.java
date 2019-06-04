@@ -5,8 +5,8 @@ import com.ibanity.apis.client.products.xs2a.models.Account;
 import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.products.xs2a.models.Transaction;
-import com.ibanity.apis.client.products.xs2a.models.factory.read.TransactionReadQuery;
-import com.ibanity.apis.client.products.xs2a.models.factory.read.TransactionsReadQuery;
+import com.ibanity.apis.client.products.xs2a.models.read.TransactionReadQuery;
+import com.ibanity.apis.client.products.xs2a.models.read.TransactionsReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.TransactionsService;
 
 import java.util.List;

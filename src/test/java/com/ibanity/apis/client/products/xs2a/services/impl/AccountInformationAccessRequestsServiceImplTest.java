@@ -4,7 +4,7 @@ import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest;
-import com.ibanity.apis.client.products.xs2a.models.factory.create.AccountInformationAccessRequestCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.create.AccountInformationAccessRequestCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountInformationAccessLinks;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountLinks;
 import com.ibanity.apis.client.services.ApiUrlProvider;
@@ -68,7 +68,7 @@ class AccountInformationAccessRequestsServiceImplTest {
                         .customerIpAddress("0.0.0.0")
                         .build();
 
-        when(ibanityHttpClient.post(buildUri(AIAR_ENDPOINT_FOR_CREATE), toIbanityModel(creationQuery), creationQuery.getCustomerAccessToken(), emptyMap()))
+        when(ibanityHttpClient.post(buildUri(AIAR_ENDPOINT_FOR_CREATE), toIbanityModel(creationQuery), emptyMap(), creationQuery.getCustomerAccessToken()))
                 .thenReturn(loadFile("json/createAccountInformationAccessRequest.json"));
 
         AccountInformationAccessRequest actual = accountInformationAccessRequestsService.create(creationQuery);
@@ -85,7 +85,7 @@ class AccountInformationAccessRequestsServiceImplTest {
                         .accountInformationAccessRequestId(ACCOUNT_INFORMATION_ACCESS_REQUEST_ID)
                         .build();
 
-        when(ibanityHttpClient.get(buildUri(AIAR_ENDPOINT_FOR_FIND), creationQuery.getCustomerAccessToken(), emptyMap()))
+        when(ibanityHttpClient.get(buildUri(AIAR_ENDPOINT_FOR_FIND), emptyMap(), creationQuery.getCustomerAccessToken()))
                 .thenReturn(loadFile("json/accountInformationAccessRequest.json"));
 
         AccountInformationAccessRequest actual = accountInformationAccessRequestsService.find(creationQuery);

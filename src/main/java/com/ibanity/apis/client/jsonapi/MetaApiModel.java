@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.jsonapi;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -12,9 +13,8 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class MetaApiModel {
 
-    @Builder.Default
-    private PagingApiModel paging = new PagingApiModel();
+    private PagingApiModel paging;
 }

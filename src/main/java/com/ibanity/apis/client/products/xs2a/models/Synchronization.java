@@ -2,6 +2,7 @@ package com.ibanity.apis.client.products.xs2a.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ibanity.apis.client.models.IbanityModel;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +16,7 @@ import java.util.UUID;
 @Data
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Synchronization implements IbanityModel {
 
     public static final String RESOURCE_TYPE    = "synchronization";

@@ -2,9 +2,9 @@ package com.ibanity.apis.client.services.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ibanity.apis.client.http.IbanityHttpClient;
-import com.ibanity.apis.client.http.IbanityHttpUtils;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.services.ApiUrlProvider;
+import com.ibanity.apis.client.utils.IbanityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -59,6 +59,6 @@ public class ApiUrlProviderImpl implements ApiUrlProvider {
     }
 
     private JsonNode mapJsonToMap(String schema) throws IOException {
-        return IbanityHttpUtils.objectMapper().readTree(schema).get("links");
+        return IbanityUtils.objectMapper().readTree(schema).get("links");
     }
 }

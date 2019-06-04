@@ -1,8 +1,8 @@
 package com.ibanity.apis.client.builders;
 
 import com.ibanity.apis.client.helpers.IbanityService;
-import com.ibanity.apis.client.holders.ApplicationCertificateHolder;
-import com.ibanity.apis.client.holders.SignatureCertificateHolder;
+import com.ibanity.apis.client.holders.ApplicationCredentials;
+import com.ibanity.apis.client.holders.SignatureCredentials;
 
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
@@ -22,13 +22,12 @@ public class IbanityServiceBuilder implements
         RequestSignatureCertificateIdBuilder {
 
     private String apiEndpoint;
-    private String sslProtocol = "TLS";
 
     private Certificate caCertificate;
 
-    private X509Certificate certificate;
-    private PrivateKey privateKey;
-    private String privateKeyPassphrase;
+    private X509Certificate tlsCertificate;
+    private PrivateKey tlsPrivateKey;
+    private String tlsPrivateKeyPassphrase;
 
     private X509Certificate signatureCertificate;
     private PrivateKey signaturePrivateKey;
@@ -40,13 +39,25 @@ public class IbanityServiceBuilder implements
     }
 
     public IbanityService build() {
-        SignatureCertificateHolder signatureCertificate = null;
+        SignatureCredentials signatureCredentials = null;
         if (signaturePrivateKey != null) {
-            signatureCertificate = new SignatureCertificateHolder(this.signatureCertificate, signaturePrivateKey, signaturePrivateKeyPassphrase, signatureCertificateId);
+            signatureCredentials = SignatureCredentials.builder()
+                    .certificate(signatureCertificate)
+                    .certificateId(signatureCertificateId)
+                    .privateKey(signaturePrivateKey)
+                    .privateKeyPassphrase(signaturePrivateKeyPassphrase)
+                    .build();
+            signaturePrivateKeyPassphrase = null;
         }
 
-        ApplicationCertificateHolder applicationCertificate = new ApplicationCertificateHolder(certificate, privateKey, privateKeyPassphrase, sslProtocol);
-        return new IbanityService(apiEndpoint, caCertificate, applicationCertificate, signatureCertificate);
+        ApplicationCredentials applicationCertificate = ApplicationCredentials.builder()
+                .certificate(tlsCertificate)
+                .privateKey(tlsPrivateKey)
+                .privateKeyPassphrase(tlsPrivateKeyPassphrase)
+                .build();
+        tlsPrivateKeyPassphrase = null;
+
+        return new IbanityService(apiEndpoint, caCertificate, applicationCertificate, signatureCredentials);
     }
 
     public OptionalPropertiesBuilder caCertificate(Certificate certificate) {
@@ -54,14 +65,8 @@ public class IbanityServiceBuilder implements
         return this;
     }
 
-    @Override
-    public OptionalPropertiesBuilder sslProtocol(String sslProtocol) {
-        this.sslProtocol = sslProtocol;
-        return this;
-    }
-
     public ApplicationPassphraseBuilder applicationPrivateKey(PrivateKey privateKey) {
-        this.privateKey = privateKey;
+        this.tlsPrivateKey = privateKey;
         return this;
     }
 
@@ -72,7 +77,7 @@ public class IbanityServiceBuilder implements
 
     @Override
     public OptionalPropertiesBuilder applicationCertificate(X509Certificate certificate) {
-        this.certificate = certificate;
+        this.tlsCertificate = certificate;
         return this;
     }
 
@@ -91,16 +96,16 @@ public class IbanityServiceBuilder implements
     @Override
     public ApplicationCertificateBuilder passphrase(String passphrase) {
         if (isBlank(passphrase)) {
-            this.privateKeyPassphrase = "";
+            this.tlsPrivateKeyPassphrase = "";
         } else {
-            this.privateKeyPassphrase = passphrase;
+            this.tlsPrivateKeyPassphrase = passphrase;
         }
         return this;
     }
 
     @Override
     public ApplicationCertificateBuilder noPassphrase() {
-        this.privateKeyPassphrase = "";
+        this.tlsPrivateKeyPassphrase = "";
         return this;
     }
 

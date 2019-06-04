@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.http;
+package com.ibanity.apis.client.utils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -6,13 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.ibanity.apis.client.holders.ApplicationCertificateHolder;
-import com.ibanity.apis.client.holders.CertificateHolder;
-import com.ibanity.apis.client.holders.SignatureCertificateHolder;
+import com.ibanity.apis.client.holders.ApplicationCredentials;
+import com.ibanity.apis.client.holders.SignatureCredentials;
 import com.ibanity.apis.client.http.interceptor.IbanitySignatureInterceptor;
 import com.ibanity.apis.client.http.interceptor.IdempotencyInterceptor;
 import com.ibanity.apis.client.http.service.impl.IbanityHttpSignatureServiceImpl;
-import com.ibanity.apis.client.utils.CustomHttpRequestRetryHandler;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -33,25 +31,27 @@ import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 
-public final class IbanityHttpUtils {
+public final class IbanityUtils {
 
     private static final int RETRY_COUNTS = 10;
     private static final int DEFAULT_REQUEST_TIMEOUT = 10_000;
 
-    private static final String KEY_ENTRY_NAME = "application certificate";
+    private static final String ALIAS_KEY_STORE = "application certificate";
+    private static final String CA_TRUST_STORE_KEY = "ibanity-ca";
+    private static final String TLS_PROTOCOL = "TLS";
 
-    private IbanityHttpUtils() {
+    private IbanityUtils() {
 
     }
 
     public static HttpClient httpClient(Certificate caCertificate,
-                                        ApplicationCertificateHolder applicationCertificate,
-                                        SignatureCertificateHolder signatureCertificate,
-                                        String host) {
+                                        ApplicationCredentials applicationCertificate,
+                                        SignatureCredentials signatureCertificate,
+                                        String basePath) {
         try {
             SSLContext sslContext = getSSLContext(caCertificate, applicationCertificate);
             HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
-            configureHttpClient(sslContext, httpClientBuilder, signatureCertificate, host);
+            configureHttpClient(sslContext, httpClientBuilder, signatureCertificate, basePath);
             return httpClientBuilder.build();
         } catch (Exception exception) {
             throw new IllegalArgumentException("An exception occurred while creating IbanityHttpClient", exception);
@@ -69,15 +69,15 @@ public final class IbanityHttpUtils {
 
     private static void configureHttpClient(SSLContext sslContext,
                                             HttpClientBuilder httpClientBuilder,
-                                            SignatureCertificateHolder signatureCertificate,
-                                            String host) {
+                                            SignatureCredentials signatureCertificate,
+                                            String basePath) {
         httpClientBuilder.setSSLContext(sslContext);
         httpClientBuilder.setSSLSocketFactory(new SSLConnectionSocketFactory(sslContext));
         httpClientBuilder.setRetryHandler(new CustomHttpRequestRetryHandler(RETRY_COUNTS, true));
         httpClientBuilder.addInterceptorLast(new IdempotencyInterceptor());
         if (signatureCertificate != null) {
             IbanityHttpSignatureServiceImpl httpSignatureService = getIbanityHttpSignatureService(signatureCertificate);
-            httpClientBuilder.addInterceptorLast(new IbanitySignatureInterceptor(httpSignatureService, host));
+            httpClientBuilder.addInterceptorLast(new IbanitySignatureInterceptor(httpSignatureService, basePath));
         }
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(DEFAULT_REQUEST_TIMEOUT)
@@ -88,7 +88,7 @@ public final class IbanityHttpUtils {
         httpClientBuilder.setConnectionReuseStrategy(new DefaultClientConnectionReuseStrategy());
     }
 
-    private static SSLContext getSSLContext(Certificate caCertificate, ApplicationCertificateHolder applicationCertificate) throws IOException, GeneralSecurityException {
+    private static SSLContext getSSLContext(Certificate caCertificate, ApplicationCredentials applicationCertificate) throws IOException, GeneralSecurityException {
 
         KeyStore keyStore = createKeyStore(applicationCertificate);
         KeyManager[] keyManagers = createKeyManagers(keyStore, applicationCertificate.getPrivateKeyPassphrase());
@@ -96,7 +96,7 @@ public final class IbanityHttpUtils {
         KeyStore trustStore = createTrustStore(caCertificate);
         TrustManager[] trustManagers = createTrustManagers(trustStore);
 
-        SSLContext sslContext = SSLContext.getInstance(applicationCertificate.getSslProtocol());
+        SSLContext sslContext = SSLContext.getInstance(TLS_PROTOCOL);
         sslContext.init(keyManagers, trustManagers, null);
 
         return sslContext;
@@ -112,28 +112,28 @@ public final class IbanityHttpUtils {
         KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
         trustStore.load(null);
 
-        if (certificate != null && !trustStore.containsAlias("ibanity-ca")) {
+        if (certificate != null && !trustStore.containsAlias(CA_TRUST_STORE_KEY)) {
             trustStore.setCertificateEntry("ibanity-ca", certificate);
         }
 
         return trustStore;
     }
 
-    private static KeyStore createKeyStore(CertificateHolder applicationCertificate) throws IOException, GeneralSecurityException {
+    private static KeyStore createKeyStore(ApplicationCredentials applicationCredentials) throws IOException, GeneralSecurityException {
         KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
         keyStore.load(null);
 
         addEntryIfNotPresent(
                 keyStore,
-                KEY_ENTRY_NAME,
-                applicationCertificate.getPrivateKey(),
-                applicationCertificate.getPrivateKeyPassphrase(),
-                new Certificate[]{applicationCertificate.getCertificate()});
+                ALIAS_KEY_STORE,
+                applicationCredentials.getPrivateKey(),
+                applicationCredentials.getPrivateKeyPassphrase(),
+                new Certificate[]{applicationCredentials.getCertificate()});
 
         return keyStore;
     }
 
-    private static IbanityHttpSignatureServiceImpl getIbanityHttpSignatureService(SignatureCertificateHolder signatureCertificate) {
+    private static IbanityHttpSignatureServiceImpl getIbanityHttpSignatureService(SignatureCredentials signatureCertificate) {
         return new IbanityHttpSignatureServiceImpl(
                 signatureCertificate.getPrivateKey(),
                 signatureCertificate.getCertificate(),
@@ -146,8 +146,11 @@ public final class IbanityHttpUtils {
         return kmf.getKeyManagers();
     }
 
-    public static void addEntryIfNotPresent(final KeyStore keyStore, final String alias,
-                                            final PrivateKey privateKey, String privateKeyPassphrase, final Certificate[] certChain)
+    private static void addEntryIfNotPresent(KeyStore keyStore,
+                                             String alias,
+                                             PrivateKey privateKey,
+                                             String privateKeyPassphrase,
+                                             Certificate[] certChain)
             throws GeneralSecurityException {
 
         if (!keyStore.containsAlias(alias)) {

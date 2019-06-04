@@ -1,6 +1,7 @@
 package com.ibanity.apis.client.jsonapi;
 
 import com.ibanity.apis.client.models.IbanityError;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -16,7 +17,7 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ErrorResourceApiModel {
 
     @Builder.Default

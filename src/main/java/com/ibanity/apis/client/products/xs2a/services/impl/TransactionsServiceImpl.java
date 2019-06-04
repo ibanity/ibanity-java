@@ -7,8 +7,8 @@ import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.products.xs2a.models.Account;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.products.xs2a.models.Transaction;
-import com.ibanity.apis.client.products.xs2a.models.factory.read.TransactionReadQuery;
-import com.ibanity.apis.client.products.xs2a.models.factory.read.TransactionsReadQuery;
+import com.ibanity.apis.client.products.xs2a.models.read.TransactionReadQuery;
+import com.ibanity.apis.client.products.xs2a.models.read.TransactionsReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.TransactionsService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +37,7 @@ public class TransactionsServiceImpl implements TransactionsService {
         }
 
         String url = getUrl(transactionsReadQuery.getFinancialInstitutionId(), transactionsReadQuery.getAccountId());
-        String response = ibanityHttpClient.get(buildUri(url, pagingSpec), transactionsReadQuery.getCustomerAccessToken(), transactionsReadQuery.getAdditionalHeaders());
+        String response = ibanityHttpClient.get(buildUri(url, pagingSpec), transactionsReadQuery.getAdditionalHeaders(), transactionsReadQuery.getCustomerAccessToken());
 
         return mapCollection(response, Transaction.class);
     }
@@ -48,7 +48,7 @@ public class TransactionsServiceImpl implements TransactionsService {
                 getUrl(transactionReadQuery.getFinancialInstitutionId(), transactionReadQuery.getAccountId())
                         + "/"
                         + transactionReadQuery.getTransactionId().toString();
-        String response = ibanityHttpClient.get(buildUri(url), transactionReadQuery.getCustomerAccessToken(), transactionReadQuery.getAdditionalHeaders());
+        String response = ibanityHttpClient.get(buildUri(url), transactionReadQuery.getAdditionalHeaders(), transactionReadQuery.getCustomerAccessToken());
         return mapResource(response, Transaction.class);
     }
 

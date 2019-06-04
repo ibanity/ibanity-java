@@ -5,8 +5,8 @@ import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.Account;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
-import com.ibanity.apis.client.products.xs2a.models.factory.read.AccountReadQuery;
-import com.ibanity.apis.client.products.xs2a.models.factory.read.AccountsReadQuery;
+import com.ibanity.apis.client.products.xs2a.models.read.AccountReadQuery;
+import com.ibanity.apis.client.products.xs2a.models.read.AccountsReadQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,7 +66,7 @@ class AccountsServiceImplTest {
                         .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                         .build();
 
-        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT + "/" + ACCOUNT_ID), CUSTOMER_ACCESS_TOKEN, emptyMap()))
+        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT + "/" + ACCOUNT_ID), emptyMap(), CUSTOMER_ACCESS_TOKEN))
                 .thenReturn(loadFile("json/account.json"));
 
         Account actual = accountsService.find(accountReadQuery);
@@ -82,7 +82,7 @@ class AccountsServiceImplTest {
                 .accountInformationAccessRequestId(ACCOUNT_INFORMATION_ACCESS_REQUEST_ID)
                 .build();
 
-        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_AIAR_ENDPOINT + "?limit=10"), CUSTOMER_ACCESS_TOKEN, emptyMap()))
+        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_AIAR_ENDPOINT + "?limit=10"), emptyMap(), CUSTOMER_ACCESS_TOKEN))
                 .thenReturn(loadFile("json/accounts.json"));
 
         IbanityCollection<Account> actual = accountsService.list(accountsReadQuery);
@@ -98,7 +98,7 @@ class AccountsServiceImplTest {
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                 .build();
 
-        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT + "?limit=10"), CUSTOMER_ACCESS_TOKEN, emptyMap()))
+        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT + "?limit=10"), emptyMap(), CUSTOMER_ACCESS_TOKEN))
                 .thenReturn(loadFile("json/accounts.json"));
         IbanityCollection<Account> actual = accountsService.list(accountsReadQuery);
 
@@ -112,7 +112,7 @@ class AccountsServiceImplTest {
                 .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                 .build();
 
-        when(ibanityHttpClient.get(new URI(ACCOUNT_ENDPOINT + "?limit=10"), CUSTOMER_ACCESS_TOKEN, emptyMap()))
+        when(ibanityHttpClient.get(new URI(ACCOUNT_ENDPOINT + "?limit=10"), emptyMap(), CUSTOMER_ACCESS_TOKEN))
                 .thenReturn(loadFile("json/accounts.json"));
 
         IbanityCollection<Account> actual = accountsService.list(accountsReadQuery);

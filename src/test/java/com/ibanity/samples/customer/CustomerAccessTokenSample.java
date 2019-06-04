@@ -2,7 +2,7 @@ package com.ibanity.samples.customer;
 
 import com.ibanity.apis.client.helpers.IbanityService;
 import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
-import com.ibanity.apis.client.products.xs2a.models.factory.create.CustomerAccessTokenCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.create.CustomerAccessTokenCreationQuery;
 import com.ibanity.apis.client.products.xs2a.services.CustomerAccessTokensService;
 
 public class CustomerAccessTokenSample {

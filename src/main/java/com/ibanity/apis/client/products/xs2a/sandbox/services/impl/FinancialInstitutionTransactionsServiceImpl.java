@@ -99,18 +99,17 @@ public class FinancialInstitutionTransactionsServiceImpl implements FinancialIns
     }
 
     private FinancialInstitutionTransaction requestMapping(FinancialInstitutionTransactionCreationQuery transactionCreationQuery) {
-        FinancialInstitutionTransaction financialInstitutionTransaction = new FinancialInstitutionTransaction();
-
-        financialInstitutionTransaction.setAmount(transactionCreationQuery.getAmount());
-        financialInstitutionTransaction.setCurrency(transactionCreationQuery.getCurrency());
-        financialInstitutionTransaction.setRemittanceInformation(transactionCreationQuery.getRemittanceInformation());
-        financialInstitutionTransaction.setRemittanceInformationType(transactionCreationQuery.getRemittanceInformationType());
-        financialInstitutionTransaction.setCounterpartName(transactionCreationQuery.getCounterpartName());
-        financialInstitutionTransaction.setCounterpartReference(transactionCreationQuery.getCounterpartReference());
-        financialInstitutionTransaction.setValueDate(transactionCreationQuery.getValueDate());
-        financialInstitutionTransaction.setExecutionDate(transactionCreationQuery.getExecutionDate());
-        financialInstitutionTransaction.setDescription(transactionCreationQuery.getDescription());
-        return financialInstitutionTransaction;
+        return FinancialInstitutionTransaction.builder()
+                .amount(transactionCreationQuery.getAmount())
+                .currency(transactionCreationQuery.getCurrency())
+                .remittanceInformation(transactionCreationQuery.getRemittanceInformation())
+                .remittanceInformationType(transactionCreationQuery.getRemittanceInformationType())
+                .counterpartName(transactionCreationQuery.getCounterpartName())
+                .counterpartReference(transactionCreationQuery.getCounterpartReference())
+                .valueDate(transactionCreationQuery.getValueDate())
+                .executionDate(transactionCreationQuery.getExecutionDate())
+                .description(transactionCreationQuery.getDescription())
+                .build();
     }
 
     private Function<DataApiModel, FinancialInstitutionTransaction> responseMapping() {

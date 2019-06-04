@@ -4,7 +4,7 @@ import com.ibanity.apis.client.helpers.IbanityService;
 import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
-import com.ibanity.apis.client.products.xs2a.models.factory.create.AccountInformationAccessRequestCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.create.AccountInformationAccessRequestCreationQuery;
 import com.ibanity.apis.client.products.xs2a.services.AccountInformationAccessRequestsService;
 
 public class AccountInformationAccessRequestSample {
