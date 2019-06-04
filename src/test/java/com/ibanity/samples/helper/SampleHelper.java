@@ -106,9 +106,9 @@ public class SampleHelper {
     public static Certificate loadCa(String certificatePath) throws CertificateException {
         if (certificatePath == null) {
             return null;
-        } else {
-            return KeyToolHelper.loadCertificate(certificatePath);
         }
+
+        return KeyToolHelper.loadCertificate(certificatePath);
     }
 
     public static PrivateKey loadPrivateKey(String path, String passphrase) throws IOException {
