@@ -6,11 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.ibanity.apis.client.holders.ApplicationCredentials;
-import com.ibanity.apis.client.holders.SignatureCredentials;
 import com.ibanity.apis.client.http.interceptor.IbanitySignatureInterceptor;
 import com.ibanity.apis.client.http.interceptor.IdempotencyInterceptor;
 import com.ibanity.apis.client.http.service.impl.IbanityHttpSignatureServiceImpl;
+import com.ibanity.apis.client.models.ApplicationCredentials;
+import com.ibanity.apis.client.models.SignatureCredentials;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -112,7 +112,7 @@ public final class IbanityUtils {
         trustStore.load(null);
 
         if (certificate != null && !trustStore.containsAlias(CA_TRUST_STORE_KEY)) {
-            trustStore.setCertificateEntry("ibanity-ca", certificate);
+            trustStore.setCertificateEntry(CA_TRUST_STORE_KEY, certificate);
         }
 
         return trustStore;

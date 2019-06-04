@@ -1,10 +1,10 @@
 package com.ibanity.samples.customer;
 
-import com.ibanity.apis.client.helpers.IbanityService;
 import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
 import com.ibanity.apis.client.products.xs2a.models.read.SynchronizationReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.SynchronizationService;
+import com.ibanity.apis.client.services.IbanityService;
 
 import java.util.UUID;
 

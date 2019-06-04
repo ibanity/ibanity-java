@@ -1,8 +1,9 @@
 package com.ibanity.apis.client.builders;
 
-import com.ibanity.apis.client.helpers.IbanityService;
-import com.ibanity.apis.client.holders.ApplicationCredentials;
-import com.ibanity.apis.client.holders.SignatureCredentials;
+import com.ibanity.apis.client.models.ApplicationCredentials;
+import com.ibanity.apis.client.models.SignatureCredentials;
+import com.ibanity.apis.client.services.IbanityService;
+import com.ibanity.apis.client.services.impl.IbanityServiceImpl;
 
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
@@ -57,7 +58,7 @@ public class IbanityServiceBuilder implements
                 .build();
         tlsPrivateKeyPassphrase = null;
 
-        return new IbanityService(apiEndpoint, caCertificate, applicationCertificate, signatureCredentials);
+        return new IbanityServiceImpl(apiEndpoint, caCertificate, applicationCertificate, signatureCredentials);
     }
 
     public OptionalPropertiesBuilder caCertificate(Certificate certificate) {

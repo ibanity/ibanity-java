@@ -1,6 +1,5 @@
 package com.ibanity.samples.sandbox;
 
-import com.ibanity.apis.client.helpers.IbanityService;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitutionAccount;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitutionUser;
@@ -8,6 +7,7 @@ import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.create.Finan
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.delete.FinancialInstitutionAccountDeleteQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.read.FinancialInstitutionAccountReadQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.services.FinancialInstitutionAccountsService;
+import com.ibanity.apis.client.services.IbanityService;
 import com.ibanity.samples.helper.SampleHelper;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;

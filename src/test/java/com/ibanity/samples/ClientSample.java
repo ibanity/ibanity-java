@@ -3,7 +3,6 @@ package com.ibanity.samples;
 import com.ibanity.apis.client.builders.IbanityServiceBuilder;
 import com.ibanity.apis.client.builders.OptionalPropertiesBuilder;
 import com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys;
-import com.ibanity.apis.client.helpers.IbanityService;
 import com.ibanity.apis.client.products.xs2a.models.Account;
 import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
@@ -11,6 +10,7 @@ import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.products.xs2a.models.PaymentInitiationRequest;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
 import com.ibanity.apis.client.products.xs2a.models.Transaction;
+import com.ibanity.apis.client.services.IbanityService;
 import com.ibanity.samples.customer.AccountInformationAccessRequestSample;
 import com.ibanity.samples.customer.AccountSample;
 import com.ibanity.samples.customer.CustomerAccessTokenSample;
@@ -28,9 +28,9 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_TLS_CA_CERTIFICATE_PATH_PROPERTY_KEY;
-import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_TLS_CLIENT_CERTIFICATE_PATH_PROPERTY_KEY;
-import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_TLS_CLIENT_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY;
-import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_TLS_CLIENT_PRIVATE_KEY_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_TLS_CERTIFICATE_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_TLS_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY;
+import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_TLS_PRIVATE_KEY_PATH_PROPERTY_KEY;
 import static com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY;
 import static com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_PATH_PROPERTY_KEY;
 import static com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY;
@@ -68,12 +68,12 @@ public class ClientSample {
     }
 
     public static void main(String[] args) throws CertificateException, IOException {
-        String passphrase = getConfiguration(IBANITY_CLIENT_TLS_CLIENT_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY);
+        String passphrase = getConfiguration(IBANITY_CLIENT_TLS_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY);
         OptionalPropertiesBuilder ibanityServiceBuilder = IbanityServiceBuilder.builder()
                 .ibanityApiEndpoint(getConfiguration(IBANITY_API_ENDPOINT_PROPERTY_KEY))
-                .applicationPrivateKey(loadPrivateKey(getConfiguration(IBANITY_CLIENT_TLS_CLIENT_PRIVATE_KEY_PATH_PROPERTY_KEY), passphrase))
+                .applicationPrivateKey(loadPrivateKey(getConfiguration(IBANITY_CLIENT_TLS_PRIVATE_KEY_PATH_PROPERTY_KEY), passphrase))
                 .passphrase(passphrase)
-                .applicationCertificate(loadCertificate(getConfiguration(IBANITY_CLIENT_TLS_CLIENT_CERTIFICATE_PATH_PROPERTY_KEY)))
+                .applicationCertificate(loadCertificate(getConfiguration(IBANITY_CLIENT_TLS_CERTIFICATE_PATH_PROPERTY_KEY)))
                 .caCertificate(loadCa(getConfiguration(IBANITY_CLIENT_TLS_CA_CERTIFICATE_PATH_PROPERTY_KEY)));
 
         if (getConfiguration(IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY) != null) {
