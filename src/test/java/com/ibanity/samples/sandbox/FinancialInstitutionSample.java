@@ -1,12 +1,12 @@
 package com.ibanity.samples.sandbox;
 
-import com.ibanity.apis.client.helpers.IbanityService;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.products.xs2a.models.read.FinancialInstitutionReadQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.create.FinancialInstitutionCreationQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.delete.FinancialInstitutionDeleteQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.update.FinancialInstitutionUpdateQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.services.SandboxFinancialInstitutionsService;
+import com.ibanity.apis.client.services.IbanityService;
 
 import java.util.UUID;
 

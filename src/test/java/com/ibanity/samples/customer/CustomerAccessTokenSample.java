@@ -1,9 +1,9 @@
 package com.ibanity.samples.customer;
 
-import com.ibanity.apis.client.helpers.IbanityService;
 import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
 import com.ibanity.apis.client.products.xs2a.models.create.CustomerAccessTokenCreationQuery;
 import com.ibanity.apis.client.products.xs2a.services.CustomerAccessTokensService;
+import com.ibanity.apis.client.services.IbanityService;
 
 public class CustomerAccessTokenSample {
 

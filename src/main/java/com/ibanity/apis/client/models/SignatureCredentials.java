@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.holders;
+package com.ibanity.apis.client.models;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

@@ -1,6 +1,5 @@
 package com.ibanity.samples.sandbox;
 
-import com.ibanity.apis.client.helpers.IbanityService;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitutionAccount;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitutionTransaction;
@@ -9,6 +8,7 @@ import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.create.Finan
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.delete.FinancialInstitutionTransactionDeleteQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.read.FinancialInstitutionTransactionReadQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.services.FinancialInstitutionTransactionsService;
+import com.ibanity.apis.client.services.IbanityService;
 import com.ibanity.samples.helper.SampleHelper;
 
 import java.util.UUID;
