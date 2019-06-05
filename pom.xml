@@ -348,10 +348,14 @@
                         <include>**/*Tests.java</include>
                     </includes>
                     <excludes>
+                        <exclude>**/jsonapi/*</exclude>
                         <exclude>**/models/*</exclude>
                         <exclude>**/links/*</exclude>
                         <exclude>**/paging/*</exclude>
                         <exclude>**/exceptions/*</exclude>
+                        <exclude>**/IbanityServiceImpl.*</exclude>
+                        <exclude>**/IbanityServiceBuilder.*</exclude>
+                        <exclude>**/utils/*</exclude>
                     </excludes>
                 </configuration>
                 <dependencies>
