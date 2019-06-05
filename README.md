@@ -39,9 +39,61 @@ You can then make use of Xs2a services through your IbanityService instance.
 ```java
 CustomerAccessTokenService customerAccessTokensService = ibanityService.xs2aService().customerAccessTokensService();
 ```
+All services are thread safe and can be configured as singleton if you want to leverage frameworks like Spring.
+
 See ClientSample class for extended examples.
 
-All services are thread safe and can be configured as singleton if you want to leverage frameworks like Spring.
+### Perform custom request to Ibanity
+You can perform custom http calls to Ibanity using the IbanityHttpClient.
+It can be accessed by calling :
+
+```java
+IbanityHttpClient ibanityHttpClient = ibanityService.ibanityHttpClient();
+```
+
+
+### Use HttpSignatureService
+If you want to sign http request, you can use the HttpSignatureService from the library.
+
+Instantiate the implementation class by calling:
+
+```java
+IbanityHttpSignatureService = new IbanityHttpSignatureServiceImpl(
+                                              privateKey,
+                                              certificate,
+                                              certificateId);
+```
+
+```java
+    public interface IbanityHttpSignatureService {
+    
+        /**
+         * Alias to be used when the request has no payload.
+         * @see IbanityHttpSignatureService#getHttpSignatureHeaders(String, URL, Map, String)
+         * Allows you to create the needed headers to sign an http request following draft http signature
+         * @see <a href="https://tools.ietf.org/html/draft-cavage-http-signatures-09">https://tools.ietf.org/html/draft-cavage-http-signatures-09</a>
+         * @param httpMethod the http method of the current request.
+         * @param url the url containing host, path and query parameters.
+         * @param requestHeaders the headers of the current request. All ibanity-* headers will included in the signature.
+         * @return the map with signature related headers: date, digest and signature headers.
+         */
+        Map<String, String> getHttpSignatureHeaders(String httpMethod, URL url, Map<String, String> requestHeaders);
+    
+        /**
+         * Allows you to create the needed headers to sign an http request following draft http signature
+         * @see <a href="https://tools.ietf.org/html/draft-cavage-http-signatures-09">https://tools.ietf.org/html/draft-cavage-http-signatures-09</a>
+         * @param httpMethod the http method of the current request.
+         * @param url the url containing host, path and query parameters.
+         * @param requestHeaders the headers of the current request. All ibanity-* headers will included in the signature.
+         * @param payload the payload of the actual request.
+         * @return the map with signature related headers: date, digest and signature headers.
+         */
+        Map<String, String> getHttpSignatureHeaders(String httpMethod, URL url, Map<String, String> requestHeaders, String payload);
+    
+    }
+
+```
+
 ## Requirements
 * Java 8 (or above)
 * Maven (for compilation)
