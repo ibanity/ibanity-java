@@ -12,7 +12,7 @@ import java.security.cert.X509Certificate;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class ApplicationCredentials {
+public class TlsCredentials {
 
     private X509Certificate certificate;
     private PrivateKey privateKey;
