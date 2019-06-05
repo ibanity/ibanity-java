@@ -7,7 +7,6 @@ import com.ibanity.apis.client.products.xs2a.models.Account;
 import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
-import com.ibanity.apis.client.products.xs2a.models.PaymentInitiationRequest;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
 import com.ibanity.apis.client.products.xs2a.models.Transaction;
 import com.ibanity.apis.client.services.IbanityService;
@@ -177,8 +176,7 @@ public class ClientSample {
         CustomerAccessToken customerAccessToken = customerAccessTokenSample.create(consentReference);
         FinancialInstitution financialInstitution = financialInstitutionSample.list().get(0);
 
-        PaymentInitiationRequest paymentInitiationRequest =
-                paymentInitiationRequestSample.create(financialInstitution, customerAccessToken,
+        paymentInitiationRequestSample.create(financialInstitution, customerAccessToken,
                         fakeTppPaymentInitiationRedirectUrl);
     }
 

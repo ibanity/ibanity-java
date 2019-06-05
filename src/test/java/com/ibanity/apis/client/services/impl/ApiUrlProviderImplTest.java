@@ -37,9 +37,7 @@ class ApiUrlProviderImplTest {
 
     @Test
     void find_whenPathNotFound_throwIllegalArgumentException() {
-        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> {
-            apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financiulInstitution", "accountInformationAccessRequest", "accounts");
-        });
+        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financiulInstitution", "accountInformationAccessRequest", "accounts"));
     }
 
     private String getSchema() {

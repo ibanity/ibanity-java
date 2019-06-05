@@ -70,13 +70,12 @@ public class FinancialInstitutionUsersServiceImpl implements FinancialInstitutio
     }
 
     private FinancialInstitutionUser mapRequest(FinancialInstitutionUserUpdateQuery userUpdateQuery) {
-        FinancialInstitutionUser financialInstitutionUser = FinancialInstitutionUser.builder()
+        return FinancialInstitutionUser.builder()
                 .login(userUpdateQuery.getLogin())
                 .password(userUpdateQuery.getPassword())
                 .firstName(userUpdateQuery.getFirstName())
                 .lastName(userUpdateQuery.getLastName())
                 .build();
-        return financialInstitutionUser;
     }
 
     private String getUrl(String financialInstitutionUserId) {

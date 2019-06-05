@@ -42,31 +42,27 @@ class IbanityResponseHandlerTest {
     }
 
     @Test
-    void handleResponse_whenServerError_thenThrowIbanityServerSideException() throws IOException {
+    void handleResponse_whenServerError_thenThrowIbanityServerSideException() {
         //language=JSON
         String expected = errorPayload();
 
         when(httpResponse.getEntity()).thenReturn(EntityBuilder.create().setText(expected).build());
         when(httpResponse.getStatusLine()).thenReturn(new BasicStatusLine(dummyProtocolVersion(), 500, ""));
 
-        IbanityServerException actual = assertThrows(IbanityServerException.class, () -> {
-            ibanityResponseHandler.handleResponse(httpResponse);
-        });
+        IbanityServerException actual = assertThrows(IbanityServerException.class, () -> ibanityResponseHandler.handleResponse(httpResponse));
 
         assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerException(createExpectedErrors()));
     }
 
     @Test
-    void handleResponse_whenResourceNotFound_thenThrowIbanityClientSideException() throws IOException {
+    void handleResponse_whenResourceNotFound_thenThrowIbanityClientSideException() {
         //language=JSON
         String expected = errorPayload();
 
         when(httpResponse.getEntity()).thenReturn(EntityBuilder.create().setText(expected).build());
         when(httpResponse.getStatusLine()).thenReturn(new BasicStatusLine(dummyProtocolVersion(), 404, ""));
 
-        IbanityClientException actual = assertThrows(IbanityClientException.class, () -> {
-            ibanityResponseHandler.handleResponse(httpResponse);
-        });
+        IbanityClientException actual = assertThrows(IbanityClientException.class, () -> ibanityResponseHandler.handleResponse(httpResponse));
 
         assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerException(createExpectedErrors()));
     }
