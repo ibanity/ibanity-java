@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @ToString
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 public abstract class IbanityException extends RuntimeException {
 
     private final List<IbanityError> errors;
