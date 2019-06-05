@@ -320,21 +320,7 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
-            <!-- To sign the artifacts -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>${maven-gpg-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -386,6 +372,18 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco-maven-plugin.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/jsonapi/*</exclude>
+                        <exclude>**/models/*</exclude>
+                        <exclude>**/links/*</exclude>
+                        <exclude>**/paging/*</exclude>
+                        <exclude>**/exceptions/*</exclude>
+                        <exclude>**/IbanityServiceImpl.*</exclude>
+                        <exclude>**/IbanityServiceBuilder.*</exclude>
+                        <exclude>**/utils/*</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
