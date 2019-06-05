@@ -35,7 +35,7 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
 
     @Override
     public String get(@NonNull URI path) {
-        return get(path, newHashMap(), null);
+        return get(path, null);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
 
     @Override
     public String post(@NonNull URI path, @NonNull Object requestApiModel) {
-        return post(path, requestApiModel, newHashMap(), null);
+        return post(path, requestApiModel, null);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
 
     @Override
     public String delete(@NonNull URI path) {
-        return delete(path, Collections.emptyMap(), null);
+        return delete(path, null);
     }
 
     @Override
