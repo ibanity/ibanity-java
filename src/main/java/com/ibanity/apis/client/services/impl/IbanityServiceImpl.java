@@ -2,8 +2,8 @@ package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.http.factory.IbanityHttpClientFactory;
-import com.ibanity.apis.client.models.ApplicationCredentials;
 import com.ibanity.apis.client.models.SignatureCredentials;
+import com.ibanity.apis.client.models.TlsCredentials;
 import com.ibanity.apis.client.products.xs2a.services.Xs2aService;
 import com.ibanity.apis.client.products.xs2a.services.impl.Xs2aServiceImpl;
 import com.ibanity.apis.client.services.ApiUrlProvider;
@@ -19,9 +19,9 @@ public class IbanityServiceImpl implements IbanityService {
 
     public IbanityServiceImpl(String apiEndpoint,
                               Certificate caCertificate,
-                              ApplicationCredentials applicationCredentials,
+                              TlsCredentials tlsCredentials,
                               SignatureCredentials signatureCredentials) {
-        this.ibanityHttpClient = new IbanityHttpClientFactory().create(caCertificate, applicationCredentials, signatureCredentials, apiEndpoint);
+        this.ibanityHttpClient = new IbanityHttpClientFactory().create(caCertificate, tlsCredentials, signatureCredentials, apiEndpoint);
         this.apiUrlProvider = new ApiUrlProviderImpl(ibanityHttpClient, apiEndpoint);
         this.xs2aService = new Xs2aServiceImpl(apiUrlProvider, ibanityHttpClient);
     }

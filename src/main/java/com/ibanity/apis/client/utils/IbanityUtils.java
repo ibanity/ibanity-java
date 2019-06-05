@@ -9,8 +9,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ibanity.apis.client.http.interceptor.IbanitySignatureInterceptor;
 import com.ibanity.apis.client.http.interceptor.IdempotencyInterceptor;
 import com.ibanity.apis.client.http.service.impl.IbanityHttpSignatureServiceImpl;
-import com.ibanity.apis.client.models.ApplicationCredentials;
 import com.ibanity.apis.client.models.SignatureCredentials;
+import com.ibanity.apis.client.models.TlsCredentials;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -44,11 +44,11 @@ public final class IbanityUtils {
     }
 
     public static HttpClient httpClient(Certificate caCertificate,
-                                        ApplicationCredentials applicationCertificate,
+                                        TlsCredentials tlsCredentials,
                                         SignatureCredentials signatureCertificate,
                                         String basePath) {
         try {
-            SSLContext sslContext = getSSLContext(caCertificate, applicationCertificate);
+            SSLContext sslContext = getSSLContext(caCertificate, tlsCredentials);
             HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
             configureHttpClient(sslContext, httpClientBuilder, signatureCertificate, basePath);
             return httpClientBuilder.build();
@@ -87,10 +87,10 @@ public final class IbanityUtils {
         httpClientBuilder.setConnectionReuseStrategy(new DefaultClientConnectionReuseStrategy());
     }
 
-    private static SSLContext getSSLContext(Certificate caCertificate, ApplicationCredentials applicationCertificate) throws IOException, GeneralSecurityException {
+    private static SSLContext getSSLContext(Certificate caCertificate, TlsCredentials tlsCredentials) throws IOException, GeneralSecurityException {
 
-        KeyStore keyStore = createKeyStore(applicationCertificate);
-        KeyManager[] keyManagers = createKeyManagers(keyStore, applicationCertificate.getPrivateKeyPassphrase());
+        KeyStore keyStore = createKeyStore(tlsCredentials);
+        KeyManager[] keyManagers = createKeyManagers(keyStore, tlsCredentials.getPrivateKeyPassphrase());
 
         KeyStore trustStore = createTrustStore(caCertificate);
         TrustManager[] trustManagers = createTrustManagers(trustStore);
@@ -118,16 +118,16 @@ public final class IbanityUtils {
         return trustStore;
     }
 
-    private static KeyStore createKeyStore(ApplicationCredentials applicationCredentials) throws IOException, GeneralSecurityException {
+    private static KeyStore createKeyStore(TlsCredentials tlsCredentials) throws IOException, GeneralSecurityException {
         KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
         keyStore.load(null);
 
         if (!keyStore.containsAlias(ALIAS_KEY_STORE)) {
             keyStore.setKeyEntry(
                     ALIAS_KEY_STORE,
-                    applicationCredentials.getPrivateKey(),
-                    applicationCredentials.getPrivateKeyPassphrase().toCharArray(),
-                    new Certificate[]{applicationCredentials.getCertificate()});
+                    tlsCredentials.getPrivateKey(),
+                    tlsCredentials.getPrivateKeyPassphrase().toCharArray(),
+                    new Certificate[]{tlsCredentials.getCertificate()});
         }
 
         return keyStore;
