@@ -14,7 +14,6 @@ public final class PaymentInitiationRequestCreationQuery {
 
     private String customerAccessToken;
     private UUID financialInstitutionId;
-    private UUID idempotencyKey;
 
     private String consentReference;
     private String endToEndId;

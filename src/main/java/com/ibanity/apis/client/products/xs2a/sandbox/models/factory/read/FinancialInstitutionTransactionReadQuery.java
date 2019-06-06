@@ -12,6 +12,4 @@ public class FinancialInstitutionTransactionReadQuery {
     private UUID financialInstitutionUserId;
     private UUID financialInstitutionAccountId;
     private UUID financialInstitutionTransactionId;
-
-    private UUID idempotencyKey;
 }

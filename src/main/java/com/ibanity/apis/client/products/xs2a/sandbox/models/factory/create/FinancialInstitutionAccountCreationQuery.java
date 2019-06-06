@@ -10,7 +10,6 @@ import java.util.UUID;
 public class FinancialInstitutionAccountCreationQuery {
     private UUID financialInstitutionId;
     private UUID financialInstitutionUserId;
-    private UUID idempotencyKey;
 
     private String subType;
     private String currency;

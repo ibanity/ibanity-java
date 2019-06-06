@@ -17,7 +17,6 @@ public final class AccountInformationAccessRequestCreationQuery {
 
     private UUID accountInformationAccessRequestId;
     private UUID financialInstitutionId;
-    private UUID idempotencyKey;
     private String consentReference;
     private String redirectURI;
     private String customerAccessToken;

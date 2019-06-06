@@ -13,8 +13,6 @@ public class FinancialInstitutionUpdateQuery {
     private UUID financialInstitutionId;
     private String name;
 
-    private UUID idempotencyKey;
-
     public static FinancialInstitutionUpdateQueryBuilder from(final FinancialInstitution financialInstitution) {
         Objects.requireNonNull(financialInstitution, "Missing required 'financialInstitution'");
 

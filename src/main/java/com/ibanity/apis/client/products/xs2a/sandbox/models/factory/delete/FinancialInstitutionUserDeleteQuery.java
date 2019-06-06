@@ -9,6 +9,4 @@ import java.util.UUID;
 @Builder
 public class FinancialInstitutionUserDeleteQuery {
     private UUID financialInstitutionUserId;
-
-    private UUID idempotencyKey;
 }
