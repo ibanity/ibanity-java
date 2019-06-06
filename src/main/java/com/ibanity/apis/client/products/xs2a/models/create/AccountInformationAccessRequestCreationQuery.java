@@ -2,7 +2,9 @@ package com.ibanity.apis.client.products.xs2a.models.create;
 
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.Map;
@@ -13,6 +15,8 @@ import static java.util.Collections.emptyMap;
 
 @Getter
 @Builder
+@ToString
+@EqualsAndHashCode
 public final class AccountInformationAccessRequestCreationQuery {
 
     private UUID accountInformationAccessRequestId;
