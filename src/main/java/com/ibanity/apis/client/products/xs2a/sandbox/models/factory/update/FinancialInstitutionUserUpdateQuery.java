@@ -14,6 +14,4 @@ public class FinancialInstitutionUserUpdateQuery {
     private String firstName;
     private String lastName;
 
-    private UUID idempotencyKey;
-
 }

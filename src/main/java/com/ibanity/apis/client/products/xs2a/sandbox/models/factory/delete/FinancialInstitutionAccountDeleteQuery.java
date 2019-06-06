@@ -11,6 +11,4 @@ public class FinancialInstitutionAccountDeleteQuery {
     private UUID financialInstitutionId;
     private UUID financialInstitutionUserId;
     private UUID financialInstitutionAccountId;
-
-    private UUID idempotencyKey;
 }

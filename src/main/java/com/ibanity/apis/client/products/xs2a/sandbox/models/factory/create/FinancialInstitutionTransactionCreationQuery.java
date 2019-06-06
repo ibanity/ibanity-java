@@ -12,7 +12,6 @@ public class FinancialInstitutionTransactionCreationQuery {
     private UUID financialInstitutionId;
     private UUID financialInstitutionUserId;
     private UUID financialInstitutionAccountId;
-    private UUID idempotencyKey;
 
     private Double amount;
     private String currency;

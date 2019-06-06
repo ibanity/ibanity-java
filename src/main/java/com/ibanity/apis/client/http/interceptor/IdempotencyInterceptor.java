@@ -12,8 +12,9 @@ public class IdempotencyInterceptor implements HttpRequestInterceptor {
 
     @Override
     public void process(final HttpRequest httpRequest, final HttpContext httpContext) {
-        if (httpRequest.getRequestLine().getMethod().equalsIgnoreCase("post")
-                || httpRequest.getRequestLine().getMethod().equalsIgnoreCase("patch")) {
+        if (!httpRequest.containsHeader(IDEMPOTENCY_HTTP_HEADER_KEY)
+                && (httpRequest.getRequestLine().getMethod().equalsIgnoreCase("post")
+                || httpRequest.getRequestLine().getMethod().equalsIgnoreCase("patch"))) {
             httpRequest.addHeader(IDEMPOTENCY_HTTP_HEADER_KEY, UUID.randomUUID().toString());
         }
     }

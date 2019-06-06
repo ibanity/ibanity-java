@@ -14,6 +14,4 @@ public class FinancialInstitutionTransactionsReadQuery {
     private UUID financialInstitutionAccountId;
 
     private IbanityPagingSpec pagingSpec;
-
-    private UUID idempotencyKey;
 }
