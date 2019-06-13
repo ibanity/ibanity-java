@@ -84,4 +84,16 @@ class IbanityHttpClientImplTest {
         assertThat(actual).isEqualTo(expected);
         assertThat(requestArgumentCaptor.getValue().getMethod()).isEqualTo("DELETE");
     }
+
+    @Test
+    void patch() throws Exception {
+        String expected = "value";
+
+        when(httpClient.execute(requestArgumentCaptor.capture(), any(IbanityResponseHandler.class))).thenReturn(expected);
+
+        String actual = ibanityHttpClient.patch(uri(), "hello");
+
+        assertThat(actual).isEqualTo(expected);
+        assertThat(requestArgumentCaptor.getValue().getMethod()).isEqualTo("PATCH");
+    }
 }

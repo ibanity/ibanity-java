@@ -50,7 +50,7 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
         RequestApiModel request = buildRequest(FinancialInstitution.RESOURCE_TYPE, financialInstitution);
 
         String url = getSandboxUrl(financialInstitutionUpdateQuery.getFinancialInstitutionId().toString());
-        String response = ibanityHttpClient.post(buildUri(url), request);
+        String response = ibanityHttpClient.patch(buildUri(url), request);
         return mapResource(response, FinancialInstitution.class);
     }
 

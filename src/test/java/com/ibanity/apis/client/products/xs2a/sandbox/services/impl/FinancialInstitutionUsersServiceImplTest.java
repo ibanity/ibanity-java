@@ -115,7 +115,7 @@ class FinancialInstitutionUsersServiceImplTest {
 
     @Test
     void update() throws Exception {
-        when(ibanityHttpClient.post(new URI(USER_ID_ENDPOINT), createRequest())).thenReturn(loadFile("json/sandbox/user.json"));
+        when(ibanityHttpClient.patch(new URI(USER_ID_ENDPOINT), createRequest())).thenReturn(loadFile("json/sandbox/user.json"));
 
         FinancialInstitutionUserUpdateQuery query = FinancialInstitutionUserUpdateQuery.builder()
                 .firstName("aFirstName")

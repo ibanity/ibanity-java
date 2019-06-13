@@ -12,9 +12,7 @@ import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.update.Finan
 import com.ibanity.apis.client.products.xs2a.sandbox.services.FinancialInstitutionUsersService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 
-import static com.ibanity.apis.client.mappers.IbanityModelMapper.buildRequest;
-import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapCollection;
-import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
+import static com.ibanity.apis.client.mappers.IbanityModelMapper.*;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static org.apache.commons.lang3.StringUtils.removeEnd;
 
@@ -65,7 +63,7 @@ public class FinancialInstitutionUsersServiceImpl implements FinancialInstitutio
         FinancialInstitutionUser financialInstitutionUser = mapRequest(userUpdateQuery);
         String url = getUrl(userUpdateQuery.getFinancialInstitutionUserId().toString());
         RequestApiModel request = buildRequest(FinancialInstitutionUser.RESOURCE_TYPE, financialInstitutionUser);
-        String response = ibanityHttpClient.post(buildUri(url), request);
+        String response = ibanityHttpClient.patch(buildUri(url), request);
         return mapResource(response, FinancialInstitutionUser.class);
     }
 

@@ -1,15 +1,13 @@
 package com.ibanity.apis.client.http.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.http.handler.IbanityResponseHandler;
 import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 
@@ -45,13 +43,8 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
 
     @Override
     public String get(@NonNull URI path, @NonNull Map<String, String> additionalHeaders, String customerAccessToken) {
-        try {
-            HttpGet httpGet = new HttpGet(path);
-            addHeaders(customerAccessToken, additionalHeaders, httpGet);
-            return httpClient.execute(httpGet, ibanityResponseHandler);
-        } catch (IOException exception) {
-            throw new RuntimeException("An error occurred while connecting to Ibanity", exception);
-        }
+        HttpGet httpGet = new HttpGet(path);
+        return addHeaderAndExecute(additionalHeaders, customerAccessToken, httpGet);
     }
 
     @Override
@@ -68,11 +61,10 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
     public String post(@NonNull URI path, @NonNull Object requestApiModel, @NonNull Map<String, String> additionalHeaders, String customerAccessToken) {
         try {
             HttpPost httpPost = new HttpPost(path);
-            addHeaders(customerAccessToken, additionalHeaders, httpPost);
             httpPost.setEntity(createEntityRequest(objectMapper().writeValueAsString(requestApiModel)));
-            return httpClient.execute(httpPost, ibanityResponseHandler);
-        } catch (IOException exception) {
-            throw new RuntimeException("An error occurred while connecting to Ibanity", exception);
+            return addHeaderAndExecute(additionalHeaders, customerAccessToken, httpPost);
+        } catch (JsonProcessingException exception) {
+            throw new RuntimeException("An error occurred while converting object to json", exception);
         }
     }
 
@@ -88,10 +80,35 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
 
     @Override
     public String delete(@NonNull URI path, @NonNull Map<String, String> additionalHeaders, String customerAccessToken) {
+        HttpDelete httpDelete = new HttpDelete(path);
+        return addHeaderAndExecute(additionalHeaders, customerAccessToken, httpDelete);
+    }
+
+    @Override
+    public String patch(@NonNull URI path, @NonNull Object requestApiModel) {
+        return patch(path, requestApiModel, null);
+    }
+
+    @Override
+    public String patch(@NonNull URI path, @NonNull Object requestApiModel, String customerAccessToken) {
+        return patch(path, requestApiModel, newHashMap(), customerAccessToken);
+    }
+
+    @Override
+    public String patch(@NonNull URI path, @NonNull Object requestApiModel, @NonNull Map<String, String> additionalHeaders, String customerAccessToken) {
         try {
-            HttpDelete httpDelete = new HttpDelete(path);
-            addHeaders(customerAccessToken, additionalHeaders, httpDelete);
-            return httpClient.execute(httpDelete, ibanityResponseHandler);
+            HttpPatch httpPatch = new HttpPatch(path);
+            httpPatch.setEntity(createEntityRequest(objectMapper().writeValueAsString(requestApiModel)));
+            return addHeaderAndExecute(additionalHeaders, customerAccessToken, httpPatch);
+        } catch (JsonProcessingException exception) {
+            throw new RuntimeException("An error occurred while converting object to json", exception);
+        }
+    }
+
+    private String addHeaderAndExecute(@NonNull Map<String, String> additionalHeaders, String customerAccessToken, HttpRequestBase httpPatch) {
+        try {
+            addHeaders(customerAccessToken, additionalHeaders, httpPatch);
+            return httpClient.execute(httpPatch, ibanityResponseHandler);
         } catch (IOException exception) {
             throw new RuntimeException("An error occurred while connecting to Ibanity", exception);
         }
