@@ -2,13 +2,7 @@ package com.ibanity.apis.client.products.xs2a.services.impl;
 
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.products.xs2a.sandbox.services.impl.SandboxServiceImpl;
-import com.ibanity.apis.client.products.xs2a.services.AccountInformationAccessRequestsService;
-import com.ibanity.apis.client.products.xs2a.services.AccountsService;
-import com.ibanity.apis.client.products.xs2a.services.CustomerAccessTokensService;
-import com.ibanity.apis.client.products.xs2a.services.FinancialInstitutionsService;
-import com.ibanity.apis.client.products.xs2a.services.PaymentInitiationRequestService;
-import com.ibanity.apis.client.products.xs2a.services.SynchronizationService;
-import com.ibanity.apis.client.products.xs2a.services.TransactionsService;
+import com.ibanity.apis.client.products.xs2a.services.*;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 
 public class Xs2aServiceImpl implements com.ibanity.apis.client.products.xs2a.services.Xs2aService {
@@ -21,6 +15,7 @@ public class Xs2aServiceImpl implements com.ibanity.apis.client.products.xs2a.se
     private final FinancialInstitutionsService financialInstitutionsService;
     private final PaymentInitiationRequestService paymentInitiationRequestService;
     private final AccountInformationAccessRequestsService accountInformationAccessRequestsService;
+    private final CustomerService customerService;
 
     public Xs2aServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
         accountService = new AccountsServiceImpl(apiUrlProvider, ibanityHttpClient);
@@ -31,7 +26,8 @@ public class Xs2aServiceImpl implements com.ibanity.apis.client.products.xs2a.se
         paymentInitiationRequestService = new PaymentInitiationRequestServiceImpl(apiUrlProvider, ibanityHttpClient);
         accountInformationAccessRequestsService = new AccountInformationAccessRequestsServiceImpl(apiUrlProvider, ibanityHttpClient);
         sandboxService = new SandboxServiceImpl(apiUrlProvider, ibanityHttpClient);
-    }
+        customerService = new CustomerServiceImpl(apiUrlProvider, ibanityHttpClient)
+;    }
 
     @Override
     public PaymentInitiationRequestService paymentInitiationRequestService() {
@@ -71,5 +67,10 @@ public class Xs2aServiceImpl implements com.ibanity.apis.client.products.xs2a.se
     @Override
     public com.ibanity.apis.client.products.xs2a.sandbox.services.SandboxService sandbox() {
         return sandboxService;
+    }
+
+    @Override
+    public CustomerService customerService() {
+        return customerService;
     }
 }

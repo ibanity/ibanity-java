@@ -11,6 +11,7 @@ import com.ibanity.apis.client.products.xs2a.models.Account;
 import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
+import com.ibanity.apis.client.products.xs2a.models.delete.AccountDeleteQuery;
 import com.ibanity.apis.client.products.xs2a.models.read.AccountReadQuery;
 import com.ibanity.apis.client.products.xs2a.models.read.AccountsReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.AccountsService;
@@ -54,6 +55,17 @@ public class AccountsServiceImpl implements AccountsService {
         String url = getUrl(accountsReadQuery.getFinancialInstitutionId(), accountsReadQuery.getAccountInformationAccessRequestId());
         String response = ibanityHttpClient.get(buildUri(url, pagingSpec), accountsReadQuery.getAdditionalHeaders(), accountsReadQuery.getCustomerAccessToken());
         return IbanityModelMapper.mapCollection(response, customMappingFunction());
+    }
+
+    @Override
+    public Account delete(AccountDeleteQuery accountDeleteQuery) {
+        String url = getUrl(accountDeleteQuery.getFinancialInstitutionId(), null)
+                + "/"
+                + accountDeleteQuery.getAccountId();
+        System.out.println(url);
+        System.out.println(accountDeleteQuery);
+        String response = ibanityHttpClient.delete(buildUri(url), accountDeleteQuery.getAdditionalHeaders(), accountDeleteQuery.getCustomerAccessToken());
+        return IbanityModelMapper.mapResource(response, customMappingFunction());
     }
 
     private Function<DataApiModel, Account> customMappingFunction() {

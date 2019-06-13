@@ -19,4 +19,6 @@ public interface Xs2aService {
     SynchronizationService synchronizationService();
 
     SandboxService sandbox();
+
+    CustomerService customerService();
 }

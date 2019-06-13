@@ -5,6 +5,7 @@ import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.Account;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
+import com.ibanity.apis.client.products.xs2a.models.delete.AccountDeleteQuery;
 import com.ibanity.apis.client.products.xs2a.models.read.AccountReadQuery;
 import com.ibanity.apis.client.products.xs2a.models.read.AccountsReadQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;
@@ -70,6 +71,23 @@ class AccountsServiceImplTest {
                 .thenReturn(loadFile("json/account.json"));
 
         Account actual = accountsService.find(accountReadQuery);
+
+        assertThat(actual).isEqualToComparingFieldByField(createExpected());
+    }
+
+    @Test
+    void delete() throws Exception {
+        AccountDeleteQuery accountReadQuery =
+                AccountDeleteQuery.builder()
+                        .accountId(ACCOUNT_ID)
+                        .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
+                        .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
+                        .build();
+
+        when(ibanityHttpClient.delete(new URI(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT + "/" + ACCOUNT_ID), emptyMap(), CUSTOMER_ACCESS_TOKEN))
+                .thenReturn(loadFile("json/account.json"));
+
+        Account actual = accountsService.delete(accountReadQuery);
 
         assertThat(actual).isEqualToComparingFieldByField(createExpected());
     }

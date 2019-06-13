@@ -105,10 +105,10 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
         }
     }
 
-    private String addHeaderAndExecute(@NonNull Map<String, String> additionalHeaders, String customerAccessToken, HttpRequestBase httpPatch) {
+    private String addHeaderAndExecute(@NonNull Map<String, String> additionalHeaders, String customerAccessToken, HttpRequestBase httpRequestBase) {
         try {
-            addHeaders(customerAccessToken, additionalHeaders, httpPatch);
-            return httpClient.execute(httpPatch, ibanityResponseHandler);
+            addHeaders(customerAccessToken, additionalHeaders, httpRequestBase);
+            return httpClient.execute(httpRequestBase, ibanityResponseHandler);
         } catch (IOException exception) {
             throw new RuntimeException("An error occurred while connecting to Ibanity", exception);
         }
@@ -123,9 +123,9 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
         additionalHeaders.forEach(httpRequestBase::addHeader);
     }
 
-    private void addAuthorizationHeader(String customerAccessToken, HttpRequestBase post) {
+    private void addAuthorizationHeader(String customerAccessToken, HttpRequestBase requestBase) {
         if (StringUtils.isNotBlank(customerAccessToken)) {
-            post.addHeader(new BasicHeader(AUTHORIZATION, "Bearer " + customerAccessToken));
+            requestBase.addHeader(new BasicHeader(AUTHORIZATION, "Bearer " + customerAccessToken));
         }
     }
 }

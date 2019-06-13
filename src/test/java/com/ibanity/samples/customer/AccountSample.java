@@ -4,6 +4,7 @@ import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.products.xs2a.models.Account;
 import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
+import com.ibanity.apis.client.products.xs2a.models.delete.AccountDeleteQuery;
 import com.ibanity.apis.client.products.xs2a.models.read.AccountReadQuery;
 import com.ibanity.apis.client.products.xs2a.models.read.AccountsReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.AccountsService;
@@ -36,5 +37,15 @@ public class AccountSample {
                 .build();
 
         return accountsService.find(accountReadQuery);
+    }
+
+    public Account delete(CustomerAccessToken customerAccessToken, FinancialInstitution financialInstitution, UUID accountId) {
+        AccountDeleteQuery accountDeleteQuery = AccountDeleteQuery.builder()
+                .customerAccessToken(customerAccessToken.getToken())
+                .financialInstitutionId(financialInstitution.getId())
+                .accountId(accountId)
+                .build();
+
+        return accountsService.delete(accountDeleteQuery);
     }
 }
