@@ -4,6 +4,8 @@ import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest;
+import com.ibanity.apis.client.products.xs2a.models.AuthorizationPortal;
+import com.ibanity.apis.client.products.xs2a.models.Meta;
 import com.ibanity.apis.client.products.xs2a.models.create.AccountInformationAccessRequestCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountInformationAccessLinks;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountLinks;
@@ -100,6 +102,10 @@ class AccountInformationAccessRequestsServiceImplTest {
                 .requestedAccountReferences(creationQuery.getRequestedAccountReferences())
                 .locale(creationQuery.getLocale())
                 .customerIpAddress(creationQuery.getCustomerIpAddress())
+                .meta(Meta.builder()
+                        .authorizationPortal(AuthorizationPortal.builder()
+                                .build())
+                        .build())
                 .build();
         return RequestApiModel.builder()
                 .data(
@@ -116,6 +122,10 @@ class AccountInformationAccessRequestsServiceImplTest {
                 .id(ACCOUNT_INFORMATION_ACCESS_REQUEST_ID)
                 .requestedAccountReferences(newArrayList("BE9386908098818901"))
                 .status("received")
+                .accountInformationAccessLinks(AccountInformationAccessLinks.builder().build())
+                .accountLinks(AccountLinks.builder()
+                        .related("https://api.ibanity.com/xs2a/customer/financial-institutions/4876fdd6-7333-4f9f-b142-ba520ca497b1/account-information-access-requests/cd273ba1-cb2a-464d-b85d-62c9fc4dc8d9/accounts")
+                        .build())
                 .build();
     }
 

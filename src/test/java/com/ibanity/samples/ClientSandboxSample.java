@@ -19,19 +19,11 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.security.cert.CertificateException;
 
-import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_TLS_CA_CERTIFICATE_PATH_PROPERTY_KEY;
-import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_TLS_CERTIFICATE_PATH_PROPERTY_KEY;
-import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_TLS_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY;
-import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_TLS_PRIVATE_KEY_PATH_PROPERTY_KEY;
-import static com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY;
-import static com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_PATH_PROPERTY_KEY;
-import static com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY;
-import static com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PATH_PROPERTY_KEY;
+import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.*;
+import static com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys.*;
 import static com.ibanity.apis.client.helpers.IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY;
 import static com.ibanity.apis.client.helpers.IbanityConfiguration.getConfiguration;
-import static com.ibanity.samples.helper.SampleHelper.loadCa;
-import static com.ibanity.samples.helper.SampleHelper.loadCertificate;
-import static com.ibanity.samples.helper.SampleHelper.loadPrivateKey;
+import static com.ibanity.samples.helper.SampleHelper.*;
 
 public class ClientSandboxSample {
     private static final Logger LOGGER = LogManager.getLogger(ClientSandboxSample.class);
@@ -67,10 +59,10 @@ public class ClientSandboxSample {
 
         IbanityService ibanityService = ibanityServiceBuilder.build();
         ClientSandboxSample clientSandboxSample = new ClientSandboxSample(ibanityService);
-        clientSandboxSample.financialInstitutionSamples();
-        clientSandboxSample.financialInstitutionUserSamples();
+//        clientSandboxSample.financialInstitutionSamples();
+//        clientSandboxSample.financialInstitutionUserSamples();
         clientSandboxSample.financialInstitutionAccountSamples();
-        clientSandboxSample.financialInstitutionTransactionSamples();
+//        clientSandboxSample.financialInstitutionTransactionSamples();
 
         LOGGER.info("Samples end");
     }
@@ -79,7 +71,7 @@ public class ClientSandboxSample {
         LOGGER.info("Financial Institution samples");
 
         FinancialInstitution financialInstitution = financialInstitutionSample.create();
-        financialInstitutionSample.update(financialInstitution);
+        FinancialInstitution update = financialInstitutionSample.update(financialInstitution);
         financialInstitutionSample.find(financialInstitution.getId());
         financialInstitutionSample.delete(financialInstitution);
     }
@@ -88,7 +80,7 @@ public class ClientSandboxSample {
         LOGGER.info("Financial Institution User samples");
 
         FinancialInstitutionUser financialInstitutionUser = financialInstitutionUserSample.create();
-        financialInstitutionUserSample.update(financialInstitutionUser);
+        FinancialInstitutionUser update = financialInstitutionUserSample.update(financialInstitutionUser);
         financialInstitutionUserSample.find(financialInstitutionUser.getId());
         financialInstitutionUserSample.delete(financialInstitutionUser);
     }
@@ -105,7 +97,8 @@ public class ClientSandboxSample {
 
         financialInstitutionAccountSample.find(financialInstitution, financialInstitutionUser, financialInstitutionAccount.getId());
 
-        financialInstitutionAccountSample.delete(financialInstitution, financialInstitutionUser, financialInstitutionAccount);
+        FinancialInstitutionAccount delete = financialInstitutionAccountSample.delete(financialInstitution, financialInstitutionUser, financialInstitutionAccount);
+        System.out.println(delete);
 
         // clean related objects
         financialInstitutionSample.delete(financialInstitution);

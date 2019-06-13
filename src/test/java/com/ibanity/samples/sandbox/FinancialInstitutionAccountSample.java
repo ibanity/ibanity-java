@@ -51,9 +51,9 @@ public class FinancialInstitutionAccountSample {
         return financialInstitutionAccountsService.find(accountReadQuery);
     }
 
-    public void delete(FinancialInstitution financialInstitution,
-                       FinancialInstitutionUser financialInstitutionUser,
-                       FinancialInstitutionAccount financialInstitutionAccount){
+    public FinancialInstitutionAccount delete(FinancialInstitution financialInstitution,
+                                              FinancialInstitutionUser financialInstitutionUser,
+                                              FinancialInstitutionAccount financialInstitutionAccount){
 
         FinancialInstitutionAccountDeleteQuery accountDeleteQuery =
                 FinancialInstitutionAccountDeleteQuery.builder()
@@ -62,6 +62,6 @@ public class FinancialInstitutionAccountSample {
                         .financialInstitutionAccountId(financialInstitutionAccount.getId())
                         .build();
 
-        financialInstitutionAccountsService.delete(accountDeleteQuery);
+        return financialInstitutionAccountsService.delete(accountDeleteQuery);
     }
 }

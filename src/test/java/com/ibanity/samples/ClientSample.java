@@ -2,6 +2,7 @@ package com.ibanity.samples;
 
 import com.ibanity.apis.client.builders.IbanityServiceBuilder;
 import com.ibanity.apis.client.builders.OptionalPropertiesBuilder;
+import com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys;
 import com.ibanity.apis.client.products.xs2a.models.*;
 import com.ibanity.apis.client.services.IbanityService;
 import com.ibanity.samples.customer.*;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.*;
+import static com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys.*;
 import static com.ibanity.apis.client.helpers.IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY;
 import static com.ibanity.apis.client.helpers.IbanityConfiguration.getConfiguration;
 import static com.ibanity.samples.helper.SampleHelper.*;
@@ -56,14 +58,14 @@ public class ClientSample {
                 .tlsCertificate(loadCertificate(getConfiguration(IBANITY_CLIENT_TLS_CERTIFICATE_PATH_PROPERTY_KEY)))
                 .caCertificate(loadCa(getConfiguration(IBANITY_CLIENT_TLS_CA_CERTIFICATE_PATH_PROPERTY_KEY)));
 
-//        if (getConfiguration(IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY) != null) {
-//            String signaturePassphrase = getConfiguration(IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY, "");
-//            ibanityServiceBuilder
-//                    .requestSignaturePrivateKey(loadPrivateKey(getConfiguration(IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PATH_PROPERTY_KEY), signaturePassphrase))
-//                    .requestSignaturePassphrase(signaturePassphrase)
-//                    .requestSignatureCertificate(loadCertificate(getConfiguration(IBANITY_CLIENT_SIGNATURE_CERTIFICATE_PATH_PROPERTY_KEY)))
-//                    .signatureCertificateId(getConfiguration(IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY));
-//        }
+        if (getConfiguration(IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY) != null) {
+            String signaturePassphrase = getConfiguration(IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY, "");
+            ibanityServiceBuilder
+                    .requestSignaturePrivateKey(loadPrivateKey(getConfiguration(IBANITY_CLIENT_SIGNATURE_PRIVATE_KEY_PATH_PROPERTY_KEY), signaturePassphrase))
+                    .requestSignaturePassphrase(signaturePassphrase)
+                    .requestSignatureCertificate(loadCertificate(getConfiguration(IBANITY_CLIENT_SIGNATURE_CERTIFICATE_PATH_PROPERTY_KEY)))
+                    .signatureCertificateId(getConfiguration(IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY));
+        }
 
         IbanityService ibanityService = ibanityServiceBuilder.build();
 
@@ -116,7 +118,7 @@ public class ClientSample {
         return financialInstitutionSample.list();
     }
 
-    public void accountInformationAccessRequestSamples(CustomerAccessToken customerAccessToken, List<FinancialInstitution> financialInstitutions) {
+    public AccountInformationAccessRequest accountInformationAccessRequestSamples(CustomerAccessToken customerAccessToken, List<FinancialInstitution> financialInstitutions) {
         LOGGER.info("Account Information Access Request samples");
 
         String consentReference = "application_customer_reference-" + UUID.randomUUID().toString();
@@ -127,6 +129,9 @@ public class ClientSample {
                         consentReference, fakeTppAccountInformationAccessRedirectUrl);
 
         SampleHelper.waitForAuthorizationWebFlow(accountInformationAccessRequest);
+
+        accountInformationAccessRequest = accountInformationAccessRequestSample.find(accountInformationAccessRequest, financialInstitutions.get(0), customerAccessToken);
+        return accountInformationAccessRequest;
     }
 
     public List<Account> accountSamples(CustomerAccessToken customerAccessToken, List<FinancialInstitution> financialInstitutions) {

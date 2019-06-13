@@ -6,7 +6,9 @@ import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.mappers.IbanityModelMapper;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest;
+import com.ibanity.apis.client.products.xs2a.models.AuthorizationPortal;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
+import com.ibanity.apis.client.products.xs2a.models.Meta;
 import com.ibanity.apis.client.products.xs2a.models.create.AccountInformationAccessRequestCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountInformationAccessLinks;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountLinks;
@@ -52,7 +54,8 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
         URI uri = getUri(financialInstitutionId, resourceId);
 
         String response = ibanityHttpClient.get(uri, accountInformationAccessRequestCreationQuery.getAdditionalHeaders(), accountInformationAccessRequestCreationQuery.getCustomerAccessToken());
-        return IbanityModelMapper.mapResource(response, AccountInformationAccessRequest.class);
+        System.out.println(response);
+        return IbanityModelMapper.mapResource(response, responseMapping());
     }
 
     private URI getUri(String financialInstitutionId, String accountInformationAccessRequestId) {
@@ -91,6 +94,14 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
                 .requestedAccountReferences(creationQuery.getRequestedAccountReferences())
                 .locale(creationQuery.getLocale())
                 .customerIpAddress(creationQuery.getCustomerIpAddress())
+                .meta(Meta.builder()
+                        .authorizationPortal(AuthorizationPortal.builder()
+                                .disclaimerContent(creationQuery.getMetaRequestCreationQuery().getAuthorizationPortalCreationQuery().getDisclaimerContent())
+                                .disclaimerTitle(creationQuery.getMetaRequestCreationQuery().getAuthorizationPortalCreationQuery().getDisclaimerTitle())
+                                .financialInstitutionPrimaryColor(creationQuery.getMetaRequestCreationQuery().getAuthorizationPortalCreationQuery().getFinancialInstitutionPrimaryColor())
+                                .financialInstitutionSecondaryColor(creationQuery.getMetaRequestCreationQuery().getAuthorizationPortalCreationQuery().getFinancialInstitutionSecondaryColor())
+                                .build())
+                        .build())
                 .build();
     }
 }

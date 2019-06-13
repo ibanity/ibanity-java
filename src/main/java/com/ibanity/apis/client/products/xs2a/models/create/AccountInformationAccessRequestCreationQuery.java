@@ -28,6 +28,9 @@ public final class AccountInformationAccessRequestCreationQuery {
     private String customerIpAddress;
 
     @Builder.Default
+    private MetaRequestCreationQuery metaRequestCreationQuery = MetaRequestCreationQuery.builder().build();
+
+    @Builder.Default
     private List<String> requestedAccountReferences = emptyList();
     private IbanityPagingSpec pagingSpec;
 

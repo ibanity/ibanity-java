@@ -4,6 +4,8 @@ import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequ
 import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.products.xs2a.models.create.AccountInformationAccessRequestCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.create.AuthorizationPortalCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.create.MetaRequestCreationQuery;
 import com.ibanity.apis.client.products.xs2a.services.AccountInformationAccessRequestsService;
 import com.ibanity.apis.client.services.IbanityService;
 
@@ -23,8 +25,24 @@ public class AccountInformationAccessRequestSample {
                         .financialInstitutionId(financialInstitution.getId())
                         .redirectURI(redirectUrl)
                         .consentReference(consentReference)
+                        .metaRequestCreationQuery(MetaRequestCreationQuery.builder()
+                                .authorizationPortalCreationQuery(AuthorizationPortalCreationQuery.builder()
+                                        .disclaimerContent("thisIsACusomOneContent")
+                                        .disclaimerTitle("thisIsACusomOneTitle")
+                                        .financialInstitutionPrimaryColor("#000000")
+                                        .financialInstitutionSecondaryColor("#000000")
+                                        .build())
+                                .build())
                         .build();
 
         return accountInformationAccessRequestsService.create(accountInformationAccessRequestCreationQuery);
+    }
+
+    public AccountInformationAccessRequest find(AccountInformationAccessRequest accountInformationAccessRequest, FinancialInstitution financialInstitution, CustomerAccessToken customerAccessToken) {
+        return accountInformationAccessRequestsService.find(AccountInformationAccessRequestCreationQuery.builder()
+                .accountInformationAccessRequestId(accountInformationAccessRequest.getId())
+                .financialInstitutionId(financialInstitution.getId())
+                .customerAccessToken(customerAccessToken.getToken())
+                .build());
     }
 }
