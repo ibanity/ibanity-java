@@ -1,12 +1,7 @@
 package com.ibanity.apis.client.products.xs2a.sandbox.models;
 
 import com.ibanity.apis.client.products.xs2a.models.Transaction;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
@@ -28,7 +23,6 @@ public class FinancialInstitutionTransaction extends Transaction {
 
     private Instant createdAt;
     private Instant updatedAt;
-    private Instant deletedAt;
 
 }
 
