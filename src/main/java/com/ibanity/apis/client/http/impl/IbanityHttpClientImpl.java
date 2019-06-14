@@ -44,7 +44,7 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
     @Override
     public String get(@NonNull URI path, @NonNull Map<String, String> additionalHeaders, String customerAccessToken) {
         HttpGet httpGet = new HttpGet(path);
-        return addHeaderAndExecute(additionalHeaders, customerAccessToken, httpGet);
+        return execute(additionalHeaders, customerAccessToken, httpGet);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
         try {
             HttpPost httpPost = new HttpPost(path);
             httpPost.setEntity(createEntityRequest(objectMapper().writeValueAsString(requestApiModel)));
-            return addHeaderAndExecute(additionalHeaders, customerAccessToken, httpPost);
+            return execute(additionalHeaders, customerAccessToken, httpPost);
         } catch (JsonProcessingException exception) {
             throw new RuntimeException("An error occurred while converting object to json", exception);
         }
@@ -81,7 +81,7 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
     @Override
     public String delete(@NonNull URI path, @NonNull Map<String, String> additionalHeaders, String customerAccessToken) {
         HttpDelete httpDelete = new HttpDelete(path);
-        return addHeaderAndExecute(additionalHeaders, customerAccessToken, httpDelete);
+        return execute(additionalHeaders, customerAccessToken, httpDelete);
     }
 
     @Override
@@ -99,13 +99,13 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
         try {
             HttpPatch httpPatch = new HttpPatch(path);
             httpPatch.setEntity(createEntityRequest(objectMapper().writeValueAsString(requestApiModel)));
-            return addHeaderAndExecute(additionalHeaders, customerAccessToken, httpPatch);
+            return execute(additionalHeaders, customerAccessToken, httpPatch);
         } catch (JsonProcessingException exception) {
             throw new RuntimeException("An error occurred while converting object to json", exception);
         }
     }
 
-    private String addHeaderAndExecute(@NonNull Map<String, String> additionalHeaders, String customerAccessToken, HttpRequestBase httpRequestBase) {
+    private String execute(@NonNull Map<String, String> additionalHeaders, String customerAccessToken, HttpRequestBase httpRequestBase) {
         try {
             addHeaders(customerAccessToken, additionalHeaders, httpRequestBase);
             return httpClient.execute(httpRequestBase, ibanityResponseHandler);
