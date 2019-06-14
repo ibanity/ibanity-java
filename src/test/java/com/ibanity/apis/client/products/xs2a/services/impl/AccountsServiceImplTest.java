@@ -85,11 +85,13 @@ class AccountsServiceImplTest {
                         .build();
 
         when(ibanityHttpClient.delete(new URI(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT + "/" + ACCOUNT_ID), emptyMap(), CUSTOMER_ACCESS_TOKEN))
-                .thenReturn(loadFile("json/account.json"));
+                .thenReturn(loadFile("json/deleteAccount.json"));
 
         Account actual = accountsService.delete(accountReadQuery);
 
-        assertThat(actual).isEqualToComparingFieldByField(createExpected());
+        assertThat(actual).isEqualToComparingFieldByField(Account.builder()
+        .id(ACCOUNT_ID)
+        .build());
     }
 
     @Test

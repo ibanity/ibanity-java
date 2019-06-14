@@ -69,12 +69,17 @@ public class AccountsServiceImpl implements AccountsService {
     private Function<DataApiModel, Account> customMappingFunction() {
         return dataApiModel -> {
             Account account = toIbanityModel(dataApiModel, Account.class);
-            Synchronization synchronization = toIbanityModel(dataApiModel.getMeta().getLatestSynchronization(), Synchronization.class);
-            RelationshipsApiModel financialInstitution = dataApiModel.getRelationships().get("financialInstitution");
+            if(dataApiModel.getMeta() != null) {
+                Synchronization synchronization = toIbanityModel(dataApiModel.getMeta().getLatestSynchronization(), Synchronization.class);
+                account.setLastSynchronization(synchronization);
+                account.setSynchronizedAt(dataApiModel.getMeta().getSynchronizedAt());
+            }
 
-            account.setFinancialInstitutionId(financialInstitution.getData().getId());
-            account.setSynchronizedAt(dataApiModel.getMeta().getSynchronizedAt());
-            account.setLastSynchronization(synchronization);
+            RelationshipsApiModel financialInstitution = dataApiModel.getRelationships().get("financialInstitution");
+            if(financialInstitution != null) {
+                account.setFinancialInstitutionId(financialInstitution.getData().getId());
+            }
+
             return account;
         };
     }
