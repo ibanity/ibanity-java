@@ -24,4 +24,10 @@ public interface IbanityHttpClient {
     String delete(URI path, String customerAccessToken);
 
     String delete(URI path, Map<String, String> additionalHeaders, String customerAccessToken);
+
+    String patch(URI path, Object requestApiModel);
+
+    String patch(URI path, Object requestApiModel, String customerAccessToken);
+
+    String patch(URI path, Object requestApiModel, Map<String, String> additionalHeaders, String customerAccessToken);
 }

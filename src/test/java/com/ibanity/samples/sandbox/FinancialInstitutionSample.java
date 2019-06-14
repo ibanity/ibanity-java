@@ -21,7 +21,7 @@ public class FinancialInstitutionSample {
     public FinancialInstitution create(){
         FinancialInstitutionCreationQuery financialInstitutionCreationQuery =
                 FinancialInstitutionCreationQuery.builder()
-                        .name("HSBC")
+                        .name("HSBC" + UUID.randomUUID())
                         .build();
 
         return sandBoxFinancialInstitutionsService.create(financialInstitutionCreationQuery);

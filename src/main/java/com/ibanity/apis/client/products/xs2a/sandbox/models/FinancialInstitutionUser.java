@@ -1,11 +1,7 @@
 package com.ibanity.apis.client.products.xs2a.sandbox.models;
 
 import com.ibanity.apis.client.models.IbanityModel;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -14,6 +10,8 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@ToString
+@EqualsAndHashCode
 public class FinancialInstitutionUser implements IbanityModel {
 
     public static final String RESOURCE_TYPE = "financialInstitutionUser";
@@ -29,5 +27,4 @@ public class FinancialInstitutionUser implements IbanityModel {
 
     private Instant createdAt;
     private Instant updatedAt;
-    private Instant deletedAt;
 }

@@ -3,11 +3,7 @@ package com.ibanity.apis.client.products.xs2a.models;
 import com.ibanity.apis.client.models.IbanityModel;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountInformationAccessLinks;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountLinks;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +26,8 @@ public class AccountInformationAccessRequest implements IbanityModel {
     private String status;
     private String locale;
     private String customerIpAddress;
+
+    private Meta meta;
 
     @Builder.Default
     private List<String> requestedAccountReferences = Collections.emptyList();

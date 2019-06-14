@@ -67,7 +67,7 @@ class SandboxFinancialInstitutionsServiceImplTest {
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                 .build();
 
-        when(ibanityHttpClient.post(new URI(API_ENDPOINT_WITH_ID), createRequest()))
+        when(ibanityHttpClient.patch(new URI(API_ENDPOINT_WITH_ID), createRequest()))
                 .thenReturn(loadFile("json/sandbox/financial_institution.json"));
 
         FinancialInstitution actual = sandboxFinancialInstitutionsService.update(query);
