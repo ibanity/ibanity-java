@@ -10,9 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class IdempotencyInterceptorTest {
@@ -38,7 +36,7 @@ class IdempotencyInterceptorTest {
     }
 
     @Test
-    void process() {
+    void process_whenPost() {
         when(httpRequest.containsHeader("ibanity-idempotency-key")).thenReturn(false);
         when(httpRequest.getRequestLine()).thenReturn(requestLine);
         when(requestLine.getMethod()).thenReturn("POST");
@@ -46,5 +44,27 @@ class IdempotencyInterceptorTest {
         idempotencyInterceptor.process(httpRequest, httpContext);
 
         verify(httpRequest).addHeader(eq("ibanity-idempotency-key"), anyString());
+    }
+
+    @Test
+    void process_whenPatch() {
+        when(httpRequest.containsHeader("ibanity-idempotency-key")).thenReturn(false);
+        when(httpRequest.getRequestLine()).thenReturn(requestLine);
+        when(requestLine.getMethod()).thenReturn("PATCH");
+
+        idempotencyInterceptor.process(httpRequest, httpContext);
+
+        verify(httpRequest).addHeader(eq("ibanity-idempotency-key"), anyString());
+    }
+
+    @Test
+    void process_whenGet_thenNoIdempotencyKey() {
+        when(httpRequest.containsHeader("ibanity-idempotency-key")).thenReturn(false);
+        when(httpRequest.getRequestLine()).thenReturn(requestLine);
+        when(requestLine.getMethod()).thenReturn("GET");
+
+        idempotencyInterceptor.process(httpRequest, httpContext);
+
+        verify(httpRequest, never()).addHeader(anyString(), anyString());
     }
 }

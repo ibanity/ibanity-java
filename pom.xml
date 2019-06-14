@@ -355,6 +355,7 @@
                         <exclude>**/exceptions/*</exclude>
                         <exclude>**/IbanityServiceImpl.*</exclude>
                         <exclude>**/IbanityServiceBuilder.*</exclude>
+                        <exclude>**/Xs2aServiceImpl.*</exclude>
                         <exclude>**/utils/*</exclude>
                     </excludes>
                 </configuration>
@@ -399,6 +400,7 @@
                         <exclude>**/exceptions/*</exclude>
                         <exclude>**/IbanityServiceImpl.*</exclude>
                         <exclude>**/IbanityServiceBuilder.*</exclude>
+                        <exclude>**/Xs2aServiceImpl.*</exclude>
                         <exclude>**/utils/*</exclude>
                     </excludes>
                 </configuration>
