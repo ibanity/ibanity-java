@@ -62,8 +62,6 @@ public class AccountsServiceImpl implements AccountsService {
         String url = getUrl(accountDeleteQuery.getFinancialInstitutionId(), null)
                 + "/"
                 + accountDeleteQuery.getAccountId();
-        System.out.println(url);
-        System.out.println(accountDeleteQuery);
         String response = ibanityHttpClient.delete(buildUri(url), accountDeleteQuery.getAdditionalHeaders(), accountDeleteQuery.getCustomerAccessToken());
         return IbanityModelMapper.mapResource(response, customMappingFunction());
     }

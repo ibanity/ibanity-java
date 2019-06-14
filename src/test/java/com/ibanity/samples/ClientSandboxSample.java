@@ -98,7 +98,6 @@ public class ClientSandboxSample {
         financialInstitutionAccountSample.find(financialInstitution, financialInstitutionUser, financialInstitutionAccount.getId());
 
         FinancialInstitutionAccount delete = financialInstitutionAccountSample.delete(financialInstitution, financialInstitutionUser, financialInstitutionAccount);
-        System.out.println(delete);
 
         // clean related objects
         financialInstitutionSample.delete(financialInstitution);
