@@ -25,13 +25,12 @@ Minimal configuration values are:
 * the application public certificate
 
 ```java
-IbanityService ibanityService = IbanityServiceBuilder.builder()
-                .ibanityApiEndpoint("https://api.ibanity.com")
-                .applicationPrivateKey(myPrivateKey)
-                .passphrase("aPassphrase")
-                .applicationCertificate(myCertificate)
-                .build()
-                
+    IbanityService ibanityServiceBuilder = IbanityServiceBuilder.builder()
+            .ibanityApiEndpoint("https://api.ibanity.com")
+            .tlsPrivateKey(myPrivateKey)
+            .passphrase("aPassphrase")
+            .tlsCertificate(myCertificate)
+            .build();
 ```
 
 You can then make use of Xs2a services through your IbanityService instance.

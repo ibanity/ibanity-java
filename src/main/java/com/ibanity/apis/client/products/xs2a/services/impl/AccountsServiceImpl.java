@@ -71,7 +71,7 @@ public class AccountsServiceImpl implements AccountsService {
             Account account = toIbanityModel(dataApiModel, Account.class);
             if(dataApiModel.getMeta() != null) {
                 Synchronization synchronization = toIbanityModel(dataApiModel.getMeta().getLatestSynchronization(), Synchronization.class);
-                account.setLastSynchronization(synchronization);
+                account.setLatestSynchronization(synchronization);
                 account.setSynchronizedAt(dataApiModel.getMeta().getSynchronizedAt());
             }
 
