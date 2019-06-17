@@ -1,6 +1,5 @@
 package com.ibanity.apis.client.products.xs2a.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ibanity.apis.client.models.IbanityModel;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -24,8 +23,7 @@ public class Account implements IbanityModel {
     private String selfLink;
     private UUID financialInstitutionId;
 
-    @JsonProperty("subtype")
-    private String subType;
+    private String subtype;
     private String currency;
     private String description;
     private String reference;

@@ -15,7 +15,7 @@ public class FinancialInstitutionAccountCreationQuery {
     private UUID financialInstitutionId;
     private UUID financialInstitutionUserId;
 
-    private String subType;
+    private String subtype;
     private String currency;
     private String description;
     private String reference;

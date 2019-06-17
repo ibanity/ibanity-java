@@ -83,7 +83,7 @@ class SynchronizationServiceImplTest {
         Synchronization synchronization = Synchronization.builder()
                 .resourceId(synchronizationReadQuery.getResourceId())
                 .resourceType(synchronizationReadQuery.getResourceType())
-                .subType(synchronizationReadQuery.getSubtype())
+                .subtype(synchronizationReadQuery.getSubtype())
                 .build();
         return RequestApiModel.builder()
                 .data(
@@ -101,7 +101,7 @@ class SynchronizationServiceImplTest {
                 .resourceId(ACCOUNT_ID)
                 .resourceType("account")
                 .status(status)
-                .subType("accountDetails")
+                .subtype("accountDetails")
                 .createdAt(Instant.parse("2019-05-09T09:18:58.358Z"))
                 .updatedAt(Instant.parse("2019-05-09T09:18:59.012Z"))
                 .build();

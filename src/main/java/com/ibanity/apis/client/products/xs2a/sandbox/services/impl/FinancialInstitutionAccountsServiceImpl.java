@@ -18,10 +18,7 @@ import com.ibanity.apis.client.services.ApiUrlProvider;
 
 import java.util.function.Function;
 
-import static com.ibanity.apis.client.mappers.IbanityModelMapper.buildRequest;
-import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapCollection;
-import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
-import static com.ibanity.apis.client.mappers.IbanityModelMapper.toIbanityModel;
+import static com.ibanity.apis.client.mappers.IbanityModelMapper.*;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static org.apache.commons.lang3.StringUtils.removeEnd;
 
@@ -90,7 +87,7 @@ public class FinancialInstitutionAccountsServiceImpl implements FinancialInstitu
                 .availableBalance(query.getAvailableBalance())
                 .currentBalance(query.getCurrentBalance())
                 .currency(query.getCurrency())
-                .subType(query.getSubType())
+                .subtype(query.getSubtype())
                 .build();
     }
 

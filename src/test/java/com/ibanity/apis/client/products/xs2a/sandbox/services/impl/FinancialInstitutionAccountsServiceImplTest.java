@@ -115,7 +115,7 @@ class FinancialInstitutionAccountsServiceImplTest {
                 .description("Checking account")
                 .reference("BE6621814485468913")
                 .referenceType("IBAN")
-                .subType("checking")
+                .subtype("checking")
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                 .financialInstitutionUserId(USER_ID)
                 .build();
@@ -135,7 +135,7 @@ class FinancialInstitutionAccountsServiceImplTest {
                 .description(query.getDescription())
                 .reference(query.getReference())
                 .referenceType(query.getReferenceType())
-                .subType(query.getSubType())
+                .subtype(query.getSubtype())
                 .build();
         return RequestApiModel.builder()
                 .data(
@@ -157,7 +157,7 @@ class FinancialInstitutionAccountsServiceImplTest {
                 .description("Checking account")
                 .reference("BE6621814485468913")
                 .referenceType("IBAN")
-                .subType("checking")
+                .subtype("checking")
                 .updatedAt(parse("2019-05-09T09:18:06.271096Z"))
                 .selfLink("https://api.ibanity.com/sandbox/financial-institutions/c96751a0-d43f-4f15-861e-d79ee49f152f/financial-institution-users/51e863e8-5213-4c3f-8303-430e83ca49fc/financial-institution-accounts/1bcb2b9e-176d-42fb-9bbb-cc9c7744d573")
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)

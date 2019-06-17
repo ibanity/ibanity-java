@@ -24,7 +24,7 @@ public class FinancialInstitutionAccountSample {
     public FinancialInstitutionAccount create(FinancialInstitution financialInstitution, FinancialInstitutionUser financialInstitutionUser){
         FinancialInstitutionAccountCreationQuery accountCreationQuery =
                 FinancialInstitutionAccountCreationQuery.builder()
-                        .subType("checking")
+                        .subtype("checking")
                         .availableBalance(SampleHelper.generateRandomAmount())
                         .currentBalance(SampleHelper.generateRandomAmount())
                         .currency("EUR")
