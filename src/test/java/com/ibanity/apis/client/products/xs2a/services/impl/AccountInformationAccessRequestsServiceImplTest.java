@@ -63,7 +63,7 @@ class AccountInformationAccessRequestsServiceImplTest {
                 AccountInformationAccessRequestCreationQuery.builder()
                         .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                         .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
-                        .redirectURI("https://fake-tpp.com/access-granted")
+                        .redirectUri("https://fake-tpp.com/access-granted")
                         .consentReference(CONSENT_REFERENCE)
                         .requestedAccountReferences(newArrayList("BE9766801628897565"))
                         .locale("fr")
@@ -97,7 +97,7 @@ class AccountInformationAccessRequestsServiceImplTest {
 
     private RequestApiModel toIbanityModel(AccountInformationAccessRequestCreationQuery creationQuery) {
         AccountInformationAccessRequest accessRequest = AccountInformationAccessRequest.builder()
-                .redirectUri(creationQuery.getRedirectURI())
+                .redirectUri(creationQuery.getRedirectUri())
                 .consentReference(creationQuery.getConsentReference())
                 .requestedAccountReferences(creationQuery.getRequestedAccountReferences())
                 .locale(creationQuery.getLocale())

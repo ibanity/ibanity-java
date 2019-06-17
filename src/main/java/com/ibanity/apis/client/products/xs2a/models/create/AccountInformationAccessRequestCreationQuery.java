@@ -22,7 +22,7 @@ public final class AccountInformationAccessRequestCreationQuery {
     private UUID accountInformationAccessRequestId;
     private UUID financialInstitutionId;
     private String consentReference;
-    private String redirectURI;
+    private String redirectUri;
     private String customerAccessToken;
     private String locale;
     private String customerIpAddress;

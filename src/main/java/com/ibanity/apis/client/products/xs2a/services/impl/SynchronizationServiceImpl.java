@@ -29,7 +29,7 @@ public class SynchronizationServiceImpl implements SynchronizationService {
         Synchronization synchronization = Synchronization.builder()
                 .resourceId(synchronizationReadQuery.getResourceId())
                 .resourceType(synchronizationReadQuery.getResourceType())
-                .subType(synchronizationReadQuery.getSubtype())
+                .subtype(synchronizationReadQuery.getSubtype())
                 .build();
         String url = getUrl();
         RequestApiModel request = IbanityModelMapper.buildRequest(Synchronization.RESOURCE_TYPE, synchronization);

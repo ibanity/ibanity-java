@@ -152,7 +152,7 @@ class AccountsServiceImplTest {
                 .currentBalance(0.0)
                 .currency("EUR")
                 .availableBalance(0.0)
-                .subType("checking")
+                .subtype("checking")
                 .synchronizedAt(parse("2019-05-09T09:19:37.683Z"))
                 .lastSynchronization(createSynchronization())
                 .build();
@@ -164,7 +164,7 @@ class AccountsServiceImplTest {
                 .resourceId(ACCOUNT_ID.toString())
                 .resourceType("account")
                 .status("success")
-                .subType("accountDetails")
+                .subtype("accountDetails")
                 .createdAt(Instant.parse("2019-05-09T09:19:37.683Z"))
                 .updatedAt(Instant.parse("2019-05-09T09:19:37.683Z"))
                 .build();

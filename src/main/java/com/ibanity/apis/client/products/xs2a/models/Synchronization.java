@@ -1,12 +1,7 @@
 package com.ibanity.apis.client.products.xs2a.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ibanity.apis.client.models.IbanityModel;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -26,8 +21,7 @@ public class Synchronization implements IbanityModel {
     @Builder.Default
     private List<String> errors = Collections.emptyList();
     private String status;
-    @JsonProperty("subtype")
-    private String subType;
+    private String subtype;
     private String resourceId;
     private String resourceType;
     private String selfLink;

@@ -23,7 +23,7 @@ public class AccountInformationAccessRequestSample {
                 AccountInformationAccessRequestCreationQuery.builder()
                         .customerAccessToken(customerAccessToken.getToken())
                         .financialInstitutionId(financialInstitution.getId())
-                        .redirectURI(redirectUrl)
+                        .redirectUri(redirectUrl)
                         .consentReference(consentReference)
                         .metaRequestCreationQuery(MetaRequestCreationQuery.builder()
                                 .authorizationPortalCreationQuery(AuthorizationPortalCreationQuery.builder()

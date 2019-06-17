@@ -88,7 +88,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
 
     private AccountInformationAccessRequest mapRequest(AccountInformationAccessRequestCreationQuery creationQuery) {
         return AccountInformationAccessRequest.builder()
-                .redirectUri(creationQuery.getRedirectURI())
+                .redirectUri(creationQuery.getRedirectUri())
                 .consentReference(creationQuery.getConsentReference())
                 .requestedAccountReferences(creationQuery.getRequestedAccountReferences())
                 .locale(creationQuery.getLocale())
