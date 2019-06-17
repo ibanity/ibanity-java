@@ -154,7 +154,7 @@ class AccountsServiceImplTest {
                 .availableBalance(0.0)
                 .subtype("checking")
                 .synchronizedAt(parse("2019-05-09T09:19:37.683Z"))
-                .lastSynchronization(createSynchronization())
+                .latestSynchronization(createSynchronization())
                 .build();
     }
 

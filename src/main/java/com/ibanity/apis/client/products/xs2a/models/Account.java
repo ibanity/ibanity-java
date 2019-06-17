@@ -31,5 +31,5 @@ public class Account implements IbanityModel {
     private Double currentBalance;
     private Double availableBalance;
     private Instant synchronizedAt;
-    private Synchronization lastSynchronization;
+    private Synchronization latestSynchronization;
 }
