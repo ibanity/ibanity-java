@@ -6,6 +6,7 @@ import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.jsonapi.ResourceApiModel;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityModel;
+import com.ibanity.apis.client.products.xs2a.models.Synchronization;
 import com.ibanity.apis.client.utils.IbanityUtils;
 
 import java.io.IOException;
@@ -43,6 +44,7 @@ public class IbanityModelMapper {
                     .firstLink(collectionApiModel.getLinks().getFirst())
                     .previousLink(collectionApiModel.getLinks().getPrev())
                     .nextLink(collectionApiModel.getLinks().getNext())
+                    .latestSynchronization(getLatestSynchronization(collectionApiModel))
                     .items(
                             collectionApiModel.getData().stream()
                                     .map(customMapping)
@@ -51,6 +53,14 @@ public class IbanityModelMapper {
                     .build();
         } catch (IOException exception) {
             throw new IllegalArgumentException("Response cannot be parsed", exception);
+        }
+    }
+
+    private static Synchronization getLatestSynchronization(CollectionApiModel collectionApiModel) {
+        if(collectionApiModel.getMeta().getLatestSynchronization() != null) {
+            return toIbanityModel(collectionApiModel.getMeta().getLatestSynchronization(), Synchronization.class);
+        } else {
+            return null;
         }
     }
 

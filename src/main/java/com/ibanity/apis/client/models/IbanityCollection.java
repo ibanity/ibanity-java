@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.models;
 
+import com.ibanity.apis.client.products.xs2a.models.Synchronization;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -20,6 +21,7 @@ public class IbanityCollection<T> {
     private String nextLink;
     private String previousLink;
     private long pageLimit;
+    private Synchronization latestSynchronization;
     List<T> items;
 }
 
