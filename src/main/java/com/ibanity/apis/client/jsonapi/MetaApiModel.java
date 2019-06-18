@@ -1,12 +1,8 @@
 package com.ibanity.apis.client.jsonapi;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+
+import java.time.Instant;
 
 @Getter
 @Builder
@@ -17,4 +13,6 @@ import lombok.ToString;
 public class MetaApiModel {
 
     private PagingApiModel paging;
+    private Instant synchronizedAt;
+    private DataApiModel latestSynchronization;
 }

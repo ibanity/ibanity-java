@@ -4,6 +4,7 @@ import com.ibanity.apis.client.helpers.IbanityTestHelper;
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityProduct;
+import com.ibanity.apis.client.products.xs2a.models.Synchronization;
 import com.ibanity.apis.client.products.xs2a.models.Transaction;
 import com.ibanity.apis.client.products.xs2a.models.read.TransactionReadQuery;
 import com.ibanity.apis.client.products.xs2a.models.read.TransactionsReadQuery;
@@ -77,6 +78,15 @@ public class TransactionsServiceImplTest {
                         .pageLimit(10)
                         .firstLink(FIRST_LINK)
                         .items(newArrayList(createExpected()))
+                        .latestSynchronization(Synchronization.builder()
+                                .resourceId("1c020714-759c-4ee6-ae87-5ce667937e77")
+                                .resourceType("account")
+                                .subtype("accountTransactions")
+                                .status("success")
+                                .id(UUID.fromString("b49dff7e-ad7b-4992-9753-8f2a004cf343"))
+                                .createdAt(Instant.parse("2019-04-25T09:06:07.171Z"))
+                                .updatedAt(Instant.parse("2019-04-25T09:06:08.044Z"))
+                                .build())
                         .build();
 
         TransactionsReadQuery transactionReadQuery =
@@ -91,7 +101,7 @@ public class TransactionsServiceImplTest {
 
         IbanityCollection<Transaction> actual = transactionsService.list(transactionReadQuery);
 
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(expected);
     }
 
     private Transaction createExpected() {
