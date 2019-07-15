@@ -59,33 +59,46 @@ public class ClientSandboxSample {
 
         IbanityService ibanityService = ibanityServiceBuilder.build();
         ClientSandboxSample clientSandboxSample = new ClientSandboxSample(ibanityService);
-//        clientSandboxSample.financialInstitutionSamples();
-//        clientSandboxSample.financialInstitutionUserSamples();
-        clientSandboxSample.financialInstitutionAccountSamples();
-//        clientSandboxSample.financialInstitutionTransactionSamples();
+        FinancialInstitution financialInstitution = clientSandboxSample.financialInstitutionSamples();
+        LOGGER.info("Financial institution {}", financialInstitution);
+
+        FinancialInstitutionUser financialInstitutionUser = clientSandboxSample.financialInstitutionUserSamples();
+        LOGGER.info("Financial institution user {}", financialInstitutionUser);
+
+        FinancialInstitutionAccount financialInstitutionAccount = clientSandboxSample.financialInstitutionAccountSamples();
+        LOGGER.info("Financial institution account {}", financialInstitutionAccount);
+
+        FinancialInstitutionTransaction financialInstitutionTransaction = clientSandboxSample.financialInstitutionTransactionSamples();
+        LOGGER.info("Financial institution transaction {}", financialInstitutionTransaction);
 
         LOGGER.info("Samples end");
     }
 
-    public void financialInstitutionSamples() {
+    public FinancialInstitution financialInstitutionSamples() {
         LOGGER.info("Financial Institution samples");
 
         FinancialInstitution financialInstitution = financialInstitutionSample.create();
         FinancialInstitution update = financialInstitutionSample.update(financialInstitution);
         financialInstitutionSample.find(financialInstitution.getId());
+        deleteFinancialInstitution(financialInstitution);
+        return financialInstitution;
+    }
+
+    private void deleteFinancialInstitution(FinancialInstitution financialInstitution) {
         financialInstitutionSample.delete(financialInstitution);
     }
 
-    public void financialInstitutionUserSamples() {
+    public FinancialInstitutionUser financialInstitutionUserSamples() {
         LOGGER.info("Financial Institution User samples");
 
         FinancialInstitutionUser financialInstitutionUser = financialInstitutionUserSample.create();
         FinancialInstitutionUser update = financialInstitutionUserSample.update(financialInstitutionUser);
         financialInstitutionUserSample.find(financialInstitutionUser.getId());
         financialInstitutionUserSample.delete(financialInstitutionUser);
+        return financialInstitutionUser;
     }
 
-    public void financialInstitutionAccountSamples() {
+    public FinancialInstitutionAccount financialInstitutionAccountSamples() {
         LOGGER.info("Financial Institution Account samples");
 
         // create related objects
@@ -100,11 +113,13 @@ public class ClientSandboxSample {
         FinancialInstitutionAccount delete = financialInstitutionAccountSample.delete(financialInstitution, financialInstitutionUser, financialInstitutionAccount);
 
         // clean related objects
-        financialInstitutionSample.delete(financialInstitution);
+        deleteFinancialInstitution(financialInstitution);
         financialInstitutionUserSample.delete(financialInstitutionUser);
+
+        return financialInstitutionAccount;
     }
 
-    public void financialInstitutionTransactionSamples() {
+    public FinancialInstitutionTransaction financialInstitutionTransactionSamples() {
         LOGGER.info("Financial Institution Transaction samples");
 
         // create related objects
@@ -124,8 +139,10 @@ public class ClientSandboxSample {
 
         // clean related objects
         this.financialInstitutionAccountSample.delete(financialInstitution, financialInstitutionUser, financialInstitutionAccount);
-        this.financialInstitutionSample.delete(financialInstitution);
+        deleteFinancialInstitution(financialInstitution);
         this.financialInstitutionUserSample.delete(financialInstitutionUser);
+
+        return financialInstitutionTransaction;
     }
 
 }

@@ -1,11 +1,7 @@
 package com.ibanity.apis.client.products.xs2a.models;
 
 import com.ibanity.apis.client.models.IbanityModel;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -26,8 +22,12 @@ public class FinancialInstitution implements IbanityModel {
     private String logoUrl;
     private String primaryColor;
     private String secondaryColor;
+    private String country;
+    private String status;
+
     private Long maxRequestedAccountReferences;
     private Long minRequestedAccountReferences;
+
     private boolean futureDatedPaymentsAllowed;
     private boolean requiresCredentialStorage;
     private boolean requiresCustomerIpAddress;
