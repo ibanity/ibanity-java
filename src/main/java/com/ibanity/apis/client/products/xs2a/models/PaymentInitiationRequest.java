@@ -3,12 +3,9 @@ package com.ibanity.apis.client.products.xs2a.models;
 import com.ibanity.apis.client.models.IbanityModel;
 import com.ibanity.apis.client.products.xs2a.models.links.FinancialInstitutionLinks;
 import com.ibanity.apis.client.products.xs2a.models.links.PaymentInitiationAuthorizationLinks;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -45,7 +42,7 @@ public class PaymentInitiationRequest implements IbanityModel {
     private String locale;
     private String customerIpAddress;
 
-    private Double amount;
+    private BigDecimal amount;
 
     private LocalDate requestedExecutionDate;
 

@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.UUID;
 
@@ -26,7 +27,7 @@ public final class PaymentInitiationRequestCreationQuery {
     private String remittanceInformationType;
     private String remittanceInformation;
 
-    private Double amount;
+    private BigDecimal amount;
     private String currency;
 
     private String debtorName;

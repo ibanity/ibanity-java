@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
@@ -20,7 +21,7 @@ public class FinancialInstitutionAccountCreationQuery {
     private String description;
     private String reference;
     private String referenceType;
-    private Double currentBalance;
-    private Double availableBalance;
+    private BigDecimal currentBalance;
+    private BigDecimal availableBalance;
 
 }

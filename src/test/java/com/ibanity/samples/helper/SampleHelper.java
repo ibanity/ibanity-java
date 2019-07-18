@@ -15,6 +15,7 @@ import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
@@ -28,14 +29,14 @@ import java.util.UUID;
 public class SampleHelper {
     private static final Logger LOGGER = LogManager.getLogger(SampleHelper.class);
 
-    public static double generateRandomAmount() {
+    public static BigDecimal generateRandomAmount() {
         Random random = new Random();
 
         int randomDebitCreditSign = random.nextBoolean() ? -1 : 1;
 
-        return Precision.round(
+        return BigDecimal.valueOf(Precision.round(
                 random.doubles(10, 100)
-                        .findFirst().getAsDouble() * randomDebitCreditSign, 2);
+                        .findFirst().getAsDouble() * randomDebitCreditSign, 2));
     }
 
     public static void waitForAuthorizationWebFlow(AccountInformationAccessRequest accountInformationAccessRequest) {

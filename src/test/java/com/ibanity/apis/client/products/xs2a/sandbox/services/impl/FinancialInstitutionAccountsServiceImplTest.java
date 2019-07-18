@@ -23,6 +23,7 @@ import java.util.UUID;
 
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
 import static com.ibanity.apis.client.models.IbanityProduct.Xs2a;
+import static java.math.BigDecimal.ZERO;
 import static java.time.Instant.parse;
 import static java.util.UUID.fromString;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -109,9 +110,9 @@ class FinancialInstitutionAccountsServiceImplTest {
     @Test
     void create() throws URISyntaxException, IOException {
         FinancialInstitutionAccountCreationQuery query = FinancialInstitutionAccountCreationQuery.builder()
-                .availableBalance(0.0)
+                .availableBalance(ZERO)
                 .currency("EUR")
-                .currentBalance(0.0)
+                .currentBalance(ZERO)
                 .description("Checking account")
                 .reference("BE6621814485468913")
                 .referenceType("IBAN")
@@ -150,10 +151,10 @@ class FinancialInstitutionAccountsServiceImplTest {
     private FinancialInstitutionAccount createExpectedForFind() {
         return FinancialInstitutionAccount.builder()
                 .id(ACCOUNT_ID)
-                .availableBalance(0.0)
+                .availableBalance(ZERO)
                 .createdAt(parse("2019-05-09T09:18:06.271096Z"))
                 .currency("EUR")
-                .currentBalance(0.0)
+                .currentBalance(ZERO)
                 .description("Checking account")
                 .reference("BE6621814485468913")
                 .referenceType("IBAN")
