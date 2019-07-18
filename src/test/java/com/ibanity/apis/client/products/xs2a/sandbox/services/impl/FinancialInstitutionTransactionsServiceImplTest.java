@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
@@ -117,7 +118,7 @@ class FinancialInstitutionTransactionsServiceImplTest {
                 .financialInstitutionAccountId(ACCOUNT_ID)
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                 .financialInstitutionUserId(USER_ID)
-                .amount(6.99)
+                .amount(new BigDecimal("6.99"))
                 .counterpartName("ALLIED BANK PHILIPPINES (UK) PLC")
                 .counterpartReference("BE4325885699707387")
                 .currency("EUR")
@@ -160,7 +161,7 @@ class FinancialInstitutionTransactionsServiceImplTest {
     private FinancialInstitutionTransaction createExpectedForFind() {
         return FinancialInstitutionTransaction.builder()
                 .id(fromString("6411162a-fe6f-428e-ae52-850291497f6b"))
-                .amount(6.99)
+                .amount(new BigDecimal("6.99"))
                 .counterpartName("ALLIED BANK PHILIPPINES (UK) PLC")
                 .counterpartReference("BE4325885699707387")
                 .createdAt(parse("2019-05-09T09:18:13.024220Z"))

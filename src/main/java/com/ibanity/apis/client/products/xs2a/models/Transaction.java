@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -21,7 +22,7 @@ public class Transaction implements IbanityModel {
 
     private UUID id;
     private String selfLink;
-    private Double amount;
+    private BigDecimal amount;
     private String currency;
 
     private Instant valueDate;

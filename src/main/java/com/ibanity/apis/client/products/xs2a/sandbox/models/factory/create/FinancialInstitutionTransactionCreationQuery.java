@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ public class FinancialInstitutionTransactionCreationQuery {
     private UUID financialInstitutionUserId;
     private UUID financialInstitutionAccountId;
 
-    private Double amount;
+    private BigDecimal amount;
     private String currency;
 
     private Instant valueDate;

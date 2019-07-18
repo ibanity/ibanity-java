@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.time.Instant;
 import java.util.UUID;
@@ -149,9 +150,9 @@ class AccountsServiceImplTest {
                 .reference("BE0178572046576544")
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                 .description("Checking account")
-                .currentBalance(0.0)
+                .currentBalance(BigDecimal.ZERO)
                 .currency("EUR")
-                .availableBalance(0.0)
+                .availableBalance(BigDecimal.ZERO)
                 .subtype("checking")
                 .synchronizedAt(parse("2019-05-09T09:19:37.683Z"))
                 .latestSynchronization(createSynchronization())

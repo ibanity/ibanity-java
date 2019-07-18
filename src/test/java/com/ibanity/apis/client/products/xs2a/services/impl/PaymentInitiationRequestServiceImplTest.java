@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -146,7 +147,7 @@ class PaymentInitiationRequestServiceImplTest {
                 .remittanceInformationType("unstructured")
                 .requestedExecutionDate(LocalDate.parse("2020-02-05"))
                 .currency("EUR")
-                .amount(59D)
+                .amount(new BigDecimal("59"))
                 .debtorName("Delmer Hermann")
                 .debtorAccountReference("BE5283671456644082")
                 .debtorAccountReferenceType("IBAN")
@@ -170,7 +171,7 @@ class PaymentInitiationRequestServiceImplTest {
                 .remittanceInformationType("unstructured")
                 .requestedExecutionDate(LocalDate.parse("2020-02-05"))
                 .currency("EUR")
-                .amount(59D)
+                .amount(new BigDecimal("59"))
                 .debtorName("Delmer Hermann")
                 .debtorAccountReference("BE5283671456644082")
                 .debtorAccountReferenceType("IBAN")

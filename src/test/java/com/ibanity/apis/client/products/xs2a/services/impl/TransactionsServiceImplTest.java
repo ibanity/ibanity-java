@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.time.Instant;
 import java.util.UUID;
@@ -106,7 +107,7 @@ public class TransactionsServiceImplTest {
 
     private Transaction createExpected() {
         return Transaction.builder()
-                .amount(new Double("6.99"))
+                .amount(new BigDecimal("6.99"))
                 .currency("EUR")
                 .remittanceInformationType("unstructured")
                 .remittanceInformation("NEW SHOES")

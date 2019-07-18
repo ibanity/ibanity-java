@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -28,8 +29,8 @@ public class Account implements IbanityModel {
     private String description;
     private String reference;
     private String referenceType;
-    private Double currentBalance;
-    private Double availableBalance;
+    private BigDecimal currentBalance;
+    private BigDecimal availableBalance;
     private Instant synchronizedAt;
     private Synchronization latestSynchronization;
 }
