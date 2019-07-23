@@ -17,17 +17,9 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.DefaultClientConnectionReuseStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
 
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.*;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
+import java.security.*;
 import java.security.cert.Certificate;
 
 public final class IbanityUtils {
@@ -91,10 +83,11 @@ public final class IbanityUtils {
 
         KeyStore keyStore = createKeyStore(tlsCredentials);
         KeyManager[] keyManagers = createKeyManagers(keyStore, tlsCredentials.getPrivateKeyPassphrase());
-
-        KeyStore trustStore = createTrustStore(caCertificate);
-        TrustManager[] trustManagers = createTrustManagers(trustStore);
-
+        TrustManager[] trustManagers = null;
+        if (caCertificate != null) {
+            KeyStore trustStore = createTrustStore(caCertificate);
+            trustManagers = createTrustManagers(trustStore);
+        }
         SSLContext sslContext = SSLContext.getInstance(TLS_PROTOCOL);
         sslContext.init(keyManagers, trustManagers, null);
 
@@ -111,7 +104,7 @@ public final class IbanityUtils {
         KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
         trustStore.load(null);
 
-        if (certificate != null && !trustStore.containsAlias(CA_TRUST_STORE_KEY)) {
+        if (!trustStore.containsAlias(CA_TRUST_STORE_KEY)) {
             trustStore.setCertificateEntry(CA_TRUST_STORE_KEY, certificate);
         }
 
