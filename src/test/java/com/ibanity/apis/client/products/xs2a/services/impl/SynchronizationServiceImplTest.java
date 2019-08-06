@@ -3,6 +3,7 @@ package com.ibanity.apis.client.products.xs2a.services.impl;
 import com.ibanity.apis.client.helpers.IbanityTestHelper;
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
+import com.ibanity.apis.client.models.IbanityError;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
 import com.ibanity.apis.client.products.xs2a.models.read.SynchronizationReadQuery;
@@ -18,6 +19,7 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.UUID;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyMap;
 import static java.util.UUID.fromString;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -76,7 +78,7 @@ class SynchronizationServiceImplTest {
 
         Synchronization actual = synchronizationService.find(synchronizationReadQuery);
 
-        assertThat(actual).isEqualToComparingFieldByField(createExpected("success"));
+        assertThat(actual).isEqualToComparingFieldByField(createExpected("error"));
     }
 
     private RequestApiModel createRequest(SynchronizationReadQuery synchronizationReadQuery) {
@@ -96,14 +98,22 @@ class SynchronizationServiceImplTest {
     }
 
     private Synchronization createExpected(String status) {
-        return Synchronization.builder()
+        Synchronization.SynchronizationBuilder synchronizationBuilder = Synchronization.builder()
                 .id(SYNCHRONIZATION_ID)
                 .resourceId(ACCOUNT_ID)
                 .resourceType("account")
                 .status(status)
                 .subtype("accountDetails")
                 .createdAt(Instant.parse("2019-05-09T09:18:58.358Z"))
-                .updatedAt(Instant.parse("2019-05-09T09:18:59.012Z"))
+                .updatedAt(Instant.parse("2019-05-09T09:18:59.012Z"));
+        if ("error".equalsIgnoreCase(status)) {
+            synchronizationBuilder = synchronizationBuilder.errors(newArrayList(IbanityError.builder()
+                    .code("authorizationInvalid")
+                    .detail("The authorization is invalid, you should ask the customer to reauthorize the account")
+                    .build()));
+
+        }
+        return synchronizationBuilder
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.products.xs2a.models;
 
+import com.ibanity.apis.client.models.IbanityError;
 import com.ibanity.apis.client.models.IbanityModel;
 import lombok.*;
 
@@ -19,7 +20,7 @@ public class Synchronization implements IbanityModel {
 
     private UUID id;
     @Builder.Default
-    private List<String> errors = Collections.emptyList();
+    private List<IbanityError> errors = Collections.emptyList();
     private String status;
     private String subtype;
     private String resourceId;

@@ -1,11 +1,16 @@
 {
   "data": {
     "attributes": {
-      "errors": [],
+      "errors": [
+        {
+          "code": "authorizationInvalid",
+          "detail": "The authorization is invalid, you should ask the customer to reauthorize the account"
+        }
+      ],
       "createdAt": "2019-05-09T09:18:58.358Z",
       "resourceId": "d0027fc6-0097-41f7-a9bb-3c400b5a3e2a",
       "resourceType": "account",
-      "status": "success",
+      "status": "error",
       "subtype": "accountDetails",
       "updatedAt": "2019-05-09T09:18:59.012Z"
     },
