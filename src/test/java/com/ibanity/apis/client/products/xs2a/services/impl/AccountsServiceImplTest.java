@@ -2,6 +2,7 @@ package com.ibanity.apis.client.products.xs2a.services.impl;
 
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityCollection;
+import com.ibanity.apis.client.models.IbanityError;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.Account;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
@@ -23,6 +24,7 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.UUID;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
 import static java.time.Instant.parse;
 import static java.util.Collections.emptyMap;
@@ -128,6 +130,24 @@ class AccountsServiceImplTest {
     }
 
     @Test
+    void list_forErrorInSynchronization() throws Exception {
+        AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()
+                .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
+                .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
+                .build();
+
+        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT + "?limit=10"), emptyMap(), CUSTOMER_ACCESS_TOKEN))
+                .thenReturn(loadFile("json/accounts_with_sync_errors.json"));
+        IbanityCollection<Account> actual = accountsService.list(accountsReadQuery);
+
+        Account expected = createExpected();
+        expected.setLatestSynchronization(createSynchronizationError());
+
+        assertThat(actual.getItems()).containsExactly(expected);
+        assertThat(actual.getPageLimit()).isEqualTo(10);
+    }
+
+    @Test
     void list() throws Exception {
         AccountsReadQuery accountsReadQuery = AccountsReadQuery.builder()
                 .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
@@ -168,6 +188,22 @@ class AccountsServiceImplTest {
                 .subtype("accountDetails")
                 .createdAt(Instant.parse("2019-05-09T09:19:37.683Z"))
                 .updatedAt(Instant.parse("2019-05-09T09:19:37.683Z"))
+                .build();
+    }
+
+    private Synchronization createSynchronizationError() {
+        return Synchronization.builder()
+                .id(SYNCHRONIZATION_ID)
+                .resourceId(ACCOUNT_ID.toString())
+                .resourceType("account")
+                .status("error")
+                .errors(newArrayList(IbanityError.builder()
+                        .code("authorizationInvalid")
+                        .detail("The authorization is invalid, you should ask the customer to reauthorize the account")
+                        .build()))
+                .subtype("accountDetails")
+                .createdAt(parse("2019-05-09T09:19:37.683Z"))
+                .updatedAt(parse("2019-05-09T09:19:37.683Z"))
                 .build();
     }
 }
