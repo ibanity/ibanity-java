@@ -11,6 +11,8 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
@@ -19,10 +21,10 @@ import static org.apache.commons.lang3.StringUtils.removeEnd;
 public class ApiUrlProviderImpl implements ApiUrlProvider {
 
     private static final Logger LOGGER = LogManager.getLogger(ApiUrlProviderImpl.class);
-    private final String ibanityEndpoint;
 
-    private JsonNode apiUrls;
+    private final String ibanityEndpoint;
     private final IbanityHttpClient ibanityHttpClient;
+    private final Map<IbanityProduct, JsonNode> apiUrls = new HashMap<>();
 
     public ApiUrlProviderImpl(IbanityHttpClient ibanityHttpClient, String ibanityEndpoint) {
         this.ibanityHttpClient = ibanityHttpClient;
@@ -31,10 +33,14 @@ public class ApiUrlProviderImpl implements ApiUrlProvider {
 
     @Override
     public String find(IbanityProduct ibanityProduct, String... paths) {
-        if (apiUrls == null) {
-            loadApiSchema();
-        }
         try {
+            JsonNode apiUrls = this.apiUrls.get(ibanityProduct);
+
+            if (apiUrls == null) {
+                loadApiSchema(ibanityProduct);
+                apiUrls = this.apiUrls.get(ibanityProduct);
+            }
+
             return Stream.of(paths)
                     .reduce(apiUrls, JsonNode::get, (jsonNode1, jsonNode2) -> jsonNode2)
                     .textValue();
@@ -44,12 +50,13 @@ public class ApiUrlProviderImpl implements ApiUrlProvider {
     }
 
     @Override
-    public void loadApiSchema() {
-        LOGGER.debug("loading schema");
+    public void loadApiSchema(IbanityProduct ibanityProduct) {
+        LOGGER.debug("loading schema for {}", ibanityProduct);
         String ibanityApiUrl = removeEnd(ibanityEndpoint, "/");
         try {
-            String schema = ibanityHttpClient.get(new URI(ibanityApiUrl + "/xs2a"), null);
-            apiUrls = mapJsonToMap(schema);
+            String schema = ibanityHttpClient.get(new URI(ibanityApiUrl + "/" + ibanityProduct.path()), null);
+            JsonNode jsonNode = mapJsonToMap(schema);
+            apiUrls.put(ibanityProduct, jsonNode);
             LOGGER.debug("schema loaded");
         } catch (URISyntaxException exception) {
             throw new IllegalArgumentException(format("Cannot create api schema URI for string %s", ibanityApiUrl), exception);

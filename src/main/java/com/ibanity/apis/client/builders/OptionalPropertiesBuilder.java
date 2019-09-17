@@ -12,4 +12,6 @@ public interface OptionalPropertiesBuilder {
     OptionalPropertiesBuilder caCertificate(Certificate certificate);
 
     RequestSignaturePassphraseBuilder requestSignaturePrivateKey(PrivateKey privateKey);
+
+    OptionalPropertiesBuilder pontoConnectOauth2ClientId(String clientId);
 }

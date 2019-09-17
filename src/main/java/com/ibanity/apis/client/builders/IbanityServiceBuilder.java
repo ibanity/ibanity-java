@@ -34,6 +34,7 @@ public class IbanityServiceBuilder implements
     private PrivateKey signaturePrivateKey;
     private String signaturePrivateKeyPassphrase;
     private String signatureCertificateId;
+    private String pontoConnectOauth2ClientId;
 
     public static IbanityApiEndpointBuilder builder() {
         return new IbanityServiceBuilder();
@@ -58,7 +59,7 @@ public class IbanityServiceBuilder implements
                 .build();
         tlsPrivateKeyPassphrase = null;
 
-        return new IbanityServiceImpl(apiEndpoint, caCertificate, tlsCredentials, signatureCredentials);
+        return new IbanityServiceImpl(apiEndpoint, caCertificate, tlsCredentials, signatureCredentials, pontoConnectOauth2ClientId);
     }
 
     public OptionalPropertiesBuilder caCertificate(Certificate certificate) {
@@ -73,6 +74,12 @@ public class IbanityServiceBuilder implements
 
     public RequestSignaturePassphraseBuilder requestSignaturePrivateKey(PrivateKey privateKey) {
         this.signaturePrivateKey = privateKey;
+        return this;
+    }
+
+    @Override
+    public OptionalPropertiesBuilder pontoConnectOauth2ClientId(String clientId) {
+        this.pontoConnectOauth2ClientId = clientId;
         return this;
     }
 
