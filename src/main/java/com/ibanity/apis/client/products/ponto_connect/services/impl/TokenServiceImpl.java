@@ -1,6 +1,6 @@
 package com.ibanity.apis.client.products.ponto_connect.services.impl;
 
-import com.ibanity.apis.client.http.OauthHttpClient;
+import com.ibanity.apis.client.http.OAuthHttpClient;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.ponto_connect.models.Token;
 import com.ibanity.apis.client.products.ponto_connect.models.create.TokenCreateQuery;
@@ -24,18 +24,18 @@ public class TokenServiceImpl implements TokenService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenServiceImpl.class);
 
     private final ApiUrlProvider apiUrlProvider;
-    private final OauthHttpClient oauthHttpClient;
+    private final OAuthHttpClient oAuthHttpClient;
 
-    public TokenServiceImpl(ApiUrlProvider apiUrlProvider, OauthHttpClient oauthHttpClient) {
+    public TokenServiceImpl(ApiUrlProvider apiUrlProvider, OAuthHttpClient oAuthHttpClient) {
         this.apiUrlProvider = apiUrlProvider;
-        this.oauthHttpClient = oauthHttpClient;
+        this.oAuthHttpClient = oAuthHttpClient;
     }
 
     @Override
     public void revoke(TokenRevokeQuery tokenRevokeQuery) {
         URI uri = buildUri(getUrl("revoke"));
         Map<String, String> deleteTokenRequestArguments = getDeleteTokenRequestArguments(tokenRevokeQuery.getToken());
-        oauthHttpClient.post(uri, tokenRevokeQuery.getAdditionalHeaders(), deleteTokenRequestArguments, tokenRevokeQuery.getClientSecret());
+        oAuthHttpClient.post(uri, tokenRevokeQuery.getAdditionalHeaders(), deleteTokenRequestArguments, tokenRevokeQuery.getClientSecret());
     }
 
     @Override
@@ -56,7 +56,7 @@ public class TokenServiceImpl implements TokenService {
     private Token performTokenRequest(Map<String, String> refreshTokenRequestArguments, String clientSecret, Map<String, String> additionalHeaders) {
         try {
             URI uri = buildUri(getUrl("token"));
-            String response = oauthHttpClient.post(uri, additionalHeaders, refreshTokenRequestArguments, clientSecret);
+            String response = oAuthHttpClient.post(uri, additionalHeaders, refreshTokenRequestArguments, clientSecret);
             return IbanityUtils.objectMapper().readValue(response, Token.class);
         } catch (IOException e) {
             LOGGER.error("oauth token response invalid", e);

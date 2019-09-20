@@ -1,7 +1,7 @@
 package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.http.IbanityHttpClient;
-import com.ibanity.apis.client.http.OauthHttpClient;
+import com.ibanity.apis.client.http.OAuthHttpClient;
 import com.ibanity.apis.client.http.factory.IbanityHttpClientFactory;
 import com.ibanity.apis.client.http.factory.OauthHttpClientFactory;
 import com.ibanity.apis.client.models.SignatureCredentials;
@@ -23,7 +23,7 @@ public class IbanityServiceImpl implements IbanityService {
     private final IbanityHttpClient ibanityHttpClient;
     private final Xs2aService xs2aService;
     private final PontoConnectService pontoConnectService;
-    private final OauthHttpClient oauthHttpClient;
+    private final OAuthHttpClient oauthHttpClient;
 
     public IbanityServiceImpl(String apiEndpoint,
                               Certificate caCertificate,
@@ -48,7 +48,7 @@ public class IbanityServiceImpl implements IbanityService {
                               IbanityHttpClient ibanityHttpClient,
                               Xs2aService xs2aService,
                               PontoConnectService pontoConnectService,
-                              OauthHttpClient oauthHttpClient) {
+                              OAuthHttpClient oauthHttpClient) {
         this.apiUrlProvider = apiUrlProvider;
         this.ibanityHttpClient = ibanityHttpClient;
         this.xs2aService = xs2aService;
@@ -71,7 +71,7 @@ public class IbanityServiceImpl implements IbanityService {
         return xs2aService;
     }
 
-    public OauthHttpClient oauthHttpClient() {
+    public OAuthHttpClient oAuthHttpClient() {
         if(oauthHttpClient == null) {
             throw new IllegalStateException("OauthHttpClient was not properly initialized. Did you configure pontoConnectOauth2ClientId?");
         }

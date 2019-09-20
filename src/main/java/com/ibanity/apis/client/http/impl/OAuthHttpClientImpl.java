@@ -1,6 +1,6 @@
 package com.ibanity.apis.client.http.impl;
 
-import com.ibanity.apis.client.http.OauthHttpClient;
+import com.ibanity.apis.client.http.OAuthHttpClient;
 import com.ibanity.apis.client.http.handler.IbanityResponseHandler;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
@@ -21,13 +21,13 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 
-public class OauthHttpClientImpl implements OauthHttpClient {
+public class OAuthHttpClientImpl implements OAuthHttpClient {
 
     private final String clientId;
     private final HttpClient httpClient;
     private final IbanityResponseHandler ibanityResponseHandler;
 
-    public OauthHttpClientImpl(String clientId, HttpClient httpClient) {
+    public OAuthHttpClientImpl(String clientId, HttpClient httpClient) {
         this.clientId = clientId;
         this.httpClient = httpClient;
         this.ibanityResponseHandler = new IbanityResponseHandler();
