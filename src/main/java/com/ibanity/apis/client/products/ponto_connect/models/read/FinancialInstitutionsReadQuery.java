@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.products.ponto_connect.models.read;
 
+import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import static java.util.Collections.emptyMap;
 public class FinancialInstitutionsReadQuery {
 
     private String accessToken;
+    private IbanityPagingSpec pagingSpec;
 
     @Builder.Default
     private Map<String, String> additionalHeaders = emptyMap();

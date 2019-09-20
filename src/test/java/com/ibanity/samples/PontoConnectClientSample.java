@@ -6,7 +6,10 @@ import com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesK
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.products.ponto_connect.models.*;
 import com.ibanity.apis.client.products.ponto_connect.models.create.SynchronizationCreateQuery;
+import com.ibanity.apis.client.products.ponto_connect.models.create.TokenCreateQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.read.*;
+import com.ibanity.apis.client.products.ponto_connect.models.refresh.TokenRefreshQuery;
+import com.ibanity.apis.client.products.ponto_connect.models.revoke.TokenRevokeQuery;
 import com.ibanity.apis.client.products.ponto_connect.services.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -76,16 +79,27 @@ public class PontoConnectClientSample {
     }
 
     private static void revokeToken(TokenService tokenService, String accessToken) {
-        tokenService.revoke(accessToken, clientSecret);
+        tokenService.revoke(TokenRevokeQuery.builder()
+                .token(accessToken)
+                .clientSecret(clientSecret)
+                .build());
     }
 
     private static String createToken(TokenService tokenService) {
         LOGGER.info("Token samples");
 
-        Token token = tokenService.create(authorizationCode, codeVerifier, pontoConnectRedirectUrl, clientSecret);
+        Token token = tokenService.create(TokenCreateQuery.builder()
+                        .authorizationCode(authorizationCode)
+                        .clientSecret(clientSecret)
+                        .codeVerifier(codeVerifier)
+                        .redirectUri(pontoConnectRedirectUrl)
+                        .build());
         LOGGER.info("Token {}", token);
 
-        token = tokenService.refresh(token.getRefreshToken(), pontoConnectRedirectUrl, clientSecret);
+        token = tokenService.refresh(TokenRefreshQuery.builder()
+                .clientSecret(clientSecret)
+                .refreshToken(token.getRefreshToken())
+                .build());
         LOGGER.info("Token {}", token);
 
         return token.getAccessToken();
