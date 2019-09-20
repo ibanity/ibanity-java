@@ -3,6 +3,9 @@ package com.ibanity.apis.client.products.ponto_connect.services.impl;
 import com.ibanity.apis.client.http.OauthHttpClient;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.ponto_connect.models.Token;
+import com.ibanity.apis.client.products.ponto_connect.models.create.TokenCreateQuery;
+import com.ibanity.apis.client.products.ponto_connect.models.refresh.TokenRefreshQuery;
+import com.ibanity.apis.client.products.ponto_connect.models.revoke.TokenRevokeQuery;
 import com.ibanity.apis.client.products.ponto_connect.services.TokenService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import com.ibanity.apis.client.utils.IbanityUtils;
@@ -29,36 +32,25 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public void revoke(String token, String clientSecret) {
-        revoke(newHashMap(), token, clientSecret);
-    }
-
-    @Override
-    public void revoke(Map<String, String> additionalHeaders, String token, String clientSecret) {
+    public void revoke(TokenRevokeQuery tokenRevokeQuery) {
         URI uri = buildUri(getUrl("revoke"));
-        oauthHttpClient.post(uri, additionalHeaders, getDeleteTokenRequestArguments(token), clientSecret);
+        Map<String, String> deleteTokenRequestArguments = getDeleteTokenRequestArguments(tokenRevokeQuery.getToken());
+        oauthHttpClient.post(uri, tokenRevokeQuery.getAdditionalHeaders(), deleteTokenRequestArguments, tokenRevokeQuery.getClientSecret());
     }
 
     @Override
-    public Token create(String authorizationCode, String codeVerifier, String redirectUri, String clientSecret) {
-        return create(newHashMap(), authorizationCode, codeVerifier, redirectUri, clientSecret);
+    public Token create(TokenCreateQuery tokenCreateQuery) {
+        Map<String, String> accessTokenRequestArguments = getAccessTokenRequestArguments(
+                tokenCreateQuery.getAuthorizationCode(),
+                tokenCreateQuery.getCodeVerifier(),
+                tokenCreateQuery.getRedirectUri());
+        return performTokenRequest(accessTokenRequestArguments, tokenCreateQuery.getClientSecret(), tokenCreateQuery.getAdditionalHeaders());
     }
 
     @Override
-    public Token create(Map<String, String> additionalHeaders, String authorizationCode, String codeVerifier, String redirectUri, String clientSecret) {
-        Map<String, String> accessTokenRequestArguments = getAccessTokenRequestArguments(authorizationCode, codeVerifier, redirectUri);
-        return performTokenRequest(accessTokenRequestArguments, clientSecret, additionalHeaders);
-    }
-
-    @Override
-    public Token refresh(String refreshToken, String redirectUri, String clientSecret) {
-        return refresh(newHashMap(), refreshToken, redirectUri, clientSecret);
-    }
-
-    @Override
-    public Token refresh(Map<String, String> additionalHeaders, String refreshToken, String redirectUri, String clientSecret) {
-        Map<String, String> refreshTokenRequestArguments = getRefreshTokenRequestArguments(refreshToken, redirectUri);
-        return performTokenRequest(refreshTokenRequestArguments, clientSecret, additionalHeaders);
+    public Token refresh(TokenRefreshQuery tokenRefreshQuery) {
+        Map<String, String> refreshTokenRequestArguments = getRefreshTokenRequestArguments(tokenRefreshQuery.getRefreshToken());
+        return performTokenRequest(refreshTokenRequestArguments, tokenRefreshQuery.getClientSecret(), tokenRefreshQuery.getAdditionalHeaders());
     }
 
     private Token performTokenRequest(Map<String, String> refreshTokenRequestArguments, String clientSecret, Map<String, String> additionalHeaders) {
@@ -91,10 +83,9 @@ public class TokenServiceImpl implements TokenService {
         return arguments;
     }
 
-    private Map<String, String> getRefreshTokenRequestArguments(String refreshToken, String redirectUri) {
+    private Map<String, String> getRefreshTokenRequestArguments(String refreshToken) {
         Map<String, String> arguments = newHashMap();
         arguments.put("refresh_token", refreshToken);
-        arguments.put("redirect_uri", redirectUri);
         arguments.put("grant_type", "refresh_token");
         return arguments;
     }
