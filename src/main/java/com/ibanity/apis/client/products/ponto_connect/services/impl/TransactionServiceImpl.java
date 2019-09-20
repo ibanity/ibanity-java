@@ -3,6 +3,7 @@ package com.ibanity.apis.client.products.ponto_connect.services.impl;
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityProduct;
+import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.products.ponto_connect.models.Account;
 import com.ibanity.apis.client.products.ponto_connect.models.Transaction;
 import com.ibanity.apis.client.products.ponto_connect.models.read.TransactionReadQuery;
@@ -39,7 +40,13 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public IbanityCollection<Transaction> list(TransactionsReadQuery transactionsReadQuery) {
-        URI uri = buildUri(getUrl(transactionsReadQuery.getAccountId()));
+        IbanityPagingSpec pagingSpec = transactionsReadQuery.getPagingSpec();
+        if (pagingSpec == null) {
+            pagingSpec = IbanityPagingSpec.DEFAULT_PAGING_SPEC;
+        }
+
+        URI uri = buildUri(getUrl(transactionsReadQuery.getAccountId()), pagingSpec);
+
         String response = ibanityHttpClient.get(uri, transactionsReadQuery.getAdditionalHeaders(), transactionsReadQuery.getAccessToken());
         return mapCollection(response, Transaction.class);
     }

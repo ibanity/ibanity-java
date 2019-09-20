@@ -3,6 +3,7 @@ package com.ibanity.apis.client.products.ponto_connect.services.impl;
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityProduct;
+import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.products.ponto_connect.models.FinancialInstitution;
 import com.ibanity.apis.client.products.ponto_connect.models.read.FinancialInstitutionReadQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.read.FinancialInstitutionsReadQuery;
@@ -39,7 +40,13 @@ public class FinancialInstitutionServiceImpl implements FinancialInstitutionServ
 
     @Override
     public IbanityCollection<FinancialInstitution> list(FinancialInstitutionsReadQuery financialInstitutionsReadQuery) {
-        String response = ibanityHttpClient.get(buildUri(getUrl()), financialInstitutionsReadQuery.getAdditionalHeaders(), financialInstitutionsReadQuery.getAccessToken());
+        IbanityPagingSpec pagingSpec = financialInstitutionsReadQuery.getPagingSpec();
+        if (pagingSpec == null) {
+            pagingSpec = IbanityPagingSpec.DEFAULT_PAGING_SPEC;
+        }
+        URI url = buildUri(getUrl(), pagingSpec);
+
+        String response = ibanityHttpClient.get(url, financialInstitutionsReadQuery.getAdditionalHeaders(), financialInstitutionsReadQuery.getAccessToken());
         return mapCollection(response, FinancialInstitution.class);
     }
 
