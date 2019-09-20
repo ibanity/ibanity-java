@@ -1,7 +1,7 @@
 package com.ibanity.apis.client.products.ponto_connect.services.impl;
 
 import com.ibanity.apis.client.http.IbanityHttpClient;
-import com.ibanity.apis.client.http.OauthHttpClient;
+import com.ibanity.apis.client.http.OAuthHttpClient;
 import com.ibanity.apis.client.products.ponto_connect.services.*;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 
@@ -13,8 +13,8 @@ public class PontoConnectServiceImpl implements PontoConnectService {
     private final SynchronizationService synchronizationService;
     private final FinancialInstitutionService financialInstitutionService;
 
-    public PontoConnectServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient, OauthHttpClient oauthHttpClient) {
-        tokenService = new TokenServiceImpl(apiUrlProvider, oauthHttpClient);
+    public PontoConnectServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient, OAuthHttpClient oAuthHttpClient) {
+        tokenService = new TokenServiceImpl(apiUrlProvider, oAuthHttpClient);
         accountService = new AccountServiceImpl(apiUrlProvider, ibanityHttpClient);
         transactionService = new TransactionServiceImpl(apiUrlProvider, ibanityHttpClient);
         synchronizationService = new SynchronizationServiceImpl(apiUrlProvider, ibanityHttpClient);

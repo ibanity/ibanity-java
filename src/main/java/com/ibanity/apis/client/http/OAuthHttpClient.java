@@ -3,7 +3,7 @@ package com.ibanity.apis.client.http;
 import java.net.URI;
 import java.util.Map;
 
-public interface OauthHttpClient {
+public interface OAuthHttpClient {
 
     String post(URI path, Map<String, String> arguments, String clientSecret);
 
