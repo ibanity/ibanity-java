@@ -16,7 +16,7 @@ import static java.util.Collections.emptyMap;
 @EqualsAndHashCode
 public class FinancialInstitutionReadQuery {
 
-    public UUID financialInstitutionId;
+    private UUID financialInstitutionId;
     private String accessToken;
 
     @Builder.Default
