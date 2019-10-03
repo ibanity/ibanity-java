@@ -1,18 +1,14 @@
 package com.ibanity.apis.client.products.ponto_connect.models;
 
 import com.ibanity.apis.client.models.IbanityModel;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
 @Data
-@SuperBuilder
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Transaction implements IbanityModel {

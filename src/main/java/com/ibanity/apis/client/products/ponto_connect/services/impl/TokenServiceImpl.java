@@ -53,10 +53,10 @@ public class TokenServiceImpl implements TokenService {
         return performTokenRequest(refreshTokenRequestArguments, tokenRefreshQuery.getClientSecret(), tokenRefreshQuery.getAdditionalHeaders());
     }
 
-    private Token performTokenRequest(Map<String, String> refreshTokenRequestArguments, String clientSecret, Map<String, String> additionalHeaders) {
+    private Token performTokenRequest(Map<String, String> tokenRequestArguments, String clientSecret, Map<String, String> additionalHeaders) {
         try {
             URI uri = buildUri(getUrl("token"));
-            String response = oAuthHttpClient.post(uri, additionalHeaders, refreshTokenRequestArguments, clientSecret);
+            String response = oAuthHttpClient.post(uri, additionalHeaders, tokenRequestArguments, clientSecret);
             return IbanityUtils.objectMapper().readValue(response, Token.class);
         } catch (IOException e) {
             LOGGER.error("oauth token response invalid", e);

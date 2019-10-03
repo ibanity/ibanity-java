@@ -1,0 +1,50 @@
+{
+  "data": {
+    "type": "account",
+    "relationships": {
+      "transactions": {
+        "links": {
+          "related": "https://api.ibanity.com/ponto-connect/accounts/8804e34f-12b0-4b70-86bf-265f013ca232/transactions",
+          "meta": {
+            "type": "transaction"
+          }
+        }
+      },
+      "financialInstitution": {
+        "links": {
+          "related": "https://api.ibanity.com/ponto-connect/financial-institutions/953934eb-229a-4fd2-8675-07794078cc7d"
+        },
+        "data": {
+          "type": "financialInstitution",
+          "id": "953934eb-229a-4fd2-8675-07794078cc7d"
+        }
+      }
+    },
+    "meta": {
+      "synchronizedAt": "2019-09-02T11:28:36.551Z",
+      "latestSynchronization": {
+        "type": "synchronization",
+        "id": "1b3e3011-d018-4785-bbba-9aa75ba14d45",
+        "attributes": {
+          "updatedAt": "2019-09-02T11:28:36.551Z",
+          "subtype": "accountDetails",
+          "status": "success",
+          "resourceType": "account",
+          "resourceId": "8804e34f-12b0-4b70-86bf-265f013ca232",
+          "errors": [],
+          "createdAt": "2019-09-02T11:28:35.971Z"
+        }
+      }
+    },
+    "id": "8804e34f-12b0-4b70-86bf-265f013ca232",
+    "attributes": {
+      "subtype": "checking",
+      "referenceType": "IBAN",
+      "reference": "BE10635516044616",
+      "description": "Ullam omnis illum.",
+      "currentBalance": 60.9,
+      "currency": "EUR",
+      "availableBalance": 61.9
+    }
+  }
+}

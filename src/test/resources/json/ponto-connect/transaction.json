@@ -1,0 +1,28 @@
+{
+  "data": {
+    "type": "transaction",
+    "relationships": {
+      "account": {
+        "links": {
+          "related": "https://api.ibanity.com/ponto-connect/accounts/8804e34f-12b0-4b70-86bf-265f013ca232"
+        },
+        "data": {
+          "type": "account",
+          "id": "8804e34f-12b0-4b70-86bf-265f013ca232"
+        }
+      }
+    },
+    "id": "a4a47c21-b606-464f-ae17-f8e3af6772c9",
+    "attributes": {
+      "valueDate": "2019-05-05T00:00:00.000Z",
+      "remittanceInformationType": "unstructured",
+      "remittanceInformation": "Nisi omnis sint.",
+      "executionDate": "2019-05-08T00:00:00.000Z",
+      "description": "Wire transfer",
+      "currency": "EUR",
+      "counterpartReference": "BE82230387495521",
+      "counterpartName": "Lind, Predovic and Hessel",
+      "amount": 6
+    }
+  }
+}
