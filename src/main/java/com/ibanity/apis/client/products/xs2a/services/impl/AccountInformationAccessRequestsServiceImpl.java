@@ -93,6 +93,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
                 .requestedAccountReferences(creationQuery.getRequestedAccountReferences())
                 .locale(creationQuery.getLocale())
                 .customerIpAddress(creationQuery.getCustomerIpAddress())
+                .allowFinancialInstitutionRedirect(creationQuery.isAllowFinancialInstitutionRedirect())
                 .meta(Meta.builder()
                         .authorizationPortal(AuthorizationPortal.builder()
                                 .disclaimerContent(creationQuery.getMetaRequestCreationQuery().getAuthorizationPortalCreationQuery().getDisclaimerContent())

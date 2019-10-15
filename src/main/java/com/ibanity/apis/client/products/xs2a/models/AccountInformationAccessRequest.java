@@ -26,6 +26,7 @@ public class AccountInformationAccessRequest implements IbanityModel {
     private String status;
     private String locale;
     private String customerIpAddress;
+    private boolean allowFinancialInstitutionRedirect;
 
     private Meta meta;
 

@@ -26,6 +26,7 @@ public final class AccountInformationAccessRequestCreationQuery {
     private String customerAccessToken;
     private String locale;
     private String customerIpAddress;
+    private boolean allowFinancialInstitutionRedirect;
 
     @Builder.Default
     private MetaRequestCreationQuery metaRequestCreationQuery = MetaRequestCreationQuery.builder().build();
