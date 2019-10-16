@@ -26,14 +26,18 @@ public final class AccountInformationAccessRequestCreationQuery {
     private String customerAccessToken;
     private String locale;
     private String customerIpAddress;
-    private boolean allowFinancialInstitutionRedirect;
+    private boolean allowFinancialInstitutionRedirectUri;
+
+    private IbanityPagingSpec pagingSpec;
 
     @Builder.Default
     private MetaRequestCreationQuery metaRequestCreationQuery = MetaRequestCreationQuery.builder().build();
 
     @Builder.Default
     private List<String> requestedAccountReferences = emptyList();
-    private IbanityPagingSpec pagingSpec;
+
+    @Builder.Default
+    private List<String> allowedAccountSubtypes = emptyList();
 
     @Builder.Default
     private Map<String, String> additionalHeaders = emptyMap();

@@ -9,6 +9,8 @@ import com.ibanity.apis.client.products.xs2a.models.create.MetaRequestCreationQu
 import com.ibanity.apis.client.products.xs2a.services.AccountInformationAccessRequestsService;
 import com.ibanity.apis.client.services.IbanityService;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 public class AccountInformationAccessRequestSample {
 
     private final AccountInformationAccessRequestsService accountInformationAccessRequestsService;
@@ -25,6 +27,8 @@ public class AccountInformationAccessRequestSample {
                         .financialInstitutionId(financialInstitution.getId())
                         .redirectUri(redirectUrl)
                         .consentReference(consentReference)
+                        .allowFinancialInstitutionRedirectUri(true)
+                        .allowedAccountSubtypes(newArrayList("checking", "savings"))
                         .metaRequestCreationQuery(MetaRequestCreationQuery.builder()
                                 .authorizationPortalCreationQuery(AuthorizationPortalCreationQuery.builder()
                                         .disclaimerContent("thisIsACusomOneContent")

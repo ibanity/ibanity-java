@@ -26,12 +26,15 @@ public class AccountInformationAccessRequest implements IbanityModel {
     private String status;
     private String locale;
     private String customerIpAddress;
-    private boolean allowFinancialInstitutionRedirect;
+    private boolean allowFinancialInstitutionRedirectUri;
 
     private Meta meta;
 
     @Builder.Default
     private List<String> requestedAccountReferences = Collections.emptyList();
+
+    @Builder.Default
+    private List<String> allowedAccountSubtypes = Collections.emptyList();
 
     private AccountInformationAccessLinks accountInformationAccessLinks;
     private AccountLinks accountLinks;
