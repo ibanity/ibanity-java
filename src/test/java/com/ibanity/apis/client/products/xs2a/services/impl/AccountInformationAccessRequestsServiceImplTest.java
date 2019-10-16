@@ -68,6 +68,7 @@ class AccountInformationAccessRequestsServiceImplTest {
                         .requestedAccountReferences(newArrayList("BE9766801628897565"))
                         .locale("fr")
                         .customerIpAddress("0.0.0.0")
+                        .allowedAccountSubtypes(newArrayList("checking", "savings"))
                         .build();
 
         when(ibanityHttpClient.post(buildUri(AIAR_ENDPOINT_FOR_CREATE), toIbanityModel(creationQuery), emptyMap(), creationQuery.getCustomerAccessToken()))
@@ -102,6 +103,7 @@ class AccountInformationAccessRequestsServiceImplTest {
                 .requestedAccountReferences(creationQuery.getRequestedAccountReferences())
                 .locale(creationQuery.getLocale())
                 .customerIpAddress(creationQuery.getCustomerIpAddress())
+                .allowedAccountSubtypes(creationQuery.getAllowedAccountSubtypes())
                 .meta(Meta.builder()
                         .authorizationPortal(AuthorizationPortal.builder()
                                 .build())
