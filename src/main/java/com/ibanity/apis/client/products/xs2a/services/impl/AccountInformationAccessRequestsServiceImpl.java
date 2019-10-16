@@ -16,6 +16,7 @@ import com.ibanity.apis.client.products.xs2a.services.AccountInformationAccessRe
 import com.ibanity.apis.client.services.ApiUrlProvider;
 
 import java.net.URI;
+import java.util.List;
 import java.util.function.Function;
 
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.buildRequest;
@@ -87,6 +88,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
     }
 
     private AccountInformationAccessRequest mapRequest(AccountInformationAccessRequestCreationQuery creationQuery) {
+        List<String> allowedAccountSubtypes = creationQuery.getAllowedAccountSubtypes();
         return AccountInformationAccessRequest.builder()
                 .redirectUri(creationQuery.getRedirectUri())
                 .consentReference(creationQuery.getConsentReference())
@@ -94,7 +96,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
                 .locale(creationQuery.getLocale())
                 .customerIpAddress(creationQuery.getCustomerIpAddress())
                 .allowFinancialInstitutionRedirectUri(creationQuery.isAllowFinancialInstitutionRedirectUri())
-                .allowedAccountSubtypes(creationQuery.getAllowedAccountSubtypes())
+                .allowedAccountSubtypes(allowedAccountSubtypes.isEmpty() ? null : allowedAccountSubtypes)
                 .meta(Meta.builder()
                         .authorizationPortal(AuthorizationPortal.builder()
                                 .disclaimerContent(creationQuery.getMetaRequestCreationQuery().getAuthorizationPortalCreationQuery().getDisclaimerContent())
