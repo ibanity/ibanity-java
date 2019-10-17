@@ -10,7 +10,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class IbanityServerException extends IbanityException {
 
-    public IbanityServerException(List<IbanityError> errors) {
-        super(errors);
+    public IbanityServerException(List<IbanityError> errors, int httpStatusCode) {
+        super(errors, httpStatusCode);
     }
 }
