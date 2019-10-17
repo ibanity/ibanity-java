@@ -51,7 +51,7 @@ class IbanityResponseHandlerTest {
 
         IbanityServerException actual = assertThrows(IbanityServerException.class, () -> ibanityResponseHandler.handleResponse(httpResponse));
 
-        assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerException(createExpectedErrors()));
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerException(createExpectedErrors(), 500));
     }
 
     @Test
@@ -64,7 +64,7 @@ class IbanityResponseHandlerTest {
 
         IbanityClientException actual = assertThrows(IbanityClientException.class, () -> ibanityResponseHandler.handleResponse(httpResponse));
 
-        assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerException(createExpectedErrors()));
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerException(createExpectedErrors(), 404));
     }
 
     private List<IbanityError> createExpectedErrors() {

@@ -22,10 +22,11 @@ public class IbanityResponseHandler implements ResponseHandler<String> {
 
     @Override
     public String handleResponse(HttpResponse httpResponse) throws IOException {
-        if (httpResponse.getStatusLine().getStatusCode() >= SERVER_ERROR) {
-            throw new IbanityServerException(parseErrors(httpResponse));
-        } else if (httpResponse.getStatusLine().getStatusCode() >= CLIENT_ERROR) {
-            throw new IbanityClientException(parseErrors(httpResponse));
+        int statusCode = httpResponse.getStatusLine().getStatusCode();
+        if (statusCode >= SERVER_ERROR) {
+            throw new IbanityServerException(parseErrors(httpResponse), statusCode);
+        } else if (statusCode >= CLIENT_ERROR) {
+            throw new IbanityClientException(parseErrors(httpResponse), statusCode);
         }
 
         return readResponseContent(httpResponse.getEntity());
