@@ -31,6 +31,8 @@ public class PaymentInitiationRequestMapper {
                 .debtorAccountReference(query.getDebtorAccountReference())
                 .debtorAccountReferenceType(query.getDebtorAccountReferenceType())
                 .debtorName(query.getDebtorName())
+                .customerIpAddress(query.getCustomerIpAddress())
+                .locale(query.getLocale())
                 .build();
     }
 

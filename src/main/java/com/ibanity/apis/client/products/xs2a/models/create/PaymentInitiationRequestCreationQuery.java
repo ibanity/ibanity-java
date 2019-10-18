@@ -41,6 +41,8 @@ public final class PaymentInitiationRequestCreationQuery {
     private String creditorAgentType;
 
     private String redirectUri;
+    private String locale;
+    private String customerIpAddress;
 
     @Builder.Default
     private Map<String, String> additionalHeaders = emptyMap();

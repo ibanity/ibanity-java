@@ -60,6 +60,8 @@ class PaymentInitiationRequestServiceImplTest {
                 PaymentInitiationRequestCreationQuery.builder()
                         .customerAccessToken(CUSTOMER_TOKEN_REFERENCE)
                         .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
+                        .customerIpAddress("1.2.3.4")
+                        .locale("fr")
                         .build();
 
         when(ibanityHttpClient.post(buildUri(PIR_ENDPOINT_FOR_CREATE), mapRequest(requestCreationQuery), emptyMap(), CUSTOMER_TOKEN_REFERENCE))
@@ -127,6 +129,8 @@ class PaymentInitiationRequestServiceImplTest {
                 .debtorAccountReference(query.getDebtorAccountReference())
                 .debtorAccountReferenceType(query.getDebtorAccountReferenceType())
                 .debtorName(query.getDebtorName())
+                .customerIpAddress(query.getCustomerIpAddress())
+                .locale(query.getLocale())
                 .build();
         return RequestApiModel.builder()
                 .data(
