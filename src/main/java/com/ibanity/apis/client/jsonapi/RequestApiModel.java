@@ -20,6 +20,7 @@ public class RequestApiModel {
     public static class RequestDataApiModel {
 
         private Object attributes;
+        private Object meta;
         private String type;
     }
 }

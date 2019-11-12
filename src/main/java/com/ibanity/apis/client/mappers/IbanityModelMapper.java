@@ -82,10 +82,15 @@ public class IbanityModelMapper {
     }
 
     public static RequestApiModel buildRequest(String resourceType, Object attributes) {
+        return buildRequest(resourceType, attributes, null);
+    }
+
+    public static RequestApiModel buildRequest(String resourceType, Object attributes, Object meta) {
         return RequestApiModel.builder()
                 .data(
                         RequestApiModel.RequestDataApiModel.builder()
                                 .type(resourceType)
+                                .meta(meta)
                                 .attributes(attributes)
                                 .build()
                 )

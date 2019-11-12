@@ -28,8 +28,6 @@ public class AccountInformationAccessRequest implements IbanityModel {
     private String customerIpAddress;
     private boolean allowFinancialInstitutionRedirectUri;
 
-    private Meta meta;
-
     @Builder.Default
     private List<String> requestedAccountReferences = Collections.emptyList();
 
