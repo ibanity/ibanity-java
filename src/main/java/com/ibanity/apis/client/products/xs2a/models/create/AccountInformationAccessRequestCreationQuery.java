@@ -30,8 +30,7 @@ public final class AccountInformationAccessRequestCreationQuery {
 
     private IbanityPagingSpec pagingSpec;
 
-    @Builder.Default
-    private MetaRequestCreationQuery metaRequestCreationQuery = MetaRequestCreationQuery.builder().build();
+    private MetaRequestCreationQuery metaRequestCreationQuery;
 
     @Builder.Default
     private List<String> requestedAccountReferences = emptyList();

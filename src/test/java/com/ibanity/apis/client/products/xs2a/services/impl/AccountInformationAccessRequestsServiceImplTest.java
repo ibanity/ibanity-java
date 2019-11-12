@@ -4,9 +4,11 @@ import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest;
+import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequestMeta;
 import com.ibanity.apis.client.products.xs2a.models.AuthorizationPortal;
-import com.ibanity.apis.client.products.xs2a.models.Meta;
 import com.ibanity.apis.client.products.xs2a.models.create.AccountInformationAccessRequestCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.create.AuthorizationPortalCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.create.MetaRequestCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountInformationAccessLinks;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountLinks;
 import com.ibanity.apis.client.services.ApiUrlProvider;
@@ -69,6 +71,11 @@ class AccountInformationAccessRequestsServiceImplTest {
                         .locale("fr")
                         .customerIpAddress("0.0.0.0")
                         .allowedAccountSubtypes(newArrayList("checking", "savings"))
+                        .metaRequestCreationQuery(MetaRequestCreationQuery.builder()
+                                .authorizationPortalCreationQuery(AuthorizationPortalCreationQuery.builder()
+                                        .disclaimerContent("disclaimerContent")
+                                        .build())
+                                .build())
                         .build();
 
         when(ibanityHttpClient.post(buildUri(AIAR_ENDPOINT_FOR_CREATE), toIbanityModel(creationQuery), emptyMap(), creationQuery.getCustomerAccessToken()))
@@ -104,14 +111,15 @@ class AccountInformationAccessRequestsServiceImplTest {
                 .locale(creationQuery.getLocale())
                 .customerIpAddress(creationQuery.getCustomerIpAddress())
                 .allowedAccountSubtypes(creationQuery.getAllowedAccountSubtypes())
-                .meta(Meta.builder()
-                        .authorizationPortal(AuthorizationPortal.builder()
-                                .build())
-                        .build())
                 .build();
         return RequestApiModel.builder()
                 .data(
                         RequestApiModel.RequestDataApiModel.builder()
+                                .meta(AccountInformationAccessRequestMeta.builder()
+                                        .authorizationPortal(AuthorizationPortal.builder()
+                                                .disclaimerContent("disclaimerContent")
+                                                .build())
+                                        .build())
                                 .attributes(accessRequest)
                                 .type(AccountInformationAccessRequest.RESOURCE_TYPE)
                                 .build()

@@ -6,10 +6,11 @@ import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.mappers.IbanityModelMapper;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest;
+import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequestMeta;
 import com.ibanity.apis.client.products.xs2a.models.AuthorizationPortal;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
-import com.ibanity.apis.client.products.xs2a.models.Meta;
 import com.ibanity.apis.client.products.xs2a.models.create.AccountInformationAccessRequestCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.create.AuthorizationPortalCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountInformationAccessLinks;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountLinks;
 import com.ibanity.apis.client.products.xs2a.services.AccountInformationAccessRequestsService;
@@ -34,15 +35,15 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
     }
 
     @Override
-    public AccountInformationAccessRequest create(
-            AccountInformationAccessRequestCreationQuery accountInformationAccessRequestCreationQuery) {
+    public AccountInformationAccessRequest create(AccountInformationAccessRequestCreationQuery accountInformationAccessRequestCreationQuery) {
 
         String financialInstitutionId = accountInformationAccessRequestCreationQuery.getFinancialInstitutionId().toString();
 
         URI uri = getUri(financialInstitutionId, "");
 
-        AccountInformationAccessRequest ibanityModel = mapRequest(accountInformationAccessRequestCreationQuery);
-        RequestApiModel request = buildRequest(AccountInformationAccessRequest.RESOURCE_TYPE, ibanityModel);
+        AccountInformationAccessRequest ibanityModel = mapAttributes(accountInformationAccessRequestCreationQuery);
+        AccountInformationAccessRequestMeta meta = mapMeta(accountInformationAccessRequestCreationQuery);
+        RequestApiModel request = buildRequest(AccountInformationAccessRequest.RESOURCE_TYPE, ibanityModel, meta);
         String response = ibanityHttpClient.post(uri, request, accountInformationAccessRequestCreationQuery.getAdditionalHeaders(), accountInformationAccessRequestCreationQuery.getCustomerAccessToken());
         return IbanityModelMapper.mapResource(response, responseMapping());
     }
@@ -87,7 +88,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
         };
     }
 
-    private AccountInformationAccessRequest mapRequest(AccountInformationAccessRequestCreationQuery creationQuery) {
+    private AccountInformationAccessRequest mapAttributes(AccountInformationAccessRequestCreationQuery creationQuery) {
         List<String> allowedAccountSubtypes = creationQuery.getAllowedAccountSubtypes();
         return AccountInformationAccessRequest.builder()
                 .redirectUri(creationQuery.getRedirectUri())
@@ -97,14 +98,22 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
                 .customerIpAddress(creationQuery.getCustomerIpAddress())
                 .allowFinancialInstitutionRedirectUri(creationQuery.isAllowFinancialInstitutionRedirectUri())
                 .allowedAccountSubtypes(allowedAccountSubtypes.isEmpty() ? null : allowedAccountSubtypes)
-                .meta(Meta.builder()
-                        .authorizationPortal(AuthorizationPortal.builder()
-                                .disclaimerContent(creationQuery.getMetaRequestCreationQuery().getAuthorizationPortalCreationQuery().getDisclaimerContent())
-                                .disclaimerTitle(creationQuery.getMetaRequestCreationQuery().getAuthorizationPortalCreationQuery().getDisclaimerTitle())
-                                .financialInstitutionPrimaryColor(creationQuery.getMetaRequestCreationQuery().getAuthorizationPortalCreationQuery().getFinancialInstitutionPrimaryColor())
-                                .financialInstitutionSecondaryColor(creationQuery.getMetaRequestCreationQuery().getAuthorizationPortalCreationQuery().getFinancialInstitutionSecondaryColor())
-                                .build())
-                        .build())
                 .build();
+    }
+
+    private AccountInformationAccessRequestMeta mapMeta(AccountInformationAccessRequestCreationQuery creationQuery) {
+        if(creationQuery.getMetaRequestCreationQuery() == null || creationQuery.getMetaRequestCreationQuery().getAuthorizationPortalCreationQuery() == null) {
+            return null;
+        } else {
+            AuthorizationPortalCreationQuery authorizationPortalCreationQuery = creationQuery.getMetaRequestCreationQuery().getAuthorizationPortalCreationQuery();
+            return AccountInformationAccessRequestMeta.builder()
+                    .authorizationPortal(AuthorizationPortal.builder()
+                            .disclaimerContent(authorizationPortalCreationQuery.getDisclaimerContent())
+                            .disclaimerTitle(authorizationPortalCreationQuery.getDisclaimerTitle())
+                            .financialInstitutionPrimaryColor(authorizationPortalCreationQuery.getFinancialInstitutionPrimaryColor())
+                            .financialInstitutionSecondaryColor(authorizationPortalCreationQuery.getFinancialInstitutionSecondaryColor())
+                            .build())
+                    .build();
+        }
     }
 }

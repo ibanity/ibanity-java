@@ -6,7 +6,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Meta {
+public class AccountInformationAccessRequestMeta {
 
     private AuthorizationPortal authorizationPortal;
 }

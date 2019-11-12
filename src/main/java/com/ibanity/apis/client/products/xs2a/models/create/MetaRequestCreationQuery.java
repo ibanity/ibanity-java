@@ -11,6 +11,5 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class MetaRequestCreationQuery {
 
-    @Builder.Default
-    private AuthorizationPortalCreationQuery authorizationPortalCreationQuery = AuthorizationPortalCreationQuery.builder().build();
+    private AuthorizationPortalCreationQuery authorizationPortalCreationQuery;
 }
