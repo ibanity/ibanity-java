@@ -21,11 +21,7 @@ public class AccountInformationAccessRequest implements IbanityModel {
     private UUID id;
     private String selfLink;
 
-    private String consentReference;
-    private String redirectUri;
     private String status;
-    private String locale;
-    private String customerIpAddress;
     private boolean allowFinancialInstitutionRedirectUri;
 
     @Builder.Default

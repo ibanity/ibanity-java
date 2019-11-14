@@ -1,11 +1,8 @@
 package com.ibanity.apis.client.products.xs2a.services.impl;
 
 import com.ibanity.apis.client.http.IbanityHttpClient;
-import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest;
-import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequestMeta;
-import com.ibanity.apis.client.products.xs2a.models.AuthorizationPortal;
 import com.ibanity.apis.client.products.xs2a.models.create.AccountInformationAccessRequestCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.create.AuthorizationPortalCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.create.MetaRequestCreationQuery;
@@ -28,6 +25,8 @@ import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static java.util.Collections.emptyMap;
 import static java.util.UUID.fromString;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -78,7 +77,7 @@ class AccountInformationAccessRequestsServiceImplTest {
                                 .build())
                         .build();
 
-        when(ibanityHttpClient.post(buildUri(AIAR_ENDPOINT_FOR_CREATE), toIbanityModel(creationQuery), emptyMap(), creationQuery.getCustomerAccessToken()))
+        when(ibanityHttpClient.post(eq(buildUri(AIAR_ENDPOINT_FOR_CREATE)), any(), eq(emptyMap()), eq(creationQuery.getCustomerAccessToken())))
                 .thenReturn(loadFile("json/createAccountInformationAccessRequest.json"));
 
         AccountInformationAccessRequest actual = accountInformationAccessRequestsService.create(creationQuery);
@@ -101,30 +100,6 @@ class AccountInformationAccessRequestsServiceImplTest {
         AccountInformationAccessRequest actual = accountInformationAccessRequestsService.find(creationQuery);
 
         assertThat(actual).isEqualToComparingFieldByField(expectedForFind());
-    }
-
-    private RequestApiModel toIbanityModel(AccountInformationAccessRequestCreationQuery creationQuery) {
-        AccountInformationAccessRequest accessRequest = AccountInformationAccessRequest.builder()
-                .redirectUri(creationQuery.getRedirectUri())
-                .consentReference(creationQuery.getConsentReference())
-                .requestedAccountReferences(creationQuery.getRequestedAccountReferences())
-                .locale(creationQuery.getLocale())
-                .customerIpAddress(creationQuery.getCustomerIpAddress())
-                .allowedAccountSubtypes(creationQuery.getAllowedAccountSubtypes())
-                .build();
-        return RequestApiModel.builder()
-                .data(
-                        RequestApiModel.RequestDataApiModel.builder()
-                                .meta(AccountInformationAccessRequestMeta.builder()
-                                        .authorizationPortal(AuthorizationPortal.builder()
-                                                .disclaimerContent("disclaimerContent")
-                                                .build())
-                                        .build())
-                                .attributes(accessRequest)
-                                .type(AccountInformationAccessRequest.RESOURCE_TYPE)
-                                .build()
-                )
-                .build();
     }
 
     private AccountInformationAccessRequest expectedForFind() {
