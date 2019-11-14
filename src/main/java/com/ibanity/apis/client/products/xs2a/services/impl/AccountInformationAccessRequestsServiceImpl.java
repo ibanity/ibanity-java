@@ -13,6 +13,7 @@ import com.ibanity.apis.client.products.xs2a.models.create.AccountInformationAcc
 import com.ibanity.apis.client.products.xs2a.models.create.AuthorizationPortalCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountInformationAccessLinks;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountLinks;
+import com.ibanity.apis.client.products.xs2a.models.read.AccountInformationAccessRequestReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.AccountInformationAccessRequestsService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import lombok.*;
@@ -51,14 +52,25 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
         return IbanityModelMapper.mapResource(response, responseMapping());
     }
 
+    @Deprecated
     @Override
     public com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest find(AccountInformationAccessRequestCreationQuery accountInformationAccessRequestCreationQuery) {
-        String financialInstitutionId = accountInformationAccessRequestCreationQuery.getFinancialInstitutionId().toString();
-        String resourceId = accountInformationAccessRequestCreationQuery.getAccountInformationAccessRequestId().toString();
+        return find(AccountInformationAccessRequestReadQuery.builder()
+                .accountInformationAccessRequestId(accountInformationAccessRequestCreationQuery.getAccountInformationAccessRequestId())
+                .financialInstitutionId(accountInformationAccessRequestCreationQuery.getFinancialInstitutionId())
+                .customerAccessToken(accountInformationAccessRequestCreationQuery.getCustomerAccessToken())
+                .additionalHeaders(accountInformationAccessRequestCreationQuery.getAdditionalHeaders())
+                .build());
+    }
+
+    @Override
+    public com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest find(AccountInformationAccessRequestReadQuery accountInformationAccessRequestReadQuery) {
+        String financialInstitutionId = accountInformationAccessRequestReadQuery.getFinancialInstitutionId().toString();
+        String resourceId = accountInformationAccessRequestReadQuery.getAccountInformationAccessRequestId().toString();
 
         URI uri = getUri(financialInstitutionId, resourceId);
 
-        String response = ibanityHttpClient.get(uri, accountInformationAccessRequestCreationQuery.getAdditionalHeaders(), accountInformationAccessRequestCreationQuery.getCustomerAccessToken());
+        String response = ibanityHttpClient.get(uri, accountInformationAccessRequestReadQuery.getAdditionalHeaders(), accountInformationAccessRequestReadQuery.getCustomerAccessToken());
         return IbanityModelMapper.mapResource(response, responseMapping());
     }
 
