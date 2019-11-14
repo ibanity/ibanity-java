@@ -6,6 +6,7 @@ import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.products.xs2a.models.create.AccountInformationAccessRequestCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.create.AuthorizationPortalCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.create.MetaRequestCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.read.AccountInformationAccessRequestReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.AccountInformationAccessRequestsService;
 import com.ibanity.apis.client.services.IbanityService;
 
@@ -28,7 +29,9 @@ public class AccountInformationAccessRequestSample {
                         .redirectUri(redirectUrl)
                         .consentReference(consentReference)
                         .allowFinancialInstitutionRedirectUri(true)
+                        .customerIpAddress("1.1.1.1")
                         .allowedAccountSubtypes(newArrayList("checking", "savings"))
+                        .skipIbanityCompletionCallback(false)
                         .metaRequestCreationQuery(MetaRequestCreationQuery.builder()
                                 .authorizationPortalCreationQuery(AuthorizationPortalCreationQuery.builder()
                                         .disclaimerContent("thisIsACusomOneContent")
@@ -43,7 +46,7 @@ public class AccountInformationAccessRequestSample {
     }
 
     public AccountInformationAccessRequest find(AccountInformationAccessRequest accountInformationAccessRequest, FinancialInstitution financialInstitution, CustomerAccessToken customerAccessToken) {
-        return accountInformationAccessRequestsService.find(AccountInformationAccessRequestCreationQuery.builder()
+        return accountInformationAccessRequestsService.find(AccountInformationAccessRequestReadQuery.builder()
                 .accountInformationAccessRequestId(accountInformationAccessRequest.getId())
                 .financialInstitutionId(financialInstitution.getId())
                 .customerAccessToken(customerAccessToken.getToken())

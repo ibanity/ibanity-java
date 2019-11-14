@@ -8,6 +8,7 @@ import com.ibanity.apis.client.products.xs2a.models.create.AuthorizationPortalCr
 import com.ibanity.apis.client.products.xs2a.models.create.MetaRequestCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountInformationAccessLinks;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountLinks;
+import com.ibanity.apis.client.products.xs2a.models.read.AccountInformationAccessRequestReadQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -87,8 +88,8 @@ class AccountInformationAccessRequestsServiceImplTest {
 
     @Test
     void find() throws Exception {
-        AccountInformationAccessRequestCreationQuery creationQuery =
-                AccountInformationAccessRequestCreationQuery.builder()
+        AccountInformationAccessRequestReadQuery creationQuery =
+                AccountInformationAccessRequestReadQuery.builder()
                         .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                         .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                         .accountInformationAccessRequestId(ACCOUNT_INFORMATION_ACCESS_REQUEST_ID)
