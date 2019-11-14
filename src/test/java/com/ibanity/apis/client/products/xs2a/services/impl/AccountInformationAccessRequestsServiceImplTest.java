@@ -42,7 +42,7 @@ class AccountInformationAccessRequestsServiceImplTest {
     private static final String AIAR_ENDPOINT_FOR_FIND = "https://api.ibanity.com/xs2a/customer/financial-institutions/4876fdd6-7333-4f9f-b142-ba520ca497b1/account-information-access-requests/cd273ba1-cb2a-464d-b85d-62c9fc4dc8d9";
     private static final String AIAR_ENDPOINT_FOR_CREATE = "https://api.ibanity.com/xs2a/customer/financial-institutions/4876fdd6-7333-4f9f-b142-ba520ca497b1/account-information-access-requests";
     private static final String CALLBACK = "https://callback.ibanity.com/sandbox/fi/aiar/i?state=dmF1bHQ6djE6Q3drVzA5VUdCVkhPOUxLc1NjdStpeUZmMmh2L3EremUrdWNUemxwUmlaemtsclgwS095cW15WFJTbGRsN2FFKzRmYjZmMFFkSWxZWUJNQnVCWFJiY2RISUZlNUJQVG1qVjFFTDIvM1BpWXhEVXY4WHA5cEZLdHFrK1FBS2xFYXRYSlhRaXMwNEVndHZNcTJHS1VGK0d2T3h3SkZQalRjUDlJVWRaRzZiMFdHck5nS2tDdTZhck03NEtoalRGR2lCNnVDVjBkdHNIMmNVWEZud1haYUMvN3YyWFFjTzkyZTlyYTRBOVdjd2dSSmtoYnNLS1E0ODgyNWI0WUJMSW8wRW5qNDBRdjd0Z3F2WUY5TElFb1ZpL0VScFNtemx0eER0a0pvSEREUEJlV1phTUVjZUU5RytpLzNieUhuaFdzci84cU02NXJBVjZ3eG1LbEVZR3UzUmRrRTVlL2kyQ0ZxdjRYNEJWNXFZU0JvY2xZZDFxeFZRVUtjVGRPWWk1RG02UjFZZVBvdW4rRDNDbW53eFhRWDNiVlplSFY0UFpPelJHSDJHa1V6UGN2Sjhnei9kN2VFeXBvTk9MaEVQOWNkT0FleUxSUTQ3WXVsN2k1d2NLdHpSYUtFR0JoTTJtdkJoREM2SWY5K1BHK0pKcU9QeGkrRVNCdWovMm5lNWMzWXYxMHMwZGpVV0NPUDRXR3JCakcvbDAwQVhCU2EyaEJmZGFIZ1dlUjZYMVlQOVM1V2pLQzVUOXFxQlRWMklUZWtDUkxzem5PRFZ2ZUtJMUtWald5ajVJUXpTWEkvVE5RTGU4NDhSODFtZTRMSjFaY1pBNkdSaXhSN1p0Y0hrSTNidVlRSWdydmJCNWhMOXVMb2Q5UDFvc0w3dVB6Y205WW50UlVnUDE3SmFVN0RQL2lVYklNeGVjTUxPOEV3YTdvSVdkTG5LUFRyRTk2VkxBaFZMM2lVUXBBY0lJbVk2ekJhMDBRUjg0TUk3Vjh0MXE0aHgzNnBaaWVaRElMVmQ2WXR3cXk5MTZ5YWp0YzNaSWZXYVpMNVByNE1CUjVOTXd0RE1XQTVWNlMySGJPOE5Sd0NZQnB2MytDeFBzVTFuQW54MXN6Uy9sbGpVQTBlU29IbFJDSUJQZUg4Q08wZittMlVYd2hCQXYvKzRudGJWNm12STdCQkJhOGJUcDg0SkE1QjhmNUdWcUx0QWwxdC9hOXNPTEw5ZlNwU3FpbTM2MjhPS3E1UlhoVGRzMytPYWRudkJFSEszSmhpYWxndEVmOTQ1SE1TTHlkK2x2eVFEUHdkTTM3N3ZkQjVZUFBLR2ljaVI0YmFRWjNuZVdZOFBGOHpSQXh1dmplN1l6L0ROZUllc2lQY0xkU1FUMFA5TXg0LzRZRVpKdVE9PQ==";
-    public static final String RELATED_ACCOUNTS = "https://api.ibanity.com/xs2a/customer/financial-institutions/4876fdd6-7333-4f9f-b142-ba520ca497b1/account-information-access-requests/df9069eb-0577-484c-b9f0-c4b0ebbba11e/accounts";
+    private static final String RELATED_ACCOUNTS = "https://api.ibanity.com/xs2a/customer/financial-institutions/4876fdd6-7333-4f9f-b142-ba520ca497b1/account-information-access-requests/df9069eb-0577-484c-b9f0-c4b0ebbba11e/accounts";
 
     @InjectMocks
     private AccountInformationAccessRequestsServiceImpl accountInformationAccessRequestsService;
@@ -84,6 +84,23 @@ class AccountInformationAccessRequestsServiceImplTest {
         AccountInformationAccessRequest actual = accountInformationAccessRequestsService.create(creationQuery);
 
         assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpectedForCreate());
+    }
+
+    @Test
+    void find_AccountInformationAccessRequestCreationQuery() throws Exception {
+        AccountInformationAccessRequestCreationQuery creationQuery =
+                AccountInformationAccessRequestCreationQuery.builder()
+                        .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
+                        .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
+                        .accountInformationAccessRequestId(ACCOUNT_INFORMATION_ACCESS_REQUEST_ID)
+                        .build();
+
+        when(ibanityHttpClient.get(buildUri(AIAR_ENDPOINT_FOR_FIND), emptyMap(), creationQuery.getCustomerAccessToken()))
+                .thenReturn(loadFile("json/accountInformationAccessRequest.json"));
+
+        AccountInformationAccessRequest actual = accountInformationAccessRequestsService.find(creationQuery);
+
+        assertThat(actual).isEqualToComparingFieldByField(expectedForFind());
     }
 
     @Test
