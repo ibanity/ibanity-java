@@ -4,8 +4,8 @@ import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.jsonapi.DataApiModel;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.mappers.IbanityModelMapper;
+import com.ibanity.apis.client.models.IbanityModel;
 import com.ibanity.apis.client.models.IbanityProduct;
-import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequestMeta;
 import com.ibanity.apis.client.products.xs2a.models.AuthorizationPortal;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
@@ -15,9 +15,12 @@ import com.ibanity.apis.client.products.xs2a.models.links.AccountInformationAcce
 import com.ibanity.apis.client.products.xs2a.models.links.AccountLinks;
 import com.ibanity.apis.client.products.xs2a.services.AccountInformationAccessRequestsService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
+import lombok.*;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Function;
 
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.buildRequest;
@@ -35,7 +38,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
     }
 
     @Override
-    public AccountInformationAccessRequest create(AccountInformationAccessRequestCreationQuery accountInformationAccessRequestCreationQuery) {
+    public com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest create(AccountInformationAccessRequestCreationQuery accountInformationAccessRequestCreationQuery) {
 
         String financialInstitutionId = accountInformationAccessRequestCreationQuery.getFinancialInstitutionId().toString();
 
@@ -49,7 +52,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
     }
 
     @Override
-    public AccountInformationAccessRequest find(AccountInformationAccessRequestCreationQuery accountInformationAccessRequestCreationQuery) {
+    public com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest find(AccountInformationAccessRequestCreationQuery accountInformationAccessRequestCreationQuery) {
         String financialInstitutionId = accountInformationAccessRequestCreationQuery.getFinancialInstitutionId().toString();
         String resourceId = accountInformationAccessRequestCreationQuery.getAccountInformationAccessRequestId().toString();
 
@@ -64,13 +67,13 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
         return buildUri(removeEnd(
                 url
                         .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId)
-                        .replace(AccountInformationAccessRequest.API_URL_TAG_ID, accountInformationAccessRequestId),
+                        .replace(com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest.API_URL_TAG_ID, accountInformationAccessRequestId),
                 "/"));
     }
 
-    private Function<DataApiModel, AccountInformationAccessRequest> responseMapping() {
+    private Function<DataApiModel, com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest> responseMapping() {
         return dataApiModel -> {
-            AccountInformationAccessRequest aiar = IbanityModelMapper.toIbanityModel(dataApiModel, AccountInformationAccessRequest.class);
+            com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest aiar = IbanityModelMapper.toIbanityModel(dataApiModel, com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest.class);
 
             aiar.setAccountInformationAccessLinks(AccountInformationAccessLinks.builder()
                     .redirect(dataApiModel.getLinks() == null ? null : dataApiModel.getLinks().getRedirect())
@@ -98,6 +101,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
                 .customerIpAddress(creationQuery.getCustomerIpAddress())
                 .allowFinancialInstitutionRedirectUri(creationQuery.isAllowFinancialInstitutionRedirectUri())
                 .allowedAccountSubtypes(allowedAccountSubtypes.isEmpty() ? null : allowedAccountSubtypes)
+                .skipIbanityCompletionCallback(creationQuery.isSkipIbanityCompletionCallback())
                 .build();
     }
 
@@ -115,5 +119,32 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
                             .build())
                     .build();
         }
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    private static class AccountInformationAccessRequest implements IbanityModel {
+
+        public static final String RESOURCE_TYPE = "accountInformationAccessRequest";
+        public static final String API_URL_TAG_ID = "{" + RESOURCE_TYPE + URL_PARAMETER_ID_POSTFIX + "}";
+
+        private UUID id;
+        private String selfLink;
+
+        private String consentReference;
+        private String redirectUri;
+        private String status;
+        private String locale;
+        private String customerIpAddress;
+        private boolean allowFinancialInstitutionRedirectUri;
+        private boolean skipIbanityCompletionCallback;
+
+        @Builder.Default
+        private List<String> requestedAccountReferences = Collections.emptyList();
+
+        @Builder.Default
+        private List<String> allowedAccountSubtypes = Collections.emptyList();
     }
 }

@@ -27,6 +27,7 @@ public final class AccountInformationAccessRequestCreationQuery {
     private String locale;
     private String customerIpAddress;
     private boolean allowFinancialInstitutionRedirectUri;
+    private boolean skipIbanityCompletionCallback;
 
     private IbanityPagingSpec pagingSpec;
 
