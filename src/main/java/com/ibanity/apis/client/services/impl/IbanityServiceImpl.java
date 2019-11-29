@@ -72,7 +72,7 @@ public class IbanityServiceImpl implements IbanityService {
     }
 
     public OAuthHttpClient oAuthHttpClient() {
-        if(oauthHttpClient == null) {
+        if (oauthHttpClient == null) {
             throw new IllegalStateException("OauthHttpClient was not properly initialized. Did you configure pontoConnectOauth2ClientId?");
         }
 
@@ -81,7 +81,7 @@ public class IbanityServiceImpl implements IbanityService {
 
     @Override
     public PontoConnectService pontoConnectService() {
-        if(pontoConnectService == null) {
+        if (pontoConnectService == null) {
             throw new IllegalStateException("PontoConnectService was not properly initialized. Did you configure pontoConnectOauth2ClientId?");
         }
 

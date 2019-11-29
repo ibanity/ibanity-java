@@ -21,4 +21,6 @@ public interface Xs2aService {
     SandboxService sandbox();
 
     CustomerService customerService();
+
+    AuthorizationsService authorizationsService();
 }
