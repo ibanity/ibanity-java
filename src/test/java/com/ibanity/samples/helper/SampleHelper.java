@@ -39,12 +39,13 @@ public class SampleHelper {
                         .findFirst().getAsDouble() * randomDebitCreditSign, 2));
     }
 
-    public static void waitForAuthorizationWebFlow(AccountInformationAccessRequest accountInformationAccessRequest) {
+    public static String waitForAuthorizationWebFlow(AccountInformationAccessRequest accountInformationAccessRequest) {
         LOGGER.info("Open the following URL in your browser and follow the web flow:");
         LOGGER.info("   " + accountInformationAccessRequest.getAccountInformationAccessLinks().getRedirect());
         LOGGER.info("Once the authorization is done, press ENTER to continue...");
+        LOGGER.info("Type in the code returned in the callback if you used skipIbanityCompletionCallback flag");
 
-        new Scanner(System.in).nextLine();
+        return new Scanner(System.in).nextLine();
     }
 
     public static FinancialInstitutionTransactionCreationQuery generateRandomTransactionCreationQuery(
