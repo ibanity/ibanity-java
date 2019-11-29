@@ -1,26 +1,34 @@
-package com.ibanity.samples.customer;
+package com.ibanity.samples;
 
 import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest;
+import com.ibanity.apis.client.products.xs2a.models.Authorization;
 import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.products.xs2a.models.create.AccountInformationAccessRequestCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.create.AuthorizationCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.create.AuthorizationPortalCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.create.MetaRequestCreationQuery;
-import com.ibanity.apis.client.products.xs2a.models.read.AccountInformationAccessRequestReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.AccountInformationAccessRequestsService;
+import com.ibanity.apis.client.products.xs2a.services.AuthorizationsService;
 import com.ibanity.apis.client.services.IbanityService;
 
+import java.util.Map;
+
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
 
-public class AccountInformationAccessRequestSample {
+public class AuthorizationSample {
 
+    private final AuthorizationsService authorizationsService;
     private final AccountInformationAccessRequestsService accountInformationAccessRequestsService;
 
-    public AccountInformationAccessRequestSample(IbanityService ibanityService) {
+    public AuthorizationSample(IbanityService ibanityService) {
         accountInformationAccessRequestsService = ibanityService.xs2aService().accountInformationAccessRequestsService();
+        authorizationsService = ibanityService.xs2aService().authorizationsService();
     }
 
-    public AccountInformationAccessRequest create(
+
+    public AccountInformationAccessRequest createAiar(
             FinancialInstitution financialInstitution,
             CustomerAccessToken customerAccessToken,
             String consentReference, String redirectUrl) {
@@ -33,7 +41,8 @@ public class AccountInformationAccessRequestSample {
                         .allowFinancialInstitutionRedirectUri(true)
                         .customerIpAddress("1.1.1.1")
                         .allowedAccountSubtypes(newArrayList("checking", "savings"))
-                        .skipIbanityCompletionCallback(false)
+                        .skipIbanityCompletionCallback(true)
+                        .state("myCustomState")
                         .metaRequestCreationQuery(MetaRequestCreationQuery.builder()
                                 .authorizationPortalCreationQuery(AuthorizationPortalCreationQuery.builder()
                                         .disclaimerContent("thisIsACusomOneContent")
@@ -47,11 +56,15 @@ public class AccountInformationAccessRequestSample {
         return accountInformationAccessRequestsService.create(accountInformationAccessRequestCreationQuery);
     }
 
-    public AccountInformationAccessRequest find(AccountInformationAccessRequest accountInformationAccessRequest, FinancialInstitution financialInstitution, CustomerAccessToken customerAccessToken) {
-        return accountInformationAccessRequestsService.find(AccountInformationAccessRequestReadQuery.builder()
+    public Authorization create(AccountInformationAccessRequest accountInformationAccessRequest, FinancialInstitution financialInstitution, CustomerAccessToken customerAccessToken, String code) {
+        Map<String, String> authorizationCode = newHashMap();
+        authorizationCode.put("code", code);
+        AuthorizationCreationQuery authorizationCreationQuery = AuthorizationCreationQuery.builder()
                 .accountInformationAccessRequestId(accountInformationAccessRequest.getId())
-                .financialInstitutionId(financialInstitution.getId())
                 .customerAccessToken(customerAccessToken.getToken())
-                .build());
+                .financialInstitutionId(financialInstitution.getId())
+                .queryParameters(authorizationCode)
+                .build();
+        return authorizationsService.create(authorizationCreationQuery);
     }
 }

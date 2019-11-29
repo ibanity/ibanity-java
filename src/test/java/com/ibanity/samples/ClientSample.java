@@ -2,7 +2,6 @@ package com.ibanity.samples;
 
 import com.ibanity.apis.client.builders.IbanityServiceBuilder;
 import com.ibanity.apis.client.builders.OptionalPropertiesBuilder;
-import com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys;
 import com.ibanity.apis.client.products.xs2a.models.*;
 import com.ibanity.apis.client.services.IbanityService;
 import com.ibanity.samples.customer.*;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.*;
-import static com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys.*;
 import static com.ibanity.apis.client.helpers.IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY;
 import static com.ibanity.apis.client.helpers.IbanityConfiguration.getConfiguration;
 import static com.ibanity.samples.helper.SampleHelper.*;
@@ -33,6 +31,7 @@ public class ClientSample {
     private final PaymentInitiationRequestSample paymentInitiationRequestSample;
     private final SynchronizationSample synchronizationSample;
     private final CustomerSample customerSample;
+    private final AuthorizationSample authorizationSample;
 
     // Configurations
     private final String fakeTppAccountInformationAccessRedirectUrl = getConfiguration("tpp.account-information-access-result.redirect-url");
@@ -47,6 +46,7 @@ public class ClientSample {
         paymentInitiationRequestSample = new PaymentInitiationRequestSample(ibanityService);
         synchronizationSample = new SynchronizationSample(ibanityService);
         customerSample = new CustomerSample(ibanityService);
+        authorizationSample = new AuthorizationSample(ibanityService);
     }
 
     public static void main(String[] args) throws CertificateException, IOException {
@@ -75,6 +75,9 @@ public class ClientSample {
         List<FinancialInstitution> financialInstitutions = clientSample.financialInstitutionSamples();
 
         clientSample.accountInformationAccessRequestSamples(customerAccessToken, financialInstitutions);
+
+        Authorization authorization = clientSample.authorizationSamples(customerAccessToken, financialInstitutions);
+        LOGGER.info("Authorization: {}", authorization);
 
         List<Account> accounts = clientSample.accountSamples(customerAccessToken, financialInstitutions);
         List<Transaction> transactions = clientSample.transactionSamples(customerAccessToken, financialInstitutions, accounts);
@@ -134,6 +137,20 @@ public class ClientSample {
         return accountInformationAccessRequest;
     }
 
+    public Authorization authorizationSamples(CustomerAccessToken customerAccessToken, List<FinancialInstitution> financialInstitutions) {
+        LOGGER.info("Authorization samples");
+
+        String consentReference = "application_customer_reference-" + UUID.randomUUID().toString();
+        FinancialInstitution financialInstitution = financialInstitutions.get(0);
+
+        AccountInformationAccessRequest accountInformationAccessRequest =
+                authorizationSample.createAiar(financialInstitution, customerAccessToken, consentReference, fakeTppAccountInformationAccessRedirectUrl);
+
+        String code = waitForAuthorizationWebFlow(accountInformationAccessRequest);
+
+        return authorizationSample.create(accountInformationAccessRequest, financialInstitution, customerAccessToken, code);
+    }
+
     public List<Account> accountSamples(CustomerAccessToken customerAccessToken, List<FinancialInstitution> financialInstitutions) {
         LOGGER.info("Accounts samples");
 
@@ -168,7 +185,7 @@ public class ClientSample {
         FinancialInstitution financialInstitution = financialInstitutionSample.list().get(0);
 
         paymentInitiationRequestSample.create(financialInstitution, customerAccessToken,
-                        fakeTppPaymentInitiationRedirectUrl);
+                fakeTppPaymentInitiationRedirectUrl);
     }
 
 }
