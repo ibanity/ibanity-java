@@ -114,6 +114,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
                 .allowFinancialInstitutionRedirectUri(creationQuery.isAllowFinancialInstitutionRedirectUri())
                 .allowedAccountSubtypes(allowedAccountSubtypes.isEmpty() ? null : allowedAccountSubtypes)
                 .skipIbanityCompletionCallback(creationQuery.isSkipIbanityCompletionCallback())
+                .state(creationQuery.getState())
                 .build();
     }
 
@@ -137,7 +138,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    private static class AccountInformationAccessRequest implements IbanityModel {
+    static class AccountInformationAccessRequest implements IbanityModel {
 
         public static final String RESOURCE_TYPE = "accountInformationAccessRequest";
         public static final String API_URL_TAG_ID = "{" + RESOURCE_TYPE + URL_PARAMETER_ID_POSTFIX + "}";
@@ -152,6 +153,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
         private String customerIpAddress;
         private boolean allowFinancialInstitutionRedirectUri;
         private boolean skipIbanityCompletionCallback;
+        private String state;
 
         @Builder.Default
         private List<String> requestedAccountReferences = Collections.emptyList();
