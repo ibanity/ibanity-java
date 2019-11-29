@@ -1,6 +1,7 @@
 package com.ibanity.apis.client.products.xs2a.services.impl;
 
 import com.ibanity.apis.client.http.IbanityHttpClient;
+import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.products.xs2a.models.create.AccountInformationAccessRequestCreationQuery;
@@ -13,6 +14,8 @@ import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -26,7 +29,6 @@ import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static java.util.Collections.emptyMap;
 import static java.util.UUID.fromString;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -53,6 +55,9 @@ class AccountInformationAccessRequestsServiceImplTest {
     @Mock
     private IbanityHttpClient ibanityHttpClient;
 
+    @Captor
+    private ArgumentCaptor<RequestApiModel> requestApiModelArgumentCaptor;
+
     @BeforeEach
     void setUp() {
         when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "accountInformationAccessRequests"))
@@ -70,6 +75,7 @@ class AccountInformationAccessRequestsServiceImplTest {
                         .requestedAccountReferences(newArrayList("BE9766801628897565"))
                         .locale("fr")
                         .customerIpAddress("0.0.0.0")
+                        .state("aCustomState")
                         .allowedAccountSubtypes(newArrayList("checking", "savings"))
                         .metaRequestCreationQuery(MetaRequestCreationQuery.builder()
                                 .authorizationPortalCreationQuery(AuthorizationPortalCreationQuery.builder()
@@ -78,12 +84,15 @@ class AccountInformationAccessRequestsServiceImplTest {
                                 .build())
                         .build();
 
-        when(ibanityHttpClient.post(eq(buildUri(AIAR_ENDPOINT_FOR_CREATE)), any(), eq(emptyMap()), eq(creationQuery.getCustomerAccessToken())))
+        when(ibanityHttpClient.post(eq(buildUri(AIAR_ENDPOINT_FOR_CREATE)), requestApiModelArgumentCaptor.capture(), eq(emptyMap()), eq(creationQuery.getCustomerAccessToken())))
                 .thenReturn(loadFile("json/createAccountInformationAccessRequest.json"));
 
         AccountInformationAccessRequest actual = accountInformationAccessRequestsService.create(creationQuery);
 
         assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpectedForCreate());
+        AccountInformationAccessRequestsServiceImpl.AccountInformationAccessRequest attributes =
+                (AccountInformationAccessRequestsServiceImpl.AccountInformationAccessRequest) requestApiModelArgumentCaptor.getValue().getData().getAttributes();
+        assertThat(attributes.getState()).isEqualTo("aCustomState");
     }
 
     @Test
