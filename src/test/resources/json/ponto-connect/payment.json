@@ -1,0 +1,19 @@
+{
+  "data": {
+    "type": "payment",
+    "id": "6c0350b5-a724-42e5-b4ce-ca3a6994df3d",
+    "attributes": {
+      "status": "pending",
+      "requestedExecutionDate": "2019-01-01",
+      "remittanceInformationType": "unstructured",
+      "remittanceInformation": "ThisIsATest",
+      "currency": "EUR",
+      "creditorName": "Alex Creditor",
+      "creditorAgentType": "anAgentType",
+      "creditorAgent": "anAgent",
+      "creditorAccountReferenceType": "IBAN",
+      "creditorAccountReference": "BE84732645584359",
+      "amount": "1"
+    }
+  }
+}

@@ -5,8 +5,10 @@ import com.ibanity.apis.client.builders.OptionalPropertiesBuilder;
 import com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.products.ponto_connect.models.*;
+import com.ibanity.apis.client.products.ponto_connect.models.create.PaymentCreateQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.create.SynchronizationCreateQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.create.TokenCreateQuery;
+import com.ibanity.apis.client.products.ponto_connect.models.delete.PaymentDeleteQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.read.*;
 import com.ibanity.apis.client.products.ponto_connect.models.refresh.TokenRefreshQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.revoke.TokenRevokeQuery;
@@ -15,7 +17,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.cert.CertificateException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -74,6 +78,10 @@ public class PontoConnectClientSample {
 
         List<Transaction> transactions = transactions(pontoConnectService.transactionService(), accountId, accessToken);
         LOGGER.info("List of transactions {}", transactions);
+        Payment payment = payments(pontoConnectService.paymentService(), accountId, accessToken);
+        LOGGER.info("payment {}", payment);
+
+        revokeToken(pontoConnectService.tokenService(), accessToken);
 
         revokeToken(pontoConnectService.tokenService(), accessToken);
     }
@@ -89,11 +97,11 @@ public class PontoConnectClientSample {
         LOGGER.info("Token samples");
 
         Token token = tokenService.create(TokenCreateQuery.builder()
-                        .authorizationCode(authorizationCode)
-                        .clientSecret(clientSecret)
-                        .codeVerifier(codeVerifier)
-                        .redirectUri(pontoConnectRedirectUrl)
-                        .build());
+                .authorizationCode(authorizationCode)
+                .clientSecret(clientSecret)
+                .codeVerifier(codeVerifier)
+                .redirectUri(pontoConnectRedirectUrl)
+                .build());
         LOGGER.info("Token {}", token);
 
         token = tokenService.refresh(TokenRefreshQuery.builder()
@@ -168,6 +176,38 @@ public class PontoConnectClientSample {
                 .build());
 
         return accounts.getItems();
+    }
+
+    private static Payment payments(PaymentService paymentService, UUID accountId, String accessToken) {
+        LOGGER.info("Payments samples");
+        Payment payment = paymentService.create(PaymentCreateQuery.builder()
+                .accessToken(accessToken)
+                .accountId(accountId)
+                .remittanceInformation("payment")
+                .remittanceInformationType("unstructured")
+                .requestedExecutionDate(LocalDate.parse("2020-02-05"))
+                .currency("EUR")
+                .amount(BigDecimal.valueOf(59))
+                .creditorName("Alex Creditor")
+                .creditorAccountReference("BE55732022998044")
+                .creditorAccountReferenceType("IBAN")
+                .creditorAgent("NBBEBEBB203")
+                .creditorAgentType("BIC")
+                .build());
+
+        payment = paymentService.find(PaymentReadQuery.builder()
+                .accessToken(accessToken)
+                .accountId(accountId)
+                .paymentId(payment.getId())
+                .build());
+
+        paymentService.delete(PaymentDeleteQuery.builder()
+                .accessToken(accessToken)
+                .accountId(accountId)
+                .paymentId(payment.getId())
+                .build());
+
+        return payment;
     }
 
 }

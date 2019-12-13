@@ -11,4 +11,6 @@ public interface PontoConnectService {
     FinancialInstitutionService financialInstitutionService();
 
     SynchronizationService synchronizationService();
+
+    PaymentService paymentService();
 }
