@@ -14,10 +14,12 @@ public abstract class IbanityException extends RuntimeException {
 
     private final List<IbanityError> errors;
     private final int httpStatusCode;
+    private final String requestId;
 
-    public IbanityException(List<IbanityError> errors, int httpStatusCode) {
+    public IbanityException(List<IbanityError> errors, int httpStatusCode, String requestId) {
         super("Ibanity request failed.");
         this.errors = errors;
         this.httpStatusCode = httpStatusCode;
+        this.requestId = requestId;
     }
 }

@@ -6,6 +6,7 @@ import com.ibanity.apis.client.models.IbanityError;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.entity.EntityBuilder;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicStatusLine;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +24,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class IbanityResponseHandlerTest {
 
+    private static final String REQUEST_ID = "thisIsARequestId";
+    private static final String IBANITY_REQUEST_ID_HEADER = "ibanity-request-id";
     private IbanityResponseHandler ibanityResponseHandler = new IbanityResponseHandler();
 
     @Mock
@@ -48,10 +51,11 @@ class IbanityResponseHandlerTest {
 
         when(httpResponse.getEntity()).thenReturn(EntityBuilder.create().setText(expected).build());
         when(httpResponse.getStatusLine()).thenReturn(new BasicStatusLine(dummyProtocolVersion(), 500, ""));
+        when(httpResponse.getFirstHeader(IBANITY_REQUEST_ID_HEADER)).thenReturn(new BasicHeader(IBANITY_REQUEST_ID_HEADER, REQUEST_ID));
 
         IbanityServerException actual = assertThrows(IbanityServerException.class, () -> ibanityResponseHandler.handleResponse(httpResponse));
 
-        assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerException(createExpectedErrors(), 500));
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerException(createExpectedErrors(), 500, REQUEST_ID));
     }
 
     @Test
@@ -61,10 +65,25 @@ class IbanityResponseHandlerTest {
 
         when(httpResponse.getEntity()).thenReturn(EntityBuilder.create().setText(expected).build());
         when(httpResponse.getStatusLine()).thenReturn(new BasicStatusLine(dummyProtocolVersion(), 404, ""));
+        when(httpResponse.getFirstHeader(IBANITY_REQUEST_ID_HEADER)).thenReturn(new BasicHeader(IBANITY_REQUEST_ID_HEADER, REQUEST_ID));
 
         IbanityClientException actual = assertThrows(IbanityClientException.class, () -> ibanityResponseHandler.handleResponse(httpResponse));
 
-        assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerException(createExpectedErrors(), 404));
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerException(createExpectedErrors(), 404, REQUEST_ID));
+    }
+
+    @Test
+    void handleResponse_whenResourceNotFoundAndNoRequestId_thenThrowIbanityClientSideException() {
+        //language=JSON
+        String expected = errorPayload();
+
+        when(httpResponse.getEntity()).thenReturn(EntityBuilder.create().setText(expected).build());
+        when(httpResponse.getStatusLine()).thenReturn(new BasicStatusLine(dummyProtocolVersion(), 404, ""));
+        when(httpResponse.getFirstHeader(IBANITY_REQUEST_ID_HEADER)).thenReturn(null);
+
+        IbanityClientException actual = assertThrows(IbanityClientException.class, () -> ibanityResponseHandler.handleResponse(httpResponse));
+
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerException(createExpectedErrors(), 404, null));
     }
 
     private List<IbanityError> createExpectedErrors() {
