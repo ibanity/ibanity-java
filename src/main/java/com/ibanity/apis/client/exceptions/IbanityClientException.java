@@ -10,8 +10,8 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class IbanityClientException extends IbanityException {
 
-    public IbanityClientException(List<IbanityError> errors, int httpStatusCode) {
-       super(errors, httpStatusCode);
+    public IbanityClientException(List<IbanityError> errors, int httpStatusCode, String requestId) {
+       super(errors, httpStatusCode, requestId);
     }
 }
 
