@@ -22,5 +22,11 @@ public interface Xs2aService {
 
     CustomerService customerService();
 
+    /**
+     * @deprecated  Replaced by {@link #accountInformationAccessRequestAuthorizationsService()}
+     */
+    @Deprecated
     AuthorizationsService authorizationsService();
+
+    AccountInformationAccessRequestAuthorizationsService accountInformationAccessRequestAuthorizationsService();
 }

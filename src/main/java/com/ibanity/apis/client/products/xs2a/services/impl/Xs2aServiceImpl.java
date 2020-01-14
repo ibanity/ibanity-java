@@ -17,6 +17,7 @@ public class Xs2aServiceImpl implements com.ibanity.apis.client.products.xs2a.se
     private final AccountInformationAccessRequestsService accountInformationAccessRequestsService;
     private final CustomerService customerService;
     private final AuthorizationsServiceImpl authorizationsService;
+    private final AccountInformationAccessRequestAuthorizationsServiceImpl accountInformationAccessRequestAuthorizationsService;
 
     public Xs2aServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
         accountService = new AccountsServiceImpl(apiUrlProvider, ibanityHttpClient);
@@ -26,6 +27,7 @@ public class Xs2aServiceImpl implements com.ibanity.apis.client.products.xs2a.se
         financialInstitutionsService = new FinancialInstitutionsServiceImpl(apiUrlProvider, ibanityHttpClient);
         paymentInitiationRequestService = new PaymentInitiationRequestServiceImpl(apiUrlProvider, ibanityHttpClient);
         accountInformationAccessRequestsService = new AccountInformationAccessRequestsServiceImpl(apiUrlProvider, ibanityHttpClient);
+        accountInformationAccessRequestAuthorizationsService = new AccountInformationAccessRequestAuthorizationsServiceImpl(apiUrlProvider, ibanityHttpClient);
         sandboxService = new SandboxServiceImpl(apiUrlProvider, ibanityHttpClient);
         customerService = new CustomerServiceImpl(apiUrlProvider, ibanityHttpClient);
         authorizationsService = new AuthorizationsServiceImpl(apiUrlProvider, ibanityHttpClient);
@@ -76,8 +78,17 @@ public class Xs2aServiceImpl implements com.ibanity.apis.client.products.xs2a.se
         return customerService;
     }
 
+    /**
+     * @deprecated  Replaced by {@link #accountInformationAccessRequestAuthorizationsService()}
+     */
+    @Deprecated
     @Override
     public AuthorizationsService authorizationsService() {
         return authorizationsService;
+    }
+
+    @Override
+    public AccountInformationAccessRequestAuthorizationsService accountInformationAccessRequestAuthorizationsService() {
+        return accountInformationAccessRequestAuthorizationsService;
     }
 }

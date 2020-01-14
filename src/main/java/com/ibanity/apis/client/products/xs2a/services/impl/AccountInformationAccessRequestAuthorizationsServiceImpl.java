@@ -8,8 +8,7 @@ import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.products.xs2a.models.create.AccountInformationAccessRequestAuthorizationCreationQuery;
-import com.ibanity.apis.client.products.xs2a.models.create.AuthorizationCreationQuery;
-import com.ibanity.apis.client.products.xs2a.services.AuthorizationsService;
+import com.ibanity.apis.client.products.xs2a.services.AccountInformationAccessRequestAuthorizationsService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
@@ -22,41 +21,33 @@ import static com.ibanity.apis.client.mappers.IbanityModelMapper.buildRequest;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static java.util.Collections.emptyMap;
 
-/**
- * @deprecated Replaced by {@link com.ibanity.apis.client.products.xs2a.services.impl.AccountInformationAccessRequestAuthorizationsServiceImpl}
- */
-@Deprecated
-public class AuthorizationsServiceImpl implements AuthorizationsService {
+public class AccountInformationAccessRequestAuthorizationsServiceImpl implements AccountInformationAccessRequestAuthorizationsService {
 
     private final ApiUrlProvider apiUrlProvider;
     private final IbanityHttpClient ibanityHttpClient;
 
-    public AuthorizationsServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
+    public AccountInformationAccessRequestAuthorizationsServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
         this.apiUrlProvider = apiUrlProvider;
         this.ibanityHttpClient = ibanityHttpClient;
     }
 
-    /**
-     * @deprecated Replaced by {@link com.ibanity.apis.client.products.xs2a.services.impl.AccountInformationAccessRequestAuthorizationsServiceImpl#create(AccountInformationAccessRequestAuthorizationCreationQuery)}
-     */
-    @Deprecated
     @Override
-    public com.ibanity.apis.client.products.xs2a.models.Authorization create(AuthorizationCreationQuery authorizationCreationQuery) {
+    public com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequestAuthorization create(AccountInformationAccessRequestAuthorizationCreationQuery authorizationCreationQuery) {
         UUID financialInstitutionId = authorizationCreationQuery.getFinancialInstitutionId();
         UUID accountInformationAccessRequestId = authorizationCreationQuery.getAccountInformationAccessRequestId();
 
         URI uri = getUrl(financialInstitutionId, accountInformationAccessRequestId);
 
-        Authorization ibanityModel = mapAttributes(authorizationCreationQuery);
-        AuthorizationMeta meta = mapMeta(authorizationCreationQuery);
-        RequestApiModel request = buildRequest(Authorization.RESOURCE_TYPE, ibanityModel, meta);
+        AccountInformationAccessRequestAuthorization ibanityModel = mapAttributes(authorizationCreationQuery);
+        AccountInformationAccessRequestAuthorizationMeta meta = mapMeta(authorizationCreationQuery);
+        RequestApiModel request = buildRequest(AccountInformationAccessRequestAuthorization.RESOURCE_TYPE, ibanityModel, meta);
 
         String response = ibanityHttpClient.post(uri, request, authorizationCreationQuery.getAdditionalHeaders(), authorizationCreationQuery.getCustomerAccessToken());
-        return IbanityModelMapper.mapResource(response, com.ibanity.apis.client.products.xs2a.models.Authorization.class);
+        return IbanityModelMapper.mapResource(response, com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequestAuthorization.class);
     }
 
-    private AuthorizationMeta mapMeta(AuthorizationCreationQuery authorizationCreationQuery) {
-        return AuthorizationMeta.builder()
+    private AccountInformationAccessRequestAuthorizationMeta mapMeta(AccountInformationAccessRequestAuthorizationCreationQuery authorizationCreationQuery) {
+        return AccountInformationAccessRequestAuthorizationMeta.builder()
                 .credentialsEncryptionKey(authorizationCreationQuery.getCredentialsEncryptionKey())
                 .build();
     }
@@ -70,8 +61,8 @@ public class AuthorizationsServiceImpl implements AuthorizationsService {
         return buildUri(StringUtils.removeEnd(url, "/"));
     }
 
-    private Authorization mapAttributes(AuthorizationCreationQuery authorizationCreationQuery) {
-        return Authorization.builder()
+    private AccountInformationAccessRequestAuthorization mapAttributes(AccountInformationAccessRequestAuthorizationCreationQuery authorizationCreationQuery) {
+        return AccountInformationAccessRequestAuthorization.builder()
                 .queryParameters(authorizationCreationQuery.getQueryParameters())
                 .build();
     }
@@ -80,7 +71,7 @@ public class AuthorizationsServiceImpl implements AuthorizationsService {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    static class Authorization implements IbanityModel {
+    static class AccountInformationAccessRequestAuthorization implements IbanityModel {
 
         public static final String RESOURCE_TYPE = "authorization";
         public static final String API_URL_TAG_ID = "{" + RESOURCE_TYPE + URL_PARAMETER_ID_POSTFIX + "}";
@@ -96,7 +87,7 @@ public class AuthorizationsServiceImpl implements AuthorizationsService {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    static class AuthorizationMeta {
+    static class AccountInformationAccessRequestAuthorizationMeta {
         private String credentialsEncryptionKey;
     }
 }

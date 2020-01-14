@@ -9,11 +9,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-/**
- * @deprecated  Replaced by {@link com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequestAuthorization}
- */
-@Deprecated
-public class Authorization implements IbanityModel {
+public class AccountInformationAccessRequestAuthorization implements IbanityModel {
 
     public static final String RESOURCE_TYPE = "authorization";
     public static final String API_URL_TAG_ID = "{" + RESOURCE_TYPE + URL_PARAMETER_ID_POSTFIX + "}";
@@ -23,6 +19,3 @@ public class Authorization implements IbanityModel {
 
     private String status;
 }
-
-
-
