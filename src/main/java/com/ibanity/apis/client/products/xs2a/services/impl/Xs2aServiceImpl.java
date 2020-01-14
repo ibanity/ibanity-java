@@ -5,7 +5,7 @@ import com.ibanity.apis.client.products.xs2a.sandbox.services.impl.SandboxServic
 import com.ibanity.apis.client.products.xs2a.services.*;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 
-public class Xs2aServiceImpl implements com.ibanity.apis.client.products.xs2a.services.Xs2aService {
+public class Xs2aServiceImpl implements Xs2aService {
 
     private final com.ibanity.apis.client.products.xs2a.sandbox.services.SandboxService sandboxService;
     private final AccountsService accountService;
@@ -18,6 +18,7 @@ public class Xs2aServiceImpl implements com.ibanity.apis.client.products.xs2a.se
     private final CustomerService customerService;
     private final AuthorizationsServiceImpl authorizationsService;
     private final AccountInformationAccessRequestAuthorizationsServiceImpl accountInformationAccessRequestAuthorizationsService;
+    private final PaymentInitiationRequestAuthorizationsServiceImpl paymentInitiationRequestAuthorizationsService;
 
     public Xs2aServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
         accountService = new AccountsServiceImpl(apiUrlProvider, ibanityHttpClient);
@@ -28,6 +29,7 @@ public class Xs2aServiceImpl implements com.ibanity.apis.client.products.xs2a.se
         paymentInitiationRequestService = new PaymentInitiationRequestServiceImpl(apiUrlProvider, ibanityHttpClient);
         accountInformationAccessRequestsService = new AccountInformationAccessRequestsServiceImpl(apiUrlProvider, ibanityHttpClient);
         accountInformationAccessRequestAuthorizationsService = new AccountInformationAccessRequestAuthorizationsServiceImpl(apiUrlProvider, ibanityHttpClient);
+        paymentInitiationRequestAuthorizationsService = new PaymentInitiationRequestAuthorizationsServiceImpl(apiUrlProvider, ibanityHttpClient);
         sandboxService = new SandboxServiceImpl(apiUrlProvider, ibanityHttpClient);
         customerService = new CustomerServiceImpl(apiUrlProvider, ibanityHttpClient);
         authorizationsService = new AuthorizationsServiceImpl(apiUrlProvider, ibanityHttpClient);
@@ -90,5 +92,10 @@ public class Xs2aServiceImpl implements com.ibanity.apis.client.products.xs2a.se
     @Override
     public AccountInformationAccessRequestAuthorizationsService accountInformationAccessRequestAuthorizationsService() {
         return accountInformationAccessRequestAuthorizationsService;
+    }
+
+    @Override
+    public PaymentInitiationRequestAuthorizationsService paymentInitiationRequestAuthorizationsService() {
+        return paymentInitiationRequestAuthorizationsService;
     }
 }

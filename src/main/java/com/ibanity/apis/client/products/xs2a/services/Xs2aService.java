@@ -29,4 +29,6 @@ public interface Xs2aService {
     AuthorizationsService authorizationsService();
 
     AccountInformationAccessRequestAuthorizationsService accountInformationAccessRequestAuthorizationsService();
+
+    PaymentInitiationRequestAuthorizationsService paymentInitiationRequestAuthorizationsService();
 }
