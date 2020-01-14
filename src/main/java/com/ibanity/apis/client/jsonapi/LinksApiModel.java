@@ -1,12 +1,6 @@
 package com.ibanity.apis.client.jsonapi;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Builder
@@ -22,4 +16,5 @@ public class LinksApiModel {
     private String next;
     private String related;
     private String redirect;
+    private String nextRedirect;
 }
