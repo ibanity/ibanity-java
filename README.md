@@ -3,7 +3,6 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.ibanity.apis/ibanity-java.svg)](https://search.maven.org/artifact/com.ibanity.apis/ibanity-java)
 [![Build Status](https://travis-ci.org/ibanity/ibanity-java.svg?branch=master)](https://travis-ci.org/ibanity/ibanity-java)
 [![License](https://img.shields.io/cocoapods/l/AFNetworking.svg)](https://github.com/ibanity/ibanity-java/blob/master/LICENSE)
-[![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=com.ibanity.apis:ibanity-java&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.ibanity.apis:ibanity-java)
 [![Maintainability](https://sonarcloud.io/api/project_badges/measure?project=com.ibanity.apis:ibanity-java&metric=sqale_rating)](https://sonarcloud.io/component_measures?id=com.ibanity.apis:ibanity-java&metric=sqale_rating)
 [![Security](https://sonarcloud.io/api/project_badges/measure?project=com.ibanity.apis:ibanity-java&metric=security_rating)](https://sonarcloud.io/component_measures?id=com.ibanity.apis:ibanity-java&metric=security_rating)
 [![Reliability](https://sonarcloud.io/api/project_badges/measure?project=com.ibanity.apis:ibanity-java&metric=reliability_rating)](https://sonarcloud.io/component_measures?id=com.ibanity.apis:ibanity-java&metric=vulnerabilities)

@@ -46,12 +46,17 @@
             <email>daniel.deluca@ibanity.com</email>
             <organizationUrl>https://www.ibanity.com</organizationUrl>
         </developer>
+        <developer>
+            <name>Damien Bravin</name>
+            <email>damien.bravin@ibanity.com</email>
+            <organizationUrl>https://www.ibanity.com</organizationUrl>
+        </developer>
     </developers>
 
     <properties>
 
         <!-- Artifact Version parts -->
-        <revision>1.2</revision>
+        <revision>2.0</revision>
         <changelist>-SNAPSHOT</changelist>
         <timestamp>${maven.build.timestamp}</timestamp>
 
