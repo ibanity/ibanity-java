@@ -22,7 +22,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
 
-import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static com.ibanity.apis.client.models.IbanityProduct.Xs2a;
 import static java.time.Instant.parse;
 import static java.util.UUID.fromString;
@@ -67,7 +67,7 @@ class FinancialInstitutionTransactionsServiceImplTest {
                 .build();
 
         when(ibanityHttpClient.get(new URI(TRANSACTION_ENDPOINT + "/" + TRANSACTION_ID)))
-                .thenReturn(loadFile("json/sandbox/find_transaction.json"));
+                .thenReturn(loadHttpResponse("json/sandbox/find_transaction.json"));
 
         FinancialInstitutionTransaction actual = financialInstitutionTransactionsService.find(query);
         assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpectedForFind());
@@ -82,7 +82,7 @@ class FinancialInstitutionTransactionsServiceImplTest {
                 .build();
 
         when(ibanityHttpClient.get(new URI(TRANSACTION_ENDPOINT + "?limit=10")))
-                .thenReturn(loadFile("json/sandbox/list_transactions.json"));
+                .thenReturn(loadHttpResponse("json/sandbox/list_transactions.json"));
 
         IbanityCollection<FinancialInstitutionTransaction> actual = financialInstitutionTransactionsService.list(query);
         assertThat(actual).isEqualToComparingFieldByFieldRecursively(
@@ -97,7 +97,7 @@ class FinancialInstitutionTransactionsServiceImplTest {
     @Test
     void delete() throws Exception {
         when(ibanityHttpClient.delete(new URI(TRANSACTION_ENDPOINT + "/" + TRANSACTION_ID)))
-                .thenReturn(loadFile("json/sandbox/delete_transaction.json"));
+                .thenReturn(loadHttpResponse("json/sandbox/delete_transaction.json"));
 
         FinancialInstitutionTransactionDeleteQuery query = FinancialInstitutionTransactionDeleteQuery.builder()
                 .financialInstitutionAccountId(ACCOUNT_ID)
@@ -130,7 +130,7 @@ class FinancialInstitutionTransactionsServiceImplTest {
                 .build();
 
         when(ibanityHttpClient.post(new URI(TRANSACTION_ENDPOINT), createRequest(query)))
-                .thenReturn(loadFile("json/sandbox/find_transaction.json"));
+                .thenReturn(loadHttpResponse("json/sandbox/find_transaction.json"));
 
         FinancialInstitutionTransaction actual = financialInstitutionTransactionsService.create(query);
         assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpectedForFind());

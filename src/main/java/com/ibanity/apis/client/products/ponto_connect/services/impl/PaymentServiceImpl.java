@@ -11,6 +11,7 @@ import com.ibanity.apis.client.products.ponto_connect.services.PaymentService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
 
 import java.math.BigDecimal;
 import java.net.URI;
@@ -37,7 +38,7 @@ public class PaymentServiceImpl implements PaymentService {
                 + "/"
                 + paymentReadQuery.getPaymentId().toString());
 
-        String response = ibanityHttpClient.get(uri, paymentReadQuery.getAdditionalHeaders(), paymentReadQuery.getAccessToken());
+        HttpResponse response = ibanityHttpClient.get(uri, paymentReadQuery.getAdditionalHeaders(), paymentReadQuery.getAccessToken());
         return mapResource(response, com.ibanity.apis.client.products.ponto_connect.models.Payment.class);
     }
 
@@ -47,7 +48,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         Payment payment = toRequest(paymentCreateQuery);
         RequestApiModel requestApiModel = buildRequest(com.ibanity.apis.client.products.ponto_connect.models.Payment.RESOURCE_TYPE, payment);
-        String response = ibanityHttpClient.post(uri, requestApiModel, paymentCreateQuery.getAdditionalHeaders(), paymentCreateQuery.getAccessToken());
+        HttpResponse response = ibanityHttpClient.post(uri, requestApiModel, paymentCreateQuery.getAdditionalHeaders(), paymentCreateQuery.getAccessToken());
         return mapResource(response, com.ibanity.apis.client.products.ponto_connect.models.Payment.class);
     }
 
@@ -57,7 +58,7 @@ public class PaymentServiceImpl implements PaymentService {
                 + "/"
                 + paymentDeleteQuery.getPaymentId().toString());
 
-        String response = ibanityHttpClient.delete(uri, paymentDeleteQuery.getAdditionalHeaders(), paymentDeleteQuery.getAccessToken());
+        HttpResponse response = ibanityHttpClient.delete(uri, paymentDeleteQuery.getAdditionalHeaders(), paymentDeleteQuery.getAccessToken());
         return mapResource(response, com.ibanity.apis.client.products.ponto_connect.models.Payment.class);
     }
 

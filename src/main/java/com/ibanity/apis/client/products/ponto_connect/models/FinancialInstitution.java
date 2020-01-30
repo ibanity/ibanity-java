@@ -16,6 +16,7 @@ public class FinancialInstitution implements IbanityModel {
 
     private UUID id;
     private String selfLink;
+    private String requestId;
 
     private String bic;
     private String name;

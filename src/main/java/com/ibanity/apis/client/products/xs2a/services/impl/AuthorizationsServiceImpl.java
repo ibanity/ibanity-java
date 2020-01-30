@@ -13,6 +13,7 @@ import com.ibanity.apis.client.products.xs2a.services.AuthorizationsService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
 
 import java.net.URI;
 import java.util.Map;
@@ -51,7 +52,7 @@ public class AuthorizationsServiceImpl implements AuthorizationsService {
         AuthorizationMeta meta = mapMeta(authorizationCreationQuery);
         RequestApiModel request = buildRequest(Authorization.RESOURCE_TYPE, ibanityModel, meta);
 
-        String response = ibanityHttpClient.post(uri, request, authorizationCreationQuery.getAdditionalHeaders(), authorizationCreationQuery.getCustomerAccessToken());
+        HttpResponse response = ibanityHttpClient.post(uri, request, authorizationCreationQuery.getAdditionalHeaders(), authorizationCreationQuery.getCustomerAccessToken());
         return IbanityModelMapper.mapResource(response, com.ibanity.apis.client.products.xs2a.models.Authorization.class);
     }
 
@@ -87,6 +88,7 @@ public class AuthorizationsServiceImpl implements AuthorizationsService {
 
         private UUID id;
         private String selfLink;
+        private String requestId;
 
         @Builder.Default
         private Map<String, String> queryParameters = emptyMap();

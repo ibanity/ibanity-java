@@ -17,6 +17,7 @@ import com.ibanity.apis.client.products.xs2a.models.read.AccountInformationAcces
 import com.ibanity.apis.client.products.xs2a.services.AccountInformationAccessRequestsService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import lombok.*;
+import org.apache.http.HttpResponse;
 
 import java.net.URI;
 import java.util.Collections;
@@ -48,7 +49,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
         AccountInformationAccessRequest ibanityModel = mapAttributes(accountInformationAccessRequestCreationQuery);
         AccountInformationAccessRequestMeta meta = mapMeta(accountInformationAccessRequestCreationQuery);
         RequestApiModel request = buildRequest(AccountInformationAccessRequest.RESOURCE_TYPE, ibanityModel, meta);
-        String response = ibanityHttpClient.post(uri, request, accountInformationAccessRequestCreationQuery.getAdditionalHeaders(), accountInformationAccessRequestCreationQuery.getCustomerAccessToken());
+        HttpResponse response = ibanityHttpClient.post(uri, request, accountInformationAccessRequestCreationQuery.getAdditionalHeaders(), accountInformationAccessRequestCreationQuery.getCustomerAccessToken());
         return IbanityModelMapper.mapResource(response, responseMapping());
     }
 
@@ -70,7 +71,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
 
         URI uri = getUri(financialInstitutionId, resourceId);
 
-        String response = ibanityHttpClient.get(uri, accountInformationAccessRequestReadQuery.getAdditionalHeaders(), accountInformationAccessRequestReadQuery.getCustomerAccessToken());
+        HttpResponse response = ibanityHttpClient.get(uri, accountInformationAccessRequestReadQuery.getAdditionalHeaders(), accountInformationAccessRequestReadQuery.getCustomerAccessToken());
         return IbanityModelMapper.mapResource(response, responseMapping());
     }
 
@@ -145,6 +146,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
 
         private UUID id;
         private String selfLink;
+        private String requestId;
 
         private String consentReference;
         private String redirectUri;

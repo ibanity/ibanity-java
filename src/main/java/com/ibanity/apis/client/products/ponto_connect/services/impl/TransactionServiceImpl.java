@@ -11,6 +11,7 @@ import com.ibanity.apis.client.products.ponto_connect.models.read.TransactionsRe
 import com.ibanity.apis.client.products.ponto_connect.services.TransactionService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
 
 import java.net.URI;
 import java.util.UUID;
@@ -34,7 +35,7 @@ public class TransactionServiceImpl implements TransactionService {
         URI uri = buildUri(getUrl(transactionReadQuery.getAccountId())
                 + "/"
                 + transactionReadQuery.getTransactionId());
-        String response = ibanityHttpClient.get(uri, transactionReadQuery.getAdditionalHeaders(), transactionReadQuery.getAccessToken());
+        HttpResponse response = ibanityHttpClient.get(uri, transactionReadQuery.getAdditionalHeaders(), transactionReadQuery.getAccessToken());
         return mapResource(response, Transaction.class);
     }
 
@@ -47,7 +48,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         URI uri = buildUri(getUrl(transactionsReadQuery.getAccountId()), pagingSpec);
 
-        String response = ibanityHttpClient.get(uri, transactionsReadQuery.getAdditionalHeaders(), transactionsReadQuery.getAccessToken());
+        HttpResponse response = ibanityHttpClient.get(uri, transactionsReadQuery.getAdditionalHeaders(), transactionsReadQuery.getAccessToken());
         return mapCollection(response, Transaction.class);
     }
 

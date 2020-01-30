@@ -14,6 +14,7 @@ import com.ibanity.apis.client.products.ponto_connect.models.read.AccountsReadQu
 import com.ibanity.apis.client.products.ponto_connect.services.AccountService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
 
 import java.util.function.Function;
 
@@ -37,7 +38,7 @@ public class AccountServiceImpl implements AccountService {
         String uri = getUrl()
                 + "/"
                 + accountReadQuery.getAccountId();
-        String response = ibanityHttpClient.get(buildUri(uri), accountReadQuery.getAdditionalHeaders(), accountReadQuery.getAccessToken());
+        HttpResponse response = ibanityHttpClient.get(buildUri(uri), accountReadQuery.getAdditionalHeaders(), accountReadQuery.getAccessToken());
         return mapResource(response, customMappingFunction());
     }
 
@@ -49,7 +50,7 @@ public class AccountServiceImpl implements AccountService {
             pagingSpec = DEFAULT_PAGING_SPEC;
         }
 
-        String response = ibanityHttpClient.get(buildUri(getUrl(), pagingSpec), accountsReadQuery.getAdditionalHeaders(), accountsReadQuery.getAccessToken());
+        HttpResponse response = ibanityHttpClient.get(buildUri(getUrl(), pagingSpec), accountsReadQuery.getAdditionalHeaders(), accountsReadQuery.getAccessToken());
         return IbanityModelMapper.mapCollection(response, customMappingFunction());
     }
 

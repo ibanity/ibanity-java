@@ -8,6 +8,7 @@ import com.ibanity.apis.client.products.xs2a.models.Synchronization;
 import com.ibanity.apis.client.products.xs2a.models.read.SynchronizationReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.SynchronizationService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
+import org.apache.http.HttpResponse;
 
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
@@ -33,14 +34,14 @@ public class SynchronizationServiceImpl implements SynchronizationService {
                 .build();
         String url = getUrl();
         RequestApiModel request = IbanityModelMapper.buildRequest(Synchronization.RESOURCE_TYPE, synchronization);
-        String response = ibanityHttpClient.post(buildUri(url), request, synchronizationReadQuery.getAdditionalHeaders(), synchronizationReadQuery.getCustomerAccessToken());
+        HttpResponse response = ibanityHttpClient.post(buildUri(url), request, synchronizationReadQuery.getAdditionalHeaders(), synchronizationReadQuery.getCustomerAccessToken());
         return mapResource(response, Synchronization.class);
     }
 
     @Override
     public Synchronization find(SynchronizationReadQuery synchronizationReadQuery) {
             String url = getUrl() + "/" + synchronizationReadQuery.getSynchronizationId();
-            String response = ibanityHttpClient.get(buildUri(url), synchronizationReadQuery.getAdditionalHeaders(), synchronizationReadQuery.getCustomerAccessToken());
+            HttpResponse response = ibanityHttpClient.get(buildUri(url), synchronizationReadQuery.getAdditionalHeaders(), synchronizationReadQuery.getCustomerAccessToken());
             return mapResource(response, Synchronization.class);
     }
 

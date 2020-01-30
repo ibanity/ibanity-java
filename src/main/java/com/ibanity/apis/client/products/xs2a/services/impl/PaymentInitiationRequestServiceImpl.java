@@ -9,6 +9,7 @@ import com.ibanity.apis.client.products.xs2a.models.create.PaymentInitiationRequ
 import com.ibanity.apis.client.products.xs2a.models.read.PaymentInitiationRequestReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.PaymentInitiationRequestService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
+import org.apache.http.HttpResponse;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -39,7 +40,7 @@ public class PaymentInitiationRequestServiceImpl implements PaymentInitiationReq
         RequestApiModel request = buildRequest(RESOURCE_TYPE, paymentInitiationRequest);
 
         String url = getUrl(query.getFinancialInstitutionId().toString(), "");
-        String response = ibanityHttpClient.post(buildUri(url), request, query.getAdditionalHeaders(), query.getCustomerAccessToken());
+        HttpResponse response = ibanityHttpClient.post(buildUri(url), request, query.getAdditionalHeaders(), query.getCustomerAccessToken());
 
         return mapResource(response, getResponseMapping());
     }
@@ -50,7 +51,7 @@ public class PaymentInitiationRequestServiceImpl implements PaymentInitiationReq
         String paymentInitiationRequestId = paymentInitiationRequestReadQuery.getPaymentInitiationRequestId().toString();
 
         String url = getUrl(financialInstitutionId, paymentInitiationRequestId);
-        String response = ibanityHttpClient.delete(buildUri(url), paymentInitiationRequestReadQuery.getAdditionalHeaders(), paymentInitiationRequestReadQuery.getCustomerAccessToken());
+        HttpResponse response = ibanityHttpClient.delete(buildUri(url), paymentInitiationRequestReadQuery.getAdditionalHeaders(), paymentInitiationRequestReadQuery.getCustomerAccessToken());
 
         return mapResource(response, getResponseMapping());
     }
@@ -61,7 +62,7 @@ public class PaymentInitiationRequestServiceImpl implements PaymentInitiationReq
         String paymentInitiationRequestId = paymentInitiationRequestReadQuery.getPaymentInitiationRequestId().toString();
 
         String url = getUrl(financialInstitutionId, paymentInitiationRequestId);
-        String response = ibanityHttpClient.get(buildUri(url), paymentInitiationRequestReadQuery.getAdditionalHeaders(), paymentInitiationRequestReadQuery.getCustomerAccessToken());
+        HttpResponse response = ibanityHttpClient.get(buildUri(url), paymentInitiationRequestReadQuery.getAdditionalHeaders(), paymentInitiationRequestReadQuery.getCustomerAccessToken());
 
         return mapResource(response, getResponseMapping());
     }
@@ -86,6 +87,7 @@ public class PaymentInitiationRequestServiceImpl implements PaymentInitiationReq
         private UUID id;
         private UUID financialInstitutionId;
         private String selfLink;
+        private String requestId;
 
         private String consentReference;
         private String endToEndId;

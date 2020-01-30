@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.net.URI;
 import java.util.UUID;
 
-import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static com.ibanity.apis.client.models.IbanityProduct.Xs2a;
 import static java.time.Instant.parse;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -62,7 +62,7 @@ class FinancialInstitutionUsersServiceImplTest {
                         .build())
                 .build();
 
-        when(ibanityHttpClient.get(new URI(USERS_ENDPOINT + "?after=868af9c1-8fa8-485a-b798-dfb1f5ae1141&limit=10"))).thenReturn(loadFile("json/sandbox/list_users.json"));
+        when(ibanityHttpClient.get(new URI(USERS_ENDPOINT + "?after=868af9c1-8fa8-485a-b798-dfb1f5ae1141&limit=10"))).thenReturn(loadHttpResponse("json/sandbox/list_users.json"));
 
         IbanityCollection<FinancialInstitutionUser> actual = financialInstitutionUsersService.list(query);
 
@@ -75,7 +75,7 @@ class FinancialInstitutionUsersServiceImplTest {
 
     @Test
     void find() throws Exception {
-        when(ibanityHttpClient.get(new URI(USER_ID_ENDPOINT))).thenReturn(loadFile("json/sandbox/user.json"));
+        when(ibanityHttpClient.get(new URI(USER_ID_ENDPOINT))).thenReturn(loadHttpResponse("json/sandbox/user.json"));
 
         FinancialInstitutionUserReadQuery query = FinancialInstitutionUserReadQuery.builder()
                 .financialInstitutionUserId(USER_ID)
@@ -87,7 +87,7 @@ class FinancialInstitutionUsersServiceImplTest {
 
     @Test
     void delete() throws Exception {
-        when(ibanityHttpClient.delete(new URI(USER_ID_ENDPOINT))).thenReturn(loadFile("json/sandbox/delete_user.json"));
+        when(ibanityHttpClient.delete(new URI(USER_ID_ENDPOINT))).thenReturn(loadHttpResponse("json/sandbox/delete_user.json"));
 
         FinancialInstitutionUserDeleteQuery query = FinancialInstitutionUserDeleteQuery.builder()
                 .financialInstitutionUserId(USER_ID)
@@ -101,7 +101,7 @@ class FinancialInstitutionUsersServiceImplTest {
 
     @Test
     void create() throws Exception {
-        when(ibanityHttpClient.post(new URI(USERS_ENDPOINT), createRequest())).thenReturn(loadFile("json/sandbox/user.json"));
+        when(ibanityHttpClient.post(new URI(USERS_ENDPOINT), createRequest())).thenReturn(loadHttpResponse("json/sandbox/user.json"));
 
         FinancialInstitutionUserUpdateQuery query = FinancialInstitutionUserUpdateQuery.builder()
                 .firstName("aFirstName")
@@ -115,7 +115,7 @@ class FinancialInstitutionUsersServiceImplTest {
 
     @Test
     void update() throws Exception {
-        when(ibanityHttpClient.patch(new URI(USER_ID_ENDPOINT), createRequest())).thenReturn(loadFile("json/sandbox/user.json"));
+        when(ibanityHttpClient.patch(new URI(USER_ID_ENDPOINT), createRequest())).thenReturn(loadHttpResponse("json/sandbox/user.json"));
 
         FinancialInstitutionUserUpdateQuery query = FinancialInstitutionUserUpdateQuery.builder()
                 .firstName("aFirstName")

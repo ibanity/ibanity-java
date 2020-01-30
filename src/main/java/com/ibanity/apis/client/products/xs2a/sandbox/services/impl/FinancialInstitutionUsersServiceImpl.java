@@ -11,6 +11,7 @@ import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.read.Financi
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.update.FinancialInstitutionUserUpdateQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.services.FinancialInstitutionUsersService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
+import org.apache.http.HttpResponse;
 
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.*;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
@@ -29,7 +30,7 @@ public class FinancialInstitutionUsersServiceImpl implements FinancialInstitutio
     @Override
     public IbanityCollection<FinancialInstitutionUser> list(FinancialInstitutionUsersReadQuery usersReadQuery) {
         String url = getUrl("");
-        String response = ibanityHttpClient.get(buildUri(url, usersReadQuery.getPagingSpec()));
+        HttpResponse response = ibanityHttpClient.get(buildUri(url, usersReadQuery.getPagingSpec()));
         return mapCollection(response, FinancialInstitutionUser.class);
 
     }
@@ -37,7 +38,7 @@ public class FinancialInstitutionUsersServiceImpl implements FinancialInstitutio
     @Override
     public FinancialInstitutionUser find(FinancialInstitutionUserReadQuery userReadQuery) {
         String url = getUrl(userReadQuery.getFinancialInstitutionUserId().toString());
-        String response = ibanityHttpClient.get(buildUri(url));
+        HttpResponse response = ibanityHttpClient.get(buildUri(url));
         return mapResource(response, FinancialInstitutionUser.class);
 
     }
@@ -45,7 +46,7 @@ public class FinancialInstitutionUsersServiceImpl implements FinancialInstitutio
     @Override
     public FinancialInstitutionUser delete(FinancialInstitutionUserDeleteQuery userDeleteQuery) {
         String url = getUrl(userDeleteQuery.getFinancialInstitutionUserId().toString());
-        String response = ibanityHttpClient.delete(buildUri(url));
+        HttpResponse response = ibanityHttpClient.delete(buildUri(url));
         return mapResource(response, FinancialInstitutionUser.class);
     }
 
@@ -54,7 +55,7 @@ public class FinancialInstitutionUsersServiceImpl implements FinancialInstitutio
         FinancialInstitutionUser financialInstitutionUser = mapRequest(userCreationQuery);
         String url = getUrl("");
         RequestApiModel request = buildRequest(FinancialInstitutionUser.RESOURCE_TYPE, financialInstitutionUser);
-        String response = ibanityHttpClient.post(buildUri(url), request);
+        HttpResponse response = ibanityHttpClient.post(buildUri(url), request);
         return mapResource(response, FinancialInstitutionUser.class);
     }
 
@@ -63,7 +64,7 @@ public class FinancialInstitutionUsersServiceImpl implements FinancialInstitutio
         FinancialInstitutionUser financialInstitutionUser = mapRequest(userUpdateQuery);
         String url = getUrl(userUpdateQuery.getFinancialInstitutionUserId().toString());
         RequestApiModel request = buildRequest(FinancialInstitutionUser.RESOURCE_TYPE, financialInstitutionUser);
-        String response = ibanityHttpClient.patch(buildUri(url), request);
+        HttpResponse response = ibanityHttpClient.patch(buildUri(url), request);
         return mapResource(response, FinancialInstitutionUser.class);
     }
 

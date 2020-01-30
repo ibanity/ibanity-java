@@ -12,6 +12,7 @@ import com.ibanity.apis.client.products.xs2a.models.read.TransactionsReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.TransactionsService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
 
 import java.util.UUID;
 
@@ -37,7 +38,7 @@ public class TransactionsServiceImpl implements TransactionsService {
         }
 
         String url = getUrl(transactionsReadQuery.getFinancialInstitutionId(), transactionsReadQuery.getAccountId());
-        String response = ibanityHttpClient.get(buildUri(url, pagingSpec), transactionsReadQuery.getAdditionalHeaders(), transactionsReadQuery.getCustomerAccessToken());
+        HttpResponse response = ibanityHttpClient.get(buildUri(url, pagingSpec), transactionsReadQuery.getAdditionalHeaders(), transactionsReadQuery.getCustomerAccessToken());
 
         return mapCollection(response, Transaction.class);
     }
@@ -48,7 +49,7 @@ public class TransactionsServiceImpl implements TransactionsService {
                 getUrl(transactionReadQuery.getFinancialInstitutionId(), transactionReadQuery.getAccountId())
                         + "/"
                         + transactionReadQuery.getTransactionId().toString();
-        String response = ibanityHttpClient.get(buildUri(url), transactionReadQuery.getAdditionalHeaders(), transactionReadQuery.getCustomerAccessToken());
+        HttpResponse response = ibanityHttpClient.get(buildUri(url), transactionReadQuery.getAdditionalHeaders(), transactionReadQuery.getCustomerAccessToken());
         return mapResource(response, Transaction.class);
     }
 

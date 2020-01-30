@@ -9,6 +9,7 @@ import com.ibanity.apis.client.products.ponto_connect.models.revoke.TokenRevokeQ
 import com.ibanity.apis.client.products.ponto_connect.services.TokenService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import com.ibanity.apis.client.utils.IbanityUtils;
+import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,8 +57,8 @@ public class TokenServiceImpl implements TokenService {
     private Token performTokenRequest(Map<String, String> tokenRequestArguments, String clientSecret, Map<String, String> additionalHeaders) {
         try {
             URI uri = buildUri(getUrl("token"));
-            String response = oAuthHttpClient.post(uri, additionalHeaders, tokenRequestArguments, clientSecret);
-            return IbanityUtils.objectMapper().readValue(response, Token.class);
+            HttpResponse response = oAuthHttpClient.post(uri, additionalHeaders, tokenRequestArguments, clientSecret);
+            return IbanityUtils.objectMapper().readValue(response.getEntity().getContent(), Token.class);
         } catch (IOException e) {
             LOGGER.error("oauth token response invalid", e);
             throw new RuntimeException("The response could not be converted.");

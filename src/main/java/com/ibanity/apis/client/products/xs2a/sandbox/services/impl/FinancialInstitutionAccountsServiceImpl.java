@@ -15,6 +15,7 @@ import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.read.Financi
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.read.FinancialInstitutionAccountsReadQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.services.FinancialInstitutionAccountsService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
+import org.apache.http.HttpResponse;
 
 import java.util.function.Function;
 
@@ -39,7 +40,7 @@ public class FinancialInstitutionAccountsServiceImpl implements FinancialInstitu
                         accountReadQuery.getFinancialInstitutionUserId().toString(),
                         accountReadQuery.getFinancialInstitutionAccountId().toString());
 
-        String response = ibanityHttpClient.get(buildUri(url));
+        HttpResponse response = ibanityHttpClient.get(buildUri(url));
         return mapResource(response, responseMapping());
     }
 
@@ -50,7 +51,7 @@ public class FinancialInstitutionAccountsServiceImpl implements FinancialInstitu
                         accountsReadQuery.getFinancialInstitutionUserId().toString(),
                         "");
 
-        String response = ibanityHttpClient.get(buildUri(url, accountsReadQuery.getPagingSpec()));
+        HttpResponse response = ibanityHttpClient.get(buildUri(url, accountsReadQuery.getPagingSpec()));
         return mapCollection(response, responseMapping());
     }
 
@@ -61,7 +62,7 @@ public class FinancialInstitutionAccountsServiceImpl implements FinancialInstitu
                         accountDeleteQuery.getFinancialInstitutionUserId().toString(),
                         accountDeleteQuery.getFinancialInstitutionAccountId().toString());
 
-        String response = ibanityHttpClient.delete(buildUri(url));
+        HttpResponse response = ibanityHttpClient.delete(buildUri(url));
         return mapResource(response, FinancialInstitutionAccount.class);
     }
 
@@ -75,7 +76,7 @@ public class FinancialInstitutionAccountsServiceImpl implements FinancialInstitu
         FinancialInstitutionAccount financialInstitutionAccount = mapRequest(query);
 
         RequestApiModel request = buildRequest(FinancialInstitutionAccount.RESOURCE_TYPE, financialInstitutionAccount);
-        String response = ibanityHttpClient.post(buildUri(url), request);
+        HttpResponse response = ibanityHttpClient.post(buildUri(url), request);
         return mapResource(response, responseMapping());
     }
 
