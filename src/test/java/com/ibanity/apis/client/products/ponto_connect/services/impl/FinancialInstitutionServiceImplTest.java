@@ -19,7 +19,7 @@ import org.mockito.quality.Strictness;
 import java.net.URI;
 import java.util.UUID;
 
-import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static java.util.Collections.emptyMap;
 import static java.util.UUID.fromString;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,7 +52,7 @@ public class FinancialInstitutionServiceImplTest {
     @Test
     public void find() throws Exception {
         when(ibanityHttpClient.get(new URI(GET_FINANCIAL_INSTITUTION_ENDPOINT), emptyMap(), ACCESS_TOKEN))
-                .thenReturn(loadFile("json/ponto-connect/financial_institution.json"));
+                .thenReturn(loadHttpResponse("json/ponto-connect/financial_institution.json"));
 
         FinancialInstitution actual = financialInstitutionService.find(FinancialInstitutionReadQuery.builder()
                 .accessToken(ACCESS_TOKEN)
@@ -65,7 +65,7 @@ public class FinancialInstitutionServiceImplTest {
     @Test
     public void list() throws Exception {
         when(ibanityHttpClient.get(new URI(LIST_FINANCIAL_INSTITUTION_ENDPOINT), emptyMap(), ACCESS_TOKEN))
-                .thenReturn(loadFile("json/ponto-connect/financial_institutions.json"));
+                .thenReturn(loadHttpResponse("json/ponto-connect/financial_institutions.json"));
 
         IbanityCollection<FinancialInstitution> actual = financialInstitutionService.list(FinancialInstitutionsReadQuery.builder()
                 .accessToken(ACCESS_TOKEN)

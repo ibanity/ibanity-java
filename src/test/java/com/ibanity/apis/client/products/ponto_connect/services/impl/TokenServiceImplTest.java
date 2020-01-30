@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
-import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -58,7 +58,7 @@ public class TokenServiceImplTest {
     @Test
     public void create() throws Exception {
         when(oAuthHttpClient.post(eq(new URI(TOKEN_ENDPOINT)), eq(emptyMap()), eq(createTokenArguments()), eq(CLIENT_SECRET)))
-                .thenReturn(loadFile("json/ponto-connect/create_access_token.json"));
+                .thenReturn(loadHttpResponse("json/ponto-connect/create_access_token.json"));
 
         Token actual = tokenService.create(TokenCreateQuery.builder()
                 .clientSecret(CLIENT_SECRET)
@@ -73,7 +73,7 @@ public class TokenServiceImplTest {
     @Test
     public void refresh() throws Exception {
         when(oAuthHttpClient.post(eq(new URI(TOKEN_ENDPOINT)), eq(emptyMap()), eq(refreshTokenArguments()), eq(CLIENT_SECRET)))
-                .thenReturn(loadFile("json/ponto-connect/create_access_token.json"));
+                .thenReturn(loadHttpResponse("json/ponto-connect/create_access_token.json"));
 
         Token actual = tokenService.refresh(TokenRefreshQuery.builder()
                 .clientSecret(CLIENT_SECRET)

@@ -14,4 +14,5 @@ public class Customer implements IbanityModel {
 
     private UUID id;
     private String selfLink;
+    private String requestId;
 }

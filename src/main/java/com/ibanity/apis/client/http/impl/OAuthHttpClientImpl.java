@@ -3,6 +3,7 @@ package com.ibanity.apis.client.http.impl;
 import com.ibanity.apis.client.http.OAuthHttpClient;
 import com.ibanity.apis.client.http.handler.IbanityResponseHandler;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -34,12 +35,12 @@ public class OAuthHttpClientImpl implements OAuthHttpClient {
     }
 
     @Override
-    public String post(URI path, Map<String, String> arguments, String clientSecret) {
+    public HttpResponse post(URI path, Map<String, String> arguments, String clientSecret) {
         return post(path, newHashMap(), arguments, clientSecret);
     }
 
     @Override
-    public String post(URI path, Map<String, String> additionalHeaders, Map<String, String> arguments, String clientSecret) {
+    public HttpResponse post(URI path, Map<String, String> additionalHeaders, Map<String, String> arguments, String clientSecret) {
         HttpPost post = new HttpPost(path);
         arguments.put("client_id", clientId);
         post.setEntity(createEntity(arguments));
@@ -54,10 +55,10 @@ public class OAuthHttpClientImpl implements OAuthHttpClient {
                 UTF_8);
     }
 
-    private String execute(Map<String, String> additionalHeaders, String clientSecret, HttpRequestBase httpRequestBase) {
+    private HttpResponse execute(Map<String, String> additionalHeaders, String clientSecret, HttpRequestBase httpRequestBase) {
         try {
             addHeaders(clientSecret, additionalHeaders, httpRequestBase);
-            return httpClient.execute(httpRequestBase, ibanityResponseHandler);
+            return ibanityResponseHandler.handleResponse(httpClient.execute(httpRequestBase));
         } catch (IOException exception) {
             throw new RuntimeException("An error occurred while connecting to Ibanity", exception);
         }

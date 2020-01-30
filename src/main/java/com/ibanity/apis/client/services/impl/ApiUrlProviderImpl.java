@@ -5,6 +5,8 @@ import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import com.ibanity.apis.client.utils.IbanityUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,7 +47,7 @@ public class ApiUrlProviderImpl implements ApiUrlProvider {
                     .reduce(apiUrls, JsonNode::get, (jsonNode1, jsonNode2) -> jsonNode2)
                     .textValue();
         } catch (Exception exception) {
-            throw new IllegalArgumentException("Url cannot be found");
+            throw new IllegalArgumentException("Url cannot be found", exception);
         }
     }
 
@@ -54,7 +56,8 @@ public class ApiUrlProviderImpl implements ApiUrlProvider {
         LOGGER.debug("loading schema for {}", ibanityProduct);
         String ibanityApiUrl = removeEnd(ibanityEndpoint, "/");
         try {
-            String schema = ibanityHttpClient.get(new URI(ibanityApiUrl + "/" + ibanityProduct.path()), null);
+            HttpResponse httpResponse = ibanityHttpClient.get(new URI(ibanityApiUrl + "/" + ibanityProduct.path()), null);
+            String schema = EntityUtils.toString(httpResponse.getEntity());
             JsonNode jsonNode = mapJsonToMap(schema);
             apiUrls.put(ibanityProduct, jsonNode);
             LOGGER.debug("schema loaded");

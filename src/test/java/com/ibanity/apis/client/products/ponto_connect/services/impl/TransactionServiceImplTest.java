@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.UUID;
 
-import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static java.time.Instant.parse;
 import static java.util.Collections.emptyMap;
 import static java.util.UUID.fromString;
@@ -56,7 +56,7 @@ public class TransactionServiceImplTest {
     @Test
     public void find() throws Exception {
         when(ibanityHttpClient.get(new URI(GET_TRANSACTION_ENDPOINT), emptyMap(), ACCESS_TOKEN))
-                .thenReturn(loadFile("json/ponto-connect/transaction.json"));
+                .thenReturn(loadHttpResponse("json/ponto-connect/transaction.json"));
 
         Transaction actual = transactionService.find(TransactionReadQuery.builder()
                 .accessToken(ACCESS_TOKEN)
@@ -70,7 +70,7 @@ public class TransactionServiceImplTest {
     @Test
     public void list() throws Exception {
         when(ibanityHttpClient.get(new URI(LIST_TRANSACTION_ENDPOINT), emptyMap(), ACCESS_TOKEN))
-                .thenReturn(loadFile("json/ponto-connect/transactions.json"));
+                .thenReturn(loadHttpResponse("json/ponto-connect/transactions.json"));
 
         IbanityCollection<Transaction> actual = transactionService.list(TransactionsReadQuery.builder()
                 .accessToken(ACCESS_TOKEN)

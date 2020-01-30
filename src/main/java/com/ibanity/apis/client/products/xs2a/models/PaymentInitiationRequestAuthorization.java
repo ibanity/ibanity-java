@@ -17,6 +17,7 @@ public class PaymentInitiationRequestAuthorization implements IbanityModel {
 
     private UUID id;
     private String selfLink;
+    private String requestId;
 
     private String status;
     private PaymentInitiationRequestAuthorizationLinks links;

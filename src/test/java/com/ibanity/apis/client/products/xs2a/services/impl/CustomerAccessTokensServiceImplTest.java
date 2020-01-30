@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.net.URI;
 import java.util.UUID;
 
-import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -44,7 +44,7 @@ class CustomerAccessTokensServiceImplTest {
 
         when(apiUrlProvider.find(IbanityProduct.Xs2a, "customerAccessTokens")).thenReturn(CUSTOMER_ACCESS_TOKEN_ENDPOINT);
         when(httpClient.post(new URI(CUSTOMER_ACCESS_TOKEN_ENDPOINT), buildRequest(), emptyMap(), null))
-                .thenReturn(loadFile("json/customerAccessToken.json"));
+                .thenReturn(loadHttpResponse("json/customerAccessToken.json"));
 
         CustomerAccessToken actual = customerAccessTokensService.create(creationQuery);
 

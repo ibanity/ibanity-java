@@ -17,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.net.URI;
 import java.util.UUID;
 
-import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static com.ibanity.apis.client.models.IbanityProduct.Xs2a;
 import static java.util.UUID.fromString;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,7 +53,7 @@ class SandboxFinancialInstitutionsServiceImplTest {
                 .build();
 
         when(ibanityHttpClient.post(new URI(API_ENDPOINT), createRequest()))
-                .thenReturn(loadFile("json/sandbox/financial_institution.json"));
+                .thenReturn(loadHttpResponse("json/sandbox/financial_institution.json"));
 
         FinancialInstitution actual = sandboxFinancialInstitutionsService.create(query);
 
@@ -68,7 +68,7 @@ class SandboxFinancialInstitutionsServiceImplTest {
                 .build();
 
         when(ibanityHttpClient.patch(new URI(API_ENDPOINT_WITH_ID), createRequest()))
-                .thenReturn(loadFile("json/sandbox/financial_institution.json"));
+                .thenReturn(loadHttpResponse("json/sandbox/financial_institution.json"));
 
         FinancialInstitution actual = sandboxFinancialInstitutionsService.update(query);
 
@@ -82,7 +82,7 @@ class SandboxFinancialInstitutionsServiceImplTest {
                 .build();
 
         when(ibanityHttpClient.delete(new URI(API_ENDPOINT_WITH_ID)))
-                .thenReturn(loadFile("json/sandbox/financial_institution.json"));
+                .thenReturn(loadHttpResponse("json/sandbox/financial_institution.json"));
 
         FinancialInstitution actual = sandboxFinancialInstitutionsService.delete(query);
 

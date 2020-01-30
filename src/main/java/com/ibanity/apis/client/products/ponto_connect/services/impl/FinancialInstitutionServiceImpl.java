@@ -10,6 +10,7 @@ import com.ibanity.apis.client.products.ponto_connect.models.read.FinancialInsti
 import com.ibanity.apis.client.products.ponto_connect.services.FinancialInstitutionService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
 
 import java.net.URI;
 
@@ -34,7 +35,7 @@ public class FinancialInstitutionServiceImpl implements FinancialInstitutionServ
                 + financialInstitutionReadQuery.getFinancialInstitutionId().toString()
         );
 
-        String response = ibanityHttpClient.get(uri, financialInstitutionReadQuery.getAdditionalHeaders(), financialInstitutionReadQuery.getAccessToken());
+        HttpResponse response = ibanityHttpClient.get(uri, financialInstitutionReadQuery.getAdditionalHeaders(), financialInstitutionReadQuery.getAccessToken());
         return mapResource(response, FinancialInstitution.class);
     }
 
@@ -46,7 +47,7 @@ public class FinancialInstitutionServiceImpl implements FinancialInstitutionServ
         }
         URI url = buildUri(getUrl(), pagingSpec);
 
-        String response = ibanityHttpClient.get(url, financialInstitutionsReadQuery.getAdditionalHeaders(), financialInstitutionsReadQuery.getAccessToken());
+        HttpResponse response = ibanityHttpClient.get(url, financialInstitutionsReadQuery.getAdditionalHeaders(), financialInstitutionsReadQuery.getAccessToken());
         return mapCollection(response, FinancialInstitution.class);
     }
 

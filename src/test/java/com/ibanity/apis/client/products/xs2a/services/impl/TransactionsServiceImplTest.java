@@ -65,7 +65,7 @@ public class TransactionsServiceImplTest {
 
 
         when(ibanityHttpClient.get(new URI(TRANSACTION_URI), emptyMap(), CUSTOMER_ACCESS_TOKEN))
-                .thenReturn(IbanityTestHelper.loadFile("json/transaction.json"));
+                .thenReturn(IbanityTestHelper.loadHttpResponse("json/transaction.json"));
 
         Transaction actual = transactionsService.find(transactionReadQuery);
 
@@ -98,7 +98,7 @@ public class TransactionsServiceImplTest {
                         .build();
 
         when(ibanityHttpClient.get(new URI(TRANSACTIONS_URI), emptyMap(), CUSTOMER_ACCESS_TOKEN))
-                .thenReturn(IbanityTestHelper.loadFile("json/transactions.json"));
+                .thenReturn(IbanityTestHelper.loadHttpResponse("json/transactions.json"));
 
         IbanityCollection<Transaction> actual = transactionsService.list(transactionReadQuery);
 

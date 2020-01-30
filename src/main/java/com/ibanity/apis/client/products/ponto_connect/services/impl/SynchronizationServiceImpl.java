@@ -10,6 +10,7 @@ import com.ibanity.apis.client.products.ponto_connect.models.read.Synchronizatio
 import com.ibanity.apis.client.products.ponto_connect.services.SynchronizationService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
 
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
@@ -32,7 +33,7 @@ public class SynchronizationServiceImpl implements SynchronizationService {
                 .subtype(synchronizationCreateQuery.getSubtype())
                 .build();
         RequestApiModel request = IbanityModelMapper.buildRequest(Synchronization.RESOURCE_TYPE, synchronization);
-        String response = ibanityHttpClient.post(buildUri(getUrl()), request, synchronizationCreateQuery.getAdditionalHeaders(), synchronizationCreateQuery.getAccessToken());
+        HttpResponse response = ibanityHttpClient.post(buildUri(getUrl()), request, synchronizationCreateQuery.getAdditionalHeaders(), synchronizationCreateQuery.getAccessToken());
         return mapResource(response, Synchronization.class);
     }
 
@@ -41,7 +42,7 @@ public class SynchronizationServiceImpl implements SynchronizationService {
         String url = getUrl()
                 + "/"
                 + synchronizationReadQuery.getSynchronizationId();
-        String response = ibanityHttpClient.get(buildUri(url), synchronizationReadQuery.getAdditionalHeaders(), synchronizationReadQuery.getAccessToken());
+        HttpResponse response = ibanityHttpClient.get(buildUri(url), synchronizationReadQuery.getAdditionalHeaders(), synchronizationReadQuery.getAccessToken());
         return mapResource(response, Synchronization.class);
     }
 

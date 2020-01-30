@@ -10,6 +10,7 @@ import com.ibanity.apis.client.products.xs2a.models.read.FinancialInstitutionRea
 import com.ibanity.apis.client.products.xs2a.models.read.FinancialInstitutionsReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.FinancialInstitutionsService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
+import org.apache.http.HttpResponse;
 
 import java.net.URI;
 
@@ -40,7 +41,7 @@ public class FinancialInstitutionsServiceImpl implements FinancialInstitutionsSe
                         "/"
                 ),
                 pagingSpec);
-        String response = ibanityHttpClient.get(uri, financialInstitutionsReadQuery.getAdditionalHeaders(), customerAccessToken);
+        HttpResponse response = ibanityHttpClient.get(uri, financialInstitutionsReadQuery.getAdditionalHeaders(), customerAccessToken);
         return IbanityModelMapper.mapCollection(response, FinancialInstitution.class);
     }
 
@@ -52,7 +53,7 @@ public class FinancialInstitutionsServiceImpl implements FinancialInstitutionsSe
                         getUrl(customerAccessToken)
                                 .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionReadQuery.getFinancialInstitutionId().toString()),
                         "/"));
-        String response = ibanityHttpClient.get(uri, financialInstitutionReadQuery.getAdditionalHeaders(), customerAccessToken);
+        HttpResponse response = ibanityHttpClient.get(uri, financialInstitutionReadQuery.getAdditionalHeaders(), customerAccessToken);
         return IbanityModelMapper.mapResource(response, FinancialInstitution.class);
     }
 

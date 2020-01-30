@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static com.google.common.collect.Maps.newHashMap;
-import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static java.util.Collections.emptyMap;
 import static java.util.UUID.fromString;
@@ -69,7 +69,7 @@ class AccountInformationAccessRequestAuthorizationsServiceImplTest {
                 .accountInformationAccessRequestId(ACCOUNT_INFORMATION_ACCESS_REQUEST_ID)
                 .build();
 
-        when(ibanityHttpClient.post(eq(buildUri(AUTHORIZATION_ENDPOINT_FOR_CREATE)), argumentCaptor.capture(), eq(emptyMap()), eq(CUSTOMER_ACCESS_TOKEN))).thenReturn(loadFile("json/createAuthorization.json"));
+        when(ibanityHttpClient.post(eq(buildUri(AUTHORIZATION_ENDPOINT_FOR_CREATE)), argumentCaptor.capture(), eq(emptyMap()), eq(CUSTOMER_ACCESS_TOKEN))).thenReturn(loadHttpResponse("json/createAuthorization.json"));
 
         AccountInformationAccessRequestAuthorization authorization = authorizationsService.create(creationQuery);
 

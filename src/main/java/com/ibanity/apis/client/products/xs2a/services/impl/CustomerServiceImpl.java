@@ -7,6 +7,7 @@ import com.ibanity.apis.client.products.xs2a.models.Customer;
 import com.ibanity.apis.client.products.xs2a.models.delete.CustomerDeleteQuery;
 import com.ibanity.apis.client.products.xs2a.services.CustomerService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
+import org.apache.http.HttpResponse;
 
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 
@@ -23,7 +24,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer delete(CustomerDeleteQuery customerDeleteQuery) {
         String url =  apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "self");
-        String response = ibanityHttpClient.delete(buildUri(url), customerDeleteQuery.getAdditionalHeaders(), customerDeleteQuery.getCustomerAccessToken());
+        HttpResponse response = ibanityHttpClient.delete(buildUri(url), customerDeleteQuery.getAdditionalHeaders(), customerDeleteQuery.getCustomerAccessToken());
         return IbanityModelMapper.mapResource(response, Customer.class);
     }
 }

@@ -23,6 +23,7 @@ public class Account implements IbanityModel {
     private UUID id;
     private String selfLink;
     private UUID financialInstitutionId;
+    private String requestId;
 
     private String subtype;
     private String currency;

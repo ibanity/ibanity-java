@@ -33,15 +33,11 @@ class IbanityResponseHandlerTest {
 
     @Test
     void handleResponse() throws IOException {
-        //language=JSON
-        String expected = validPayload();
-
-        when(httpResponse.getEntity()).thenReturn(EntityBuilder.create().setText(expected).build());
         when(httpResponse.getStatusLine()).thenReturn(new BasicStatusLine(dummyProtocolVersion(), 200, ""));
 
-        String actual = ibanityResponseHandler.handleResponse(httpResponse);
+        HttpResponse actual = ibanityResponseHandler.handleResponse(httpResponse);
 
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).isEqualTo(httpResponse);
     }
 
     @Test

@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.UUID;
 
-import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static java.time.Instant.parse;
 import static java.util.Collections.emptyMap;
 import static java.util.UUID.fromString;
@@ -56,7 +56,7 @@ public class AccountServiceImplTest {
     @Test
     public void find() throws Exception {
         when(ibanityHttpClient.get(new URI(GET_ACCOUNT_ENDPOINT), emptyMap(), ACCESS_TOKEN))
-                .thenReturn(loadFile("json/ponto-connect/account.json"));
+                .thenReturn(loadHttpResponse("json/ponto-connect/account.json"));
 
         Account actual = accountService.find(AccountReadQuery.builder()
                 .accessToken(ACCESS_TOKEN)
@@ -69,7 +69,7 @@ public class AccountServiceImplTest {
     @Test
     public void list() throws Exception {
         when(ibanityHttpClient.get(new URI(LIST_ACCOUNT_ENDPOINT), emptyMap(), ACCESS_TOKEN))
-                .thenReturn(loadFile("json/ponto-connect/accounts.json"));
+                .thenReturn(loadHttpResponse("json/ponto-connect/accounts.json"));
 
         IbanityCollection<Account> actual = accountService.list(AccountsReadQuery.builder()
                 .accessToken(ACCESS_TOKEN)

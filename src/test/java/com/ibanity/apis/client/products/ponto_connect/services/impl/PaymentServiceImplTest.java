@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static java.math.BigDecimal.ONE;
 import static java.util.Collections.emptyMap;
@@ -60,7 +60,7 @@ class PaymentServiceImplTest {
                 .accessToken(ACCESS_TOKEN)
                 .build();
         when(ibanityHttpClient.get(buildUri(PAYMENT_ENDPOINT_FOR_FIND), emptyMap(), ACCESS_TOKEN))
-                .thenReturn(loadFile("json/ponto-connect/payment.json"));
+                .thenReturn(loadHttpResponse("json/ponto-connect/payment.json"));
 
         Payment actual = paymentService.find(paymentReadQuery);
 
@@ -74,7 +74,7 @@ class PaymentServiceImplTest {
                 .accessToken(ACCESS_TOKEN)
                 .build();
         when(ibanityHttpClient.post(eq(buildUri(PAYMENT_ENDPOINT_FOR_CREATE)), any(),eq(emptyMap()), eq(ACCESS_TOKEN)))
-                .thenReturn(loadFile("json/ponto-connect/payment.json"));
+                .thenReturn(loadHttpResponse("json/ponto-connect/payment.json"));
 
         Payment actual = paymentService.create(paymentCreateQuery);
 
@@ -89,7 +89,7 @@ class PaymentServiceImplTest {
                 .accessToken(ACCESS_TOKEN)
                 .build();
         when(ibanityHttpClient.delete(buildUri(PAYMENT_ENDPOINT_FOR_FIND), emptyMap(), ACCESS_TOKEN))
-                .thenReturn(loadFile("json/ponto-connect/payment.json"));
+                .thenReturn(loadHttpResponse("json/ponto-connect/payment.json"));
 
         Payment actual = paymentService.delete(paymentDeleteQuery);
 

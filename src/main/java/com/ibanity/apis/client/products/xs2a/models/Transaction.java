@@ -22,6 +22,8 @@ public class Transaction implements IbanityModel {
 
     private UUID id;
     private String selfLink;
+    private String requestId;
+    
     private BigDecimal amount;
     private String currency;
 

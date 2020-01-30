@@ -8,34 +8,49 @@ import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityModel;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
 import com.ibanity.apis.client.utils.IbanityUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 
 import java.io.IOException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.ibanity.apis.client.http.handler.IbanityResponseHandler.IBANITY_REQUEST_ID_HEADER;
 import static java.lang.String.format;
 
 public class IbanityModelMapper {
 
-    public static <T extends IbanityModel> T mapResource(String jsonPayload, Class<T> classType) {
-        return mapResource(jsonPayload, dataApiModel -> toIbanityModel(dataApiModel, classType));
-    }
+    private static final String DEFAULT_ENCODING = "UTF-8";
 
-    public static <T extends IbanityModel> T mapResource(String jsonPayload, Function<DataApiModel, T> customMapping) {
+    public static <T extends IbanityModel> T mapResource(HttpResponse httpResponse, Class<T> classType) {
+        return mapResource(httpResponse, dataApiModel -> toIbanityModel(dataApiModel, classType));
+    }
+    public static <T extends IbanityModel> T mapResource(HttpResponse httpResponse, Function<DataApiModel, T> customMapping) {
         try {
+            String jsonPayload = readResponseContent(httpResponse.getEntity());
             DataApiModel dataApiModel = IbanityUtils.objectMapper().readValue(jsonPayload, ResourceApiModel.class).getData();
-            return customMapping.apply(dataApiModel);
+            T ibanityModel = customMapping.apply(dataApiModel);
+            ibanityModel.setRequestId(getRequestId(httpResponse));
+            return ibanityModel;
         } catch (IOException exception) {
             throw new IllegalArgumentException("Response cannot be parsed", exception);
         }
     }
 
-    public static <T extends IbanityModel> IbanityCollection<T> mapCollection(String jsonPayload, Class<T> classType) {
-        return mapCollection(jsonPayload, dataApiModel -> toIbanityModel(dataApiModel, classType));
+    private static String getRequestId(HttpResponse httpResponse) {
+        Header header = httpResponse.getFirstHeader(IBANITY_REQUEST_ID_HEADER);
+        return header == null ? null : header.getValue();
     }
 
-    public static <T extends IbanityModel> IbanityCollection<T> mapCollection(String jsonPayload, Function<DataApiModel, T> customMapping) {
+    public static <T extends IbanityModel> IbanityCollection<T> mapCollection(HttpResponse httpResponse, Class<T> classType) {
+        return mapCollection(httpResponse, dataApiModel -> toIbanityModel(dataApiModel, classType));
+    }
+
+    public static <T extends IbanityModel> IbanityCollection<T> mapCollection(HttpResponse httpResponse, Function<DataApiModel, T> customMapping) {
         try {
+            String jsonPayload = readResponseContent(httpResponse.getEntity());
             CollectionApiModel collectionApiModel = IbanityUtils.objectMapper().readValue(jsonPayload, CollectionApiModel.class);
             return IbanityCollection.<T>builder()
                     .pageLimit(collectionApiModel.getMeta().getPaging().getLimit())
@@ -95,5 +110,9 @@ public class IbanityModelMapper {
                                 .build()
                 )
                 .build();
+    }
+
+    public static String readResponseContent(HttpEntity entity) throws IOException {
+        return IOUtils.toString(entity.getContent(), DEFAULT_ENCODING);
     }
 }

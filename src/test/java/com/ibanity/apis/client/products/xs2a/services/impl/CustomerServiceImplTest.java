@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.net.URI;
 import java.util.UUID;
 
-import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -49,7 +49,7 @@ class CustomerServiceImplTest {
                         .build();
 
         when(ibanityHttpClient.delete(new URI(CUSTOMER_API), emptyMap(), CUSTOMER_ACCESS_TOKEN))
-                .thenReturn(loadFile("json/customer.json"));
+                .thenReturn(loadHttpResponse("json/customer.json"));
 
         Customer actual = customerService.delete(customerDeleteQuery);
 

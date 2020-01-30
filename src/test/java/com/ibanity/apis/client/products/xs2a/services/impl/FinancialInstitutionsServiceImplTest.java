@@ -56,7 +56,7 @@ class FinancialInstitutionsServiceImplTest {
         FinancialInstitutionsReadQuery financialInstitutionsReadQuery = FinancialInstitutionsReadQuery.builder().build();
 
         when(ibanityHttpClient.get(buildUri("https://api.ibanity.localhost/xs2a/financial-institutions", IbanityPagingSpec.DEFAULT_PAGING_SPEC), emptyMap(), null))
-                .thenReturn(IbanityTestHelper.loadFile("json/financialInstitutions.json"));
+                .thenReturn(IbanityTestHelper.loadHttpResponse("json/financialInstitutions.json"));
 
         IbanityCollection<FinancialInstitution> actual = financialInstitutionsService.list(financialInstitutionsReadQuery);
 
@@ -72,7 +72,7 @@ class FinancialInstitutionsServiceImplTest {
                         .build();
 
         when(ibanityHttpClient.get(buildUri(FINANCIAL_INSTITUTION_CUSTOMER_ENDPOINT, IbanityPagingSpec.DEFAULT_PAGING_SPEC), emptyMap(), CUSTOMER_ACCESS_TOKEN))
-                .thenReturn(IbanityTestHelper.loadFile("json/financialInstitutions.json"));
+                .thenReturn(IbanityTestHelper.loadHttpResponse("json/financialInstitutions.json"));
 
         IbanityCollection<FinancialInstitution> actual = financialInstitutionsService.list(financialInstitutionsReadQuery);
 
@@ -88,7 +88,7 @@ class FinancialInstitutionsServiceImplTest {
                 .build();
 
         when(ibanityHttpClient.get(buildUri(FINANCIAL_INSTITUTION_ENDPOINT_ID), emptyMap(), null))
-                .thenReturn(IbanityTestHelper.loadFile("json/financialInstitution.json"));
+                .thenReturn(IbanityTestHelper.loadHttpResponse("json/financialInstitution.json"));
 
         FinancialInstitution actual = financialInstitutionsService.find(financialInstitutionsReadQuery);
 

@@ -21,7 +21,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
 
-import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static com.ibanity.apis.client.models.IbanityProduct.Xs2a;
 import static java.math.BigDecimal.ZERO;
 import static java.time.Instant.parse;
@@ -64,7 +64,7 @@ class FinancialInstitutionAccountsServiceImplTest {
                 .build();
 
         when(ibanityHttpClient.get(new URI(ACCOUNT_ENPOINT + "/" + ACCOUNT_ID)))
-                .thenReturn(loadFile("json/sandbox/find_account.json"));
+                .thenReturn(loadHttpResponse("json/sandbox/find_account.json"));
 
         FinancialInstitutionAccount actual = financialInstitutionAccountsService.find(query);
         assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpectedForFind());
@@ -78,7 +78,7 @@ class FinancialInstitutionAccountsServiceImplTest {
                 .build();
 
         when(ibanityHttpClient.get(new URI(ACCOUNT_ENPOINT + "?limit=10")))
-                .thenReturn(loadFile("json/sandbox/list_accounts.json"));
+                .thenReturn(loadHttpResponse("json/sandbox/list_accounts.json"));
 
         IbanityCollection<FinancialInstitutionAccount> actual = financialInstitutionAccountsService.list(query);
         assertThat(actual).isEqualToComparingFieldByFieldRecursively(
@@ -93,7 +93,7 @@ class FinancialInstitutionAccountsServiceImplTest {
     @Test
     void delete() throws Exception {
         when(ibanityHttpClient.delete(new URI(ACCOUNT_ENPOINT + "/" + ACCOUNT_ID)))
-                .thenReturn(loadFile("json/sandbox/delete_account.json"));
+                .thenReturn(loadHttpResponse("json/sandbox/delete_account.json"));
 
         FinancialInstitutionAccountDeleteQuery query = FinancialInstitutionAccountDeleteQuery.builder()
                 .financialInstitutionAccountId(ACCOUNT_ID)
@@ -122,7 +122,7 @@ class FinancialInstitutionAccountsServiceImplTest {
                 .build();
 
         when(ibanityHttpClient.post(new URI(ACCOUNT_ENPOINT), createRequest(query)))
-                .thenReturn(loadFile("json/sandbox/find_account.json"));
+                .thenReturn(loadHttpResponse("json/sandbox/find_account.json"));
 
         FinancialInstitutionAccount actual = financialInstitutionAccountsService.create(query);
         assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpectedForFind());

@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static java.util.Collections.emptyMap;
 import static java.util.UUID.fromString;
@@ -85,7 +85,7 @@ class AccountInformationAccessRequestsServiceImplTest {
                         .build();
 
         when(ibanityHttpClient.post(eq(buildUri(AIAR_ENDPOINT_FOR_CREATE)), requestApiModelArgumentCaptor.capture(), eq(emptyMap()), eq(creationQuery.getCustomerAccessToken())))
-                .thenReturn(loadFile("json/createAccountInformationAccessRequest.json"));
+                .thenReturn(loadHttpResponse("json/createAccountInformationAccessRequest.json"));
 
         AccountInformationAccessRequest actual = accountInformationAccessRequestsService.create(creationQuery);
 
@@ -105,7 +105,7 @@ class AccountInformationAccessRequestsServiceImplTest {
                         .build();
 
         when(ibanityHttpClient.get(buildUri(AIAR_ENDPOINT_FOR_FIND), emptyMap(), creationQuery.getCustomerAccessToken()))
-                .thenReturn(loadFile("json/accountInformationAccessRequest.json"));
+                .thenReturn(loadHttpResponse("json/accountInformationAccessRequest.json"));
 
         AccountInformationAccessRequest actual = accountInformationAccessRequestsService.find(creationQuery);
 
@@ -122,7 +122,7 @@ class AccountInformationAccessRequestsServiceImplTest {
                         .build();
 
         when(ibanityHttpClient.get(buildUri(AIAR_ENDPOINT_FOR_FIND), emptyMap(), creationQuery.getCustomerAccessToken()))
-                .thenReturn(loadFile("json/accountInformationAccessRequest.json"));
+                .thenReturn(loadHttpResponse("json/accountInformationAccessRequest.json"));
 
         AccountInformationAccessRequest actual = accountInformationAccessRequestsService.find(creationQuery);
 

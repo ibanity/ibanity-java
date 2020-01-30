@@ -9,4 +9,6 @@ public interface IbanityModel {
     void setId(UUID uuid);
 
     void setSelfLink(String selfLink);
+
+    void setRequestId(String requestId);
 }

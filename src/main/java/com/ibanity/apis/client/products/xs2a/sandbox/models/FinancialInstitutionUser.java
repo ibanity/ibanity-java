@@ -18,8 +18,9 @@ public class FinancialInstitutionUser implements IbanityModel {
     public static final String API_URL_TAG_ID = "{" + RESOURCE_TYPE + URL_PARAMETER_ID_POSTFIX + "}";
 
     private UUID id;
-
     private String selfLink;
+    private String requestId;
+
     private String password;
     private String firstName;
     private String lastName;

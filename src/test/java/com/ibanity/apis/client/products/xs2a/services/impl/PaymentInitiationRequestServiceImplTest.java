@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -69,7 +69,7 @@ class PaymentInitiationRequestServiceImplTest {
                         .build();
 
         when(ibanityHttpClient.post(buildUri(PIR_ENDPOINT_FOR_CREATE), mapRequest(requestCreationQuery), emptyMap(), CUSTOMER_TOKEN_REFERENCE))
-                .thenReturn(loadFile("json/createPir.json"));
+                .thenReturn(loadHttpResponse("json/createPir.json"));
 
         PaymentInitiationRequest actual = paymentInitiationRequestService.create(requestCreationQuery);
         assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpectedForCreate());
@@ -85,7 +85,7 @@ class PaymentInitiationRequestServiceImplTest {
                         .build();
 
         when(ibanityHttpClient.delete(buildUri(PIR_ENDPOINT_WITH_ID), emptyMap(), CUSTOMER_TOKEN_REFERENCE))
-                .thenReturn(loadFile("json/deletePir.json"));
+                .thenReturn(loadHttpResponse("json/deletePir.json"));
 
         PaymentInitiationRequest actual = paymentInitiationRequestService.delete(requestReadQuery);
         assertThat(actual).isEqualToComparingFieldByField(createExpectedForDelete());
@@ -101,7 +101,7 @@ class PaymentInitiationRequestServiceImplTest {
                         .build();
 
         when(ibanityHttpClient.get(buildUri(PIR_ENDPOINT_WITH_ID), emptyMap(), CUSTOMER_TOKEN_REFERENCE))
-                .thenReturn(loadFile("json/pir.json"));
+                .thenReturn(loadHttpResponse("json/pir.json"));
 
         PaymentInitiationRequest actual = paymentInitiationRequestService.find(readQuery);
 

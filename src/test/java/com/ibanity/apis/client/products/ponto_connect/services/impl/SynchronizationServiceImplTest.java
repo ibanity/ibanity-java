@@ -20,7 +20,7 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.UUID;
 
-import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -62,7 +62,7 @@ public class SynchronizationServiceImplTest {
                         .build()),
                 emptyMap(),
                 ACCESS_TOKEN))
-                .thenReturn(loadFile("json/ponto-connect/synchronization.json"));
+                .thenReturn(loadHttpResponse("json/ponto-connect/synchronization.json"));
 
         Synchronization actual = synchronizationService.create(SynchronizationCreateQuery.builder()
                 .subtype(SUBTYPE)
@@ -79,7 +79,7 @@ public class SynchronizationServiceImplTest {
         when(ibanityHttpClient.get(new URI(FIND_SYNCHRONIZATION_ENDPOINT),
                 emptyMap(),
                 ACCESS_TOKEN))
-                .thenReturn(loadFile("json/ponto-connect/synchronization.json"));
+                .thenReturn(loadHttpResponse("json/ponto-connect/synchronization.json"));
 
         Synchronization actual = synchronizationService.find(SynchronizationReadQuery.builder()
                 .synchronizationId(SYNCHRONIZATION_ID)

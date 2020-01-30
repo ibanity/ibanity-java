@@ -25,7 +25,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static java.time.Instant.parse;
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -71,7 +71,7 @@ class AccountsServiceImplTest {
                         .build();
 
         when(ibanityHttpClient.get(new URI(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT + "/" + ACCOUNT_ID), emptyMap(), CUSTOMER_ACCESS_TOKEN))
-                .thenReturn(loadFile("json/account.json"));
+                .thenReturn(loadHttpResponse("json/account.json"));
 
         Account actual = accountsService.find(accountReadQuery);
 
@@ -88,7 +88,7 @@ class AccountsServiceImplTest {
                         .build();
 
         when(ibanityHttpClient.delete(new URI(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT + "/" + ACCOUNT_ID), emptyMap(), CUSTOMER_ACCESS_TOKEN))
-                .thenReturn(loadFile("json/deleteAccount.json"));
+                .thenReturn(loadHttpResponse("json/deleteAccount.json"));
 
         Account actual = accountsService.delete(accountReadQuery);
 
@@ -106,7 +106,7 @@ class AccountsServiceImplTest {
                 .build();
 
         when(ibanityHttpClient.get(new URI(ACCOUNT_BY_AIAR_ENDPOINT + "?limit=10"), emptyMap(), CUSTOMER_ACCESS_TOKEN))
-                .thenReturn(loadFile("json/accounts.json"));
+                .thenReturn(loadHttpResponse("json/accounts.json"));
 
         IbanityCollection<Account> actual = accountsService.list(accountsReadQuery);
 
@@ -122,7 +122,7 @@ class AccountsServiceImplTest {
                 .build();
 
         when(ibanityHttpClient.get(new URI(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT + "?limit=10"), emptyMap(), CUSTOMER_ACCESS_TOKEN))
-                .thenReturn(loadFile("json/accounts.json"));
+                .thenReturn(loadHttpResponse("json/accounts.json"));
         IbanityCollection<Account> actual = accountsService.list(accountsReadQuery);
 
         assertThat(actual.getItems()).containsExactly(createExpected());
@@ -137,7 +137,7 @@ class AccountsServiceImplTest {
                 .build();
 
         when(ibanityHttpClient.get(new URI(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT + "?limit=10"), emptyMap(), CUSTOMER_ACCESS_TOKEN))
-                .thenReturn(loadFile("json/accounts_with_sync_errors.json"));
+                .thenReturn(loadHttpResponse("json/accounts_with_sync_errors.json"));
         IbanityCollection<Account> actual = accountsService.list(accountsReadQuery);
 
         Account expected = createExpected();
@@ -154,7 +154,7 @@ class AccountsServiceImplTest {
                 .build();
 
         when(ibanityHttpClient.get(new URI(ACCOUNT_ENDPOINT + "?limit=10"), emptyMap(), CUSTOMER_ACCESS_TOKEN))
-                .thenReturn(loadFile("json/accounts.json"));
+                .thenReturn(loadHttpResponse("json/accounts.json"));
 
         IbanityCollection<Account> actual = accountsService.list(accountsReadQuery);
 

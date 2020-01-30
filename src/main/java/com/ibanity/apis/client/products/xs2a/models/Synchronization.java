@@ -19,6 +19,8 @@ public class Synchronization implements IbanityModel {
     public static final String API_URL_TAG_ID   = "{" + RESOURCE_TYPE + URL_PARAMETER_ID_POSTFIX + "}";
 
     private UUID id;
+    private String requestId;
+
     @Builder.Default
     private List<IbanityError> errors = Collections.emptyList();
     private String status;
