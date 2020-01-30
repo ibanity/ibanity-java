@@ -6,7 +6,8 @@ import com.ibanity.apis.client.products.xs2a.models.PaymentInitiationRequest;
 import com.ibanity.apis.client.products.xs2a.models.create.PaymentInitiationRequestCreationQuery;
 import com.ibanity.apis.client.products.xs2a.services.PaymentInitiationRequestService;
 import com.ibanity.apis.client.services.IbanityService;
-import com.ibanity.samples.helper.SampleHelper;
+
+import static com.ibanity.samples.helper.SampleHelper.generateRandomPaymentInitiationRequestCreationQuery;
 
 public class PaymentInitiationRequestSample {
 
@@ -19,8 +20,7 @@ public class PaymentInitiationRequestSample {
     public PaymentInitiationRequest create(FinancialInstitution financialInstitution, CustomerAccessToken customerAccessToken,
                                            String redirectUrl){
         PaymentInitiationRequestCreationQuery paymentInitiationRequestCreationQuery =
-                SampleHelper.generateRandomPaymentInitiationRequestCreationQuery(
-                        financialInstitution, customerAccessToken, redirectUrl);
+                generateRandomPaymentInitiationRequestCreationQuery(financialInstitution, customerAccessToken, redirectUrl);
 
         return paymentInitiationRequestService.create(paymentInitiationRequestCreationQuery);
     }

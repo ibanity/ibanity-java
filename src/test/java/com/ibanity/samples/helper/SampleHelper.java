@@ -97,6 +97,9 @@ public class SampleHelper {
 
                 .remittanceInformationType("unstructured")
                 .remittanceInformation("Payment initiation sample")
+                .skipIbanityCompletionCallback(true)
+                .allowFinancialInstitutionRedirectUri(true)
+                .state("thisIsMyState")
                 .build();
     }
 

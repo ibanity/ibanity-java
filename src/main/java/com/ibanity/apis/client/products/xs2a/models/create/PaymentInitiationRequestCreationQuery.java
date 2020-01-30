@@ -44,6 +44,10 @@ public final class PaymentInitiationRequestCreationQuery {
     private String locale;
     private String customerIpAddress;
 
+    private boolean allowFinancialInstitutionRedirectUri;
+    private boolean skipIbanityCompletionCallback;
+    private String state;
+
     @Builder.Default
     private Map<String, String> additionalHeaders = emptyMap();
 }

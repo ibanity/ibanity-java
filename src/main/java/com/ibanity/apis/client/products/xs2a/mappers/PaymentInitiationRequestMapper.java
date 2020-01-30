@@ -3,10 +3,10 @@ package com.ibanity.apis.client.products.xs2a.mappers;
 import com.ibanity.apis.client.jsonapi.DataApiModel;
 import com.ibanity.apis.client.jsonapi.RelationshipsApiModel;
 import com.ibanity.apis.client.mappers.IbanityModelMapper;
-import com.ibanity.apis.client.products.xs2a.models.PaymentInitiationRequest;
 import com.ibanity.apis.client.products.xs2a.models.create.PaymentInitiationRequestCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.links.FinancialInstitutionLinks;
 import com.ibanity.apis.client.products.xs2a.models.links.PaymentInitiationAuthorizationLinks;
+import com.ibanity.apis.client.products.xs2a.services.impl.PaymentInitiationRequestServiceImpl.PaymentInitiationRequest;
 
 import java.util.function.Function;
 
@@ -33,13 +33,16 @@ public class PaymentInitiationRequestMapper {
                 .debtorName(query.getDebtorName())
                 .customerIpAddress(query.getCustomerIpAddress())
                 .locale(query.getLocale())
+                .skipIbanityCompletionCallback(query.isSkipIbanityCompletionCallback())
+                .allowFinancialInstitutionRedirectUri(query.isAllowFinancialInstitutionRedirectUri())
+                .state(query.getState())
                 .build();
     }
 
-    public static Function<DataApiModel, PaymentInitiationRequest> getResponseMapping() {
+    public static Function<DataApiModel, com.ibanity.apis.client.products.xs2a.models.PaymentInitiationRequest> getResponseMapping() {
         return dataApiModel -> {
-            PaymentInitiationRequest paymentInitiationRequest =
-                    IbanityModelMapper.toIbanityModel(dataApiModel, PaymentInitiationRequest.class);
+            com.ibanity.apis.client.products.xs2a.models.PaymentInitiationRequest paymentInitiationRequest =
+                    IbanityModelMapper.toIbanityModel(dataApiModel, com.ibanity.apis.client.products.xs2a.models.PaymentInitiationRequest.class);
 
             if (dataApiModel.getLinks() != null) {
                 paymentInitiationRequest.setLinks(PaymentInitiationAuthorizationLinks.builder()
