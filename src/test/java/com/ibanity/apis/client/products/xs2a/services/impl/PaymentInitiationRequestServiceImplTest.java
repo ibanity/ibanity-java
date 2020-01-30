@@ -38,6 +38,7 @@ class PaymentInitiationRequestServiceImplTest {
     private static final String CUSTOMER_TOKEN_REFERENCE = "itsme";
     private static final String FINANCIAL_INSTITUTION_RELATED_LINK = "https://api.ibanity.com/xs2a/financial-institutions/9c6dad12-4927-4a40-af87-20f8ff4a4433";
     private static final String PIR_ENDPOINT_WITH_ID = "https://api.ibanity.com/xs2a/customer/financial-institutions/9c6dad12-4927-4a40-af87-20f8ff4a4433/payment-initiation-requests/7fbdf174-325a-4c1a-808e-4eec951c1b4d";
+    private static final String CUSTOM_STATE = "myState";
 
     @InjectMocks
     private PaymentInitiationRequestServiceImpl paymentInitiationRequestService;
@@ -62,6 +63,9 @@ class PaymentInitiationRequestServiceImplTest {
                         .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                         .customerIpAddress("1.2.3.4")
                         .locale("fr")
+                        .skipIbanityCompletionCallback(true)
+                        .allowFinancialInstitutionRedirectUri(true)
+                        .state(CUSTOM_STATE)
                         .build();
 
         when(ibanityHttpClient.post(buildUri(PIR_ENDPOINT_FOR_CREATE), mapRequest(requestCreationQuery), emptyMap(), CUSTOMER_TOKEN_REFERENCE))
@@ -111,7 +115,7 @@ class PaymentInitiationRequestServiceImplTest {
     }
 
     private RequestApiModel mapRequest(PaymentInitiationRequestCreationQuery query) {
-        PaymentInitiationRequest paymentInitiationRequest = PaymentInitiationRequest.builder()
+        PaymentInitiationRequestServiceImpl.PaymentInitiationRequest paymentInitiationRequest = PaymentInitiationRequestServiceImpl.PaymentInitiationRequest.builder()
                 .financialInstitutionId(query.getFinancialInstitutionId())
                 .amount(query.getAmount())
                 .consentReference(query.getConsentReference())
@@ -131,6 +135,9 @@ class PaymentInitiationRequestServiceImplTest {
                 .debtorName(query.getDebtorName())
                 .customerIpAddress(query.getCustomerIpAddress())
                 .locale(query.getLocale())
+                .state(query.getState())
+                .skipIbanityCompletionCallback(query.isSkipIbanityCompletionCallback())
+                .allowFinancialInstitutionRedirectUri(query.isAllowFinancialInstitutionRedirectUri())
                 .build();
         return RequestApiModel.builder()
                 .data(
