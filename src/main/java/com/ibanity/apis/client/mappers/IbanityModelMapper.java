@@ -52,7 +52,9 @@ public class IbanityModelMapper {
         try {
             String jsonPayload = readResponseContent(httpResponse.getEntity());
             CollectionApiModel collectionApiModel = IbanityUtils.objectMapper().readValue(jsonPayload, CollectionApiModel.class);
+            String requestId = getRequestId(httpResponse);
             return IbanityCollection.<T>builder()
+                    .requestId(requestId)
                     .pageLimit(collectionApiModel.getMeta().getPaging().getLimit())
                     .afterCursor(collectionApiModel.getMeta().getPaging().getAfter())
                     .beforeCursor(collectionApiModel.getMeta().getPaging().getBefore())
@@ -63,6 +65,7 @@ public class IbanityModelMapper {
                     .items(
                             collectionApiModel.getData().stream()
                                     .map(customMapping)
+                                    .peek(value -> { value.setRequestId(requestId); })
                                     .collect(Collectors.toList())
                     )
                     .build();
