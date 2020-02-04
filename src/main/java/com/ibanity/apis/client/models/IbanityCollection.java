@@ -15,6 +15,7 @@ import java.util.UUID;
 @EqualsAndHashCode
 public class IbanityCollection<T> {
 
+    private String requestId;
     private UUID beforeCursor;
     private UUID afterCursor;
     private String firstLink;
