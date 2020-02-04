@@ -1,0 +1,32 @@
+{
+  "data": {
+    "attributes": {
+      "lastValuation": 10,
+      "lastValuationCurrency": "USD",
+      "lastValuationDate": "2020-01-01T00:00:00.000Z",
+      "name": "AAPL",
+      "quantity": 10.55,
+      "reference": "ISINBE6456789",
+      "referenceType": "ISIN",
+      "subtype": "STOCK",
+      "totalValuation": 105.5,
+      "totalValuationCurrency": "USD"
+    },
+    "id": "a5af9187-9d11-4c30-9263-7c35ff036f6c",
+    "links": {
+      "self": "https://api.ibanity.localhost/xs2a/customer/financial-institutions/f252866e-638e-4d28-a575-20a406223777/accounts/9fe37230-9103-49bd-a432-2bad72d5abb2/holdings/a5af9187-9d11-4c30-9263-7c35ff036f6c"
+    },
+    "relationships": {
+      "account": {
+        "data": {
+          "id": "9fe37230-9103-49bd-a432-2bad72d5abb2",
+          "type": "account"
+        },
+        "links": {
+          "related": "https://api.ibanity.localhost/xs2a/customer/financial-institutions/f252866e-638e-4d28-a575-20a406223777/accounts/9fe37230-9103-49bd-a432-2bad72d5abb2"
+        }
+      }
+    },
+    "type": "holding"
+  }
+}
