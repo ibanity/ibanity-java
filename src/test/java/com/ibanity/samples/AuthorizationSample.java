@@ -40,7 +40,7 @@ public class AuthorizationSample {
                         .consentReference(consentReference)
                         .allowFinancialInstitutionRedirectUri(true)
                         .customerIpAddress("1.1.1.1")
-                        .allowedAccountSubtypes(newArrayList("checking", "savings"))
+                        .allowedAccountSubtypes(newArrayList("checking", "savings", "securities"))
                         .skipIbanityCompletionCallback(true)
                         .state("myCustomState")
                         .metaRequestCreationQuery(MetaRequestCreationQuery.builder()

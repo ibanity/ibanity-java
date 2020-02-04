@@ -32,7 +32,7 @@ public class AccountInformationAccessRequestSample {
                         .consentReference(consentReference)
                         .allowFinancialInstitutionRedirectUri(true)
                         .customerIpAddress("1.1.1.1")
-                        .allowedAccountSubtypes(newArrayList("checking", "savings"))
+                        .allowedAccountSubtypes(newArrayList("checking", "savings", "securities"))
                         .skipIbanityCompletionCallback(false)
                         .metaRequestCreationQuery(MetaRequestCreationQuery.builder()
                                 .authorizationPortalCreationQuery(AuthorizationPortalCreationQuery.builder()

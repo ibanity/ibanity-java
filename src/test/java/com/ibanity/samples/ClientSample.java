@@ -35,6 +35,7 @@ public class ClientSample {
     private final SynchronizationSample synchronizationSample;
     private final CustomerSample customerSample;
     private final AuthorizationSample authorizationSample;
+    private final HoldingSample holdingSample;
 
     // Configurations
     private final String fakeTppAccountInformationAccessRedirectUrl = getConfiguration("tpp.account-information-access-result.redirect-url");
@@ -50,6 +51,7 @@ public class ClientSample {
         synchronizationSample = new SynchronizationSample(ibanityService);
         customerSample = new CustomerSample(ibanityService);
         authorizationSample = new AuthorizationSample(ibanityService);
+        holdingSample = new HoldingSample(ibanityService);
     }
 
     public static void main(String[] args) throws CertificateException, IOException {
@@ -82,12 +84,14 @@ public class ClientSample {
 
         List<Account> accounts = clientSample.accountSamples(customerAccessToken, financialInstitutions);
         List<Transaction> transactions = clientSample.transactionSamples(customerAccessToken, financialInstitutions, accounts);
+        List<Holding> holdings = clientSample.holdingSample(customerAccessToken, financialInstitutions, accounts);
         Synchronization synchronization = clientSample.synchronizationSamples(customerAccessToken, accounts);
         PaymentInitiationRequest paymentInitiationRequest = clientSample.paymentInitiationRequestSamples();
 
         LOGGER.info("List of financialInstitutions: {}", financialInstitutions);
         LOGGER.info("List of accounts: {}", accounts);
         LOGGER.info("List of transactions: {}", transactions);
+        LOGGER.info("List of holdings: {}", holdings);
         LOGGER.info("synchronization: {}", synchronization);
         LOGGER.info("paymentInitiationRequest: {}", paymentInitiationRequest);
 
@@ -175,6 +179,20 @@ public class ClientSample {
         transactionSample.get(customerAccessToken, financialInstitution, account, transactions.get(0).getId());
 
         return transactions;
+    }
+
+    public List<Holding> holdingSample(CustomerAccessToken customerAccessToken, List<FinancialInstitution> financialInstitutionList, List<Account> accountList) {
+        LOGGER.info("Holdings samples");
+
+        FinancialInstitution financialInstitution = financialInstitutionList.get(0);
+
+        Account account = accountList.stream().filter(account1 -> account1.getSubtype().equalsIgnoreCase("securities")).findFirst().get();
+
+        List<Holding> holdings = holdingSample.list(customerAccessToken, financialInstitution, account);
+
+        holdingSample.get(customerAccessToken, financialInstitution, account, holdings.get(0).getId());
+
+        return holdings;
     }
 
     public PaymentInitiationRequest paymentInitiationRequestSamples() {
