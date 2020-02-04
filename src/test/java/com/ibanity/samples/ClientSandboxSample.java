@@ -6,13 +6,11 @@ import com.ibanity.apis.client.builders.OptionalPropertiesBuilder;
 import com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitutionAccount;
+import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitutionHolding;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitutionTransaction;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitutionUser;
 import com.ibanity.apis.client.services.IbanityService;
-import com.ibanity.samples.sandbox.FinancialInstitutionAccountSample;
-import com.ibanity.samples.sandbox.FinancialInstitutionSample;
-import com.ibanity.samples.sandbox.FinancialInstitutionTransactionSample;
-import com.ibanity.samples.sandbox.FinancialInstitutionUserSample;
+import com.ibanity.samples.sandbox.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,12 +30,14 @@ public class ClientSandboxSample {
     private final FinancialInstitutionUserSample financialInstitutionUserSample;
     private final FinancialInstitutionAccountSample financialInstitutionAccountSample;
     private final FinancialInstitutionTransactionSample financialInstitutionTransactionSample;
+    private final FinancialInstitutionHoldingSample financialInstitutionHoldingSample;
 
     public ClientSandboxSample(IbanityService ibanityService) {
         financialInstitutionSample = new FinancialInstitutionSample(ibanityService);
         financialInstitutionUserSample = new FinancialInstitutionUserSample(ibanityService);
         financialInstitutionAccountSample = new FinancialInstitutionAccountSample(ibanityService);
         financialInstitutionTransactionSample = new FinancialInstitutionTransactionSample(ibanityService);
+        financialInstitutionHoldingSample = new FinancialInstitutionHoldingSample(ibanityService);
     }
 
     public static void main(String[] args) throws CertificateException, IOException {
@@ -70,6 +70,9 @@ public class ClientSandboxSample {
 
         FinancialInstitutionTransaction financialInstitutionTransaction = clientSandboxSample.financialInstitutionTransactionSamples();
         LOGGER.info("Financial institution transaction {}", financialInstitutionTransaction);
+
+        FinancialInstitutionHolding financialInstitutionHoldingSamples = clientSandboxSample.financialInstitutionHoldingSamples();
+        LOGGER.info("Financial institution holding {}", financialInstitutionHoldingSamples);
 
         LOGGER.info("Samples end");
     }
@@ -143,6 +146,31 @@ public class ClientSandboxSample {
         this.financialInstitutionUserSample.delete(financialInstitutionUser);
 
         return financialInstitutionTransaction;
+    }
+
+    public FinancialInstitutionHolding financialInstitutionHoldingSamples() {
+        LOGGER.info("Financial Institution Holding samples");
+
+        FinancialInstitution financialInstitution = financialInstitutionSample.create();
+        FinancialInstitutionUser financialInstitutionUser = financialInstitutionUserSample.create();
+        FinancialInstitutionAccount financialInstitutionAccount =
+                financialInstitutionAccountSample.create(financialInstitution, financialInstitutionUser);
+
+        FinancialInstitutionHolding financialInstitutionHolding =
+                financialInstitutionHoldingSample.create(financialInstitution, financialInstitutionUser, financialInstitutionAccount);
+
+        financialInstitutionHoldingSample.find(financialInstitution, financialInstitutionUser,
+                financialInstitutionAccount, financialInstitutionHolding.getId());
+
+        financialInstitutionHoldingSample.delete(financialInstitution, financialInstitutionUser,
+                financialInstitutionAccount, financialInstitutionHolding);
+
+        // clean related objects
+        this.financialInstitutionAccountSample.delete(financialInstitution, financialInstitutionUser, financialInstitutionAccount);
+        deleteFinancialInstitution(financialInstitution);
+        this.financialInstitutionUserSample.delete(financialInstitutionUser);
+
+        return financialInstitutionHolding;
     }
 
 }

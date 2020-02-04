@@ -7,6 +7,7 @@ import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.products.xs2a.models.create.PaymentInitiationRequestCreationQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitutionAccount;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitutionUser;
+import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.create.FinancialInstitutionHoldingCreationQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.create.FinancialInstitutionTransactionCreationQuery;
 import org.apache.commons.math3.util.Precision;
 import org.apache.logging.log4j.LogManager;
@@ -21,10 +22,13 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.UUID;
+
+import static java.math.BigDecimal.TEN;
 
 public class SampleHelper {
     private static final Logger LOGGER = LogManager.getLogger(SampleHelper.class);
@@ -125,5 +129,26 @@ public class SampleHelper {
     public static X509Certificate loadCertificate(String path) throws CertificateException {
         return (X509Certificate) KeyToolHelper.loadCertificate(
                 path);
+    }
+
+    public static FinancialInstitutionHoldingCreationQuery generateRandomHoldingCreationQuery(
+            FinancialInstitution financialInstitution,
+            FinancialInstitutionUser financialInstitutionUser,
+            FinancialInstitutionAccount financialInstitutionAccount) {
+        return FinancialInstitutionHoldingCreationQuery.builder()
+                .financialInstitutionId(financialInstitution.getId())
+                .financialInstitutionUserId(financialInstitutionUser.getId())
+                .financialInstitutionAccountId(financialInstitutionAccount.getId())
+                .name("Fake STOCK")
+                .reference("ISIN456")
+                .referenceType("ISIN")
+                .subtype("STOCK")
+                .quantity(TEN)
+                .totalValuation(new BigDecimal("100"))
+                .totalValuationCurrency("EUR")
+                .lastValuation(TEN)
+                .lastValuationCurrency("EUR")
+                .lastValuationDate(LocalDate.now())
+                .build();
     }
 }

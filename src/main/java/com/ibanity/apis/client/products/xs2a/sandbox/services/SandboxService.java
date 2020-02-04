@@ -9,4 +9,6 @@ public interface SandboxService {
     FinancialInstitutionAccountsService financialInstitutionAccountsService();
 
     FinancialInstitutionTransactionsService financialInstitutionTransactionsService();
+
+    FinancialInstitutionHoldingsService financialInstitutionHoldingsService();
 }
