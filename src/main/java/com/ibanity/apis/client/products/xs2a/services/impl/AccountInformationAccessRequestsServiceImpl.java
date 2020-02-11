@@ -11,6 +11,7 @@ import com.ibanity.apis.client.products.xs2a.models.AuthorizationPortal;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.products.xs2a.models.create.AccountInformationAccessRequestCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.create.AuthorizationPortalCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.create.MetaRequestCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountInformationAccessLinks;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountLinks;
 import com.ibanity.apis.client.products.xs2a.models.read.AccountInformationAccessRequestReadQuery;
@@ -120,17 +121,25 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
     }
 
     private AccountInformationAccessRequestMeta mapMeta(AccountInformationAccessRequestCreationQuery creationQuery) {
-        if(creationQuery.getMetaRequestCreationQuery() == null || creationQuery.getMetaRequestCreationQuery().getAuthorizationPortalCreationQuery() == null) {
+        MetaRequestCreationQuery metaRequestCreationQuery = creationQuery.getMetaRequestCreationQuery();
+        if (metaRequestCreationQuery == null) {
             return null;
         } else {
-            AuthorizationPortalCreationQuery authorizationPortalCreationQuery = creationQuery.getMetaRequestCreationQuery().getAuthorizationPortalCreationQuery();
+            AuthorizationPortalCreationQuery authorizationPortalCreationQuery = metaRequestCreationQuery.getAuthorizationPortalCreationQuery();
+            AuthorizationPortal authorizationPortal;
+            if (metaRequestCreationQuery.getAuthorizationPortalCreationQuery() == null) {
+                authorizationPortal = null;
+            } else {
+                authorizationPortal = AuthorizationPortal.builder()
+                        .disclaimerContent(authorizationPortalCreationQuery.getDisclaimerContent())
+                        .disclaimerTitle(authorizationPortalCreationQuery.getDisclaimerTitle())
+                        .financialInstitutionPrimaryColor(authorizationPortalCreationQuery.getFinancialInstitutionPrimaryColor())
+                        .financialInstitutionSecondaryColor(authorizationPortalCreationQuery.getFinancialInstitutionSecondaryColor())
+                        .build();
+            }
             return AccountInformationAccessRequestMeta.builder()
-                    .authorizationPortal(AuthorizationPortal.builder()
-                            .disclaimerContent(authorizationPortalCreationQuery.getDisclaimerContent())
-                            .disclaimerTitle(authorizationPortalCreationQuery.getDisclaimerTitle())
-                            .financialInstitutionPrimaryColor(authorizationPortalCreationQuery.getFinancialInstitutionPrimaryColor())
-                            .financialInstitutionSecondaryColor(authorizationPortalCreationQuery.getFinancialInstitutionSecondaryColor())
-                            .build())
+                    .requestedPastTransactionDays(metaRequestCreationQuery.getRequestedPastTransactionDays())
+                    .authorizationPortal(authorizationPortal)
                     .build();
         }
     }
