@@ -21,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -78,6 +79,7 @@ class AccountInformationAccessRequestsServiceImplTest {
                         .state("aCustomState")
                         .allowedAccountSubtypes(newArrayList("checking", "savings"))
                         .metaRequestCreationQuery(MetaRequestCreationQuery.builder()
+                                .requestedPastTransactionDays(BigDecimal.TEN)
                                 .authorizationPortalCreationQuery(AuthorizationPortalCreationQuery.builder()
                                         .disclaimerContent("disclaimerContent")
                                         .build())
