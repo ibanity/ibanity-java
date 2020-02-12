@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import static com.ibanity.apis.client.http.handler.IbanityResponseHandler.IBANITY_REQUEST_ID_HEADER;
 import static java.lang.String.format;
+import static org.apache.http.util.EntityUtils.consumeQuietly;
 
 public class IbanityModelMapper {
 
@@ -116,6 +117,10 @@ public class IbanityModelMapper {
     }
 
     public static String readResponseContent(HttpEntity entity) throws IOException {
-        return IOUtils.toString(entity.getContent(), DEFAULT_ENCODING);
+        try {
+            return IOUtils.toString(entity.getContent(), DEFAULT_ENCODING);
+        } finally {
+            consumeQuietly(entity);
+        }
     }
 }
