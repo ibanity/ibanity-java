@@ -4,7 +4,16 @@
       "errors": [
         {
           "code": "authorizationInvalid",
-          "detail": "The authorization is invalid, you should ask the customer to reauthorize the account"
+          "detail": "The authorization is invalid, you should ask the customer to reauthorize the account",
+          "meta": {
+            "financialInstitutionResponse": {
+              "statusCode": 500,
+              "body": "somehtml",
+              "requestId": "354fwfwef4w684",
+              "timestamp": "2019-05-09T09:18:00.000Z",
+              "requestUri": "http://google.com"
+            }
+          }
         }
       ],
       "createdAt": "2019-05-09T09:18:58.358Z",

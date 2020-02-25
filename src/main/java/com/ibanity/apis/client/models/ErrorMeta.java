@@ -8,9 +8,7 @@ import lombok.*;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class IbanityError {
+public class ErrorMeta {
 
-    private String code;
-    private String detail;
-    private ErrorMeta meta;
+    private FinancialInstitutionResponse financialInstitutionResponse;
 }

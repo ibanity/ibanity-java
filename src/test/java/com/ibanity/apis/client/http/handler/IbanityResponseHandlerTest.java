@@ -2,6 +2,8 @@ package com.ibanity.apis.client.http.handler;
 
 import com.ibanity.apis.client.exceptions.IbanityClientException;
 import com.ibanity.apis.client.exceptions.IbanityServerException;
+import com.ibanity.apis.client.models.ErrorMeta;
+import com.ibanity.apis.client.models.FinancialInstitutionResponse;
 import com.ibanity.apis.client.models.IbanityError;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
@@ -14,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -86,6 +89,15 @@ class IbanityResponseHandlerTest {
         return newArrayList(IbanityError.builder()
                 .code("invalidCredentials")
                 .detail("Your credentials are invalid.")
+                .meta(ErrorMeta.builder()
+                        .financialInstitutionResponse(FinancialInstitutionResponse.builder()
+                                .body("somehtml")
+                                .requestId("354fwfwef4w684")
+                                .statusCode(500)
+                                .timestamp(Instant.parse("2019-05-09T09:18:00.000Z"))
+                                .requestUri("http://google.com")
+                                .build())
+                        .build())
                 .build());
     }
 
@@ -98,7 +110,17 @@ class IbanityResponseHandlerTest {
                 "  \"errors\": [\n" +
                 "    {\n" +
                 "      \"code\": \"invalidCredentials\",\n" +
-                "      \"detail\": \"Your credentials are invalid.\"\n" +
+                "      \"detail\": \"Your credentials are invalid.\",\n" +
+                "      \"meta\": {\n" +
+                "        \"financialInstitutionResponse\": {\n" +
+                "          \"statusCode\": 500,\n" +
+                "          \"body\": \"somehtml\",\n" +
+                "          \"requestId\": \"354fwfwef4w684\",\n" +
+                "          \"timestamp\": \"2019-05-09T09:18:00.000Z\",\n" +
+                "          \"requestUri\": \"http://google.com\"\n" +
+                "        }\n" +
+                "      " +
+                "}\n" +
                 "    }\n" +
                 "  ]\n" +
                 "}";
