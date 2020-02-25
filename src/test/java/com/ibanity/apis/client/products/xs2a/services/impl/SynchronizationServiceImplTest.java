@@ -3,6 +3,8 @@ package com.ibanity.apis.client.products.xs2a.services.impl;
 import com.ibanity.apis.client.helpers.IbanityTestHelper;
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
+import com.ibanity.apis.client.models.ErrorMeta;
+import com.ibanity.apis.client.models.FinancialInstitutionResponse;
 import com.ibanity.apis.client.models.IbanityError;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
@@ -110,6 +112,15 @@ class SynchronizationServiceImplTest {
             synchronizationBuilder = synchronizationBuilder.errors(newArrayList(IbanityError.builder()
                     .code("authorizationInvalid")
                     .detail("The authorization is invalid, you should ask the customer to reauthorize the account")
+                    .meta(ErrorMeta.builder()
+                            .financialInstitutionResponse(FinancialInstitutionResponse.builder()
+                                    .body("somehtml")
+                                    .requestId("354fwfwef4w684")
+                                    .statusCode(500)
+                                    .timestamp(Instant.parse("2019-05-09T09:18:00.000Z"))
+                                    .requestUri("http://google.com")
+                                    .build())
+                            .build())
                     .build()));
 
         }
