@@ -36,6 +36,7 @@ public class IbanityServiceBuilder implements
     private String signaturePrivateKeyPassphrase;
     private String signatureCertificateId;
     private String pontoConnectOauth2ClientId;
+    private boolean disableTlsClientCertificate;
 
     public static IbanityApiEndpointBuilder builder() {
         return new IbanityServiceBuilder();
@@ -53,12 +54,17 @@ public class IbanityServiceBuilder implements
             signaturePrivateKeyPassphrase = null;
         }
 
-        TlsCredentials tlsCredentials = TlsCredentials.builder()
-                .certificate(tlsCertificate)
-                .privateKey(tlsPrivateKey)
-                .privateKeyPassphrase(tlsPrivateKeyPassphrase)
-                .build();
-        tlsPrivateKeyPassphrase = null;
+        TlsCredentials tlsCredentials = null;
+        if(!disableTlsClientCertificate) {
+            tlsCredentials = TlsCredentials.builder()
+                    .certificate(tlsCertificate)
+                    .privateKey(tlsPrivateKey)
+                    .privateKeyPassphrase(tlsPrivateKeyPassphrase)
+                    .build();
+            tlsPrivateKeyPassphrase = null;
+        }
+
+
 
         return new IbanityServiceImpl(apiEndpoint, caCertificate, tlsCredentials, signatureCredentials, pontoConnectOauth2ClientId, proxyEndpoint);
     }
@@ -70,6 +76,12 @@ public class IbanityServiceBuilder implements
 
     public TlsPassphraseBuilder tlsPrivateKey(PrivateKey privateKey) {
         this.tlsPrivateKey = privateKey;
+        return this;
+    }
+
+    @Override
+    public OptionalPropertiesBuilder disableTlsClientCertificate() {
+        this.disableTlsClientCertificate = true;
         return this;
     }
 

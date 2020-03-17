@@ -31,7 +31,9 @@ public class ApiUrlProviderImpl implements ApiUrlProvider {
     private final Map<IbanityProduct, JsonNode> apiUrls = new HashMap<>();
 
     public ApiUrlProviderImpl(IbanityHttpClient ibanityHttpClient, String ibanityEndpoint) {
-        this(ibanityHttpClient, ibanityEndpoint, null);
+        this.ibanityHttpClient = ibanityHttpClient;
+        this.ibanityEndpoint = ibanityEndpoint;
+        this.proxyEndpoint = null;
     }
 
     public ApiUrlProviderImpl(IbanityHttpClient ibanityHttpClient, String apiEndpoint, String proxyEndpoint) {
