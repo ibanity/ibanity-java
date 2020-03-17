@@ -80,9 +80,14 @@ public final class IbanityUtils {
     }
 
     private static SSLContext getSSLContext(Certificate caCertificate, TlsCredentials tlsCredentials) throws IOException, GeneralSecurityException {
+        KeyManager[] keyManagers;
+        if(tlsCredentials != null) {
+            KeyStore keyStore = createKeyStore(tlsCredentials);
+            keyManagers = createKeyManagers(keyStore, tlsCredentials.getPrivateKeyPassphrase());
+        } else {
+            keyManagers = createEmptyKeyManagers();
+        }
 
-        KeyStore keyStore = createKeyStore(tlsCredentials);
-        KeyManager[] keyManagers = createKeyManagers(keyStore, tlsCredentials.getPrivateKeyPassphrase());
         TrustManager[] trustManagers = null;
         if (caCertificate != null) {
             KeyStore trustStore = createTrustStore(caCertificate);
@@ -90,7 +95,6 @@ public final class IbanityUtils {
         }
         SSLContext sslContext = SSLContext.getInstance(TLS_PROTOCOL);
         sslContext.init(keyManagers, trustManagers, null);
-
         return sslContext;
     }
 
@@ -136,6 +140,11 @@ public final class IbanityUtils {
     private static KeyManager[] createKeyManagers(KeyStore keyStore, String passphrase) throws NoSuchAlgorithmException, KeyStoreException, UnrecoverableKeyException {
         KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         kmf.init(keyStore, passphrase.toCharArray());
+        return kmf.getKeyManagers();
+    }
+
+    private static KeyManager[] createEmptyKeyManagers() throws NoSuchAlgorithmException {
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         return kmf.getKeyManagers();
     }
 }

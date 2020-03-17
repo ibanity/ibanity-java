@@ -67,7 +67,7 @@ public class ClientSample {
                 .requestSignaturePrivateKey(privateKey)
                 .requestSignaturePassphrase(passphrase)
                 .requestSignatureCertificate(certificate)
-                .signatureCertificateId(getConfiguration(IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY));;
+                .signatureCertificateId(getConfiguration(IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY));
 
 
         IbanityService ibanityService = ibanityServiceBuilder.build();

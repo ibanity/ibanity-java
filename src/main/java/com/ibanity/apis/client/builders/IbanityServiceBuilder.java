@@ -23,6 +23,7 @@ public class IbanityServiceBuilder implements
         RequestSignatureCertificateIdBuilder {
 
     private String apiEndpoint;
+    private String proxyEndpoint;
 
     private Certificate caCertificate;
 
@@ -59,7 +60,7 @@ public class IbanityServiceBuilder implements
                 .build();
         tlsPrivateKeyPassphrase = null;
 
-        return new IbanityServiceImpl(apiEndpoint, caCertificate, tlsCredentials, signatureCredentials, pontoConnectOauth2ClientId);
+        return new IbanityServiceImpl(apiEndpoint, caCertificate, tlsCredentials, signatureCredentials, pontoConnectOauth2ClientId, proxyEndpoint);
     }
 
     public OptionalPropertiesBuilder caCertificate(Certificate certificate) {
@@ -80,6 +81,12 @@ public class IbanityServiceBuilder implements
     @Override
     public OptionalPropertiesBuilder pontoConnectOauth2ClientId(String clientId) {
         this.pontoConnectOauth2ClientId = clientId;
+        return this;
+    }
+
+    @Override
+    public OptionalPropertiesBuilder proxyEndpoint(String proxyEndpoint) {
+        this.proxyEndpoint = proxyEndpoint;
         return this;
     }
 

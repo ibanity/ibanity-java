@@ -8,31 +8,34 @@ import org.apache.http.message.BasicHttpResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.UnsupportedEncodingException;
 
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.HTTP;
+import static java.net.URI.create;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.lenient;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({MockitoExtension.class})
 class ApiUrlProviderImplTest {
+
+    public static final String API_ENDPOINT = "https://api.ibanity.localhost";
+    public static final String PROXY_ENDPOINT = "http://myproxy.com";
 
     @Mock
     private IbanityHttpClient ibanityHttpClient;
 
-    @InjectMocks
     private ApiUrlProviderImpl apiUrlProvider;
+
 
     @BeforeEach
     void setUp() throws UnsupportedEncodingException {
-        when(ibanityHttpClient.get(any(), eq(null))).thenReturn(getHttpResponse());
+        lenient().when(ibanityHttpClient.get(eq(create(PROXY_ENDPOINT + "/xs2a")), eq(null))).thenReturn(getHttpResponse());
+        lenient().when(ibanityHttpClient.get(eq(create(API_ENDPOINT + "/xs2a")), eq(null))).thenReturn(getHttpResponse());
     }
 
     private HttpResponse getHttpResponse() throws UnsupportedEncodingException {
@@ -42,13 +45,22 @@ class ApiUrlProviderImplTest {
     }
 
     @Test
-    void find() {
+    void find_whenProxyIsSetup() {
+        apiUrlProvider = new ApiUrlProviderImpl(ibanityHttpClient, API_ENDPOINT, PROXY_ENDPOINT);
         String actual = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "accountInformationAccessRequest", "accounts");
-        assertThat(actual).isEqualTo("https://api.ibanity.localhost/xs2a/customer/financial-institutions/{financialInstitutionId}/account-information-access-requests/{accountInformationAccessRequestId}/accounts");
+        assertThat(actual).isEqualTo(PROXY_ENDPOINT + "/xs2a/customer/financial-institutions/{financialInstitutionId}/account-information-access-requests/{accountInformationAccessRequestId}/accounts");
+    }
+
+    @Test
+    void find() {
+        apiUrlProvider = new ApiUrlProviderImpl(ibanityHttpClient, API_ENDPOINT);
+        String actual = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "accountInformationAccessRequest", "accounts");
+        assertThat(actual).isEqualTo(API_ENDPOINT + "/xs2a/customer/financial-institutions/{financialInstitutionId}/account-information-access-requests/{accountInformationAccessRequestId}/accounts");
     }
 
     @Test
     void find_whenPathNotFound_throwIllegalArgumentException() {
+        apiUrlProvider = new ApiUrlProviderImpl(ibanityHttpClient, API_ENDPOINT, PROXY_ENDPOINT);
         assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financiulInstitution", "accountInformationAccessRequest", "accounts"));
     }
 
