@@ -14,4 +14,6 @@ public interface OptionalPropertiesBuilder {
     RequestSignaturePassphraseBuilder requestSignaturePrivateKey(PrivateKey privateKey);
 
     OptionalPropertiesBuilder pontoConnectOauth2ClientId(String clientId);
+
+    OptionalPropertiesBuilder proxyEndpoint(String proxyEndpoint);
 }

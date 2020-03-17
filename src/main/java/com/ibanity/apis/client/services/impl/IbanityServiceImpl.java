@@ -29,9 +29,10 @@ public class IbanityServiceImpl implements IbanityService {
                               Certificate caCertificate,
                               TlsCredentials tlsCredentials,
                               SignatureCredentials signatureCredentials,
-                              String clientId) {
+                              String clientId,
+                              String proxyEndpoint) {
         this.ibanityHttpClient = new IbanityHttpClientFactory().create(caCertificate, tlsCredentials, signatureCredentials, apiEndpoint);
-        this.apiUrlProvider = new ApiUrlProviderImpl(ibanityHttpClient, apiEndpoint);
+        this.apiUrlProvider = new ApiUrlProviderImpl(ibanityHttpClient, apiEndpoint, proxyEndpoint);
 
         this.xs2aService = new Xs2aServiceImpl(apiUrlProvider, ibanityHttpClient);
 
