@@ -47,12 +47,12 @@ class IbanityHttpSignatureServiceImplTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        httpSignatureService = new IbanityHttpSignatureServiceImpl(loadPrivateKey(), loadCertificate(), CERTIFICATE_ID, clock);
+        httpSignatureService = new IbanityHttpSignatureServiceImpl(loadPrivateKey(), loadCertificate(), CERTIFICATE_ID, clock, "https://api.ibanity.com/");
     }
 
     @Test
     void getHttpSignatureHeaders() throws MalformedURLException {
-        Map<String, String> actual = httpSignatureService.getHttpSignatureHeaders("POST", new URL("https://api.ibanity.com/xs2a/customer-access-tokens?test=1&test=2"), getRequestHeaders(), getRequestPayload());
+        Map<String, String> actual = httpSignatureService.getHttpSignatureHeaders("POST", new URL("https://myproxy.com/xs2a/customer-access-tokens?test=1&test=2"), getRequestHeaders(), getRequestPayload());
         assertThat(actual).isNotEmpty().hasSize(3);
         assertThat(actual).containsEntry("Date", ISO_DATE);
         assertThat(actual).containsEntry("Digest", EXPECTED_DIGEST);

@@ -5,14 +5,10 @@ import com.ibanity.apis.client.http.service.IbanityHttpSignatureService;
 import lombok.NonNull;
 import org.apache.commons.codec.digest.MessageDigestAlgorithms;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.Signature;
-import java.security.SignatureException;
+import java.security.*;
 import java.security.cert.X509Certificate;
 import java.time.Clock;
 import java.time.Instant;
@@ -38,23 +34,27 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
     private String certificateId;
     private PrivateKey privateKey;
     private X509Certificate certificate;
+    private String ibanityEndpoint;
 
     public IbanityHttpSignatureServiceImpl(
             @NonNull PrivateKey privateKey,
             @NonNull X509Certificate certificate,
-            @NonNull String certificateId) {
-        this(privateKey, certificate, certificateId, Clock.systemUTC());
+            @NonNull String certificateId,
+            @NonNull String ibanityEndpoint) {
+        this(privateKey, certificate, certificateId, Clock.systemUTC(), ibanityEndpoint);
     }
 
     public IbanityHttpSignatureServiceImpl(
             @NonNull PrivateKey privateKey,
             @NonNull X509Certificate certificate,
             @NonNull String certificateId,
-            @NonNull Clock clock) {
+            @NonNull Clock clock,
+            @NonNull String ibanityEndpoint) {
         this.privateKey = privateKey;
         this.certificate = certificate;
         this.certificateId = certificateId;
         this.clock = clock;
+        this.ibanityEndpoint = ibanityEndpoint;
     }
 
 
@@ -77,13 +77,21 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
 
         String dateHeaderValue = getDateHeader();
         String payloadDigestHeaderValue = getDigestHeader(payload);
-        String signatureDigest = getSignatureDigest(getRequestTarget(httpMethod, url), url.getHost(), payloadDigestHeaderValue, dateHeaderValue, requestHeaders);
+        String signatureDigest = getSignatureDigest(getRequestTarget(httpMethod, url), getHost(), payloadDigestHeaderValue, dateHeaderValue, requestHeaders);
         String signatureHeaderValue = getSignatureHeader(certificateId, getCertificateAlgorithm(certificate), getSignatureHeaders(requestHeaders), signatureDigest);
 
         httpSignatureHeaders.put("Date", dateHeaderValue);
         httpSignatureHeaders.put("Digest", payloadDigestHeaderValue);
         httpSignatureHeaders.put("Signature", signatureHeaderValue);
         return httpSignatureHeaders;
+    }
+
+    private String getHost() {
+        try {
+            return new URL(ibanityEndpoint).getHost();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Ibanity api endpoint misconfigured: " + ibanityEndpoint, e);
+        }
     }
 
     private String getDigestHeader(String payload) {
