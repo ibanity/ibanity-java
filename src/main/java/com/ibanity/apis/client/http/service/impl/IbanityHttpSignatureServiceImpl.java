@@ -4,10 +4,13 @@ import com.google.common.collect.Maps;
 import com.ibanity.apis.client.http.service.IbanityHttpSignatureService;
 import lombok.NonNull;
 import org.apache.commons.codec.digest.MessageDigestAlgorithms;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.cert.X509Certificate;
 import java.time.Clock;
@@ -24,9 +27,10 @@ import static java.util.stream.Collectors.toList;
 
 public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureService {
 
+    private static final Logger LOGGER = LogManager.getLogger(IbanityHttpSignatureServiceImpl.class);
     private static final String SIGNATURE_HEADER_TEMPLATE = "keyId=\"%s\",algorithm=\"%s\",headers=\"%s\",signature=\"%s\"";
     private static final String DIGEST_ALGORITHM = MessageDigestAlgorithms.SHA_512;
-    private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
+    private static final Charset UTF8_CHARSET = StandardCharsets.UTF_8;
     private static final String ACCEPTED_HEADERS_REGEX = "(authorization|ibanity.*?)";
     private static final Pattern HEADERS_PATTERN = Pattern.compile(ACCEPTED_HEADERS_REGEX, Pattern.CASE_INSENSITIVE);
 
@@ -135,6 +139,10 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
     private String getSignatureDigest(String requestTarget, String host, String payloadDigest, String date, Map<String, String> requestHeaders) {
         try {
             String signatureString = getSignatureString(requestTarget, host, payloadDigest, date, requestHeaders);
+            if(LOGGER.isTraceEnabled()) {
+                LOGGER.trace("Signature value: {}", signatureString);
+            }
+
             Signature signature = Signature.getInstance(certificate.getSigAlgName());
             signature.initSign(privateKey);
             signature.update(signatureString.getBytes());
