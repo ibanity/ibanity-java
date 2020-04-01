@@ -46,7 +46,7 @@ class IbanityResponseHandlerTest {
     @Test
     void handleResponse_whenServerError_thenThrowIbanityServerSideException() {
         //language=JSON
-        String expected = errorPayload();
+        String expected = errorPayloadWithJson();
 
         when(httpResponse.getEntity()).thenReturn(EntityBuilder.create().setText(expected).build());
         when(httpResponse.getStatusLine()).thenReturn(new BasicStatusLine(dummyProtocolVersion(), 500, ""));
@@ -54,13 +54,13 @@ class IbanityResponseHandlerTest {
 
         IbanityServerException actual = assertThrows(IbanityServerException.class, () -> ibanityResponseHandler.handleResponse(httpResponse));
 
-        assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerException(createExpectedErrors(), 500, REQUEST_ID));
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerException(createExpectedErrorsWithJson(), 500, REQUEST_ID));
     }
 
     @Test
     void handleResponse_whenResourceNotFound_thenThrowIbanityClientSideException() {
         //language=JSON
-        String expected = errorPayload();
+        String expected = errorPayloadWithJson();
 
         when(httpResponse.getEntity()).thenReturn(EntityBuilder.create().setText(expected).build());
         when(httpResponse.getStatusLine()).thenReturn(new BasicStatusLine(dummyProtocolVersion(), 404, ""));
@@ -68,13 +68,13 @@ class IbanityResponseHandlerTest {
 
         IbanityClientException actual = assertThrows(IbanityClientException.class, () -> ibanityResponseHandler.handleResponse(httpResponse));
 
-        assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerException(createExpectedErrors(), 404, REQUEST_ID));
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerException(createExpectedErrorsWithJson(), 404, REQUEST_ID));
     }
 
     @Test
     void handleResponse_whenResourceNotFoundAndNoRequestId_thenThrowIbanityClientSideException() {
         //language=JSON
-        String expected = errorPayload();
+        String expected = errorPayloadWithHtml();
 
         when(httpResponse.getEntity()).thenReturn(EntityBuilder.create().setText(expected).build());
         when(httpResponse.getStatusLine()).thenReturn(new BasicStatusLine(dummyProtocolVersion(), 404, ""));
@@ -82,16 +82,16 @@ class IbanityResponseHandlerTest {
 
         IbanityClientException actual = assertThrows(IbanityClientException.class, () -> ibanityResponseHandler.handleResponse(httpResponse));
 
-        assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerException(createExpectedErrors(), 404, null));
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(new IbanityServerException(createExpectedErrorsWithHtml(), 404, null));
     }
 
-    private List<IbanityError> createExpectedErrors() {
+    private List<IbanityError> createExpectedErrors(String body) {
         return newArrayList(IbanityError.builder()
                 .code("invalidCredentials")
                 .detail("Your credentials are invalid.")
                 .meta(ErrorMeta.builder()
                         .financialInstitutionResponse(FinancialInstitutionResponse.builder()
-                                .body("somehtml")
+                                .body(body)
                                 .requestId("354fwfwef4w684")
                                 .statusCode(500)
                                 .timestamp(Instant.parse("2019-05-09T09:18:00.000Z"))
@@ -101,11 +101,15 @@ class IbanityResponseHandlerTest {
                 .build());
     }
 
-    private String validPayload() {
-        return "{\"message\": \"hello world\"}";
+    private List<IbanityError> createExpectedErrorsWithJson() {
+        return createExpectedErrors("{\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"NOT_FOUND\",\"text\":\"3.2 - Not Found\"}]}");
     }
 
-    private String errorPayload() {
+    private List<IbanityError> createExpectedErrorsWithHtml() {
+        return createExpectedErrors("<html><head>SomeHtml</head></html>");
+    }
+
+    private String errorPayloadWithHtml() {
         return "{\n" +
                 "  \"errors\": [\n" +
                 "    {\n" +
@@ -114,7 +118,36 @@ class IbanityResponseHandlerTest {
                 "      \"meta\": {\n" +
                 "        \"financialInstitutionResponse\": {\n" +
                 "          \"statusCode\": 500,\n" +
-                "          \"body\": \"somehtml\",\n" +
+                "          \"body\": \"<html><head>SomeHtml</head></html>\",\n" +
+                "          \"requestId\": \"354fwfwef4w684\",\n" +
+                "          \"timestamp\": \"2019-05-09T09:18:00.000Z\",\n" +
+                "          \"requestUri\": \"http://google.com\"\n" +
+                "        }\n" +
+                "      " +
+                "}\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
+    }
+
+    private String errorPayloadWithJson() {
+        return "{\n" +
+                "  \"errors\": [\n" +
+                "    {\n" +
+                "      \"code\": \"invalidCredentials\",\n" +
+                "      \"detail\": \"Your credentials are invalid.\",\n" +
+                "      \"meta\": {\n" +
+                "        \"financialInstitutionResponse\": {\n" +
+                "          \"statusCode\": 500,\n" +
+                "          \"body\": {\n" +
+                "            \"tppMessages\": [\n" +
+                "              {\n" +
+                "                \"category\": \"ERROR\",\n" +
+                "                \"code\": \"NOT_FOUND\",\n" +
+                "                \"text\": \"3.2 - Not Found\"\n" +
+                "              }\n" +
+                "            ]\n" +
+                "          },\n" +
                 "          \"requestId\": \"354fwfwef4w684\",\n" +
                 "          \"timestamp\": \"2019-05-09T09:18:00.000Z\",\n" +
                 "          \"requestUri\": \"http://google.com\"\n" +

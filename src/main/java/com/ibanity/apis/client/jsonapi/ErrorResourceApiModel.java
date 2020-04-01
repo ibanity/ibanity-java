@@ -1,13 +1,6 @@
 package com.ibanity.apis.client.jsonapi;
 
-import com.ibanity.apis.client.models.IbanityError;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,5 +14,5 @@ import java.util.List;
 public class ErrorResourceApiModel {
 
     @Builder.Default
-    private List<IbanityError> errors = Collections.emptyList();
+    private List<IbanityErrorApiModel> errors = Collections.emptyList();
 }
