@@ -7,6 +7,7 @@ import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.products.ponto_connect.models.FinancialInstitution;
 import com.ibanity.apis.client.products.ponto_connect.models.read.FinancialInstitutionReadQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.read.FinancialInstitutionsReadQuery;
+import com.ibanity.apis.client.products.ponto_connect.models.read.OrganizationFinancialInstitutionsReadQuery;
 import com.ibanity.apis.client.products.ponto_connect.services.FinancialInstitutionService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.apache.commons.lang3.StringUtils;
@@ -40,14 +41,28 @@ public class FinancialInstitutionServiceImpl implements FinancialInstitutionServ
     }
 
     @Override
+    public IbanityCollection<FinancialInstitution> list(OrganizationFinancialInstitutionsReadQuery organizationFinancialInstitutionsReadQuery) {
+        IbanityPagingSpec pagingSpec = organizationFinancialInstitutionsReadQuery.getPagingSpec();
+        if (pagingSpec == null) {
+            pagingSpec = IbanityPagingSpec.DEFAULT_PAGING_SPEC;
+        }
+
+        URI url = buildUri(getUrl(), pagingSpec);
+
+        HttpResponse response = ibanityHttpClient.get(url, organizationFinancialInstitutionsReadQuery.getAdditionalHeaders(), organizationFinancialInstitutionsReadQuery.getAccessToken());
+        return mapCollection(response, FinancialInstitution.class);
+    }
+
+    @Override
     public IbanityCollection<FinancialInstitution> list(FinancialInstitutionsReadQuery financialInstitutionsReadQuery) {
         IbanityPagingSpec pagingSpec = financialInstitutionsReadQuery.getPagingSpec();
         if (pagingSpec == null) {
             pagingSpec = IbanityPagingSpec.DEFAULT_PAGING_SPEC;
         }
-        URI url = buildUri(getUrl(), pagingSpec);
 
-        HttpResponse response = ibanityHttpClient.get(url, financialInstitutionsReadQuery.getAdditionalHeaders(), financialInstitutionsReadQuery.getAccessToken());
+        URI url = buildUri(getUrl(), pagingSpec, financialInstitutionsReadQuery.getFilters());
+
+        HttpResponse response = ibanityHttpClient.get(url, financialInstitutionsReadQuery.getAdditionalHeaders(), null);
         return mapCollection(response, FinancialInstitution.class);
     }
 
