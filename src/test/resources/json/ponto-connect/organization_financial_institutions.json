@@ -12,14 +12,7 @@
       "type": "financialInstitution",
       "id": "953934eb-229a-4fd2-8675-07794078cc7d",
       "attributes": {
-        "name": "Full Fake Bank"
-      }
-    },
-    {
-      "type": "financialInstitution",
-      "id": "953934eb-0002-4fd2-8675-07794078cc7d",
-      "attributes": {
-        "name": "Full Fake Bank 2"
+        "name": "Fake Bank"
       }
     }
   ]

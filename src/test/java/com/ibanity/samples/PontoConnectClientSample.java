@@ -131,7 +131,7 @@ public class PontoConnectClientSample {
     private static List<FinancialInstitution> financialInstitutions(FinancialInstitutionService financialInstitutionService, String accessToken) {
         LOGGER.info("Transactions samples");
 
-        IbanityCollection<FinancialInstitution> financialInstitutions = financialInstitutionService.list(FinancialInstitutionsReadQuery.builder()
+        IbanityCollection<FinancialInstitution> financialInstitutions = financialInstitutionService.list(OrganizationFinancialInstitutionsReadQuery.builder()
                 .accessToken(accessToken)
                 .build());
 
