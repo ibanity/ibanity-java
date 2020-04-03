@@ -98,7 +98,7 @@ public class IbanityServiceBuilder implements
 
     @Override
     public OptionalPropertiesBuilder proxyEndpoint(String proxyEndpoint) {
-        this.proxyEndpoint = proxyEndpoint;
+        this.proxyEndpoint = removeTrailingSlash(proxyEndpoint);;
         return this;
     }
 
@@ -155,7 +155,11 @@ public class IbanityServiceBuilder implements
 
     @Override
     public TlsPrivateKeyBuilder ibanityApiEndpoint(String apiEndpoint) {
-        this.apiEndpoint = apiEndpoint;
+        this.apiEndpoint = removeTrailingSlash(apiEndpoint);
         return this;
+    }
+
+    private String removeTrailingSlash(String url) {
+        return url != null ? url.replaceAll("/\\z", "") : null;
     }
 }
