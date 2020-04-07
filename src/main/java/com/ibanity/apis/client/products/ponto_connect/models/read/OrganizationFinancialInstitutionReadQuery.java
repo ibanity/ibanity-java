@@ -14,9 +14,10 @@ import static java.util.Collections.emptyMap;
 @Builder
 @ToString
 @EqualsAndHashCode
-public class FinancialInstitutionReadQuery {
+public class OrganizationFinancialInstitutionReadQuery {
 
     private UUID financialInstitutionId;
+    private String accessToken;
 
     @Builder.Default
     private Map<String, String> additionalHeaders = emptyMap();
