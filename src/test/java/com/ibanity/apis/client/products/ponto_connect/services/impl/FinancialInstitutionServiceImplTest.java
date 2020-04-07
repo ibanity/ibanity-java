@@ -7,6 +7,7 @@ import com.ibanity.apis.client.products.ponto_connect.models.Filter;
 import com.ibanity.apis.client.products.ponto_connect.models.FinancialInstitution;
 import com.ibanity.apis.client.products.ponto_connect.models.read.FinancialInstitutionReadQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.read.FinancialInstitutionsReadQuery;
+import com.ibanity.apis.client.products.ponto_connect.models.read.OrganizationFinancialInstitutionReadQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.read.OrganizationFinancialInstitutionsReadQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,10 +57,22 @@ public class FinancialInstitutionServiceImplTest {
 
     @Test
     public void find() throws Exception {
-        when(ibanityHttpClient.get(new URI(GET_FINANCIAL_INSTITUTION_ENDPOINT), emptyMap(), ACCESS_TOKEN))
+        when(ibanityHttpClient.get(new URI(GET_FINANCIAL_INSTITUTION_ENDPOINT), emptyMap(), null))
                 .thenReturn(loadHttpResponse("json/ponto-connect/financial_institution.json"));
 
         FinancialInstitution actual = financialInstitutionService.find(FinancialInstitutionReadQuery.builder()
+                .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
+                .build());
+
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpected(FINANCIAL_INSTITUTION_ID, "Fake Bank"));
+    }
+
+    @Test
+    public void findForOrganization() throws Exception {
+        when(ibanityHttpClient.get(new URI(GET_FINANCIAL_INSTITUTION_ENDPOINT), emptyMap(), ACCESS_TOKEN))
+                .thenReturn(loadHttpResponse("json/ponto-connect/financial_institution.json"));
+
+        FinancialInstitution actual = financialInstitutionService.find(OrganizationFinancialInstitutionReadQuery.builder()
                 .accessToken(ACCESS_TOKEN)
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                 .build());

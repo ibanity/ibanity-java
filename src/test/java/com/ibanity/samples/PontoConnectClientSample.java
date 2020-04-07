@@ -137,7 +137,7 @@ public class PontoConnectClientSample {
 
         FinancialInstitution financialInstitution = financialInstitutions.getItems().stream().findFirst().orElseThrow(RuntimeException::new);
 
-        financialInstitutionService.find(FinancialInstitutionReadQuery.builder()
+        financialInstitutionService.find(OrganizationFinancialInstitutionReadQuery.builder()
                 .financialInstitutionId(financialInstitution.getId())
                 .accessToken(accessToken).build());
 

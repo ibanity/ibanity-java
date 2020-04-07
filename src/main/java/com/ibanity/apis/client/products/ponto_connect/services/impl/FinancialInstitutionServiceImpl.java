@@ -7,6 +7,7 @@ import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.products.ponto_connect.models.FinancialInstitution;
 import com.ibanity.apis.client.products.ponto_connect.models.read.FinancialInstitutionReadQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.read.FinancialInstitutionsReadQuery;
+import com.ibanity.apis.client.products.ponto_connect.models.read.OrganizationFinancialInstitutionReadQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.read.OrganizationFinancialInstitutionsReadQuery;
 import com.ibanity.apis.client.products.ponto_connect.services.FinancialInstitutionService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
@@ -36,7 +37,18 @@ public class FinancialInstitutionServiceImpl implements FinancialInstitutionServ
                 + financialInstitutionReadQuery.getFinancialInstitutionId().toString()
         );
 
-        HttpResponse response = ibanityHttpClient.get(uri, financialInstitutionReadQuery.getAdditionalHeaders(), financialInstitutionReadQuery.getAccessToken());
+        HttpResponse response = ibanityHttpClient.get(uri, financialInstitutionReadQuery.getAdditionalHeaders(), null);
+        return mapResource(response, FinancialInstitution.class);
+    }
+
+    @Override
+    public FinancialInstitution find(OrganizationFinancialInstitutionReadQuery organizationFinancialInstitutionReadQuery) {
+        URI uri = buildUri(getUrl()
+                + "/"
+                + organizationFinancialInstitutionReadQuery.getFinancialInstitutionId().toString()
+        );
+
+        HttpResponse response = ibanityHttpClient.get(uri, organizationFinancialInstitutionReadQuery.getAdditionalHeaders(), organizationFinancialInstitutionReadQuery.getAccessToken());
         return mapResource(response, FinancialInstitution.class);
     }
 
