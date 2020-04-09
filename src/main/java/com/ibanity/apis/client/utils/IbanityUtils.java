@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.ibanity.apis.client.builders.IbanityConfiguration;
 import com.ibanity.apis.client.http.interceptor.IbanitySignatureInterceptor;
 import com.ibanity.apis.client.http.interceptor.IdempotencyInterceptor;
 import com.ibanity.apis.client.http.service.impl.IbanityHttpSignatureServiceImpl;
@@ -35,6 +36,10 @@ public final class IbanityUtils {
 
     }
 
+    /**
+     * @deprecated  Replaced by {@link #httpClient(IbanityConfiguration)}
+     */
+    @Deprecated
     public static HttpClient httpClient(Certificate caCertificate,
                                         TlsCredentials tlsCredentials,
                                         SignatureCredentials signatureCertificate,
@@ -43,6 +48,19 @@ public final class IbanityUtils {
             SSLContext sslContext = getSSLContext(caCertificate, tlsCredentials);
             HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
             configureHttpClient(sslContext, httpClientBuilder, signatureCertificate, basePath);
+            return httpClientBuilder.build();
+        } catch (Exception exception) {
+            throw new IllegalArgumentException("An exception occurred while creating IbanityHttpClient", exception);
+        }
+    }
+
+    public static HttpClient httpClient(IbanityConfiguration configuration) {
+        try {
+            SSLContext sslContext = getSSLContext(configuration.getCaCertificate(), configuration.getTlsCredentials());
+            HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+            configureHttpClient(sslContext, httpClientBuilder, configuration.getSignatureCredentials(), configuration.getApiEndpoint());
+            configuration.getHttpRequestInterceptors().forEach(httpClientBuilder::addInterceptorLast);
+            configuration.getHttpResponseInterceptors().forEach(httpClientBuilder::addInterceptorFirst);
             return httpClientBuilder.build();
         } catch (Exception exception) {
             throw new IllegalArgumentException("An exception occurred while creating IbanityHttpClient", exception);
