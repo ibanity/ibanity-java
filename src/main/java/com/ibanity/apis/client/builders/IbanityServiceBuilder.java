@@ -4,11 +4,16 @@ import com.ibanity.apis.client.models.SignatureCredentials;
 import com.ibanity.apis.client.models.TlsCredentials;
 import com.ibanity.apis.client.services.IbanityService;
 import com.ibanity.apis.client.services.impl.IbanityServiceImpl;
+import org.apache.http.HttpRequestInterceptor;
+import org.apache.http.HttpResponseInterceptor;
 
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
+import java.util.List;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class IbanityServiceBuilder implements
@@ -37,6 +42,8 @@ public class IbanityServiceBuilder implements
     private String signatureCertificateId;
     private String pontoConnectOauth2ClientId;
     private boolean disableTlsClientCertificate;
+    private List<HttpRequestInterceptor> requestInterceptors = newArrayList();
+    private List<HttpResponseInterceptor> responseInterceptors = newArrayList();
 
     public static IbanityApiEndpointBuilder builder() {
         return new IbanityServiceBuilder();
@@ -64,9 +71,18 @@ public class IbanityServiceBuilder implements
             tlsPrivateKeyPassphrase = null;
         }
 
+        IbanityConfiguration ibanityConfiguration = IbanityConfiguration.builder()
+                .apiEndpoint(apiEndpoint)
+                .caCertificate(caCertificate)
+                .tlsCredentials(tlsCredentials)
+                .signatureCredentials(signatureCredentials)
+                .proxyEndpoint(proxyEndpoint)
+                .pontoConnectOauth2ClientId(pontoConnectOauth2ClientId)
+                .httpRequestInterceptors(requestInterceptors)
+                .httpResponseInterceptors(responseInterceptors)
+                .build();
 
-
-        return new IbanityServiceImpl(apiEndpoint, caCertificate, tlsCredentials, signatureCredentials, pontoConnectOauth2ClientId, proxyEndpoint);
+        return new IbanityServiceImpl(ibanityConfiguration);
     }
 
     public OptionalPropertiesBuilder caCertificate(Certificate certificate) {
@@ -99,6 +115,18 @@ public class IbanityServiceBuilder implements
     @Override
     public OptionalPropertiesBuilder proxyEndpoint(String proxyEndpoint) {
         this.proxyEndpoint = removeTrailingSlash(proxyEndpoint);;
+        return this;
+    }
+
+    @Override
+    public OptionalPropertiesBuilder withHttpRequestInterceptor(HttpRequestInterceptor... httpRequestInterceptor) {
+        this.requestInterceptors.addAll(asList(httpRequestInterceptor));
+        return this;
+    }
+
+    @Override
+    public OptionalPropertiesBuilder withHttpResponseInterceptor(HttpResponseInterceptor... httpResponseInterceptor) {
+        this.responseInterceptors.addAll(asList(httpResponseInterceptor));
         return this;
     }
 
@@ -162,4 +190,5 @@ public class IbanityServiceBuilder implements
     private String removeTrailingSlash(String url) {
         return url != null ? url.replaceAll("/\\z", "") : null;
     }
+
 }

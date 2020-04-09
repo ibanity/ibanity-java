@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.services.impl;
 
+import com.ibanity.apis.client.builders.IbanityConfiguration;
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.http.OAuthHttpClient;
 import com.ibanity.apis.client.http.factory.IbanityHttpClientFactory;
@@ -12,6 +13,8 @@ import com.ibanity.apis.client.products.xs2a.services.Xs2aService;
 import com.ibanity.apis.client.products.xs2a.services.impl.Xs2aServiceImpl;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import com.ibanity.apis.client.services.IbanityService;
+import com.ibanity.apis.client.utils.IbanityUtils;
+import org.apache.http.client.HttpClient;
 
 import java.security.cert.Certificate;
 
@@ -25,6 +28,10 @@ public class IbanityServiceImpl implements IbanityService {
     private final PontoConnectService pontoConnectService;
     private final OAuthHttpClient oauthHttpClient;
 
+    /**
+     * @deprecated  Replaced by {@link #IbanityServiceImpl(IbanityConfiguration)}
+     */
+    @Deprecated
     public IbanityServiceImpl(String apiEndpoint,
                               Certificate caCertificate,
                               TlsCredentials tlsCredentials,
@@ -55,6 +62,23 @@ public class IbanityServiceImpl implements IbanityService {
         this.xs2aService = xs2aService;
         this.pontoConnectService = pontoConnectService;
         this.oauthHttpClient = oauthHttpClient;
+    }
+
+    public IbanityServiceImpl(IbanityConfiguration ibanityConfiguration) {
+        String clientId = ibanityConfiguration.getPontoConnectOauth2ClientId();
+        HttpClient httpClient = IbanityUtils.httpClient(ibanityConfiguration);
+        this.ibanityHttpClient = new IbanityHttpClientFactory().create(httpClient);
+        this.apiUrlProvider = new ApiUrlProviderImpl(ibanityHttpClient, ibanityConfiguration.getApiEndpoint(), ibanityConfiguration.getProxyEndpoint());
+
+        this.xs2aService = new Xs2aServiceImpl(apiUrlProvider, ibanityHttpClient);
+
+        if (isBlank(clientId)) {
+            this.oauthHttpClient = null;
+            this.pontoConnectService = null;
+        } else {
+            this.oauthHttpClient = new OauthHttpClientFactory().create(clientId, httpClient);
+            this.pontoConnectService = new PontoConnectServiceImpl(apiUrlProvider, ibanityHttpClient, oauthHttpClient);
+        }
     }
 
     @Override
