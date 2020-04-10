@@ -131,6 +131,7 @@ class IbanityResponseHandlerTest {
     }
 
     private String errorPayloadWithJson() {
+        //language=JSON
         return "{\n" +
                 "  \"errors\": [\n" +
                 "    {\n" +

@@ -24,6 +24,7 @@ import java.util.function.Function;
 
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.toIbanityModel;
 import static com.ibanity.apis.client.paging.IbanityPagingSpec.DEFAULT_PAGING_SPEC;
+import static com.ibanity.apis.client.products.xs2a.mappers.SynchronizationMapper.map;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 
 public class AccountsServiceImpl implements AccountsService {
@@ -38,11 +39,11 @@ public class AccountsServiceImpl implements AccountsService {
 
     @Override
     public Account find(AccountReadQuery accountReadQuery) {
-            String url = getUrl(accountReadQuery.getFinancialInstitutionId(), null)
-                    + "/"
-                    + accountReadQuery.getAccountId();
-            HttpResponse response = ibanityHttpClient.get(buildUri(url), accountReadQuery.getAdditionalHeaders(), accountReadQuery.getCustomerAccessToken());
-            return IbanityModelMapper.mapResource(response, customMappingFunction());
+        String url = getUrl(accountReadQuery.getFinancialInstitutionId(), null)
+                + "/"
+                + accountReadQuery.getAccountId();
+        HttpResponse response = ibanityHttpClient.get(buildUri(url), accountReadQuery.getAdditionalHeaders(), accountReadQuery.getCustomerAccessToken());
+        return IbanityModelMapper.mapResource(response, customMappingFunction());
     }
 
     @Override
@@ -70,14 +71,14 @@ public class AccountsServiceImpl implements AccountsService {
     private Function<DataApiModel, Account> customMappingFunction() {
         return dataApiModel -> {
             Account account = toIbanityModel(dataApiModel, Account.class);
-            if(dataApiModel.getMeta() != null) {
-                Synchronization synchronization = toIbanityModel(dataApiModel.getMeta().getLatestSynchronization(), Synchronization.class);
+            if (dataApiModel.getMeta() != null) {
+                Synchronization synchronization = map(dataApiModel.getMeta().getLatestSynchronization());
                 account.setLatestSynchronization(synchronization);
                 account.setSynchronizedAt(dataApiModel.getMeta().getSynchronizedAt());
             }
 
             RelationshipsApiModel financialInstitution = dataApiModel.getRelationships().get("financialInstitution");
-            if(financialInstitution != null) {
+            if (financialInstitution != null) {
                 account.setFinancialInstitutionId(financialInstitution.getData().getId());
             }
 

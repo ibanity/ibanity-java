@@ -7,6 +7,7 @@ import com.ibanity.apis.client.mappers.IbanityModelMapper;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
+import com.ibanity.apis.client.products.ponto_connect.mappers.SynchronizationMapper;
 import com.ibanity.apis.client.products.ponto_connect.models.Account;
 import com.ibanity.apis.client.products.ponto_connect.models.Synchronization;
 import com.ibanity.apis.client.products.ponto_connect.models.read.AccountReadQuery;
@@ -65,7 +66,7 @@ public class AccountServiceImpl implements AccountService {
         return dataApiModel -> {
             Account account = toIbanityModel(dataApiModel, Account.class);
             if (dataApiModel.getMeta() != null) {
-                Synchronization synchronization = toIbanityModel(dataApiModel.getMeta().getLatestSynchronization(), Synchronization.class);
+                Synchronization synchronization = SynchronizationMapper.map(dataApiModel.getMeta().getLatestSynchronization());
                 account.setLatestSynchronization(synchronization);
                 account.setSynchronizedAt(dataApiModel.getMeta().getSynchronizedAt());
             }

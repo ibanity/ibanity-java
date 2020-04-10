@@ -1,0 +1,24 @@
+package com.ibanity.apis.client.jsonapi;
+
+import lombok.*;
+
+import java.time.Instant;
+import java.util.List;
+
+@Getter
+@Setter
+@Builder
+@ToString
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class SynchronizationApIModel {
+
+    private Instant createdAt;
+    private String resourceId;
+    private String resourceType;
+    private String status;
+    private String subtype;
+    private Instant updatedAt;
+    private List<IbanityErrorApiModel> errors;
+}
