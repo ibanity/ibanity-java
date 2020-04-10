@@ -64,8 +64,8 @@ public class ClientSample {
                 .tlsPrivateKey(privateKey)
                 .passphrase(passphrase)
                 .tlsCertificate(certificate)
-                .withHttpRequestInterceptor((request, context) -> LOGGER.info("This is a HttpRequestInterceptor"))
-                .withHttpResponseInterceptor((response, context) -> LOGGER.info("This is a HttpResponseInterceptor"))
+                .withHttpRequestInterceptors((request, context) -> LOGGER.info("This is a HttpRequestInterceptor"))
+                .withHttpResponseInterceptors((response, context) -> LOGGER.info("This is a HttpResponseInterceptor"))
                 ;
 
         if(getConfiguration(IBANITY_CLIENT_TLS_CA_CERTIFICATE_PATH_PROPERTY_KEY) != null) {

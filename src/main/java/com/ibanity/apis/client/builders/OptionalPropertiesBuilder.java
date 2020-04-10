@@ -19,7 +19,7 @@ public interface OptionalPropertiesBuilder {
 
     OptionalPropertiesBuilder proxyEndpoint(String proxyEndpoint);
 
-    OptionalPropertiesBuilder withHttpRequestInterceptor(HttpRequestInterceptor... httpRequestInterceptor);
+    OptionalPropertiesBuilder withHttpRequestInterceptors(HttpRequestInterceptor... httpRequestInterceptor);
 
-    OptionalPropertiesBuilder withHttpResponseInterceptor(HttpResponseInterceptor... httpResponseInterceptor);
+    OptionalPropertiesBuilder withHttpResponseInterceptors(HttpResponseInterceptor... httpResponseInterceptor);
 }

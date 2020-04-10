@@ -21,13 +21,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
-import static com.ibanity.apis.client.helpers.IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY;
-import static com.ibanity.apis.client.helpers.IbanityConfiguration.getConfiguration;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class IbanitySignatureInterceptorTest {
+
+    private static final String BASE_PATH = "https://api.ibanity.localhost";
 
     private IbanitySignatureInterceptor ibanitySignatureInterceptor;
 
@@ -45,7 +45,7 @@ class IbanitySignatureInterceptorTest {
 
     @BeforeEach
     void setUp() {
-        ibanitySignatureInterceptor = new IbanitySignatureInterceptor(ibanityHttpSignatureService, "https://api.ibanity.localhost");
+        ibanitySignatureInterceptor = new IbanitySignatureInterceptor(ibanityHttpSignatureService, BASE_PATH);
     }
 
     @Test
@@ -75,7 +75,7 @@ class IbanitySignatureInterceptorTest {
     }
 
     private URL getUrl() throws MalformedURLException {
-        return new URL(getConfiguration(IBANITY_API_ENDPOINT_PROPERTY_KEY) + "/path");
+        return new URL(BASE_PATH + "/path");
     }
 
     private Map<String, String> getRequestedHeaders() {

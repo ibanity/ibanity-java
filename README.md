@@ -92,6 +92,35 @@ IbanityHttpSignatureService = new IbanityHttpSignatureServiceImpl(
 
 ```
 
+
+### Add custom Http Interceptors
+The library uses Apache HttpClient. 
+
+You can add your own HttpRequestInterceptor and HttpResponseInterceptor.
+
+Configuring custom interceptors can be done through the IbanityServiceBuilder. They are optional.
+
+```java
+public interface OptionalPropertiesBuilder {
+
+...
+
+    OptionalPropertiesBuilder withHttpRequestInterceptors(HttpRequestInterceptor... httpRequestInterceptor);
+
+    OptionalPropertiesBuilder withHttpResponseInterceptors(HttpResponseInterceptor... httpResponseInterceptor);
+}
+```
+
+```java
+        OptionalPropertiesBuilder ibanityServiceBuilder = IbanityServiceBuilder.builder()
+                .ibanityApiEndpoint("https://api.ibanity.com")
+                .tlsPrivateKey(privateKey)
+                .passphrase(passphrase)
+                .tlsCertificate(certificate)
+                .withHttpRequestInterceptors((request, context) -> LOGGER.info("This is a HttpRequestInterceptor"))
+                .withHttpResponseInterceptors((response, context) -> LOGGER.info("This is a HttpResponseInterceptor"));
+```
+
 ## Requirements
 * Java 8 (or above)
 * Maven (for compilation)

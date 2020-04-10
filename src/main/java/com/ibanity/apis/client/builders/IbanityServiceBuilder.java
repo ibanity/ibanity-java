@@ -119,13 +119,13 @@ public class IbanityServiceBuilder implements
     }
 
     @Override
-    public OptionalPropertiesBuilder withHttpRequestInterceptor(HttpRequestInterceptor... httpRequestInterceptor) {
+    public OptionalPropertiesBuilder withHttpRequestInterceptors(HttpRequestInterceptor... httpRequestInterceptor) {
         this.requestInterceptors.addAll(asList(httpRequestInterceptor));
         return this;
     }
 
     @Override
-    public OptionalPropertiesBuilder withHttpResponseInterceptor(HttpResponseInterceptor... httpResponseInterceptor) {
+    public OptionalPropertiesBuilder withHttpResponseInterceptors(HttpResponseInterceptor... httpResponseInterceptor) {
         this.responseInterceptors.addAll(asList(httpResponseInterceptor));
         return this;
     }
