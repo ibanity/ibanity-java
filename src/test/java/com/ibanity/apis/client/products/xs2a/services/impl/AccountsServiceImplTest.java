@@ -1,9 +1,7 @@
 package com.ibanity.apis.client.products.xs2a.services.impl;
 
 import com.ibanity.apis.client.http.IbanityHttpClient;
-import com.ibanity.apis.client.models.IbanityCollection;
-import com.ibanity.apis.client.models.IbanityError;
-import com.ibanity.apis.client.models.IbanityProduct;
+import com.ibanity.apis.client.models.*;
 import com.ibanity.apis.client.products.xs2a.models.Account;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
 import com.ibanity.apis.client.products.xs2a.models.delete.AccountDeleteQuery;
@@ -200,6 +198,15 @@ class AccountsServiceImplTest {
                 .errors(newArrayList(IbanityError.builder()
                         .code("authorizationInvalid")
                         .detail("The authorization is invalid, you should ask the customer to reauthorize the account")
+                        .meta(ErrorMeta.builder()
+                                .financialInstitutionResponse(FinancialInstitutionResponse.builder()
+                                        .body("{\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"NOT_FOUND\",\"text\":\"3.2 - Not Found\"}]}")
+                                        .requestId("354fwfwef4w684")
+                                        .statusCode(500)
+                                        .timestamp(Instant.parse("2019-05-09T09:18:00.000Z"))
+                                        .requestUri("http://google.com")
+                                        .build())
+                                .build())
                         .build()))
                 .subtype("accountDetails")
                 .createdAt(parse("2019-05-09T09:19:37.683Z"))

@@ -1,0 +1,37 @@
+{
+  "data": {
+    "attributes": {
+      "errors": [
+        {
+          "code": "authorizationInvalid",
+          "detail": "The authorization is invalid, you should ask the customer to reauthorize the account",
+          "meta": {
+            "financialInstitutionResponse": {
+              "statusCode": 500,
+              "body": {
+                "tppMessages": [
+                  {
+                    "category": "ERROR",
+                    "code": "NOT_FOUND",
+                    "text": "3.2 - Not Found"
+                  }
+                ]
+              },
+              "requestId": "354fwfwef4w684",
+              "timestamp": "2019-05-09T09:18:00.000Z",
+              "requestUri": "http://google.com"
+            }
+          }
+        }
+      ],
+      "createdAt": "2019-05-09T09:18:58.358Z",
+      "resourceId": "d0027fc6-0097-41f7-a9bb-3c400b5a3e2a",
+      "resourceType": "account",
+      "status": "error",
+      "subtype": "accountDetails",
+      "updatedAt": "2019-05-09T09:18:59.012Z"
+    },
+    "id": "04e98b21-8213-4aec-b373-13eb51f948e9",
+    "type": "synchronization"
+  }
+}

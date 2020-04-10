@@ -64,7 +64,7 @@ class SynchronizationServiceImplTest {
 
         Synchronization actual = synchronizationService.create(synchronizationReadQuery);
 
-        assertThat(actual).isEqualToComparingFieldByField(createExpected("pending"));
+        assertThat(actual).isEqualToComparingFieldByField(createExpected("pending", "somehtml"));
     }
 
     @Test
@@ -80,7 +80,23 @@ class SynchronizationServiceImplTest {
 
         Synchronization actual = synchronizationService.find(synchronizationReadQuery);
 
-        assertThat(actual).isEqualToComparingFieldByField(createExpected("error"));
+        assertThat(actual).isEqualToComparingFieldByField(createExpected("error", "somehtml"));
+    }
+
+    @Test
+    void find_when_error_contains_json() throws Exception {
+        SynchronizationReadQuery synchronizationReadQuery =
+                SynchronizationReadQuery.builder()
+                        .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
+                        .synchronizationId(SYNCHRONIZATION_ID)
+                        .build();
+
+        when(ibanityHttpClient.get(new URI(SYNCHRONIZATION_ENDPOINT + "/" + SYNCHRONIZATION_ID), emptyMap(), CUSTOMER_ACCESS_TOKEN))
+                .thenReturn(IbanityTestHelper.loadHttpResponse("json/synchronization_with_json_error.json"));
+
+        Synchronization actual = synchronizationService.find(synchronizationReadQuery);
+
+        assertThat(actual).isEqualToComparingFieldByField(createExpected("error", "{\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"NOT_FOUND\",\"text\":\"3.2 - Not Found\"}]}"));
     }
 
     private RequestApiModel createRequest(SynchronizationReadQuery synchronizationReadQuery) {
@@ -99,7 +115,7 @@ class SynchronizationServiceImplTest {
                 .build();
     }
 
-    private Synchronization createExpected(String status) {
+    private Synchronization createExpected(String status, String body) {
         Synchronization.SynchronizationBuilder synchronizationBuilder = Synchronization.builder()
                 .id(SYNCHRONIZATION_ID)
                 .resourceId(ACCOUNT_ID)
@@ -114,7 +130,7 @@ class SynchronizationServiceImplTest {
                     .detail("The authorization is invalid, you should ask the customer to reauthorize the account")
                     .meta(ErrorMeta.builder()
                             .financialInstitutionResponse(FinancialInstitutionResponse.builder()
-                                    .body("somehtml")
+                                    .body(body)
                                     .requestId("354fwfwef4w684")
                                     .statusCode(500)
                                     .timestamp(Instant.parse("2019-05-09T09:18:00.000Z"))

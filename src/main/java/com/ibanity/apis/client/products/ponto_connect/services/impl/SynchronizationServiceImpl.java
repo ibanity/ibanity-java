@@ -4,6 +4,7 @@ import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.mappers.IbanityModelMapper;
 import com.ibanity.apis.client.models.IbanityProduct;
+import com.ibanity.apis.client.products.ponto_connect.mappers.SynchronizationMapper;
 import com.ibanity.apis.client.products.ponto_connect.models.Synchronization;
 import com.ibanity.apis.client.products.ponto_connect.models.create.SynchronizationCreateQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.read.SynchronizationReadQuery;
@@ -43,7 +44,7 @@ public class SynchronizationServiceImpl implements SynchronizationService {
                 + "/"
                 + synchronizationReadQuery.getSynchronizationId();
         HttpResponse response = ibanityHttpClient.get(buildUri(url), synchronizationReadQuery.getAdditionalHeaders(), synchronizationReadQuery.getAccessToken());
-        return mapResource(response, Synchronization.class);
+        return mapResource(response, SynchronizationMapper::map);
     }
 
     private String getUrl() {
