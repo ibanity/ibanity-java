@@ -2,8 +2,7 @@ package com.ibanity.apis.client.products.xs2a.services.impl;
 
 import com.ibanity.apis.client.helpers.IbanityTestHelper;
 import com.ibanity.apis.client.http.IbanityHttpClient;
-import com.ibanity.apis.client.models.IbanityCollection;
-import com.ibanity.apis.client.models.IbanityProduct;
+import com.ibanity.apis.client.models.*;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
 import com.ibanity.apis.client.products.xs2a.models.Transaction;
 import com.ibanity.apis.client.products.xs2a.models.read.TransactionReadQuery;
@@ -84,6 +83,19 @@ public class TransactionsServiceImplTest {
                                 .resourceType("account")
                                 .subtype("accountTransactions")
                                 .status("success")
+                                .errors(newArrayList(IbanityError.builder()
+                                        .code("authorizationInvalid")
+                                        .detail("The authorization is invalid, you should ask the customer to reauthorize the account")
+                                        .meta(ErrorMeta.builder()
+                                                .financialInstitutionResponse(FinancialInstitutionResponse.builder()
+                                                        .body("{\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"NOT_FOUND\",\"text\":\"3.2 - Not Found\"}]}")
+                                                        .requestId("354fwfwef4w684")
+                                                        .statusCode(500)
+                                                        .timestamp(Instant.parse("2019-05-09T09:18:00.000Z"))
+                                                        .requestUri("http://google.com")
+                                                        .build())
+                                                .build())
+                                        .build()))
                                 .id(UUID.fromString("b49dff7e-ad7b-4992-9753-8f2a004cf343"))
                                 .createdAt(Instant.parse("2019-04-25T09:06:07.171Z"))
                                 .updatedAt(Instant.parse("2019-04-25T09:06:08.044Z"))

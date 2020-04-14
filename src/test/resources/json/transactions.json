@@ -37,7 +37,29 @@
     "latestSynchronization": {
       "attributes": {
         "createdAt": "2019-04-25T09:06:07.171Z",
-        "errors": [],
+        "errors": [
+          {
+            "code": "authorizationInvalid",
+            "detail": "The authorization is invalid, you should ask the customer to reauthorize the account",
+            "meta": {
+              "financialInstitutionResponse": {
+                "statusCode": 500,
+                "body": {
+                  "tppMessages": [
+                    {
+                      "category": "ERROR",
+                      "code": "NOT_FOUND",
+                      "text": "3.2 - Not Found"
+                    }
+                  ]
+                },
+                "requestId": "354fwfwef4w684",
+                "timestamp": "2019-05-09T09:18:00.000Z",
+                "requestUri": "http://google.com"
+              }
+            }
+          }
+        ],
         "resourceId": "1c020714-759c-4ee6-ae87-5ce667937e77",
         "resourceType": "account",
         "status": "success",

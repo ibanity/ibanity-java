@@ -6,6 +6,7 @@ import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.jsonapi.ResourceApiModel;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityModel;
+import com.ibanity.apis.client.products.xs2a.mappers.SynchronizationMapper;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
 import com.ibanity.apis.client.utils.IbanityUtils;
 import org.apache.commons.io.IOUtils;
@@ -77,7 +78,7 @@ public class IbanityModelMapper {
 
     private static Synchronization getLatestSynchronization(CollectionApiModel collectionApiModel) {
         if(collectionApiModel.getMeta().getLatestSynchronization() != null) {
-            return toIbanityModel(collectionApiModel.getMeta().getLatestSynchronization(), Synchronization.class);
+            return SynchronizationMapper.map(collectionApiModel.getMeta().getLatestSynchronization());
         } else {
             return null;
         }
