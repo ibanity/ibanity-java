@@ -12,6 +12,16 @@ import com.ibanity.apis.client.products.ponto_connect.models.delete.PaymentDelet
 import com.ibanity.apis.client.products.ponto_connect.models.read.*;
 import com.ibanity.apis.client.products.ponto_connect.models.refresh.TokenRefreshQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.revoke.TokenRevokeQuery;
+import com.ibanity.apis.client.products.ponto_connect.sandbox.models.FinancialInstitutionAccount;
+import com.ibanity.apis.client.products.ponto_connect.sandbox.models.FinancialInstitutionTransaction;
+import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.create.FinancialInstitutionTransactionCreationQuery;
+import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.read.FinancialInstitutionAccountReadQuery;
+import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.read.FinancialInstitutionAccountsReadQuery;
+import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.read.FinancialInstitutionTransactionReadQuery;
+import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.read.FinancialInstitutionTransactionsReadQuery;
+import com.ibanity.apis.client.products.ponto_connect.sandbox.services.FinancialInstitutionAccountsService;
+import com.ibanity.apis.client.products.ponto_connect.sandbox.services.FinancialInstitutionTransactionsService;
+import com.ibanity.apis.client.products.ponto_connect.sandbox.services.SandboxService;
 import com.ibanity.apis.client.products.ponto_connect.services.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +29,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.security.cert.CertificateException;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -63,10 +74,13 @@ public class PontoConnectClientSample {
                 .build()
                 .pontoConnectService();
 
+
         String accessToken = createToken(pontoConnectService.tokenService());
 
         List<FinancialInstitution> financialInstitutions = financialInstitutions(pontoConnectService.financialInstitutionService(), accessToken);
         LOGGER.info("List of financialInstitutions {}", financialInstitutions);
+
+        sampleSandbox(pontoConnectService.sandboxService(), financialInstitutions.stream().map(FinancialInstitution::getId).findFirst().orElseThrow(RuntimeException::new));
 
         List<Account> accounts = accounts(pontoConnectService.accountService(), accessToken);
         LOGGER.info("List of accounts {}", accounts);
@@ -82,8 +96,54 @@ public class PontoConnectClientSample {
         LOGGER.info("payment {}", payment);
 
         revokeToken(pontoConnectService.tokenService(), accessToken);
+    }
 
-        revokeToken(pontoConnectService.tokenService(), accessToken);
+    private static void sampleSandbox(SandboxService sandboxService, UUID financialInstitutionId) {
+        List<FinancialInstitutionAccount> financialInstitutionAccounts = financialInstitutionAccounts(sandboxService.financialInstitutionAccountsService(), financialInstitutionId);
+        LOGGER.info("List of financialInstitutionAccounts {}", financialInstitutionAccounts);
+
+        UUID financialInstitutionAccountId = financialInstitutionAccounts.stream().map(FinancialInstitutionAccount::getId).findFirst().orElseThrow(RuntimeException::new);
+        List<FinancialInstitutionTransaction> financialInstitutionAccountTransaction = financialInstitutionTransactions(sandboxService.financialInstitutionTransactionsService(), financialInstitutionId, financialInstitutionAccountId);
+        LOGGER.info("List of financialInstitutionAccountTransaction {}", financialInstitutionAccountTransaction);
+    }
+
+    private static List<FinancialInstitutionTransaction> financialInstitutionTransactions(FinancialInstitutionTransactionsService financialInstitutionTransactionsService, UUID financialInstitutionId, UUID financialInstitutionAccountId) {
+        financialInstitutionTransactionsService.create(FinancialInstitutionTransactionCreationQuery.builder()
+                .remittanceInformationType("unstructured")
+                .remittanceInformation("NEW SHOES")
+                .description("Small Cotton Shoes")
+                .currency("EUR")
+                .counterpartName("Otro Bank")
+                .counterpartReference("BE9786154282554")
+                .amount(new BigDecimal("84.42"))
+                .valueDate(Instant.parse("2020-05-22T00:00:00Z"))
+                .executionDate(Instant.parse("2020-05-25T00:00:00Z"))
+                .build());
+        IbanityCollection<FinancialInstitutionTransaction> list = financialInstitutionTransactionsService.list(FinancialInstitutionTransactionsReadQuery.builder()
+                .financialInstitutionId(financialInstitutionId)
+                .financialInstitutionAccountId(financialInstitutionAccountId)
+                .build());
+
+        UUID financialInstitutionTransactionId = list.getItems().stream().map(FinancialInstitutionTransaction::getId).findFirst().orElseThrow(RuntimeException::new);
+        financialInstitutionTransactionsService.find(FinancialInstitutionTransactionReadQuery.builder()
+                .financialInstitutionId(financialInstitutionId)
+                .financialInstitutionAccountId(financialInstitutionAccountId)
+                .financialInstitutionTransactionId(financialInstitutionTransactionId)
+                .build());
+        return list.getItems();
+    }
+
+    private static List<FinancialInstitutionAccount> financialInstitutionAccounts(FinancialInstitutionAccountsService financialInstitutionAccountsService, UUID financialInstitutionId) {
+        IbanityCollection<FinancialInstitutionAccount> list = financialInstitutionAccountsService.list(FinancialInstitutionAccountsReadQuery.builder()
+                .financialInstitutionId(financialInstitutionId)
+                .build());
+
+        UUID financialInstitutionAccountId = list.getItems().stream().map(FinancialInstitutionAccount::getId).findFirst().orElseThrow(RuntimeException::new);
+        financialInstitutionAccountsService.find(FinancialInstitutionAccountReadQuery.builder()
+                .financialInstitutionId(financialInstitutionId)
+                .financialInstitutionAccountId(financialInstitutionAccountId)
+                .build());
+        return list.getItems();
     }
 
     private static void revokeToken(TokenService tokenService, String accessToken) {

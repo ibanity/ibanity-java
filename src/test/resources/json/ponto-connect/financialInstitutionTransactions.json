@@ -1,0 +1,29 @@
+{
+  "meta": {
+    "paging": {
+      "limit": 10,
+      "after": "bbb81383-d509-4bd0-9921-a88fb880233a"
+    }
+  },
+  "links": {
+    "next": "https://api.ibanity.com/ponto-connect/sandbox/financial-institutions/953934eb-229a-4fd2-8675-07794078cc7d/financial-institution-accounts/8a532347-3e21-4783-8aec-685c7ba0ac55/financial-institution-transactions?after=bbb81383-d509-4bd0-9921-a88fb880233a",
+    "first": "https://api.ibanity.com/ponto-connect/sandbox/financial-institutions/953934eb-229a-4fd2-8675-07794078cc7d/financial-institution-accounts/8a532347-3e21-4783-8aec-685c7ba0ac55/financial-institution-transactions"
+  },
+  "data": [
+    {
+      "type": "financialInstitutionTransaction",
+      "id": "f87f120d-1dd7-4226-8b0e-fd83c9ed631a",
+      "attributes": {
+        "valueDate": "2020-05-22T00:00:00Z",
+        "remittanceInformationType": "unstructured",
+        "remittanceInformation": "NEW SHOES",
+        "executionDate": "2020-05-25T00:00:00Z",
+        "description": "Small Cotton Shoes",
+        "currency": "EUR",
+        "counterpartReference": "BE9786154282554",
+        "counterpartName": "Otro Bank",
+        "amount": 84.42
+      }
+    }
+  ]
+}

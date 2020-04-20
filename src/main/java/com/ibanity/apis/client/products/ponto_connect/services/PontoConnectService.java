@@ -1,5 +1,7 @@
 package com.ibanity.apis.client.products.ponto_connect.services;
 
+import com.ibanity.apis.client.products.ponto_connect.sandbox.services.SandboxService;
+
 public interface PontoConnectService {
 
     TokenService tokenService();
@@ -13,4 +15,6 @@ public interface PontoConnectService {
     SynchronizationService synchronizationService();
 
     PaymentService paymentService();
+
+    SandboxService sandboxService();
 }
