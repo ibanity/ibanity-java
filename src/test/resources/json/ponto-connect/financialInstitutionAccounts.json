@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "paging": {
+      "limit": 10
+    }
+  },
+  "links": {
+    "first": "https://api.ibanity.com/ponto-connect/sandbox/financial-institutions/953934eb-229a-4fd2-8675-07794078cc7d/financial-institution-accounts"
+  },
+  "data": [
+    {
+      "type": "financialInstitutionAccount",
+      "id": "8a532347-3e21-4783-8aec-685c7ba0ac55",
+      "attributes": {
+        "subtype": "checking",
+        "referenceType": "IBAN",
+        "reference": "BE17618075636065",
+        "description": "Velit expedita voluptas.",
+        "currentBalance": 567.32,
+        "currency": "EUR",
+        "availableBalance": 567.32
+      }
+    }
+  ]
+}

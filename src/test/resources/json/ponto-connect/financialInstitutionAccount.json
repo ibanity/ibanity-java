@@ -1,0 +1,15 @@
+{
+  "data": {
+    "type": "financialInstitutionAccount",
+    "id": "8a532347-3e21-4783-8aec-685c7ba0ac55",
+    "attributes": {
+      "subtype": "checking",
+      "referenceType": "IBAN",
+      "reference": "BE17618075636065",
+      "description": "Velit expedita voluptas.",
+      "currentBalance": 567.32,
+      "currency": "EUR",
+      "availableBalance": 567.32
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "data": {
+    "type": "financialInstitutionTransaction",
+    "id": "f87f120d-1dd7-4226-8b0e-fd83c9ed631a",
+    "attributes": {
+      "valueDate": "2020-05-22T00:00:00Z",
+      "remittanceInformationType": "unstructured",
+      "remittanceInformation": "NEW SHOES",
+      "executionDate": "2020-05-25T00:00:00Z",
+      "description": "Small Cotton Shoes",
+      "currency": "EUR",
+      "counterpartReference": "BE9786154282554",
+      "counterpartName": "Otro Bank",
+      "amount": 84.42
+    }
+  }
+}
