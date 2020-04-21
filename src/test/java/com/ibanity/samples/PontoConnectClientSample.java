@@ -80,7 +80,7 @@ public class PontoConnectClientSample {
         List<FinancialInstitution> financialInstitutions = financialInstitutions(pontoConnectService.financialInstitutionService(), accessToken);
         LOGGER.info("List of financialInstitutions {}", financialInstitutions);
 
-        sampleSandbox(pontoConnectService.sandboxService(), financialInstitutions.stream().map(FinancialInstitution::getId).findFirst().orElseThrow(RuntimeException::new));
+        sampleSandbox(pontoConnectService.sandboxService(), financialInstitutions.stream().map(FinancialInstitution::getId).findFirst().orElseThrow(RuntimeException::new), accessToken);
 
         List<Account> accounts = accounts(pontoConnectService.accountService(), accessToken);
         LOGGER.info("List of accounts {}", accounts);
@@ -98,17 +98,18 @@ public class PontoConnectClientSample {
         revokeToken(pontoConnectService.tokenService(), accessToken);
     }
 
-    private static void sampleSandbox(SandboxService sandboxService, UUID financialInstitutionId) {
-        List<FinancialInstitutionAccount> financialInstitutionAccounts = financialInstitutionAccounts(sandboxService.financialInstitutionAccountsService(), financialInstitutionId);
+    private static void sampleSandbox(SandboxService sandboxService, UUID financialInstitutionId, String accessToken) {
+        List<FinancialInstitutionAccount> financialInstitutionAccounts = financialInstitutionAccounts(sandboxService.financialInstitutionAccountsService(), financialInstitutionId, accessToken);
         LOGGER.info("List of financialInstitutionAccounts {}", financialInstitutionAccounts);
 
         UUID financialInstitutionAccountId = financialInstitutionAccounts.stream().map(FinancialInstitutionAccount::getId).findFirst().orElseThrow(RuntimeException::new);
-        List<FinancialInstitutionTransaction> financialInstitutionAccountTransaction = financialInstitutionTransactions(sandboxService.financialInstitutionTransactionsService(), financialInstitutionId, financialInstitutionAccountId);
+        List<FinancialInstitutionTransaction> financialInstitutionAccountTransaction = financialInstitutionTransactions(sandboxService.financialInstitutionTransactionsService(), financialInstitutionId, financialInstitutionAccountId, accessToken);
         LOGGER.info("List of financialInstitutionAccountTransaction {}", financialInstitutionAccountTransaction);
     }
 
-    private static List<FinancialInstitutionTransaction> financialInstitutionTransactions(FinancialInstitutionTransactionsService financialInstitutionTransactionsService, UUID financialInstitutionId, UUID financialInstitutionAccountId) {
+    private static List<FinancialInstitutionTransaction> financialInstitutionTransactions(FinancialInstitutionTransactionsService financialInstitutionTransactionsService, UUID financialInstitutionId, UUID financialInstitutionAccountId, String accessToken) {
         financialInstitutionTransactionsService.create(FinancialInstitutionTransactionCreationQuery.builder()
+                .accessToken(accessToken)
                 .remittanceInformationType("unstructured")
                 .remittanceInformation("NEW SHOES")
                 .description("Small Cotton Shoes")
@@ -118,14 +119,18 @@ public class PontoConnectClientSample {
                 .amount(new BigDecimal("84.42"))
                 .valueDate(Instant.parse("2020-05-22T00:00:00Z"))
                 .executionDate(Instant.parse("2020-05-25T00:00:00Z"))
+                .financialInstitutionAccountId(financialInstitutionAccountId)
+                .financialInstitutionId(financialInstitutionId)
                 .build());
         IbanityCollection<FinancialInstitutionTransaction> list = financialInstitutionTransactionsService.list(FinancialInstitutionTransactionsReadQuery.builder()
+                .accessToken(accessToken)
                 .financialInstitutionId(financialInstitutionId)
                 .financialInstitutionAccountId(financialInstitutionAccountId)
                 .build());
 
         UUID financialInstitutionTransactionId = list.getItems().stream().map(FinancialInstitutionTransaction::getId).findFirst().orElseThrow(RuntimeException::new);
         financialInstitutionTransactionsService.find(FinancialInstitutionTransactionReadQuery.builder()
+                .accessToken(accessToken)
                 .financialInstitutionId(financialInstitutionId)
                 .financialInstitutionAccountId(financialInstitutionAccountId)
                 .financialInstitutionTransactionId(financialInstitutionTransactionId)
@@ -133,13 +138,15 @@ public class PontoConnectClientSample {
         return list.getItems();
     }
 
-    private static List<FinancialInstitutionAccount> financialInstitutionAccounts(FinancialInstitutionAccountsService financialInstitutionAccountsService, UUID financialInstitutionId) {
+    private static List<FinancialInstitutionAccount> financialInstitutionAccounts(FinancialInstitutionAccountsService financialInstitutionAccountsService, UUID financialInstitutionId, String accessToken) {
         IbanityCollection<FinancialInstitutionAccount> list = financialInstitutionAccountsService.list(FinancialInstitutionAccountsReadQuery.builder()
+                .accessToken(accessToken)
                 .financialInstitutionId(financialInstitutionId)
                 .build());
 
         UUID financialInstitutionAccountId = list.getItems().stream().map(FinancialInstitutionAccount::getId).findFirst().orElseThrow(RuntimeException::new);
         financialInstitutionAccountsService.find(FinancialInstitutionAccountReadQuery.builder()
+                .accessToken(accessToken)
                 .financialInstitutionId(financialInstitutionId)
                 .financialInstitutionAccountId(financialInstitutionAccountId)
                 .build());
