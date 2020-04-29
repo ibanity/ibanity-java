@@ -49,6 +49,29 @@ It can be accessed by calling :
 IbanityHttpClient ibanityHttpClient = ibanityService.ibanityHttpClient();
 ```
 
+### Configure proxy
+If you are  using a Web application firewall or a proxy, you can configure it in the IbanityServiceBuilder.
+
+```java
+public interface OptionalPropertiesBuilder {
+
+...
+
+    OptionalPropertiesBuilder proxyEndpoint(String proxyEndpoint);
+
+}
+```
+
+```java
+    IbanityService ibanityServiceBuilder = IbanityServiceBuilder.builder()
+            .ibanityApiEndpoint("https://api.ibanity.com")
+            .tlsPrivateKey(myPrivateKey)
+            .passphrase("aPassphrase")
+            .tlsCertificate(myCertificate)
+            .proxyEndpoint("http://interal.proxy.com")
+            .build();
+```
+
 
 ### Use HttpSignatureService
 If you want to sign http request, you can use the HttpSignatureService from the library.
