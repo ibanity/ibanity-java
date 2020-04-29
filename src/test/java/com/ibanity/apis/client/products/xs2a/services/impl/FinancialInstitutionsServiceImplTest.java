@@ -20,6 +20,7 @@ import org.mockito.quality.Strictness;
 
 import java.util.UUID;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -92,7 +93,33 @@ class FinancialInstitutionsServiceImplTest {
 
         FinancialInstitution actual = financialInstitutionsService.find(financialInstitutionsReadQuery);
 
-        assertThat(actual).isEqualToComparingFieldByField(createExpected()[0]);
+        assertThat(actual).isEqualToComparingFieldByField(createExpectedForFind());
+    }
+
+    private FinancialInstitution createExpectedForFind() {
+        return FinancialInstitution.builder()
+                .id(FINANCIAL_INSTITUTION_ID)
+                .selfLink("https://api.ibanity.com/xs2a/financial-institutions/268c9f39-736b-4a9a-b198-4191030c0e21")
+                .bic("NBBEBEBB203")
+                .country("BE")
+                .status("stable")
+                .authorizationModels(newArrayList("single", "financialInstitutionOffered"))
+                .periodicPaymentsEnabled(true)
+                .periodicPaymentsProductTypes(newArrayList("sepaCreditTransfer"))
+                .bulkPaymentsEnabled(true)
+                .bulkPaymentsProductTypes(newArrayList("sepaCreditTransfer"))
+                .paymentsEnabled(true)
+                .paymentsProductTypes(newArrayList("sepaCreditTransfer"))
+                .name("ALKEN ASSET MANAGEMENT 0")
+                .futureDatedPaymentsAllowed(true)
+                .logoUrl("https://s3.eu-central-1.amazonaws.com/ibanity-production-financial-institution-assets/sandbox.png")
+                .primaryColor("#7d39ff")
+                .requiresCredentialStorage(false)
+                .requiresCustomerIpAddress(false)
+                .secondaryColor("#3DF2C2")
+                .minRequestedAccountReferences(0L)
+                .sandbox(true)
+                .build();
     }
 
     private FinancialInstitution[] createExpected() {
