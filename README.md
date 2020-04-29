@@ -68,7 +68,7 @@ public interface OptionalPropertiesBuilder {
             .tlsPrivateKey(myPrivateKey)
             .passphrase("aPassphrase")
             .tlsCertificate(myCertificate)
-            .proxyEndpoint("http://interal.proxy.com")
+            .proxyEndpoint("https://interal.proxy.com")
             .build();
 ```
 
