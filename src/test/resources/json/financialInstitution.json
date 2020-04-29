@@ -1,30 +1,40 @@
 {
   "data": {
     "attributes": {
+      "authorizationModels": [
+        "single",
+        "financialInstitutionOffered"
+      ],
       "bic": "NBBEBEBB203",
+      "bulkPaymentsEnabled": true,
+      "bulkPaymentsProductTypes": [
+        "sepaCreditTransfer"
+      ],
+      "country": "BE",
       "futureDatedPaymentsAllowed": true,
       "logoUrl": "https://s3.eu-central-1.amazonaws.com/ibanity-production-financial-institution-assets/sandbox.png",
       "maxRequestedAccountReferences": null,
       "minRequestedAccountReferences": 0,
-      "name": "ABN AMRO FUND MANAGERS LIMITED 0",
+      "name": "ALKEN ASSET MANAGEMENT 0",
+      "paymentsEnabled": true,
+      "paymentsProductTypes": [
+        "sepaCreditTransfer"
+      ],
+      "periodicPaymentsEnabled": true,
+      "periodicPaymentsProductTypes": [
+        "sepaCreditTransfer"
+      ],
       "primaryColor": "#7d39ff",
-      "requiresCredentialStorage": true,
-      "requiresCustomerIpAddress": true,
+      "requiresCredentialStorage": false,
+      "requiresCustomerIpAddress": false,
       "sandbox": true,
-      "secondaryColor": "#3DF2C2"
+      "secondaryColor": "#3DF2C2",
+      "status": "stable"
     },
     "id": "268c9f39-736b-4a9a-b198-4191030c0e21",
     "links": {
       "self": "https://api.ibanity.com/xs2a/financial-institutions/268c9f39-736b-4a9a-b198-4191030c0e21"
     },
     "type": "financialInstitution"
-  },
-  "links": {
-    "first": "https://api.ibanity.com/xs2a/financial-institutions"
-  },
-  "meta": {
-    "paging": {
-      "limit": 10
-    }
   }
 }
