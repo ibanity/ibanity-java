@@ -1,6 +1,7 @@
 package com.ibanity.apis.client.products.xs2a.services.impl;
 
 import com.ibanity.apis.client.http.IbanityHttpClient;
+import com.ibanity.apis.client.jsonapi.DataApiModel;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.mappers.IbanityModelMapper;
 import com.ibanity.apis.client.models.IbanityModel;
@@ -8,6 +9,7 @@ import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequest;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.products.xs2a.models.create.AccountInformationAccessRequestAuthorizationCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.links.AccountInformationAccessRequestAuthorizationLinks;
 import com.ibanity.apis.client.products.xs2a.services.AccountInformationAccessRequestAuthorizationsService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import lombok.*;
@@ -17,8 +19,10 @@ import org.apache.http.HttpResponse;
 import java.net.URI;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.buildRequest;
+import static com.ibanity.apis.client.mappers.IbanityModelMapper.toIbanityModel;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static java.util.Collections.emptyMap;
 
@@ -44,7 +48,7 @@ public class AccountInformationAccessRequestAuthorizationsServiceImpl implements
         RequestApiModel request = buildRequest(AccountInformationAccessRequestAuthorization.RESOURCE_TYPE, ibanityModel, meta);
 
         HttpResponse response = ibanityHttpClient.post(uri, request, authorizationCreationQuery.getAdditionalHeaders(), authorizationCreationQuery.getCustomerAccessToken());
-        return IbanityModelMapper.mapResource(response, com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequestAuthorization.class);
+        return IbanityModelMapper.mapResource(response, responseMapping());
     }
 
     private AccountInformationAccessRequestAuthorizationMeta mapMeta(AccountInformationAccessRequestAuthorizationCreationQuery authorizationCreationQuery) {
@@ -66,6 +70,19 @@ public class AccountInformationAccessRequestAuthorizationsServiceImpl implements
         return AccountInformationAccessRequestAuthorization.builder()
                 .queryParameters(authorizationCreationQuery.getQueryParameters())
                 .build();
+    }
+
+    private Function<DataApiModel, com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequestAuthorization> responseMapping() {
+        return dataApiModel -> {
+            com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequestAuthorization accountInformationAccessRequestAuthorization = toIbanityModel(dataApiModel, com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequestAuthorization.class);
+            if (dataApiModel.getLinks() != null && dataApiModel.getLinks().getNextRedirect() != null) {
+                accountInformationAccessRequestAuthorization.setLinks(AccountInformationAccessRequestAuthorizationLinks.builder()
+                        .nextRedirect(dataApiModel.getLinks().getNextRedirect())
+                        .build());
+            }
+
+            return accountInformationAccessRequestAuthorization;
+        };
     }
 
     @Data

@@ -5,6 +5,7 @@ import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.AccountInformationAccessRequestAuthorization;
 import com.ibanity.apis.client.products.xs2a.models.create.AccountInformationAccessRequestAuthorizationCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.links.AccountInformationAccessRequestAuthorizationLinks;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -83,6 +84,11 @@ class AccountInformationAccessRequestAuthorizationsServiceImplTest {
         return AccountInformationAccessRequestAuthorization.builder()
                 .id(AUTHORIZATION_ID)
                 .status("succeeded")
+                .links(
+                        AccountInformationAccessRequestAuthorizationLinks.builder()
+                                .nextRedirect("https://my-bank.localhost/step-2")
+                                .build()
+                )
                 .build();
     }
 }
