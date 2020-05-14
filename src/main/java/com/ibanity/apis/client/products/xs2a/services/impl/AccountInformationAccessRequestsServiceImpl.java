@@ -116,6 +116,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
                 .allowFinancialInstitutionRedirectUri(creationQuery.isAllowFinancialInstitutionRedirectUri())
                 .allowedAccountSubtypes(allowedAccountSubtypes.isEmpty() ? null : allowedAccountSubtypes)
                 .skipIbanityCompletionCallback(creationQuery.isSkipIbanityCompletionCallback())
+                .allowMulticurrencyAccounts(creationQuery.isAllowMulticurrencyAccounts())
                 .state(creationQuery.getState())
                 .build();
     }
@@ -164,6 +165,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
         private String customerIpAddress;
         private boolean allowFinancialInstitutionRedirectUri;
         private boolean skipIbanityCompletionCallback;
+        private boolean allowMulticurrencyAccounts;
         private String state;
 
         @Builder.Default

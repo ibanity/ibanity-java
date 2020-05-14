@@ -77,6 +77,7 @@ class AccountInformationAccessRequestsServiceImplTest {
                         .locale("fr")
                         .customerIpAddress("0.0.0.0")
                         .state("aCustomState")
+                        .allowMulticurrencyAccounts(true)
                         .allowedAccountSubtypes(newArrayList("checking", "savings"))
                         .metaRequestCreationQuery(MetaRequestCreationQuery.builder()
                                 .requestedPastTransactionDays(BigDecimal.TEN)
