@@ -15,8 +15,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static com.ibanity.apis.client.models.IbanityProduct.Xs2a;
 import static java.util.UUID.fromString;
@@ -31,6 +33,7 @@ class SandboxFinancialInstitutionsServiceImplTest {
     private static final String API_ENDPOINT = "https://api.ibanity.com/sandbox/financial-institutions";
     private static final String API_SCHEMA_ENDPOINT = "https://api.ibanity.com/sandbox/financial-institutions/{financialInstitutionId}";
     private static final String API_ENDPOINT_WITH_ID = API_ENDPOINT + "/" + FINANCIAL_INSTITUTION_ID;
+    private static final List<String> AUTHORIZATION_MODELS = newArrayList("detailed", "financialInstitutionOffered");
 
     @InjectMocks
     private SandboxFinancialInstitutionsServiceImpl sandboxFinancialInstitutionsService;
@@ -53,6 +56,21 @@ class SandboxFinancialInstitutionsServiceImplTest {
                 .build();
 
         when(ibanityHttpClient.post(new URI(API_ENDPOINT), createRequest()))
+                .thenReturn(loadHttpResponse("json/sandbox/financial_institution.json"));
+
+        FinancialInstitution actual = sandboxFinancialInstitutionsService.create(query);
+
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpected());
+    }
+
+    @Test
+    void createWithAuthorizationModels() throws Exception {
+        FinancialInstitutionCreationQuery query = FinancialInstitutionCreationQuery.builder()
+                .authorizationModels(AUTHORIZATION_MODELS)
+                .name("aName")
+                .build();
+
+        when(ibanityHttpClient.post(new URI(API_ENDPOINT), createRequest(AUTHORIZATION_MODELS)))
                 .thenReturn(loadHttpResponse("json/sandbox/financial_institution.json"));
 
         FinancialInstitution actual = sandboxFinancialInstitutionsService.create(query);
@@ -92,16 +110,22 @@ class SandboxFinancialInstitutionsServiceImplTest {
     private FinancialInstitution createExpected() {
         return FinancialInstitution.builder()
                 .name("MetaBank")
+                .authorizationModels(AUTHORIZATION_MODELS)
                 .sandbox(true)
                 .id(FINANCIAL_INSTITUTION_ID)
                 .build();
     }
 
     private RequestApiModel createRequest() {
+        return createRequest(null);
+    }
+
+    private RequestApiModel createRequest(List<String> authorizationModels) {
         return RequestApiModel.builder()
                 .data(RequestApiModel.RequestDataApiModel.builder()
                         .type(FinancialInstitution.RESOURCE_TYPE)
                         .attributes(FinancialInstitution.builder()
+                                .authorizationModels(authorizationModels)
                                 .name("aName")
                                 .sandbox(true)
                                 .build())
