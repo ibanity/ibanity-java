@@ -12,6 +12,8 @@ import com.ibanity.apis.client.products.xs2a.services.impl.FinancialInstitutions
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.apache.http.HttpResponse;
 
+import java.util.List;
+
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.buildRequest;
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
@@ -33,6 +35,7 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
         FinancialInstitution financialInstitution = FinancialInstitution.builder()
                 .sandbox(Boolean.TRUE)
                 .name(financialInstitutionCreationQuery.getName())
+                .authorizationModels(getAuthorizationModels(financialInstitutionCreationQuery))
                 .build();
         RequestApiModel request = buildRequest(FinancialInstitution.RESOURCE_TYPE, financialInstitution);
 
@@ -46,6 +49,7 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
     public FinancialInstitution update(FinancialInstitutionUpdateQuery financialInstitutionUpdateQuery) {
         FinancialInstitution financialInstitution = FinancialInstitution.builder()
                 .name(financialInstitutionUpdateQuery.getName())
+                .authorizationModels(null)
                 .sandbox(true)
                 .build();
         RequestApiModel request = buildRequest(FinancialInstitution.RESOURCE_TYPE, financialInstitution);
@@ -60,6 +64,10 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
         String url = getSandboxUrl(financialInstitutionDeleteQuery.getFinancialInstitutionId().toString());
         HttpResponse response = ibanityHttpClient.delete(buildUri(url));
         return mapResource(response, FinancialInstitution.class);
+    }
+
+    private List<String> getAuthorizationModels(FinancialInstitutionCreationQuery financialInstitutionCreationQuery) {
+        return financialInstitutionCreationQuery.getAuthorizationModels().isEmpty() ? null : financialInstitutionCreationQuery.getAuthorizationModels();
     }
 
     private String getSandboxUrl(String financialInstitutionId) {

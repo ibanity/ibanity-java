@@ -1,6 +1,10 @@
 {
   "data": {
     "attributes": {
+      "authorizationModels": [
+        "detailed",
+        "financialInstitutionOffered"
+      ],
       "name": "MetaBank",
       "sandbox": true
     },
