@@ -15,6 +15,9 @@ import java.util.List;
 public class FinancialInstitutionCreationQuery {
 
     private String name;
+    private String bic;
+    private String logoUrl;
+    private String country;
 
     @Builder.Default
     private List<String> authorizationModels = Collections.emptyList();
