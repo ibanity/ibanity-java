@@ -35,6 +35,9 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
         FinancialInstitution financialInstitution = FinancialInstitution.builder()
                 .sandbox(Boolean.TRUE)
                 .name(financialInstitutionCreationQuery.getName())
+                .country(financialInstitutionCreationQuery.getCountry())
+                .bic(financialInstitutionCreationQuery.getBic())
+                .logoUrl(financialInstitutionCreationQuery.getLogoUrl())
                 .authorizationModels(getAuthorizationModels(financialInstitutionCreationQuery))
                 .build();
         RequestApiModel request = buildRequest(FinancialInstitution.RESOURCE_TYPE, financialInstitution);
@@ -49,6 +52,9 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
     public FinancialInstitution update(FinancialInstitutionUpdateQuery financialInstitutionUpdateQuery) {
         FinancialInstitution financialInstitution = FinancialInstitution.builder()
                 .name(financialInstitutionUpdateQuery.getName())
+                .country(financialInstitutionUpdateQuery.getCountry())
+                .bic(financialInstitutionUpdateQuery.getBic())
+                .logoUrl(financialInstitutionUpdateQuery.getLogoUrl())
                 .authorizationModels(null)
                 .sandbox(true)
                 .build();

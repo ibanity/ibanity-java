@@ -15,7 +15,11 @@ import java.util.UUID;
 @EqualsAndHashCode
 public class FinancialInstitutionUpdateQuery {
     private UUID financialInstitutionId;
+
     private String name;
+    private String bic;
+    private String logoUrl;
+    private String country;
 
     public static FinancialInstitutionUpdateQueryBuilder from(final FinancialInstitution financialInstitution) {
         Objects.requireNonNull(financialInstitution, "Missing required 'financialInstitution'");
