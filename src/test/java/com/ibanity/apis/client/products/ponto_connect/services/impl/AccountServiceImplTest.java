@@ -92,6 +92,7 @@ public class AccountServiceImplTest {
                 .subtype("checking")
                 .synchronizedAt(parse("2019-09-02T11:28:36.551Z"))
                 .latestSynchronization(createSynchronization())
+                .deprecated(true)
                 .build();
     }
 

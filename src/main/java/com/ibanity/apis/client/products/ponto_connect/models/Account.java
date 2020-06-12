@@ -31,4 +31,6 @@ public class Account implements IbanityModel {
 
     private Instant synchronizedAt;
     private Synchronization latestSynchronization;
+
+    private boolean deprecated;
 }

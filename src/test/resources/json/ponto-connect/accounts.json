@@ -53,7 +53,8 @@
         "description": "Ullam omnis illum.",
         "currentBalance": 60.9,
         "currency": "EUR",
-        "availableBalance": 61.9
+        "availableBalance": 61.9,
+        "deprecated": true
       }
     }
   ]

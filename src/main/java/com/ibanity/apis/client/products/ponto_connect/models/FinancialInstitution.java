@@ -25,5 +25,7 @@ public class FinancialInstitution implements IbanityModel {
     private String secondaryColor;
     private String country;
     private String status;
+
+    private boolean deprecated;
 }
 
