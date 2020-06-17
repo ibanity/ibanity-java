@@ -172,6 +172,17 @@ class AccountsServiceImplTest {
                 .currency("EUR")
                 .availableBalance(BigDecimal.ZERO)
                 .subtype("checking")
+                .internalReference("account_123")
+                .product("Easy account")
+                .holderName("John Doe")
+                .currentBalanceChangedAt(parse("2018-10-25T00:00:00Z"))
+                .currentBalanceVariationObservedAt(parse("2018-10-25T00:30:00Z"))
+                .currentBalanceReferenceDate(parse("2018-10-25T01:00:00Z"))
+                .availableBalanceChangedAt(parse("2018-10-25T02:00:00Z"))
+                .availableBalanceVariationObservedAt(parse("2018-10-25T02:30:00Z"))
+                .availableBalanceReferenceDate(parse("2018-10-25T03:00:00Z"))
+                .authorizedAt(parse("2018-10-24T01:00:00Z"))
+                .authorizationExpirationExpectedAt(parse("2019-01-24T01:00:00Z"))
                 .synchronizedAt(parse("2019-05-09T09:19:37.683Z"))
                 .latestSynchronization(createSynchronization())
                 .build();
@@ -184,8 +195,8 @@ class AccountsServiceImplTest {
                 .resourceType("account")
                 .status("success")
                 .subtype("accountDetails")
-                .createdAt(Instant.parse("2019-05-09T09:19:37.683Z"))
-                .updatedAt(Instant.parse("2019-05-09T09:19:37.683Z"))
+                .createdAt(parse("2019-05-09T09:19:37.683Z"))
+                .updatedAt(parse("2019-05-09T09:19:37.683Z"))
                 .build();
     }
 
@@ -203,7 +214,7 @@ class AccountsServiceImplTest {
                                         .body("{\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"NOT_FOUND\",\"text\":\"3.2 - Not Found\"}]}")
                                         .requestId("354fwfwef4w684")
                                         .statusCode(500)
-                                        .timestamp(Instant.parse("2019-05-09T09:18:00.000Z"))
+                                        .timestamp(parse("2019-05-09T09:18:00.000Z"))
                                         .requestUri("http://google.com")
                                         .build())
                                 .build())

@@ -127,6 +127,13 @@ class FinancialInstitutionTransactionsServiceImplTest {
                 .remittanceInformation("NEW SHOES")
                 .remittanceInformationType("unstructured")
                 .valueDate(parse("2018-10-22T00:00:00Z"))
+                .bankTransactionCode("PMNT-IRCT-ESCT")
+                .proprietaryBankTransactionCode("prop123")
+                .endToEndId("61dd468606594217af9965ad3928280d")
+                .purposeCode("CASH")
+                .mandateId("12345678")
+                .creditorId("98765")
+                .additionalInformation("addional")
                 .build();
 
         when(ibanityHttpClient.post(new URI(TRANSACTION_ENDPOINT), createRequest(query)))
@@ -147,6 +154,13 @@ class FinancialInstitutionTransactionsServiceImplTest {
                 .valueDate(query.getValueDate())
                 .executionDate(query.getExecutionDate())
                 .description(query.getDescription())
+                .bankTransactionCode(query.getBankTransactionCode())
+                .proprietaryBankTransactionCode(query.getProprietaryBankTransactionCode())
+                .endToEndId(query.getEndToEndId())
+                .purposeCode(query.getPurposeCode())
+                .mandateId(query.getMandateId())
+                .creditorId(query.getCreditorId())
+                .additionalInformation(query.getAdditionalInformation())
                 .build();
         return RequestApiModel.builder()
                 .data(
@@ -172,6 +186,14 @@ class FinancialInstitutionTransactionsServiceImplTest {
                 .remittanceInformationType("unstructured")
                 .updatedAt(parse("2019-05-09T09:18:13.024220Z"))
                 .valueDate(parse("2018-10-22T00:00:00Z"))
+                .internalReference("transaction_12345")
+                .bankTransactionCode("PMNT-IRCT-ESCT")
+                .proprietaryBankTransactionCode("prop123")
+                .endToEndId("61dd468606594217af9965ad3928280d")
+                .purposeCode("CASH")
+                .mandateId("12345678")
+                .creditorId("98765")
+                .additionalInformation("addional")
                 .financialInstitutionAccountId(fromString("63b35ad7-5af7-47b7-b27c-da4791320d21"))
                 .selfLink("https://api.ibanity.com/sandbox/financial-institutions/eb4aca94-136d-4077-bce0-220daeb50a4e/financial-institution-users/d2c3aaf0-e617-44e6-9da8-e28bed46d9d4/financial-institution-accounts/63b35ad7-5af7-47b7-b27c-da4791320d21/financial-institution-transactions/6411162a-fe6f-428e-ae52-850291497f6b")
                 .build();

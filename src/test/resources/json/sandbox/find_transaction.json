@@ -11,7 +11,15 @@
       "remittanceInformation": "NEW SHOES",
       "remittanceInformationType": "unstructured",
       "updatedAt": "2019-05-09T09:18:13.024220Z",
-      "valueDate": "2018-10-22T00:00:00Z"
+      "valueDate": "2018-10-22T00:00:00Z",
+      "internalReference": "transaction_12345",
+      "bankTransactionCode": "PMNT-IRCT-ESCT",
+      "proprietaryBankTransactionCode": "prop123",
+      "endToEndId": "61dd468606594217af9965ad3928280d",
+      "purposeCode": "CASH",
+      "mandateId": "12345678",
+      "creditorId": "98765",
+      "additionalInformation": "addional"
     },
     "id": "6411162a-fe6f-428e-ae52-850291497f6b",
     "links": {
