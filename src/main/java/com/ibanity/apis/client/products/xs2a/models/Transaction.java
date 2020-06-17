@@ -23,7 +23,7 @@ public class Transaction implements IbanityModel {
     private UUID id;
     private String selfLink;
     private String requestId;
-    
+
     private BigDecimal amount;
     private String currency;
 
@@ -35,5 +35,14 @@ public class Transaction implements IbanityModel {
     private String remittanceInformation;
     private String counterpartName;
     private String counterpartReference;
+    private String bankTransactionCode;
+    private String proprietaryBankTransactionCode;
+    private String endToEndId;
+    private String purposeCode;
+    private String mandateId;
+    private String creditorId;
+    private String additionalInformation;
+    private String digest;
+    private String internalReference;
 }
 

@@ -34,4 +34,15 @@ public class Account implements IbanityModel {
     private BigDecimal availableBalance;
     private Instant synchronizedAt;
     private Synchronization latestSynchronization;
+    private String internalReference;
+    private String product;
+    private String holderName;
+    private Instant currentBalanceChangedAt;
+    private Instant currentBalanceReferenceDate;
+    private Instant currentBalanceVariationObservedAt;
+    private Instant availableBalanceChangedAt;
+    private Instant availableBalanceReferenceDate;
+    private Instant availableBalanceVariationObservedAt;
+    private Instant authorizedAt;
+    private Instant authorizationExpirationExpectedAt;
 }
