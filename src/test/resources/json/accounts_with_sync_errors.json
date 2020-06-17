@@ -8,7 +8,18 @@
         "description": "Checking account",
         "reference": "BE0178572046576544",
         "referenceType": "IBAN",
-        "subtype": "checking"
+        "subtype": "checking",
+        "internalReference": "account_123",
+        "product": "Easy account",
+        "holderName": "John Doe",
+        "currentBalanceChangedAt": "2018-10-25T00:00:00Z",
+        "currentBalanceVariationObservedAt": "2018-10-25T00:30:00Z",
+        "currentBalanceReferenceDate": "2018-10-25T01:00:00Z",
+        "availableBalanceChangedAt": "2018-10-25T02:00:00Z",
+        "availableBalanceVariationObservedAt": "2018-10-25T02:30:00Z",
+        "availableBalanceReferenceDate": "2018-10-25T03:00:00Z",
+        "authorizedAt": "2018-10-24T01:00:00Z",
+        "authorizationExpirationExpectedAt": "2019-01-24T01:00:00Z"
       },
       "id": "d6d2a2bc-6607-467b-ac78-86e4e19963ff",
       "links": {

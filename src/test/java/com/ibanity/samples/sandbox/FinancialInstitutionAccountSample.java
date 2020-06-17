@@ -31,6 +31,12 @@ public class FinancialInstitutionAccountSample {
                         .description("Checking Account")
                         .reference(Iban.random(CountryCode.BE).toString())
                         .referenceType("IBAN")
+                        .product("Easy account")
+                        .holderName("John Doe")
+                        .currentBalanceChangedAt(parse("2018-10-25T00:00:00Z"))
+                        .currentBalanceReferenceDate(parse("2018-10-25T01:00:00Z"))
+                        .availableBalanceChangedAt(parse("2018-10-25T02:00:00Z"))
+                        .availableBalanceReferenceDate(parse("2018-10-25T03:00:00Z"))
                         .financialInstitutionId(financialInstitution.getId())
                         .financialInstitutionUserId(financialInstitutionUser.getId())
                         .build();
