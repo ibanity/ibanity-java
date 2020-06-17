@@ -12,6 +12,7 @@ import com.ibanity.samples.helper.SampleHelper;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 
+import java.time.Instant.parse;
 import java.util.UUID;
 
 public class FinancialInstitutionAccountSample {
@@ -33,10 +34,10 @@ public class FinancialInstitutionAccountSample {
                         .referenceType("IBAN")
                         .product("Easy account")
                         .holderName("John Doe")
-                        .currentBalanceChangedAt(Instant.parse("2018-10-25T00:00:00Z"))
-                        .currentBalanceReferenceDate(Instant.parse("2018-10-25T01:00:00Z"))
-                        .availableBalanceChangedAt(Instant.parse("2018-10-25T02:00:00Z"))
-                        .availableBalanceReferenceDate(Instant.parse("2018-10-25T03:00:00Z"))
+                        .currentBalanceChangedAt(parse("2018-10-25T00:00:00Z"))
+                        .currentBalanceReferenceDate(parse("2018-10-25T01:00:00Z"))
+                        .availableBalanceChangedAt(parse("2018-10-25T02:00:00Z"))
+                        .availableBalanceReferenceDate(parse("2018-10-25T03:00:00Z"))
                         .financialInstitutionId(financialInstitution.getId())
                         .financialInstitutionUserId(financialInstitutionUser.getId())
                         .build();
