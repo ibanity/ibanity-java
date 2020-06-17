@@ -12,7 +12,7 @@ import com.ibanity.samples.helper.SampleHelper;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 
-import java.time.Instant.parse;
+import static java.time.Instant.parse;
 import java.util.UUID;
 
 public class FinancialInstitutionAccountSample {
