@@ -89,6 +89,12 @@ public class FinancialInstitutionAccountsServiceImpl implements FinancialInstitu
                 .currentBalance(query.getCurrentBalance())
                 .currency(query.getCurrency())
                 .subtype(query.getSubtype())
+                .product(query.getProduct())
+                .holderName(query.getHolderName())
+                .currentBalanceChangedAt(query.getCurrentBalanceChangedAt())
+                .currentBalanceReferenceDate(query.getCurrentBalanceReferenceDate())
+                .availableBalanceChangedAt(query.getAvailableBalanceChangedAt())
+                .availableBalanceReferenceDate(query.getAvailableBalanceReferenceDate())
                 .build();
     }
 
