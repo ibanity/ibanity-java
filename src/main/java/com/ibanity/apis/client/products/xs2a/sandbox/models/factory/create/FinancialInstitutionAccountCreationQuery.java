@@ -24,4 +24,10 @@ public class FinancialInstitutionAccountCreationQuery {
     private BigDecimal currentBalance;
     private BigDecimal availableBalance;
 
+    private String product;
+    private String holderName;
+    private Instant currentBalanceChangedAt;
+    private Instant currentBalanceReferenceDate;
+    private Instant availableBalanceChangedAt;
+    private Instant availableBalanceReferenceDate;
 }
