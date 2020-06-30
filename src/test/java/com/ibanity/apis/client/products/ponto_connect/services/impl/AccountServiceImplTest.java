@@ -90,6 +90,7 @@ public class AccountServiceImplTest {
                 .currency("EUR")
                 .availableBalance(new BigDecimal("61.9"))
                 .subtype("checking")
+                .deprecated(true)
                 .synchronizedAt(parse("2019-09-02T11:28:36.551Z"))
                 .latestSynchronization(createSynchronization())
                 .build();

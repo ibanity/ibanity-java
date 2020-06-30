@@ -113,6 +113,7 @@ public class FinancialInstitutionServiceImplTest {
         return FinancialInstitution.builder()
                 .id(financialInstitutionId)
                 .name(name)
+                .deprecated(true)
                 .build();
     }
 }
