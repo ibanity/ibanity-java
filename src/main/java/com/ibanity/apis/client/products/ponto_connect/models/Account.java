@@ -28,6 +28,7 @@ public class Account implements IbanityModel {
     private String referenceType;
     private BigDecimal currentBalance;
     private BigDecimal availableBalance;
+    private boolean deprecated;
 
     private Instant synchronizedAt;
     private Synchronization latestSynchronization;

@@ -3,7 +3,8 @@
     "type": "financialInstitution",
     "id": "953934eb-229a-4fd2-8675-07794078cc7d",
     "attributes": {
-      "name": "Fake Bank"
+      "name": "Fake Bank",
+      "deprecated": true
     }
   }
 }
