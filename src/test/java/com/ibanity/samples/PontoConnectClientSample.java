@@ -80,6 +80,9 @@ public class PontoConnectClientSample {
         List<FinancialInstitution> financialInstitutions = financialInstitutions(pontoConnectService.financialInstitutionService(), accessToken);
         LOGGER.info("List of financialInstitutions {}", financialInstitutions);
 
+        Userinfo userinfo = userinfo(pontoConnectService.userinfoService(), accessToken);
+        LOGGER.info("Userinfo {}", userinfo);
+
         sampleSandbox(pontoConnectService.sandboxService(), financialInstitutions.stream().map(FinancialInstitution::getId).findFirst().orElseThrow(RuntimeException::new), accessToken);
 
         List<Account> accounts = accounts(pontoConnectService.accountService(), accessToken);
@@ -96,6 +99,12 @@ public class PontoConnectClientSample {
         LOGGER.info("payment {}", payment);
 
         revokeToken(pontoConnectService.tokenService(), accessToken);
+    }
+
+    private static Userinfo userinfo(UserinfoService userinfoService, String accessToken) {
+        return userinfoService.getUserinfo(UserinfoReadQuery.builder()
+                .accessToken(accessToken)
+                .build());
     }
 
     private static void sampleSandbox(SandboxService sandboxService, UUID financialInstitutionId, String accessToken) {
