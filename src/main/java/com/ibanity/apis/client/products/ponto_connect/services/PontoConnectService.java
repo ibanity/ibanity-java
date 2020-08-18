@@ -17,4 +17,6 @@ public interface PontoConnectService {
     PaymentService paymentService();
 
     SandboxService sandboxService();
+
+    UserinfoService userinfoService();
 }

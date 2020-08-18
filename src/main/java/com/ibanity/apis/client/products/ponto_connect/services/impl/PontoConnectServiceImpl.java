@@ -11,6 +11,7 @@ public class PontoConnectServiceImpl implements PontoConnectService {
 
     private final TokenService tokenService;
     private final AccountService accountService;
+    private final UserinfoService userinfoService;
     private final TransactionService transactionService;
     private final SynchronizationService synchronizationService;
     private final FinancialInstitutionService financialInstitutionService;
@@ -20,6 +21,7 @@ public class PontoConnectServiceImpl implements PontoConnectService {
     public PontoConnectServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient, OAuthHttpClient oAuthHttpClient) {
         tokenService = new TokenServiceImpl(apiUrlProvider, oAuthHttpClient);
         accountService = new AccountServiceImpl(apiUrlProvider, ibanityHttpClient);
+        userinfoService = new UserinfoServiceImpl(apiUrlProvider, ibanityHttpClient);
         transactionService = new TransactionServiceImpl(apiUrlProvider, ibanityHttpClient);
         synchronizationService = new SynchronizationServiceImpl(apiUrlProvider, ibanityHttpClient);
         financialInstitutionService = new FinancialInstitutionServiceImpl(apiUrlProvider, ibanityHttpClient);
@@ -60,5 +62,10 @@ public class PontoConnectServiceImpl implements PontoConnectService {
     @Override
     public SandboxService sandboxService() {
         return sandboxService;
+    }
+
+    @Override
+    public UserinfoService userinfoService() {
+        return userinfoService;
     }
 }
