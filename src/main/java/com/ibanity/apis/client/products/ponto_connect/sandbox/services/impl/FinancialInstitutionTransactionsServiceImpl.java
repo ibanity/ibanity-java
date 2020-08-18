@@ -84,6 +84,13 @@ public class FinancialInstitutionTransactionsServiceImpl implements FinancialIns
                 .valueDate(transactionCreationQuery.getValueDate())
                 .executionDate(transactionCreationQuery.getExecutionDate())
                 .description(transactionCreationQuery.getDescription())
+                .bankTransactionCode(transactionCreationQuery.getBankTransactionCode())
+                .proprietaryBankTransactionCode(transactionCreationQuery.getProprietaryBankTransactionCode())
+                .additionalInformation(transactionCreationQuery.getAdditionalInformation())
+                .creditorId(transactionCreationQuery.getCreditorId())
+                .mandateId(transactionCreationQuery.getMandateId())
+                .purposeCode(transactionCreationQuery.getPurposeCode())
+                .endToEndId(transactionCreationQuery.getEndToEndId())
                 .build();
     }
 }

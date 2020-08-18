@@ -30,5 +30,11 @@ public class FinancialInstitutionTransactionCreationQuery {
     private String remittanceInformation;
     private String counterpartName;
     private String counterpartReference;
-
+    private String bankTransactionCode;
+    private String proprietaryBankTransactionCode;
+    private String additionalInformation;
+    private String creditorId;
+    private String mandateId;
+    private String purposeCode;
+    private String endToEndId;
 }
