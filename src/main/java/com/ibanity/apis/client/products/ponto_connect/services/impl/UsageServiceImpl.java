@@ -5,7 +5,7 @@ import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.ponto_connect.models.OrganizationUsage;
 import com.ibanity.apis.client.products.ponto_connect.models.read.OrganizationUsageReadQuery;
-import com.ibanity.apis.client.products.ponto_connect.services.OrganizationUsageService;
+import com.ibanity.apis.client.products.ponto_connect.services.UsageService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import com.ibanity.apis.client.utils.IbanityUtils;
 import org.apache.http.HttpResponse;
@@ -17,20 +17,20 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.util.UUID;
 
-public class OrganizationUsageServiceImpl implements OrganizationUsageService {
+public class UsageServiceImpl implements UsageService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OrganizationUsageServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UsageServiceImpl.class);
 
     private final ApiUrlProvider apiUrlProvider;
     private final IbanityHttpClient ibanityHttpClient;
 
-    public OrganizationUsageServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
+    public UsageServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
         this.apiUrlProvider = apiUrlProvider;
         this.ibanityHttpClient = ibanityHttpClient;
     }
 
     @Override
-    public OrganizationUsage getUsage(OrganizationUsageReadQuery readQuery) {
+    public OrganizationUsage getOrganizationUsage(OrganizationUsageReadQuery readQuery) {
         try {
             String url = getUrl(readQuery.getOrganizationId(), readQuery.getMonth());
             HttpResponse response = ibanityHttpClient.get(URI.create(url), readQuery.getAdditionalHeaders(), readQuery.getAccessToken());

@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class OrganizationUsageServiceImplTest {
+class UsageServiceImplTest {
 
     private static final String ACCESS_TOKEN = "thisIsAnAccessToken";
     private static final UUID ORGANIZATION_ID = fromString("953934eb-229a-4fd2-8675-07794078cc7d");
@@ -37,7 +37,7 @@ class OrganizationUsageServiceImplTest {
     private static final String GET_ORGANIZATION_ENDPOINT = "https://api.development.ibanity.net/ponto-connect/organizations/" + ORGANIZATION_ID.toString() + "/usage/" + MONTH;
 
     @InjectMocks
-    private OrganizationUsageServiceImpl organizationUsageService;
+    private UsageServiceImpl organizationUsageService;
 
     @Mock
     private ApiUrlProvider apiUrlProvider;
@@ -51,7 +51,7 @@ class OrganizationUsageServiceImplTest {
     }
 
     @Test
-    void getUsage() throws URISyntaxException, IOException {
+    void getOrganizationUsage() throws URISyntaxException, IOException {
         when(ibanityHttpClient.get(new URI(GET_ORGANIZATION_ENDPOINT), emptyMap(), ACCESS_TOKEN))
                 .thenReturn(loadHttpResponse("json/ponto-connect/organizations_usage.json"));
 
@@ -60,7 +60,7 @@ class OrganizationUsageServiceImplTest {
                 .month(MONTH)
                 .organizationId(ORGANIZATION_ID)
                 .build();
-        OrganizationUsage actual = organizationUsageService.getUsage(readQuery);
+        OrganizationUsage actual = organizationUsageService.getOrganizationUsage(readQuery);
 
         Assertions.assertThat(actual).isEqualToComparingFieldByField(expected());
     }
