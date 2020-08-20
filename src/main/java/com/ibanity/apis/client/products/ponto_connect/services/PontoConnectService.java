@@ -19,4 +19,6 @@ public interface PontoConnectService {
     SandboxService sandboxService();
 
     UserinfoService userinfoService();
+
+    UsageService usageService();
 }

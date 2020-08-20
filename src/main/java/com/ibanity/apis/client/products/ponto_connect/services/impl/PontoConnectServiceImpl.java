@@ -10,6 +10,7 @@ import com.ibanity.apis.client.services.ApiUrlProvider;
 public class PontoConnectServiceImpl implements PontoConnectService {
 
     private final TokenService tokenService;
+    private final UsageService usageService;
     private final AccountService accountService;
     private final UserinfoService userinfoService;
     private final TransactionService transactionService;
@@ -20,6 +21,7 @@ public class PontoConnectServiceImpl implements PontoConnectService {
 
     public PontoConnectServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient, OAuthHttpClient oAuthHttpClient) {
         tokenService = new TokenServiceImpl(apiUrlProvider, oAuthHttpClient);
+        usageService = new UsageServiceImpl(apiUrlProvider, ibanityHttpClient);
         accountService = new AccountServiceImpl(apiUrlProvider, ibanityHttpClient);
         userinfoService = new UserinfoServiceImpl(apiUrlProvider, ibanityHttpClient);
         transactionService = new TransactionServiceImpl(apiUrlProvider, ibanityHttpClient);
@@ -67,5 +69,10 @@ public class PontoConnectServiceImpl implements PontoConnectService {
     @Override
     public UserinfoService userinfoService() {
         return userinfoService;
+    }
+
+    @Override
+    public UsageService usageService() {
+        return usageService;
     }
 }
