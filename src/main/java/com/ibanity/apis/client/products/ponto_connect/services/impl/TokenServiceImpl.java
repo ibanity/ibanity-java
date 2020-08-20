@@ -9,6 +9,7 @@ import com.ibanity.apis.client.products.ponto_connect.models.revoke.TokenRevokeQ
 import com.ibanity.apis.client.products.ponto_connect.services.TokenService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import com.ibanity.apis.client.utils.IbanityUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,10 +78,14 @@ public class TokenServiceImpl implements TokenService {
 
     private Map<String, String> getAccessTokenRequestArguments(String authorizationCode, String codeVerifier, String redirectUri) {
         Map<String, String> arguments = newHashMap();
-        arguments.put("grant_type", "authorization_code");
-        arguments.put("code", authorizationCode);
-        arguments.put("code_verifier", codeVerifier);
-        arguments.put("redirect_uri", redirectUri);
+        if (StringUtils.isBlank(authorizationCode)) {
+            arguments.put("grant_type", "client_credentials");
+        } else {
+            arguments.put("grant_type", "authorization_code");
+            arguments.put("code", authorizationCode);
+            arguments.put("code_verifier", codeVerifier);
+            arguments.put("redirect_uri", redirectUri);
+        }
         return arguments;
     }
 
