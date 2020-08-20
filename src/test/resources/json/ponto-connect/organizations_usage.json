@@ -1,0 +1,19 @@
+{
+  "relationships": {
+    "organization": {
+      "data": {
+        "type": "organization",
+        "id": "6680437c-8ed8-425b-84b7-2c31e5ca625d"
+      }
+    }
+  },
+  "data": {
+    "type": "usage",
+    "id": "2020-08",
+    "attributes": {
+      "paymentCount": 1.1,
+      "paymentAccountCount": 10,
+      "accountCount": 1
+    }
+  }
+}
