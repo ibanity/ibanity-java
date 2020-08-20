@@ -40,7 +40,8 @@ public class FinancialInstitutionsServiceImpl implements FinancialInstitutionsSe
                         getUrl(customerAccessToken).replace(FinancialInstitution.API_URL_TAG_ID, ""),
                         "/"
                 ),
-                pagingSpec);
+                pagingSpec,
+                financialInstitutionsReadQuery.getFilters());
         HttpResponse response = ibanityHttpClient.get(uri, financialInstitutionsReadQuery.getAdditionalHeaders(), customerAccessToken);
         return IbanityModelMapper.mapCollection(response, FinancialInstitution.class);
     }

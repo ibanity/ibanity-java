@@ -5,6 +5,7 @@ import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
+import com.ibanity.apis.client.products.ponto_connect.models.Filter;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.products.xs2a.models.read.FinancialInstitutionReadQuery;
 import com.ibanity.apis.client.products.xs2a.models.read.FinancialInstitutionsReadQuery;
@@ -18,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import java.util.List;
 import java.util.UUID;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -54,9 +56,12 @@ class FinancialInstitutionsServiceImplTest {
 
     @Test
     void list() throws Exception {
-        FinancialInstitutionsReadQuery financialInstitutionsReadQuery = FinancialInstitutionsReadQuery.builder().build();
+        List<Filter> filters = newArrayList(Filter.builder().field("country").eq("be").build());
+        FinancialInstitutionsReadQuery financialInstitutionsReadQuery = FinancialInstitutionsReadQuery.builder()
+                .filters(filters)
+                .build();
 
-        when(ibanityHttpClient.get(buildUri("https://api.ibanity.localhost/xs2a/financial-institutions", IbanityPagingSpec.DEFAULT_PAGING_SPEC), emptyMap(), null))
+        when(ibanityHttpClient.get(buildUri("https://api.ibanity.localhost/xs2a/financial-institutions", IbanityPagingSpec.DEFAULT_PAGING_SPEC, filters), emptyMap(), null))
                 .thenReturn(IbanityTestHelper.loadHttpResponse("json/financialInstitutions.json"));
 
         IbanityCollection<FinancialInstitution> actual = financialInstitutionsService.list(financialInstitutionsReadQuery);
