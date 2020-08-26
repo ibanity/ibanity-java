@@ -36,6 +36,7 @@ public class PaymentInitiationRequestMapper {
                 .skipIbanityCompletionCallback(query.isSkipIbanityCompletionCallback())
                 .allowFinancialInstitutionRedirectUri(query.isAllowFinancialInstitutionRedirectUri())
                 .state(query.getState())
+                .requestedExecutionDate(query.getRequestedExecutionDate())
                 .build();
     }
 

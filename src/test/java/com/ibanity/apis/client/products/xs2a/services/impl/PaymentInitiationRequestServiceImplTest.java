@@ -66,6 +66,7 @@ class PaymentInitiationRequestServiceImplTest {
                         .skipIbanityCompletionCallback(true)
                         .allowFinancialInstitutionRedirectUri(true)
                         .state(CUSTOM_STATE)
+                        .requestedExecutionDate(LocalDate.now())
                         .build();
 
         when(ibanityHttpClient.post(buildUri(PIR_ENDPOINT_FOR_CREATE), mapRequest(requestCreationQuery), emptyMap(), CUSTOMER_TOKEN_REFERENCE))
@@ -138,6 +139,7 @@ class PaymentInitiationRequestServiceImplTest {
                 .state(query.getState())
                 .skipIbanityCompletionCallback(query.isSkipIbanityCompletionCallback())
                 .allowFinancialInstitutionRedirectUri(query.isAllowFinancialInstitutionRedirectUri())
+                .requestedExecutionDate(LocalDate.now())
                 .build();
         return RequestApiModel.builder()
                 .data(
