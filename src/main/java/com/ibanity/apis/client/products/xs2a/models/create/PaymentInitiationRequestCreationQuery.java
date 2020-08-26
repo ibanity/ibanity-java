@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.UUID;
 
@@ -47,6 +48,8 @@ public final class PaymentInitiationRequestCreationQuery {
     private boolean allowFinancialInstitutionRedirectUri;
     private boolean skipIbanityCompletionCallback;
     private String state;
+
+    private LocalDate requestedExecutionDate;
 
     @Builder.Default
     private Map<String, String> additionalHeaders = emptyMap();
