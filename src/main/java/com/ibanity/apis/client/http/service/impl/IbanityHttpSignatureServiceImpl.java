@@ -13,6 +13,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.cert.X509Certificate;
+import java.security.spec.MGF1ParameterSpec;
+import java.security.spec.PSSParameterSpec;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Base64;
@@ -27,12 +29,15 @@ import static java.util.stream.Collectors.toList;
 
 public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureService {
 
+    public static final PSSParameterSpec PARAMETER_SPEC = new PSSParameterSpec("SHA-256", "MGF1", MGF1ParameterSpec.SHA256, 32, 1);
+
     private static final Logger LOGGER = LogManager.getLogger(IbanityHttpSignatureServiceImpl.class);
-    private static final String SIGNATURE_HEADER_TEMPLATE = "keyId=\"%s\",algorithm=\"%s\",headers=\"%s\",signature=\"%s\"";
+    private static final String SIGNATURE_HEADER_TEMPLATE = "keyId=\"%s\",created=\"%s\",algorithm=\"%s\",headers=\"%s\",signature=\"%s\"";
     private static final String DIGEST_ALGORITHM = MessageDigestAlgorithms.SHA_512;
     private static final Charset UTF8_CHARSET = StandardCharsets.UTF_8;
     private static final String ACCEPTED_HEADERS_REGEX = "(authorization|ibanity.*?)";
     private static final Pattern HEADERS_PATTERN = Pattern.compile(ACCEPTED_HEADERS_REGEX, Pattern.CASE_INSENSITIVE);
+    private static final String SIGNATURE_ALGORITHM = "hs2019";
 
     private Clock clock;
     private String certificateId;
@@ -79,12 +84,11 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
             String payload) {
         HashMap<String, String> httpSignatureHeaders = Maps.newHashMap();
 
-        String dateHeaderValue = getDateHeader();
+        Long createdHeader = getCreatedHeader();
         String payloadDigestHeaderValue = getDigestHeader(payload);
-        String signatureDigest = getSignatureDigest(getRequestTarget(httpMethod, url), getHost(), payloadDigestHeaderValue, dateHeaderValue, requestHeaders);
-        String signatureHeaderValue = getSignatureHeader(certificateId, getCertificateAlgorithm(certificate), getSignatureHeaders(requestHeaders), signatureDigest);
+        String signatureDigest = getSignatureDigest(getRequestTarget(httpMethod, url), getHost(), payloadDigestHeaderValue, createdHeader, requestHeaders);
+        String signatureHeaderValue = getSignatureHeader(certificateId, getCreatedHeader(), SIGNATURE_ALGORITHM, getSignatureHeaders(requestHeaders), signatureDigest);
 
-        httpSignatureHeaders.put("Date", dateHeaderValue);
         httpSignatureHeaders.put("Digest", payloadDigestHeaderValue);
         httpSignatureHeaders.put("Signature", signatureHeaderValue);
         return httpSignatureHeaders;
@@ -111,16 +115,16 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
         }
     }
 
-    private String getDateHeader() {
-        return Instant.now(clock).toString();
+    private Long getCreatedHeader() {
+        return Instant.now(clock).toEpochMilli();
     }
 
-    private String getSignatureHeader(String certificateId, String algorithm, String headers, String signature) {
-        return String.format(SIGNATURE_HEADER_TEMPLATE, certificateId, algorithm, headers, signature);
+    private String getSignatureHeader(String certificateId, Long created, String algorithm, String headers, String signature) {
+        return String.format(SIGNATURE_HEADER_TEMPLATE, certificateId, created, algorithm, headers, signature);
     }
 
     private String getSignatureHeaders(Map<String, String> requestHeaders) {
-        List<String> headers = newArrayList("(request-target)", "host", "digest", "date");
+        List<String> headers = newArrayList("(request-target)", "host", "digest", "(created)");
         List<String> additionalHeaders = getAdditionalHeaders(requestHeaders).keySet().stream()
                 .map(String::toLowerCase)
                 .collect(toList());
@@ -136,50 +140,38 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
                         Map.Entry::getValue));
     }
 
-    private String getSignatureDigest(String requestTarget, String host, String payloadDigest, String date, Map<String, String> requestHeaders) {
+    private String getSignatureDigest(String requestTarget, String host, String payloadDigest, Long timestamp, Map<String, String> requestHeaders) {
         try {
-            String signatureString = getSignatureString(requestTarget, host, payloadDigest, date, requestHeaders);
+            String signatureString = getSignatureString(requestTarget, host, payloadDigest, timestamp, requestHeaders);
             if(LOGGER.isTraceEnabled()) {
                 LOGGER.trace("Signature value: {}", signatureString);
             }
 
-            Signature signature = Signature.getInstance(certificate.getSigAlgName());
+            Signature signature = Signature.getInstance("SHA256withRSA/PSS");
+            signature.setParameter(PARAMETER_SPEC);
             signature.initSign(privateKey);
             signature.update(signatureString.getBytes());
             byte[] signedData = signature.sign();
 
             return Base64.getEncoder().encodeToString(signedData);
-        } catch (InvalidKeyException | NoSuchAlgorithmException | SignatureException exception) {
+        } catch (InvalidKeyException | NoSuchAlgorithmException | SignatureException | InvalidAlgorithmParameterException exception) {
             String errorMessage = "Error while trying to generate the signature of the request";
             throw new IllegalArgumentException(errorMessage, exception);
         }
     }
 
-    private String getSignatureString(String requestTarget, String host, String payloadDigest, String date, Map<String, String> requestHeaders) {
+    private String getSignatureString(String requestTarget, String host, String payloadDigest, Long timestamp, Map<String, String> requestHeaders) {
         List<String> values = newArrayList(
                 "(request-target): " + requestTarget,
                 "host: " + host,
                 "digest: " + payloadDigest,
-                "date: " + date);
+                "(created): " + timestamp);
 
         values.addAll(getAdditionalHeaders(requestHeaders).entrySet().stream()
                 .map(entry -> String.format("%s: %s", entry.getKey().toLowerCase(), entry.getValue()))
                 .collect(Collectors.toList()));
 
         return String.join("\n", values);
-    }
-
-    private String getCertificateAlgorithm(X509Certificate certificate) {
-        String signatureAlgorithm = certificate.getSigAlgName();
-
-        switch (signatureAlgorithm) {
-            case "SHA256withRSA":
-                return "rsa-sha256";
-            case "SHA512withRSA":
-                return "rsa-sha512";
-            default:
-                throw new IllegalArgumentException("Unsupported signature algorithm:" + signatureAlgorithm);
-        }
     }
 
     private String getRequestTarget(String httpMethod, URL url) {
