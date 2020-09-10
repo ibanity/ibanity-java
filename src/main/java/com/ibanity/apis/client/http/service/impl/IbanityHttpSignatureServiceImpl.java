@@ -29,6 +29,7 @@ import static java.util.stream.Collectors.toList;
 
 public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureService {
 
+    public static final String SIGNATURE_ALGORITHM = "SHA256withRSA/PSS";
     public static final PSSParameterSpec PARAMETER_SPEC = new PSSParameterSpec("SHA-256", "MGF1", MGF1ParameterSpec.SHA256, 32, 1);
 
     private static final Logger LOGGER = LogManager.getLogger(IbanityHttpSignatureServiceImpl.class);
@@ -37,7 +38,7 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
     private static final Charset UTF8_CHARSET = StandardCharsets.UTF_8;
     private static final String ACCEPTED_HEADERS_REGEX = "(authorization|ibanity.*?)";
     private static final Pattern HEADERS_PATTERN = Pattern.compile(ACCEPTED_HEADERS_REGEX, Pattern.CASE_INSENSITIVE);
-    private static final String SIGNATURE_ALGORITHM = "hs2019";
+    private static final String SIGNATURE_HEADER_ALGORITHM = "hs2019";
 
     private Clock clock;
     private String certificateId;
@@ -87,7 +88,7 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
         Long createdHeader = getCreatedHeader();
         String payloadDigestHeaderValue = getDigestHeader(payload);
         String signatureDigest = getSignatureDigest(getRequestTarget(httpMethod, url), getHost(), payloadDigestHeaderValue, createdHeader, requestHeaders);
-        String signatureHeaderValue = getSignatureHeader(certificateId, getCreatedHeader(), SIGNATURE_ALGORITHM, getSignatureHeaders(requestHeaders), signatureDigest);
+        String signatureHeaderValue = getSignatureHeader(certificateId, getCreatedHeader(), SIGNATURE_HEADER_ALGORITHM, getSignatureHeaders(requestHeaders), signatureDigest);
 
         httpSignatureHeaders.put("Digest", payloadDigestHeaderValue);
         httpSignatureHeaders.put("Signature", signatureHeaderValue);
@@ -147,7 +148,7 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
                 LOGGER.trace("Signature value: {}", signatureString);
             }
 
-            Signature signature = Signature.getInstance("SHA256withRSA/PSS");
+            Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
             signature.setParameter(PARAMETER_SPEC);
             signature.initSign(privateKey);
             signature.update(signatureString.getBytes());
