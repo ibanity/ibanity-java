@@ -44,7 +44,7 @@ class IbanityHttpSignatureServiceImplTest {
             "(request-target): post /xs2a/customer-access-tokens?test=1&test=2",
             "host: api.ibanity.com",
             "digest: SHA-512=pX9+OFjSGF4KFWUh8fv1Ihh4PuSb2KnyobO/hr228nkET5vRUhi0Qj2Ai5OcBXtzmzgII18sZiaEH4PoxkYqew==",
-            "(created): 1548841917124",
+            "(created): 1548841917",
             "ibanity-idempotency-key: 61f02718-eeee-46e1-b5eb-e8fd6e799c2d"
     );
 

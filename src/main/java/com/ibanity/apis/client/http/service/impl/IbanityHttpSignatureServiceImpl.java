@@ -117,7 +117,7 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
     }
 
     private Long getCreatedHeader() {
-        return Instant.now(clock).toEpochMilli();
+        return Instant.now(clock).getEpochSecond();
     }
 
     private String getSignatureHeader(String certificateId, Long created, String algorithm, String headers, String signature) {
