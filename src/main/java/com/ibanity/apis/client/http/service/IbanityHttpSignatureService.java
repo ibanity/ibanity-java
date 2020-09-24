@@ -9,7 +9,7 @@ public interface IbanityHttpSignatureService {
      * Alias to be used when the request has no payload.
      * @see IbanityHttpSignatureService#getHttpSignatureHeaders(String, URL, Map, String)
      * Allows you to create the needed headers to sign an http request following draft http signature
-     * @see <a href="https://tools.ietf.org/html/draft-cavage-http-signatures-09">https://tools.ietf.org/html/draft-cavage-http-signatures-09</a>
+     * @see <a href="https://tools.ietf.org/html/draft-cavage-http-signatures-12">https://tools.ietf.org/html/draft-cavage-http-signatures-12</a>
      * @param httpMethod the http method of the current request.
      * @param url the url containing host, path and query parameters.
      * @param requestHeaders the headers of the current request. All ibanity-* headers will included in the signature.
@@ -19,7 +19,7 @@ public interface IbanityHttpSignatureService {
 
     /**
      * Allows you to create the needed headers to sign an http request following draft http signature
-     * @see <a href="https://tools.ietf.org/html/draft-cavage-http-signatures-09">https://tools.ietf.org/html/draft-cavage-http-signatures-09</a>
+     * @see <a href="https://tools.ietf.org/html/draft-cavage-http-signatures-12">https://tools.ietf.org/html/draft-cavage-http-signatures-12</a>
      * @param httpMethod the http method of the current request.
      * @param url the url containing host, path and query parameters.
      * @param requestHeaders the headers of the current request. All ibanity-* headers will included in the signature.
