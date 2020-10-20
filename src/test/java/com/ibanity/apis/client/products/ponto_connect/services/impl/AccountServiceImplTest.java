@@ -62,7 +62,7 @@ public class AccountServiceImplTest {
                 .accessToken(ACCESS_TOKEN)
                 .accountId(ACCOUNT_ID)
                 .build());
-
+        
         assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpected());
     }
 
@@ -90,9 +90,11 @@ public class AccountServiceImplTest {
                 .currency("EUR")
                 .availableBalance(new BigDecimal("61.9"))
                 .subtype("checking")
-                .deprecated(true)
+                .deprecated(false)
                 .synchronizedAt(parse("2019-09-02T11:28:36.551Z"))
                 .latestSynchronization(createSynchronization())
+                .authorizedAt(parse("2020-10-19T11:02:11.084Z"))
+                .authorizationExpirationExpectedAt(parse("2021-01-17T11:02:11.084Z"))
                 .build();
     }
 
