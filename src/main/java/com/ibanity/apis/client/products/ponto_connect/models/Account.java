@@ -32,4 +32,7 @@ public class Account implements IbanityModel {
 
     private Instant synchronizedAt;
     private Synchronization latestSynchronization;
+    
+    private Instant authorizedAt;
+    private Instant authorizationExpirationExpectedAt;
 }
