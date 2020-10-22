@@ -85,10 +85,10 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
             String payload) {
         HashMap<String, String> httpSignatureHeaders = Maps.newHashMap();
 
-        Long createdHeader = getCreatedHeader();
+        Long createdTimestamp = getTimestamp();
         String payloadDigestHeaderValue = getDigestHeader(payload);
-        String signatureDigest = getSignatureDigest(getRequestTarget(httpMethod, url), getHost(), payloadDigestHeaderValue, createdHeader, requestHeaders);
-        String signatureHeaderValue = getSignatureHeader(certificateId, getCreatedHeader(), SIGNATURE_HEADER_ALGORITHM, getSignatureHeaders(requestHeaders), signatureDigest);
+        String signatureDigest = getSignatureDigest(getRequestTarget(httpMethod, url), getHost(), payloadDigestHeaderValue, createdTimestamp, requestHeaders);
+        String signatureHeaderValue = getSignatureHeader(certificateId, createdTimestamp, SIGNATURE_HEADER_ALGORITHM, getSignatureHeaders(requestHeaders), signatureDigest);
 
         httpSignatureHeaders.put("Digest", payloadDigestHeaderValue);
         httpSignatureHeaders.put("Signature", signatureHeaderValue);
@@ -116,7 +116,7 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
         }
     }
 
-    private Long getCreatedHeader() {
+    private Long getTimestamp() {
         return Instant.now(clock).getEpochSecond();
     }
 
