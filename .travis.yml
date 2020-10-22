@@ -1,15 +1,9 @@
 language: java
-dist: trusty
+dist: focal
 jdk:
   - oraclejdk8
 
-sudo: required
-
-services:
-  - docker
-
 before_install:
-    - docker pull ibanity/sandbox-authorization-cli:latest
     - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
     - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
 
