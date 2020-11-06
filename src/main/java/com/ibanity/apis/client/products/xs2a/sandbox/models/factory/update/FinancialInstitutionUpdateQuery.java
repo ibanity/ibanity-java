@@ -20,6 +20,9 @@ public class FinancialInstitutionUpdateQuery {
     private String bic;
     private String logoUrl;
     private String country;
+    private boolean financialInstitutionCustomerReferenceRequired;
+    private String sharedBrandReference;
+    private String sharedBrandName;
 
     public static FinancialInstitutionUpdateQueryBuilder from(final FinancialInstitution financialInstitution) {
         Objects.requireNonNull(financialInstitution, "Missing required 'financialInstitution'");

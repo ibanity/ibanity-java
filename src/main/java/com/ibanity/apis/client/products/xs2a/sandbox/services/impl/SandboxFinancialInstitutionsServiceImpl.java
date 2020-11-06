@@ -39,6 +39,9 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
                 .bic(financialInstitutionCreationQuery.getBic())
                 .logoUrl(financialInstitutionCreationQuery.getLogoUrl())
                 .authorizationModels(getAuthorizationModels(financialInstitutionCreationQuery))
+                .sharedBrandReference(financialInstitutionCreationQuery.getSharedBrandReference())
+                .sharedBrandName(financialInstitutionCreationQuery.getSharedBrandName())
+                .financialInstitutionCustomerReferenceRequired(financialInstitutionCreationQuery.isFinancialInstitutionCustomerReferenceRequired())
                 .build();
         RequestApiModel request = buildRequest(FinancialInstitution.RESOURCE_TYPE, financialInstitution);
 
@@ -57,6 +60,9 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
                 .logoUrl(financialInstitutionUpdateQuery.getLogoUrl())
                 .authorizationModels(null)
                 .sandbox(true)
+                .sharedBrandReference(financialInstitutionUpdateQuery.getSharedBrandReference())
+                .sharedBrandName(financialInstitutionUpdateQuery.getSharedBrandName())
+                .financialInstitutionCustomerReferenceRequired(financialInstitutionUpdateQuery.isFinancialInstitutionCustomerReferenceRequired())
                 .build();
         RequestApiModel request = buildRequest(FinancialInstitution.RESOURCE_TYPE, financialInstitution);
 

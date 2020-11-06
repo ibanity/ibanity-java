@@ -38,6 +38,7 @@ public class PaymentInitiationRequestMapper {
                 .allowFinancialInstitutionRedirectUri(query.isAllowFinancialInstitutionRedirectUri())
                 .state(query.getState())
                 .requestedExecutionDate(query.getRequestedExecutionDate())
+                .financialInstitutionCustomerReference(query.getFinancialInstitutionCustomerReference())
                 .build();
     }
 

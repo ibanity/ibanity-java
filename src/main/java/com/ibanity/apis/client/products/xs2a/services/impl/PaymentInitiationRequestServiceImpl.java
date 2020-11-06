@@ -9,8 +9,8 @@ import com.ibanity.apis.client.products.xs2a.models.create.PaymentInitiationRequ
 import com.ibanity.apis.client.products.xs2a.models.read.PaymentInitiationRequestReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.PaymentInitiationRequestService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
-import org.apache.http.HttpResponse;
 import lombok.*;
+import org.apache.http.HttpResponse;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -110,6 +110,7 @@ public class PaymentInitiationRequestServiceImpl implements PaymentInitiationReq
         private boolean allowFinancialInstitutionRedirectUri;
         private boolean skipIbanityCompletionCallback;
         private String state;
+        private String financialInstitutionCustomerReference;
 
         private BigDecimal amount;
 

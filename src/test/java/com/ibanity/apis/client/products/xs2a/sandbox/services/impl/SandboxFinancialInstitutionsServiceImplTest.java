@@ -53,6 +53,9 @@ class SandboxFinancialInstitutionsServiceImplTest {
     void create() throws Exception {
         FinancialInstitutionCreationQuery query = FinancialInstitutionCreationQuery.builder()
                 .name("aName")
+                .financialInstitutionCustomerReferenceRequired(true)
+                .sharedBrandName("ABC INTERNATIONAL BANK PLC")
+                .sharedBrandReference("abc-international-bank-plc-be")
                 .build();
 
         when(ibanityHttpClient.post(new URI(API_ENDPOINT), createRequest()))
@@ -68,6 +71,9 @@ class SandboxFinancialInstitutionsServiceImplTest {
         FinancialInstitutionCreationQuery query = FinancialInstitutionCreationQuery.builder()
                 .authorizationModels(AUTHORIZATION_MODELS)
                 .name("aName")
+                .financialInstitutionCustomerReferenceRequired(true)
+                .sharedBrandName("ABC INTERNATIONAL BANK PLC")
+                .sharedBrandReference("abc-international-bank-plc-be")
                 .build();
 
         when(ibanityHttpClient.post(new URI(API_ENDPOINT), createRequest(AUTHORIZATION_MODELS)))
@@ -83,6 +89,9 @@ class SandboxFinancialInstitutionsServiceImplTest {
         FinancialInstitutionUpdateQuery query = FinancialInstitutionUpdateQuery.builder()
                 .name("aName")
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
+                .financialInstitutionCustomerReferenceRequired(true)
+                .sharedBrandName("ABC INTERNATIONAL BANK PLC")
+                .sharedBrandReference("abc-international-bank-plc-be")
                 .build();
 
         when(ibanityHttpClient.patch(new URI(API_ENDPOINT_WITH_ID), createRequest()))
@@ -128,6 +137,9 @@ class SandboxFinancialInstitutionsServiceImplTest {
                                 .authorizationModels(authorizationModels)
                                 .name("aName")
                                 .sandbox(true)
+                                .financialInstitutionCustomerReferenceRequired(true)
+                                .sharedBrandName("ABC INTERNATIONAL BANK PLC")
+                                .sharedBrandReference("abc-international-bank-plc-be")
                                 .build())
                         .build())
                 .build();

@@ -67,6 +67,7 @@ class PaymentInitiationRequestServiceImplTest {
                         .allowFinancialInstitutionRedirectUri(true)
                         .state(CUSTOM_STATE)
                         .requestedExecutionDate(LocalDate.now())
+                        .financialInstitutionCustomerReference("jdoe001")
                         .build();
 
         when(ibanityHttpClient.post(buildUri(PIR_ENDPOINT_FOR_CREATE), mapRequest(requestCreationQuery), emptyMap(), CUSTOMER_TOKEN_REFERENCE))
@@ -140,6 +141,7 @@ class PaymentInitiationRequestServiceImplTest {
                 .skipIbanityCompletionCallback(query.isSkipIbanityCompletionCallback())
                 .allowFinancialInstitutionRedirectUri(query.isAllowFinancialInstitutionRedirectUri())
                 .requestedExecutionDate(LocalDate.now())
+                .financialInstitutionCustomerReference(query.getFinancialInstitutionCustomerReference())
                 .build();
         return RequestApiModel.builder()
                 .data(
@@ -197,6 +199,7 @@ class PaymentInitiationRequestServiceImplTest {
                 .links(PaymentInitiationAuthorizationLinks.builder().redirect(REDIRECT_LINK).build())
                 .financialInstitutionLink(FinancialInstitutionLinks.builder().related(FINANCIAL_INSTITUTION_RELATED_LINK).build())
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
+                .financialInstitutionCustomerReference("jdoe001")
                 .build();
     }
 }
