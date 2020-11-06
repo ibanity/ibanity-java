@@ -18,6 +18,9 @@ public class FinancialInstitutionCreationQuery {
     private String bic;
     private String logoUrl;
     private String country;
+    private boolean financialInstitutionCustomerReferenceRequired;
+    private String sharedBrandReference;
+    private String sharedBrandName;
 
     @Builder.Default
     private List<String> authorizationModels = Collections.emptyList();

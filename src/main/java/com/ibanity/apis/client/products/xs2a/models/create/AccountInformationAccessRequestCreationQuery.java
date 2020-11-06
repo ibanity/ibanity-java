@@ -30,6 +30,7 @@ public final class AccountInformationAccessRequestCreationQuery {
     private boolean skipIbanityCompletionCallback;
     private boolean allowMulticurrencyAccounts;
     private String state;
+    private String financialInstitutionCustomerReference;
 
     private IbanityPagingSpec pagingSpec;
 

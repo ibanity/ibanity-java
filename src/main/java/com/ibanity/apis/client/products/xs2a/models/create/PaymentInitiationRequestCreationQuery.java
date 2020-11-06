@@ -48,6 +48,7 @@ public final class PaymentInitiationRequestCreationQuery {
     private boolean allowFinancialInstitutionRedirectUri;
     private boolean skipIbanityCompletionCallback;
     private String state;
+    private String financialInstitutionCustomerReference;
 
     private LocalDate requestedExecutionDate;
 

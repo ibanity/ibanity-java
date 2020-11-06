@@ -78,6 +78,7 @@ class AccountInformationAccessRequestsServiceImplTest {
                         .customerIpAddress("0.0.0.0")
                         .state("aCustomState")
                         .allowMulticurrencyAccounts(true)
+                        .financialInstitutionCustomerReference("jdoe0001")
                         .allowedAccountSubtypes(newArrayList("checking", "savings"))
                         .metaRequestCreationQuery(MetaRequestCreationQuery.builder()
                                 .requestedPastTransactionDays(BigDecimal.TEN)
@@ -96,6 +97,7 @@ class AccountInformationAccessRequestsServiceImplTest {
         AccountInformationAccessRequestsServiceImpl.AccountInformationAccessRequest attributes =
                 (AccountInformationAccessRequestsServiceImpl.AccountInformationAccessRequest) requestApiModelArgumentCaptor.getValue().getData().getAttributes();
         assertThat(attributes.getState()).isEqualTo("aCustomState");
+        assertThat(attributes.getFinancialInstitutionCustomerReference()).isEqualTo("jdoe0001");
     }
 
     @Test

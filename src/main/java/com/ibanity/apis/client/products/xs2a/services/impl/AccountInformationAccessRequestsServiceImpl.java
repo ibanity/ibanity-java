@@ -118,6 +118,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
                 .skipIbanityCompletionCallback(creationQuery.isSkipIbanityCompletionCallback())
                 .allowMulticurrencyAccounts(creationQuery.isAllowMulticurrencyAccounts())
                 .state(creationQuery.getState())
+                .financialInstitutionCustomerReference(creationQuery.getFinancialInstitutionCustomerReference())
                 .build();
     }
 
@@ -167,6 +168,7 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
         private boolean skipIbanityCompletionCallback;
         private boolean allowMulticurrencyAccounts;
         private String state;
+        private String financialInstitutionCustomerReference;
 
         @Builder.Default
         private List<String> requestedAccountReferences = Collections.emptyList();
