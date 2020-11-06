@@ -21,7 +21,12 @@ public class IbanityCollection<T> {
     private String firstLink;
     private String nextLink;
     private String previousLink;
+    private String lastLink;
     private long pageLimit;
+    private long pageNumber;
+    private long pageSize;
+    private long totalEntries;
+    private long totalPages;
     private Synchronization latestSynchronization;
     List<T> items;
 }

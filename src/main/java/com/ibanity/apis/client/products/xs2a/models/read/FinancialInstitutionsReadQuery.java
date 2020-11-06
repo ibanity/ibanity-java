@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.products.xs2a.models.read;
 
+import com.ibanity.apis.client.paging.IbanityOffsetPagingSpec;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.products.ponto_connect.models.Filter;
 import lombok.Builder;
@@ -21,6 +22,7 @@ public final class FinancialInstitutionsReadQuery {
 
     private String customerAccessToken;
     private IbanityPagingSpec pagingSpec;
+    private IbanityOffsetPagingSpec offsetPagingSpec;
 
     @Builder.Default
     private Map<String, String> additionalHeaders = emptyMap();

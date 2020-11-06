@@ -4,6 +4,7 @@ import com.ibanity.apis.client.helpers.IbanityTestHelper;
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityProduct;
+import com.ibanity.apis.client.paging.IbanityOffsetPagingSpec;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.products.ponto_connect.models.Filter;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
@@ -53,7 +54,6 @@ class FinancialInstitutionsServiceImplTest {
         when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitutions")).thenReturn(FINANCIAL_INSTITUTION_CUSTOMER_ENDPOINT);
     }
 
-
     @Test
     void list() throws Exception {
         List<Filter> filters = newArrayList(Filter.builder().field("country").eq("be").build());
@@ -68,6 +68,30 @@ class FinancialInstitutionsServiceImplTest {
 
         assertThat(actual.getItems()).containsExactly(createExpected());
         assertThat(actual.getPageLimit()).isEqualTo(10);
+    }
+
+    @Test
+    void list_offsetBased() throws Exception {
+        List<Filter> filters = newArrayList(Filter.builder().field("country").eq("be").build());
+        IbanityOffsetPagingSpec offsetPagingSpec = IbanityOffsetPagingSpec.builder()
+                .pageNumber(2)
+                .pageSize(1)
+                .build();
+        FinancialInstitutionsReadQuery financialInstitutionsReadQuery = FinancialInstitutionsReadQuery.builder()
+                .offsetPagingSpec(offsetPagingSpec)
+                .filters(filters)
+                .build();
+
+        when(ibanityHttpClient.get(buildUri("https://api.ibanity.localhost/xs2a/financial-institutions", offsetPagingSpec, filters), emptyMap(), null))
+                .thenReturn(IbanityTestHelper.loadHttpResponse("json/financialInstitutionsOffset.json"));
+
+        IbanityCollection<FinancialInstitution> actual = financialInstitutionsService.list(financialInstitutionsReadQuery);
+
+        assertThat(actual.getItems()).containsExactly(createExpected());
+        assertThat(actual.getPageNumber()).isEqualTo(2);
+        assertThat(actual.getPageSize()).isEqualTo(2);
+        assertThat(actual.getTotalEntries()).isEqualTo(7);
+        assertThat(actual.getTotalPages()).isEqualTo(4);
     }
 
     @Test
@@ -124,6 +148,9 @@ class FinancialInstitutionsServiceImplTest {
                 .secondaryColor("#3DF2C2")
                 .minRequestedAccountReferences(0L)
                 .sandbox(true)
+                .financialInstitutionCustomerReferenceRequired(true)
+                .sharedBrandName("Deckow")
+                .sharedBrandReference("deckow-be")
                 .build();
     }
 

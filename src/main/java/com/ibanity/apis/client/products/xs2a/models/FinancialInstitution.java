@@ -27,6 +27,8 @@ public class FinancialInstitution implements IbanityModel {
     private String secondaryColor;
     private String country;
     private String status;
+    private String sharedBrandReference;
+    private String sharedBrandName;
 
     @Builder.Default
     private List<String> authorizationModels = Collections.emptyList();
@@ -47,6 +49,7 @@ public class FinancialInstitution implements IbanityModel {
     private boolean bulkPaymentsEnabled;
     private boolean paymentsEnabled;
     private boolean periodicPaymentsEnabled;
+    private boolean financialInstitutionCustomerReferenceRequired;
 
 
 }
