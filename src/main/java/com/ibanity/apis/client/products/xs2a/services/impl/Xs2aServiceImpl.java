@@ -20,6 +20,7 @@ public class Xs2aServiceImpl implements Xs2aService {
     private final AuthorizationsServiceImpl authorizationsService;
     private final AccountInformationAccessRequestAuthorizationsServiceImpl accountInformationAccessRequestAuthorizationsService;
     private final PaymentInitiationRequestAuthorizationsServiceImpl paymentInitiationRequestAuthorizationsService;
+    private final FinancialInstitutionCountriesService financialInstitutionCountriesService;
 
     public Xs2aServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
         accountService = new AccountsServiceImpl(apiUrlProvider, ibanityHttpClient);
@@ -31,6 +32,7 @@ public class Xs2aServiceImpl implements Xs2aService {
         accountInformationAccessRequestsService = new AccountInformationAccessRequestsServiceImpl(apiUrlProvider, ibanityHttpClient);
         accountInformationAccessRequestAuthorizationsService = new AccountInformationAccessRequestAuthorizationsServiceImpl(apiUrlProvider, ibanityHttpClient);
         paymentInitiationRequestAuthorizationsService = new PaymentInitiationRequestAuthorizationsServiceImpl(apiUrlProvider, ibanityHttpClient);
+        financialInstitutionCountriesService = new FinancialInstitutionCountriesServiceImpl(apiUrlProvider, ibanityHttpClient);
         sandboxService = new SandboxServiceImpl(apiUrlProvider, ibanityHttpClient);
         customerService = new CustomerServiceImpl(apiUrlProvider, ibanityHttpClient);
         authorizationsService = new AuthorizationsServiceImpl(apiUrlProvider, ibanityHttpClient);
@@ -104,5 +106,10 @@ public class Xs2aServiceImpl implements Xs2aService {
     @Override
     public HoldingsService holdingsService() {
         return holdingsService;
+    }
+
+    @Override
+    public FinancialInstitutionCountriesService financialInstitutionCountriesService() {
+        return financialInstitutionCountriesService;
     }
 }

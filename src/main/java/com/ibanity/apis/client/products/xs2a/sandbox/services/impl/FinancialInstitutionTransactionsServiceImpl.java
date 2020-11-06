@@ -120,8 +120,8 @@ public class FinancialInstitutionTransactionsServiceImpl implements FinancialIns
     private Function<DataApiModel, FinancialInstitutionTransaction> responseMapping() {
         return dataApiModel -> {
             FinancialInstitutionTransaction financialInstitutionTransaction = toIbanityModel(dataApiModel, FinancialInstitutionTransaction.class);
-            UUID accountId = dataApiModel.getRelationships().get("financialInstitutionAccount").getData().getId();
-            financialInstitutionTransaction.setFinancialInstitutionAccountId(accountId);
+            String accountId = dataApiModel.getRelationships().get("financialInstitutionAccount").getData().getId();
+            financialInstitutionTransaction.setFinancialInstitutionAccountId(UUID.fromString(accountId));
             return financialInstitutionTransaction;
         };
     }

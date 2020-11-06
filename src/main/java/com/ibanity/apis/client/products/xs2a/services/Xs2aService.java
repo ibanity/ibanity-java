@@ -33,4 +33,6 @@ public interface Xs2aService {
     PaymentInitiationRequestAuthorizationsService paymentInitiationRequestAuthorizationsService();
 
     HoldingsService holdingsService();
+
+    FinancialInstitutionCountriesService financialInstitutionCountriesService();
 }

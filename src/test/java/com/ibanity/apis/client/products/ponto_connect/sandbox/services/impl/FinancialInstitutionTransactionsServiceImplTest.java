@@ -39,7 +39,7 @@ class FinancialInstitutionTransactionsServiceImplTest {
     private static final String ACCESS_TOKEN = "o8drk02QucaUes24017lj8VfHSvUukpwdOAZ7N_31e4.id1xyaKQjyzxg0ceqxW7FVZSci5C5RbpJVJJSSXpFdI";
     private static final String TRANSACTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/sandbox/financial-institutions/{financialInstitutionId}/financial-institution-accounts/{financialInstitutionAccountId}/financial-institution-transactions/{financialInstitutionTransactionId}";
     private static final String GET_TRANSACTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/sandbox/financial-institutions/953934eb-229a-4fd2-8675-07794078cc7d/financial-institution-accounts/8a532347-3e21-4783-8aec-685c7ba0ac55/financial-institution-transactions/f87f120d-1dd7-4226-8b0e-fd83c9ed631a";
-    private static final String LIST_TRANSACTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/sandbox/financial-institutions/953934eb-229a-4fd2-8675-07794078cc7d/financial-institution-accounts/8a532347-3e21-4783-8aec-685c7ba0ac55/financial-institution-transactions?limit=10";
+    private static final String LIST_TRANSACTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/sandbox/financial-institutions/953934eb-229a-4fd2-8675-07794078cc7d/financial-institution-accounts/8a532347-3e21-4783-8aec-685c7ba0ac55/financial-institution-transactions?page%5Blimit%5D=10";
     private static final String CREATE_TRANSACTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/sandbox/financial-institutions/953934eb-229a-4fd2-8675-07794078cc7d/financial-institution-accounts/8a532347-3e21-4783-8aec-685c7ba0ac55/financial-institution-transactions";
 
     @InjectMocks

@@ -17,6 +17,7 @@ import com.ibanity.apis.client.products.xs2a.sandbox.services.FinancialInstituti
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.apache.http.HttpResponse;
 
+import java.util.UUID;
 import java.util.function.Function;
 
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.*;
@@ -110,8 +111,8 @@ public class FinancialInstitutionAccountsServiceImpl implements FinancialInstitu
             RelationshipsApiModel financialInstitution = dataApiModel.getRelationships().get("financialInstitution");
             RelationshipsApiModel financialInstitutionUser = dataApiModel.getRelationships().get("financialInstitutionUser");
             FinancialInstitutionAccount financialInstitutionAccount = toIbanityModel(dataApiModel, FinancialInstitutionAccount.class);
-            financialInstitutionAccount.setFinancialInstitutionId(financialInstitution.getData().getId());
-            financialInstitutionAccount.setFinancialInstitutionUserId(financialInstitutionUser.getData().getId());
+            financialInstitutionAccount.setFinancialInstitutionId(UUID.fromString(financialInstitution.getData().getId()));
+            financialInstitutionAccount.setFinancialInstitutionUserId(UUID.fromString(financialInstitutionUser.getData().getId()));
             return financialInstitutionAccount;
         };
     }

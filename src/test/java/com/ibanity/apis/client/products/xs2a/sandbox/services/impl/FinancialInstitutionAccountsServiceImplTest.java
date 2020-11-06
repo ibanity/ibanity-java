@@ -77,7 +77,7 @@ class FinancialInstitutionAccountsServiceImplTest {
                 .financialInstitutionUserId(USER_ID)
                 .build();
 
-        when(ibanityHttpClient.get(new URI(ACCOUNT_ENPOINT + "?limit=10")))
+        when(ibanityHttpClient.get(new URI(ACCOUNT_ENPOINT + "?page%5Blimit%5D=10")))
                 .thenReturn(loadHttpResponse("json/sandbox/list_accounts.json"));
 
         IbanityCollection<FinancialInstitutionAccount> actual = financialInstitutionAccountsService.list(query);

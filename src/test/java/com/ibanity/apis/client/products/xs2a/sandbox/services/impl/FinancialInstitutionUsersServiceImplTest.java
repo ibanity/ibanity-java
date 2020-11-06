@@ -62,7 +62,7 @@ class FinancialInstitutionUsersServiceImplTest {
                         .build())
                 .build();
 
-        when(ibanityHttpClient.get(new URI(USERS_ENDPOINT + "?after=868af9c1-8fa8-485a-b798-dfb1f5ae1141&limit=10"))).thenReturn(loadHttpResponse("json/sandbox/list_users.json"));
+        when(ibanityHttpClient.get(new URI(USERS_ENDPOINT + "?page%5Bafter%5D=868af9c1-8fa8-485a-b798-dfb1f5ae1141&page%5Blimit%5D=10"))).thenReturn(loadHttpResponse("json/sandbox/list_users.json"));
 
         IbanityCollection<FinancialInstitutionUser> actual = financialInstitutionUsersService.list(query);
 

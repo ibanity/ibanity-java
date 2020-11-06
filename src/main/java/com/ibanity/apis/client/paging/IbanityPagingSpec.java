@@ -1,10 +1,6 @@
 package com.ibanity.apis.client.paging;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -18,7 +14,33 @@ public class IbanityPagingSpec {
 
     @Builder.Default
     private long limit = 10L;
-    private UUID before;
-    private UUID after;
+    private String before;
+    private String after;
 
+    public static class IbanityPagingSpecBuilder {
+
+        private long limit = 10L;
+        private String before;
+        private String after;
+
+        public IbanityPagingSpecBuilder before(String before) {
+            this.before = before;
+            return this;
+        }
+
+        public IbanityPagingSpecBuilder after(String after) {
+            this.after = after;
+            return this;
+        }
+
+        public IbanityPagingSpecBuilder before(UUID before) {
+            this.before = before.toString();
+            return this;
+        }
+
+        public IbanityPagingSpecBuilder after(UUID after) {
+            this.after = after.toString();
+            return this;
+        }
+    }
 }

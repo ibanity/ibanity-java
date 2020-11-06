@@ -34,7 +34,7 @@ class FinancialInstitutionAccountsServiceImplTest {
     private static final String ACCESS_TOKEN = "o8drk02QucaUes24017lj8VfHSvUukpwdOAZ7N_31e4.id1xyaKQjyzxg0ceqxW7FVZSci5C5RbpJVJJSSXpFdI";
     private static final String ACCOUNT_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/sandbox/financial-institutions/{financialInstitutionId}/financial-institution-accounts/{financialInstitutionAccountId}";
     private static final String GET_ACCOUNT_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/sandbox/financial-institutions/" + FINANCIAL_INSTITUTION_ID + "/financial-institution-accounts/" + ACCOUNT_ID;
-    private static final String LIST_ACCOUNT_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/sandbox/financial-institutions/" + FINANCIAL_INSTITUTION_ID +"/financial-institution-accounts?limit=10";
+    private static final String LIST_ACCOUNT_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/sandbox/financial-institutions/" + FINANCIAL_INSTITUTION_ID +"/financial-institution-accounts?page%5Blimit%5D=10";
 
     @InjectMocks
     private FinancialInstitutionAccountsServiceImpl financialInstitutionAccountsService;
