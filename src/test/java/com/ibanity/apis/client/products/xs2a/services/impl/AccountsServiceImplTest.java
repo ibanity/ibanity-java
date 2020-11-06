@@ -174,6 +174,7 @@ class AccountsServiceImplTest {
                 .internalReference("account_123")
                 .product("Easy account")
                 .holderName("John Doe")
+                .availability("available")
                 .currentBalanceChangedAt(parse("2018-10-25T00:00:00Z"))
                 .currentBalanceVariationObservedAt(parse("2018-10-25T00:30:00Z"))
                 .currentBalanceReferenceDate(parse("2018-10-25T01:00:00Z"))

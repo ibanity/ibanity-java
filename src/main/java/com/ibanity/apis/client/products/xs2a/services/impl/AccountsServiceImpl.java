@@ -74,6 +74,7 @@ public class AccountsServiceImpl implements AccountsService {
             if (dataApiModel.getMeta() != null) {
                 Synchronization synchronization = map(dataApiModel.getMeta().getLatestSynchronization());
                 account.setLatestSynchronization(synchronization);
+                account.setAvailability(dataApiModel.getMeta().getAvailability());
                 account.setSynchronizedAt(dataApiModel.getMeta().getSynchronizedAt());
             }
 
