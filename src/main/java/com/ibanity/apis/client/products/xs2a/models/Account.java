@@ -45,4 +45,5 @@ public class Account implements IbanityModel {
     private Instant availableBalanceVariationObservedAt;
     private Instant authorizedAt;
     private Instant authorizationExpirationExpectedAt;
+    private String availability;
 }

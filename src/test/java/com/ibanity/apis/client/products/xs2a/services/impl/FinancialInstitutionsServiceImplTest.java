@@ -25,6 +25,7 @@ import java.util.UUID;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
+import static java.time.Instant.parse;
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -151,6 +152,9 @@ class FinancialInstitutionsServiceImplTest {
                 .financialInstitutionCustomerReferenceRequired(true)
                 .sharedBrandName("Deckow")
                 .sharedBrandReference("deckow-be")
+                .maintenanceType("internal")
+                .maintenanceFrom(parse("2018-10-25T00:00:00Z"))
+                .maintenanceTo(parse("2018-11-25T00:00:00Z"))
                 .build();
     }
 

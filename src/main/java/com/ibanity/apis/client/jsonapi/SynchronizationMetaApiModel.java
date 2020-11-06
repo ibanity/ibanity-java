@@ -1,12 +1,6 @@
 package com.ibanity.apis.client.jsonapi;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.Instant;
 
@@ -18,6 +12,7 @@ import java.time.Instant;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SynchronizationMetaApiModel {
 
+    private String availability;
     private Instant synchronizedAt;
     private DataApiModel latestSynchronization;
 }

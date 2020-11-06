@@ -25,6 +25,7 @@
       "self": "https://api.ibanity.com/xs2a/customer/financial-institutions/43a02473-1023-4b70-a881-6c9b1857e8e6/accounts/d6d2a2bc-6607-467b-ac78-86e4e19963ff"
     },
     "meta": {
+      "availability": "available",
       "latestSynchronization": {
         "attributes": {
           "createdAt": "2019-05-09T09:19:37.683Z",

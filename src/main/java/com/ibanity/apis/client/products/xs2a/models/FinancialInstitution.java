@@ -3,6 +3,7 @@ package com.ibanity.apis.client.products.xs2a.models;
 import com.ibanity.apis.client.models.IbanityModel;
 import lombok.*;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -29,6 +30,10 @@ public class FinancialInstitution implements IbanityModel {
     private String status;
     private String sharedBrandReference;
     private String sharedBrandName;
+
+    private Instant maintenanceFrom;
+    private Instant maintenanceTo;
+    private String maintenanceType;
 
     @Builder.Default
     private List<String> authorizationModels = Collections.emptyList();
