@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.utils;
 
+import com.ibanity.apis.client.paging.IbanityOffsetPagingSpec;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.products.ponto_connect.helpers.FilterHelper;
 import com.ibanity.apis.client.products.ponto_connect.models.Filter;
@@ -26,6 +27,19 @@ public class URIHelper {
             addIfNotNull(uriBuilder, "page[before]", pagingSpec.getBefore());
             addIfNotNull(uriBuilder, "page[after]", pagingSpec.getAfter());
             addIfNotNull(uriBuilder, "page[limit]", pagingSpec.getLimit());
+            addFilters(uriBuilder, filters);
+            return uriBuilder.build();
+        } catch (URISyntaxException exception) {
+            throw new IllegalStateException("URL cannot be build", exception);
+        }
+    }
+
+    public static URI buildUri(@NonNull String url, IbanityOffsetPagingSpec pagingSpec, List<Filter> filters) {
+        try {
+            pagingSpec = pagingSpec == null ? IbanityOffsetPagingSpec.DEFAULT_OFFSET_PAGING_SPEC : pagingSpec;
+            URIBuilder uriBuilder = new URIBuilder(removeEnd(url, "/"));
+            addIfNotNull(uriBuilder, "page[size]", pagingSpec.getPageSize());
+            addIfNotNull(uriBuilder, "page[number]", pagingSpec.getPageNumber());
             addFilters(uriBuilder, filters);
             return uriBuilder.build();
         } catch (URISyntaxException exception) {

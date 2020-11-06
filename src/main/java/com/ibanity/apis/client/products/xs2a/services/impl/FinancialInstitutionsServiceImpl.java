@@ -4,7 +4,6 @@ import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.mappers.IbanityModelMapper;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityProduct;
-import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.products.xs2a.models.read.FinancialInstitutionReadQuery;
 import com.ibanity.apis.client.products.xs2a.models.read.FinancialInstitutionsReadQuery;
@@ -30,20 +29,36 @@ public class FinancialInstitutionsServiceImpl implements FinancialInstitutionsSe
 
     @Override
     public IbanityCollection<FinancialInstitution> list(FinancialInstitutionsReadQuery financialInstitutionsReadQuery) {
-        IbanityPagingSpec pagingSpec =
-                financialInstitutionsReadQuery.getPagingSpec() == null
-                        ? IbanityPagingSpec.DEFAULT_PAGING_SPEC : financialInstitutionsReadQuery.getPagingSpec();
 
         String customerAccessToken = financialInstitutionsReadQuery.getCustomerAccessToken();
-        URI uri = buildUri(
+        URI uri = isCursorBased(financialInstitutionsReadQuery) ?
+                buildUriCursorBased(financialInstitutionsReadQuery, customerAccessToken) : buildUriOffsetBased(financialInstitutionsReadQuery, customerAccessToken);
+        HttpResponse response = ibanityHttpClient.get(uri, financialInstitutionsReadQuery.getAdditionalHeaders(), customerAccessToken);
+        return IbanityModelMapper.mapCollection(response, FinancialInstitution.class);
+    }
+
+    private boolean isCursorBased(FinancialInstitutionsReadQuery financialInstitutionsReadQuery) {
+        return financialInstitutionsReadQuery.getOffsetPagingSpec() == null;
+    }
+
+    private URI buildUriOffsetBased(FinancialInstitutionsReadQuery financialInstitutionsReadQuery, String customerAccessToken) {
+        return buildUri(
                 removeEnd(
                         getUrl(customerAccessToken).replace(FinancialInstitution.API_URL_TAG_ID, ""),
                         "/"
                 ),
-                pagingSpec,
+                financialInstitutionsReadQuery.getOffsetPagingSpec(),
                 financialInstitutionsReadQuery.getFilters());
-        HttpResponse response = ibanityHttpClient.get(uri, financialInstitutionsReadQuery.getAdditionalHeaders(), customerAccessToken);
-        return IbanityModelMapper.mapCollection(response, FinancialInstitution.class);
+    }
+
+    private URI buildUriCursorBased(FinancialInstitutionsReadQuery financialInstitutionsReadQuery, String customerAccessToken) {
+        return buildUri(
+                removeEnd(
+                        getUrl(customerAccessToken).replace(FinancialInstitution.API_URL_TAG_ID, ""),
+                        "/"
+                ),
+                financialInstitutionsReadQuery.getPagingSpec(),
+                financialInstitutionsReadQuery.getFilters());
     }
 
     @Override

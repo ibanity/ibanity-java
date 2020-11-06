@@ -27,9 +27,12 @@
       "primaryColor": "#7d39ff",
       "requiresCredentialStorage": false,
       "requiresCustomerIpAddress": false,
+      "financialInstitutionCustomerReferenceRequired": true,
       "sandbox": true,
       "secondaryColor": "#3DF2C2",
-      "status": "stable"
+      "status": "stable",
+      "sharedBrandReference": "deckow-be",
+      "sharedBrandName": "Deckow"
     },
     "id": "268c9f39-736b-4a9a-b198-4191030c0e21",
     "links": {
