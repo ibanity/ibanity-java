@@ -1,15 +1,8 @@
 package com.ibanity.apis.client.jsonapi;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Map;
-import java.util.UUID;
 
 import static java.util.Collections.emptyMap;
 
@@ -21,7 +14,7 @@ import static java.util.Collections.emptyMap;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class DataApiModel {
 
-    private UUID id;
+    private String id;
     private LinksApiModel links;
     private String type;
     private SynchronizationMetaApiModel meta;

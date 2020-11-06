@@ -37,7 +37,7 @@ public class TransactionServiceImplTest {
     private static final UUID TRANSACTION_ID = fromString("a4a47c21-b606-464f-ae17-f8e3af6772c9");
     private static final String TRANSACTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/accounts/{accountId}/transactions/{transactionId}";
     private static final String GET_TRANSACTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/accounts/8804e34f-12b0-4b70-86bf-265f013ca232/transactions/a4a47c21-b606-464f-ae17-f8e3af6772c9";
-    private static final String LIST_TRANSACTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/accounts/8804e34f-12b0-4b70-86bf-265f013ca232/transactions?limit=10";
+    private static final String LIST_TRANSACTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/accounts/8804e34f-12b0-4b70-86bf-265f013ca232/transactions?page%5Blimit%5D=10";
 
     @InjectMocks
     private TransactionServiceImpl transactionService;

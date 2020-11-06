@@ -23,9 +23,9 @@ public class URIHelper {
         try {
             pagingSpec = pagingSpec == null ? IbanityPagingSpec.DEFAULT_PAGING_SPEC : pagingSpec;
             URIBuilder uriBuilder = new URIBuilder(removeEnd(url, "/"));
-            addIfNotNull(uriBuilder, "before", pagingSpec.getBefore());
-            addIfNotNull(uriBuilder, "after", pagingSpec.getAfter());
-            addIfNotNull(uriBuilder, "limit", pagingSpec.getLimit());
+            addIfNotNull(uriBuilder, "page[before]", pagingSpec.getBefore());
+            addIfNotNull(uriBuilder, "page[after]", pagingSpec.getAfter());
+            addIfNotNull(uriBuilder, "page[limit]", pagingSpec.getLimit());
             addFilters(uriBuilder, filters);
             return uriBuilder.build();
         } catch (URISyntaxException exception) {

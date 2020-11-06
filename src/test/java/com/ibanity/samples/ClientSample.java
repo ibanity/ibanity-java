@@ -4,6 +4,7 @@ import com.ibanity.apis.client.builders.IbanityServiceBuilder;
 import com.ibanity.apis.client.builders.OptionalPropertiesBuilder;
 import com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys;
 import com.ibanity.apis.client.products.xs2a.models.*;
+import com.ibanity.apis.client.products.xs2a.models.read.FinancialInstitutionCountriesReadQuery;
 import com.ibanity.apis.client.services.IbanityService;
 import com.ibanity.samples.customer.*;
 import com.ibanity.samples.helper.SampleHelper;
@@ -68,7 +69,7 @@ public class ClientSample {
                 .withHttpResponseInterceptors((response, context) -> LOGGER.info("This is a HttpResponseInterceptor"))
                 ;
 
-        if(getConfiguration(IBANITY_CLIENT_TLS_CA_CERTIFICATE_PATH_PROPERTY_KEY) != null) {
+        if (getConfiguration(IBANITY_CLIENT_TLS_CA_CERTIFICATE_PATH_PROPERTY_KEY) != null) {
             ibanityServiceBuilder.caCertificate(loadCa(getConfiguration(IBANITY_CLIENT_TLS_CA_CERTIFICATE_PATH_PROPERTY_KEY)));
         }
 
@@ -87,6 +88,7 @@ public class ClientSample {
 
         CustomerAccessToken customerAccessToken = clientSample.customerAccessTokenSamples();
         List<FinancialInstitution> financialInstitutions = clientSample.financialInstitutionSamples();
+        List<FinancialInstitutionCountry> financialInstitutionCountries = clientSample.financialInstitutionCountrySamples(ibanityService);
 
         clientSample.accountInformationAccessRequestSamples(customerAccessToken, financialInstitutions);
 
@@ -99,6 +101,7 @@ public class ClientSample {
         Synchronization synchronization = clientSample.synchronizationSamples(customerAccessToken, accounts);
         PaymentInitiationRequest paymentInitiationRequest = clientSample.paymentInitiationRequestSamples();
 
+        LOGGER.info("List of financialInstitutionCountries: {}", financialInstitutionCountries);
         LOGGER.info("List of financialInstitutions: {}", financialInstitutions);
         LOGGER.info("List of accounts: {}", accounts);
         LOGGER.info("List of transactions: {}", transactions);
@@ -109,6 +112,13 @@ public class ClientSample {
         clientSample.customerSamples(customerAccessToken);
 
         LOGGER.info("Samples end");
+    }
+
+    private List<FinancialInstitutionCountry> financialInstitutionCountrySamples(IbanityService ibanityService) {
+        return ibanityService.xs2aService().financialInstitutionCountriesService()
+                .list(FinancialInstitutionCountriesReadQuery.builder()
+                        .build())
+                .getItems();
     }
 
     private Customer customerSamples(CustomerAccessToken customerAccessToken) {

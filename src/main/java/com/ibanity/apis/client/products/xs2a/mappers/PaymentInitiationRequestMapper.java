@@ -8,6 +8,7 @@ import com.ibanity.apis.client.products.xs2a.models.links.FinancialInstitutionLi
 import com.ibanity.apis.client.products.xs2a.models.links.PaymentInitiationAuthorizationLinks;
 import com.ibanity.apis.client.products.xs2a.services.impl.PaymentInitiationRequestServiceImpl.PaymentInitiationRequest;
 
+import java.util.UUID;
 import java.util.function.Function;
 
 public class PaymentInitiationRequestMapper {
@@ -54,7 +55,7 @@ public class PaymentInitiationRequestMapper {
             if (dataApiModel.getRelationships() != null
                     && dataApiModel.getRelationships().get("financialInstitution") != null) {
                 RelationshipsApiModel financialInstitution = dataApiModel.getRelationships().get("financialInstitution");
-                paymentInitiationRequest.setFinancialInstitutionId(financialInstitution.getData().getId());
+                paymentInitiationRequest.setFinancialInstitutionId(UUID.fromString(financialInstitution.getData().getId()));
                 paymentInitiationRequest.setFinancialInstitutionLink(
                         FinancialInstitutionLinks.builder()
                                 .related(financialInstitution.getLinks().getRelated())

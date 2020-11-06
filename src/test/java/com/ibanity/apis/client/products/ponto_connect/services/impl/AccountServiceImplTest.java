@@ -37,7 +37,7 @@ public class AccountServiceImplTest {
     private static final UUID FINANCIAL_INSTITUTION_ID = fromString("953934eb-229a-4fd2-8675-07794078cc7d");
     private static final String ACCOUNT_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/accounts/{accountId}";
     private static final String GET_ACCOUNT_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/accounts/8804e34f-12b0-4b70-86bf-265f013ca232";
-    private static final String LIST_ACCOUNT_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/accounts?limit=10";
+    private static final String LIST_ACCOUNT_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/accounts?page%5Blimit%5D=10";
 
     @InjectMocks
     private AccountServiceImpl accountService;
@@ -62,7 +62,7 @@ public class AccountServiceImplTest {
                 .accessToken(ACCESS_TOKEN)
                 .accountId(ACCOUNT_ID)
                 .build());
-        
+
         assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpected());
     }
 

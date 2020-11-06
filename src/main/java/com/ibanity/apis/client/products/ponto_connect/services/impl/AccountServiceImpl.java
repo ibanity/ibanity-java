@@ -17,6 +17,7 @@ import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 
+import java.util.UUID;
 import java.util.function.Function;
 
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
@@ -73,7 +74,7 @@ public class AccountServiceImpl implements AccountService {
 
             RelationshipsApiModel financialInstitution = dataApiModel.getRelationships().get("financialInstitution");
             if (financialInstitution != null) {
-                account.setFinancialInstitutionId(financialInstitution.getData().getId());
+                account.setFinancialInstitutionId(UUID.fromString(financialInstitution.getData().getId()));
             }
 
             return account;

@@ -1,0 +1,20 @@
+{
+  "data": [
+    {
+      "id": "BE",
+      "type": "financialInstitutionCountry"
+    },
+    {
+      "id": "NL",
+      "type": "financialInstitutionCountry"
+    }
+  ],
+  "links": {
+    "first": "https://api.ibanity.com/xs2a/financial-institution-countries"
+  },
+  "meta": {
+    "paging": {
+      "limit": 10
+    }
+  }
+}

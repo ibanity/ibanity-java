@@ -15,11 +15,14 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 
 import java.io.IOException;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.ibanity.apis.client.http.handler.IbanityResponseHandler.IBANITY_REQUEST_ID_HEADER;
 import static java.lang.String.format;
+import static java.util.UUID.fromString;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.http.util.EntityUtils.consumeQuietly;
 
 public class IbanityModelMapper {
@@ -41,7 +44,7 @@ public class IbanityModelMapper {
         }
     }
 
-    private static String getRequestId(HttpResponse httpResponse) {
+    public static String getRequestId(HttpResponse httpResponse) {
         Header header = httpResponse.getFirstHeader(IBANITY_REQUEST_ID_HEADER);
         return header == null ? null : header.getValue();
     }
@@ -58,8 +61,8 @@ public class IbanityModelMapper {
             return IbanityCollection.<T>builder()
                     .requestId(requestId)
                     .pageLimit(collectionApiModel.getMeta().getPaging().getLimit())
-                    .afterCursor(collectionApiModel.getMeta().getPaging().getAfter())
-                    .beforeCursor(collectionApiModel.getMeta().getPaging().getBefore())
+                    .afterCursor(toUUIDNullSafe(collectionApiModel.getMeta().getPaging().getAfter()))
+                    .beforeCursor(toUUIDNullSafe(collectionApiModel.getMeta().getPaging().getBefore()))
                     .firstLink(collectionApiModel.getLinks().getFirst())
                     .previousLink(collectionApiModel.getLinks().getPrev())
                     .nextLink(collectionApiModel.getLinks().getNext())
@@ -90,7 +93,7 @@ public class IbanityModelMapper {
             if (clientObject == null) {
                 clientObject = classType.newInstance();
             }
-            clientObject.setId(data.getId());
+            clientObject.setId(fromString(data.getId()));
             if (data.getLinks() != null) {
                 clientObject.setSelfLink(data.getLinks().getSelf());
             }
@@ -123,5 +126,9 @@ public class IbanityModelMapper {
         } finally {
             consumeQuietly(entity);
         }
+    }
+
+    public static UUID toUUIDNullSafe(String value) {
+        return isNotBlank(value) ? fromString(value) : null;
     }
 }

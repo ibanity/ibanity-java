@@ -38,8 +38,8 @@ public class FinancialInstitutionServiceImplTest {
     private static final UUID FINANCIAL_INSTITUTION_ID_2 = fromString("953934eb-0002-4fd2-8675-07794078cc7d");
     private static final String FINANCIAL_INSTITUTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/financial-institutions/{financialInstitutionId}";
     private static final String GET_FINANCIAL_INSTITUTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/financial-institutions/953934eb-229a-4fd2-8675-07794078cc7d";
-    private static final String LIST_ORGANIZATION_FINANCIAL_INSTITUTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/financial-institutions?limit=10";
-    private static final String LIST_FINANCIAL_INSTITUTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/financial-institutions?limit=10&filter%5Bname%5D%5Bcontains%5D=Bank";
+    private static final String LIST_ORGANIZATION_FINANCIAL_INSTITUTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/financial-institutions?page%5Blimit%5D=10";
+    private static final String LIST_FINANCIAL_INSTITUTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/financial-institutions?page%5Blimit%5D=10&filter%5Bname%5D%5Bcontains%5D=Bank";
 
     @InjectMocks
     private FinancialInstitutionServiceImpl financialInstitutionService;

@@ -81,7 +81,7 @@ class FinancialInstitutionTransactionsServiceImplTest {
                 .financialInstitutionUserId(USER_ID)
                 .build();
 
-        when(ibanityHttpClient.get(new URI(TRANSACTION_ENDPOINT + "?limit=10")))
+        when(ibanityHttpClient.get(new URI(TRANSACTION_ENDPOINT + "?page%5Blimit%5D=10")))
                 .thenReturn(loadHttpResponse("json/sandbox/list_transactions.json"));
 
         IbanityCollection<FinancialInstitutionTransaction> actual = financialInstitutionTransactionsService.list(query);

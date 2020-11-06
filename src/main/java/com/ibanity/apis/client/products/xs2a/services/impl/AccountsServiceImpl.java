@@ -79,7 +79,7 @@ public class AccountsServiceImpl implements AccountsService {
 
             RelationshipsApiModel financialInstitution = dataApiModel.getRelationships().get("financialInstitution");
             if (financialInstitution != null) {
-                account.setFinancialInstitutionId(financialInstitution.getData().getId());
+                account.setFinancialInstitutionId(UUID.fromString(financialInstitution.getData().getId()));
             }
 
             return account;

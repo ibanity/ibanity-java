@@ -19,7 +19,6 @@ import org.mockito.quality.Strictness;
 
 import java.math.BigDecimal;
 import java.net.URI;
-import java.time.Instant;
 import java.util.UUID;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -103,7 +102,7 @@ class AccountsServiceImplTest {
                 .accountInformationAccessRequestId(ACCOUNT_INFORMATION_ACCESS_REQUEST_ID)
                 .build();
 
-        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_AIAR_ENDPOINT + "?limit=10"), emptyMap(), CUSTOMER_ACCESS_TOKEN))
+        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_AIAR_ENDPOINT + "?page%5Blimit%5D=10"), emptyMap(), CUSTOMER_ACCESS_TOKEN))
                 .thenReturn(loadHttpResponse("json/accounts.json"));
 
         IbanityCollection<Account> actual = accountsService.list(accountsReadQuery);
@@ -119,7 +118,7 @@ class AccountsServiceImplTest {
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                 .build();
 
-        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT + "?limit=10"), emptyMap(), CUSTOMER_ACCESS_TOKEN))
+        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT + "?page%5Blimit%5D=10"), emptyMap(), CUSTOMER_ACCESS_TOKEN))
                 .thenReturn(loadHttpResponse("json/accounts.json"));
         IbanityCollection<Account> actual = accountsService.list(accountsReadQuery);
 
@@ -134,7 +133,7 @@ class AccountsServiceImplTest {
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                 .build();
 
-        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT + "?limit=10"), emptyMap(), CUSTOMER_ACCESS_TOKEN))
+        when(ibanityHttpClient.get(new URI(ACCOUNT_BY_FINANCIAL_INSTITUTION_ENDPOINT + "?page%5Blimit%5D=10"), emptyMap(), CUSTOMER_ACCESS_TOKEN))
                 .thenReturn(loadHttpResponse("json/accounts_with_sync_errors.json"));
         IbanityCollection<Account> actual = accountsService.list(accountsReadQuery);
 
@@ -151,7 +150,7 @@ class AccountsServiceImplTest {
                 .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                 .build();
 
-        when(ibanityHttpClient.get(new URI(ACCOUNT_ENDPOINT + "?limit=10"), emptyMap(), CUSTOMER_ACCESS_TOKEN))
+        when(ibanityHttpClient.get(new URI(ACCOUNT_ENDPOINT + "?page%5Blimit%5D=10"), emptyMap(), CUSTOMER_ACCESS_TOKEN))
                 .thenReturn(loadHttpResponse("json/accounts.json"));
 
         IbanityCollection<Account> actual = accountsService.list(accountsReadQuery);

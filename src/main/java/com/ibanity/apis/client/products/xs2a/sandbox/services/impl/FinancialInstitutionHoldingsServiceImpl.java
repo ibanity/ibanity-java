@@ -114,8 +114,8 @@ public class FinancialInstitutionHoldingsServiceImpl implements FinancialInstitu
     private Function<DataApiModel, FinancialInstitutionHolding> responseMapping() {
         return dataApiModel -> {
             FinancialInstitutionHolding financialInstitutionHolding = toIbanityModel(dataApiModel, FinancialInstitutionHolding.class);
-            UUID accountId = dataApiModel.getRelationships().get("financialInstitutionAccount").getData().getId();
-            financialInstitutionHolding.setFinancialInstitutionAccountId(accountId);
+            String accountId = dataApiModel.getRelationships().get("financialInstitutionAccount").getData().getId();
+            financialInstitutionHolding.setFinancialInstitutionAccountId(UUID.fromString(accountId));
             return financialInstitutionHolding;
         };
     }

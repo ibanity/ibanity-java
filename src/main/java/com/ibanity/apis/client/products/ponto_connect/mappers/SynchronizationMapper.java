@@ -6,6 +6,7 @@ import com.ibanity.apis.client.mappers.IbanityErrorMapper;
 import com.ibanity.apis.client.products.ponto_connect.models.Synchronization;
 import com.ibanity.apis.client.utils.IbanityUtils;
 
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class SynchronizationMapper {
@@ -22,7 +23,7 @@ public class SynchronizationMapper {
                 .errors(synchronizationApiModel.getErrors().stream()
                         .map(IbanityErrorMapper::map)
                         .collect(Collectors.toList()))
-                .id(dataApiModel.getId())
+                .id(UUID.fromString(dataApiModel.getId()))
                 .build();
 
         if (dataApiModel.getLinks() != null) {

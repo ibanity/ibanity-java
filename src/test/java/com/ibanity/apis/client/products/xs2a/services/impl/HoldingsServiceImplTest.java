@@ -40,7 +40,7 @@ class HoldingsServiceImplTest {
     private static final String CUSTOMER_ACCESS_TOKEN = UUID.randomUUID().toString();
     private static final String HOLDINGS_ENDPOINT = "https://api.ibanity.localhost/xs2a/customer/financial-institutions/{financialInstitutionId}/accounts/{accountId}/holdings/{holdingId}";
     private static final String HOLDING_URI = "https://api.ibanity.localhost/xs2a/customer/financial-institutions/f252866e-638e-4d28-a575-20a406223777/accounts/9fe37230-9103-49bd-a432-2bad72d5abb2/holdings/eb535c31-f619-4092-9db2-4db84149ddcb";
-    private static final String HOLDINGS_URI = "https://api.ibanity.localhost/xs2a/customer/financial-institutions/f252866e-638e-4d28-a575-20a406223777/accounts/9fe37230-9103-49bd-a432-2bad72d5abb2/holdings?limit=10";
+    private static final String HOLDINGS_URI = "https://api.ibanity.localhost/xs2a/customer/financial-institutions/f252866e-638e-4d28-a575-20a406223777/accounts/9fe37230-9103-49bd-a432-2bad72d5abb2/holdings?page%5Blimit%5D=10";
     private static final String FIRST_LINK = "https://api.ibanity.localhost/xs2a/customer/financial-institutions/f252866e-638e-4d28-a575-20a406223777/accounts/9fe37230-9103-49bd-a432-2bad72d5abb2/holdings";
 
 
