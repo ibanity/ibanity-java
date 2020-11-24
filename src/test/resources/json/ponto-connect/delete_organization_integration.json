@@ -1,0 +1,14 @@
+{
+  "data": {
+    "type": "integration",
+    "id": "8804e34f-12b0-4b70-86bf-265f013ca232",
+    "relationships": {
+      "organization": {
+        "data": {
+          "type": "organization",
+          "id": "6680437c-8ed8-425b-84b7-2c31e5ca625d"
+        }
+      }
+    }
+  }
+}
