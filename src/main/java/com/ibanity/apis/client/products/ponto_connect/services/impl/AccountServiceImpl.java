@@ -10,6 +10,7 @@ import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.products.ponto_connect.mappers.SynchronizationMapper;
 import com.ibanity.apis.client.products.ponto_connect.models.Account;
 import com.ibanity.apis.client.products.ponto_connect.models.Synchronization;
+import com.ibanity.apis.client.products.ponto_connect.models.delete.AccountDeleteQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.read.AccountReadQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.read.AccountsReadQuery;
 import com.ibanity.apis.client.products.ponto_connect.services.AccountService;
@@ -54,6 +55,15 @@ public class AccountServiceImpl implements AccountService {
 
         HttpResponse response = ibanityHttpClient.get(buildUri(getUrl(), pagingSpec), accountsReadQuery.getAdditionalHeaders(), accountsReadQuery.getAccessToken());
         return IbanityModelMapper.mapCollection(response, customMappingFunction());
+    }
+
+    @Override
+    public Account delete(AccountDeleteQuery accountDeleteQuery) {
+        String uri = getUrl()
+                + "/"
+                + accountDeleteQuery.getAccountId();
+        HttpResponse response = ibanityHttpClient.delete(buildUri(uri), accountDeleteQuery.getAdditionalHeaders(), accountDeleteQuery.getAccessToken());
+        return mapResource(response, customMappingFunction());
     }
 
     private String getUrl() {
