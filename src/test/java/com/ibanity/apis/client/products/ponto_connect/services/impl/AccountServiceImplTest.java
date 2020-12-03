@@ -5,6 +5,7 @@ import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.ponto_connect.models.Account;
 import com.ibanity.apis.client.products.ponto_connect.models.Synchronization;
+import com.ibanity.apis.client.products.ponto_connect.models.delete.AccountDeleteQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.read.AccountReadQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.read.AccountsReadQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;
@@ -64,6 +65,21 @@ public class AccountServiceImplTest {
                 .build());
 
         assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpected());
+    }
+
+    @Test
+    public void delete() throws Exception {
+        when(ibanityHttpClient.delete(new URI(GET_ACCOUNT_ENDPOINT), emptyMap(), ACCESS_TOKEN))
+                .thenReturn(loadHttpResponse("json/ponto-connect/account_delete.json"));
+
+        Account actual = accountService.delete(AccountDeleteQuery.builder()
+                .accessToken(ACCESS_TOKEN)
+                .accountId(ACCOUNT_ID)
+                .build());
+
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(Account.builder()
+                .id(ACCOUNT_ID)
+                .build());
     }
 
     @Test
