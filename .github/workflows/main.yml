@@ -14,3 +14,9 @@ jobs:
           java-version: 1.8
       - name: Build with Maven
         run: mvn -B package --file pom.xml
+      - name: Extract Tag Name
+        shell: bash
+        run: echo "##[set-output name=tag;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_tag
+      - name: Set version package
+        run: mvn versions:set -DnewVersion=${{ steps.extract_tag.outputs.tag }}
