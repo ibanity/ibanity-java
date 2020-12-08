@@ -28,16 +28,14 @@
             <id>api.wiki</id>
             <url>https://github.com/ibanity/ibanity-java/wiki</url>
         </site>
-
         <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>artifactory</id>
+            <url>https://artifactory.ibanity.net/artifactory/maven-snapshots-local/</url>
         </snapshotRepository>
         <repository>
             <id>ossrh</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
-
     </distributionManagement>
 
     <developers>
@@ -337,6 +335,13 @@
                         <goals>
                             <goal>sign</goal>
                         </goals>
+                        <configuration>
+                            <!-- Prevent `gpg` from using pinentry programs -->
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
