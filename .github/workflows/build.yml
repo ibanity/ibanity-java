@@ -8,6 +8,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Import GPG Owner Trust
+        run: echo ${{secrets.GPG_OWNERTRUST}} | base64 --decode | gpg --import-ownertrust
       - name: Set up JDK 1.8
         uses: actions/setup-java@v1
         with:
@@ -16,10 +18,7 @@ jobs:
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
-      - name: Import GPG Owner Trust
-        run: echo ${{secrets.GPG_OWNERTRUST}} | base64 --decode | gpg --import-ownertrust
-      - name: Import GPG key
-        run: echo ${{secrets.GPG_SECRET_KEYS}} | base64 --decode | gpg --import --no-tty --batch --yes
+          gpg-private-key: ${{ secrets.GPG_SECRET_KEYS }}
       - name: Publish to Artifactory
         run: mvn deploy
         env:
