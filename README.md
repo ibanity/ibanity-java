@@ -1,7 +1,7 @@
 # Java wrapper for the Ibanity API
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.ibanity.apis/ibanity-java.svg)](https://search.maven.org/artifact/com.ibanity.apis/ibanity-java)
-[![Build Status](https://github.com/ibanity/ibanity-java/workflows/Build/badge.svg?branch=master)](https://travis-ci.org/ibanity/ibanity-java)
+[![Build Status](https://github.com/ibanity/ibanity-java/workflows/Build/badge.svg?branch=master)](https://github.com/ibanity/ibanity-java/actions?query=workflow%3ABuild)
 [![License](https://img.shields.io/cocoapods/l/AFNetworking.svg)](https://github.com/ibanity/ibanity-java/blob/master/LICENSE)
 [![Maintainability](https://sonarcloud.io/api/project_badges/measure?project=com.ibanity.apis:ibanity-java&metric=sqale_rating)](https://sonarcloud.io/component_measures?id=com.ibanity.apis:ibanity-java&metric=sqale_rating)
 [![Security](https://sonarcloud.io/api/project_badges/measure?project=com.ibanity.apis:ibanity-java&metric=security_rating)](https://sonarcloud.io/component_measures?id=com.ibanity.apis:ibanity-java&metric=security_rating)
