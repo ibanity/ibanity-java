@@ -31,4 +31,6 @@ public class FinancialInstitutionUpdateQuery {
                 .financialInstitutionId(financialInstitution.getId())
                 .name(financialInstitution.getName());
     }
+
+    public static class FinancialInstitutionUpdateQueryBuilder {}
 }
