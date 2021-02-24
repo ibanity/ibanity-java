@@ -29,7 +29,7 @@ import static java.util.stream.Collectors.toList;
 
 public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureService {
 
-    public static final String SIGNATURE_ALGORITHM = "SHA256withRSA/PSS";
+    public static final String SIGNATURE_ALGORITHM = "RSASSA-PSS";
     public static final PSSParameterSpec PARAMETER_SPEC = new PSSParameterSpec("SHA-256", "MGF1", MGF1ParameterSpec.SHA256, 32, 1);
 
     private static final Logger LOGGER = LogManager.getLogger(IbanityHttpSignatureServiceImpl.class);
