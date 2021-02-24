@@ -1,19 +1,20 @@
 package com.ibanity.apis.client.http.service.impl;
 
-import com.ibanity.apis.client.helpers.KeyToolHelper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.bouncycastle.util.io.pem.PemReader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.StringReader;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.*;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -25,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class IbanityHttpSignatureServiceImplTest {
@@ -68,7 +70,7 @@ class IbanityHttpSignatureServiceImplTest {
     void verifySignature() throws Exception {
         Map<String, String> actual = getSignatureHeaders();
 
-        Signature publicSignature = Signature.getInstance("SHA256withRSA/PSS");
+        Signature publicSignature = Signature.getInstance("RSASSA-PSS");
         publicSignature.setParameter(IbanityHttpSignatureServiceImpl.PARAMETER_SPEC);
 
         PublicKey publicKey = loadPublicKey();
@@ -99,13 +101,19 @@ class IbanityHttpSignatureServiceImplTest {
     }
 
     private X509Certificate loadCertificate() throws CertificateException {
-        return (X509Certificate) KeyToolHelper.loadCertificate(getPath(CERTIFICATE_FILENAME));
+
+        return (X509Certificate) loadCertificate(getPath(CERTIFICATE_FILENAME));
     }
 
     private PrivateKey loadPrivateKey() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         String privateKeyPath = getPath(PRIVATE_KEY_FILENAME);
-        String privateKey = IOUtils.toString(FileUtils.openInputStream(new File(privateKeyPath)), "UTF-8");
-        byte[] encoded = new PemReader(new StringReader(privateKey)).readPemObject().getContent();
+        String privateKey = IOUtils.toString(FileUtils.openInputStream(new File(privateKeyPath)), UTF_8);
+        String privateKeyPEM = privateKey
+                .replace("-----BEGIN PRIVATE KEY-----", "")
+                .replaceAll(System.lineSeparator(), "")
+                .replace("-----END PRIVATE KEY-----", "");
+
+        byte[] encoded = Base64.getDecoder().decode(privateKeyPEM);
         return KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(encoded));
     }
 
@@ -122,5 +130,15 @@ class IbanityHttpSignatureServiceImplTest {
     private Map<String, String> getSignatureHeaders() throws MalformedURLException {
         URL url = new URL("https://myproxy.com/xs2a/customer-access-tokens?test=1&test=2");
         return httpSignatureService.getHttpSignatureHeaders("POST", url, getRequestHeaders(), getRequestPayload());
+    }
+
+    public static Certificate loadCertificate(final String certificatePath) throws CertificateException {
+        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+        try {
+            InputStream is = FileUtils.openInputStream(new File(certificatePath));
+            return certificateFactory.generateCertificate(is);
+        } catch (IOException exception) {
+            throw new IllegalArgumentException(new FileNotFoundException("Resource Path not found:" + certificatePath));
+        }
     }
 }
