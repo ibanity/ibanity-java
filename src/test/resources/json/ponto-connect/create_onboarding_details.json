@@ -1,0 +1,19 @@
+{
+  "data": {
+    "type": "onboardingDetails",
+    "id": "df44642f-c38e-4e8c-9373-7f8e0b9f502f",
+    "attributes": {
+      "vatNumber": "BE0999999999",
+      "phoneNumber": "+32484000000",
+      "organizationName": "Smith Ltd",
+      "lastName": "Smith",
+      "firstName": "Jo",
+      "enterpriseNumber": "0999999999",
+      "email": "jsmith@example.com",
+      "addressStreetAddress": "123 Main St",
+      "addressPostalCode": "1000",
+      "addressCountry": "BE",
+      "addressCity": "Brussels"
+    }
+  }
+}

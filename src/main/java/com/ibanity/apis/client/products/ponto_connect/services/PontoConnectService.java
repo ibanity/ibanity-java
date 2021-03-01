@@ -23,4 +23,6 @@ public interface PontoConnectService {
     UsageService usageService();
 
     IntegrationService integrationService();
+
+    OnboardingDetailsService onboardingDetailsService();
 }

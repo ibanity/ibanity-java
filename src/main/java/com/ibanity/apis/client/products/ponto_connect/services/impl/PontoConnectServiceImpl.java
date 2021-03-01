@@ -19,6 +19,7 @@ public class PontoConnectServiceImpl implements PontoConnectService {
     private final PaymentService paymentService;
     private final IntegrationService integrationService;
     private final SandboxService sandboxService;
+    private final OnboardingDetailsService onboardingDetailsService;
 
     public PontoConnectServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient, OAuthHttpClient oAuthHttpClient) {
         tokenService = new TokenServiceImpl(apiUrlProvider, oAuthHttpClient);
@@ -31,6 +32,7 @@ public class PontoConnectServiceImpl implements PontoConnectService {
         paymentService = new PaymentServiceImpl(apiUrlProvider, ibanityHttpClient);
         sandboxService = new SandboxServiceImpl(apiUrlProvider, ibanityHttpClient);
         integrationService = new IntegrationServiceImpl(apiUrlProvider, ibanityHttpClient);
+        onboardingDetailsService = new OnboardingDetailsServiceImpl(apiUrlProvider, ibanityHttpClient);
     }
 
     @Override
@@ -81,5 +83,10 @@ public class PontoConnectServiceImpl implements PontoConnectService {
     @Override
     public IntegrationService integrationService() {
         return integrationService;
+    }
+
+    @Override
+    public OnboardingDetailsService onboardingDetailsService() {
+        return onboardingDetailsService;
     }
 }
