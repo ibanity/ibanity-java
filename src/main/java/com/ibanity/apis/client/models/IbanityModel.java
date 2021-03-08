@@ -2,13 +2,7 @@ package com.ibanity.apis.client.models;
 
 import java.util.UUID;
 
-public interface IbanityModel {
+public interface IbanityModel extends GenericModel<UUID> {
 
     String URL_PARAMETER_ID_POSTFIX = "Id";
-
-    void setId(UUID uuid);
-
-    void setSelfLink(String selfLink);
-
-    void setRequestId(String requestId);
 }
