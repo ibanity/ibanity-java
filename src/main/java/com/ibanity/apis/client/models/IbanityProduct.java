@@ -2,7 +2,9 @@ package com.ibanity.apis.client.models;
 
 public enum IbanityProduct {
 
-    PontoConnect("ponto-connect"), Xs2a("xs2a");
+    IsabelConnect("isabel-connect"),
+    PontoConnect("ponto-connect"),
+    Xs2a("xs2a");
 
     private String path;
 
