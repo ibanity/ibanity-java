@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "paging": {
+      "offset": 10,
+      "total": 11
+    }
+  },
+  "data": [
+    {
+      "attributes": {
+        "country": "BE",
+        "currency": "EUR",
+        "description": "current account",
+        "financialInstitutionBic": "KREDBEBB",
+        "holderAddress": "Avenue du Grisbi, 1200 Bruxelles",
+        "holderAddressCountry": "BE",
+        "holderName": "Flouze",
+        "reference": "BE96153112434405",
+        "referenceType": "IBAN"
+      },
+      "type": "account",
+      "id": "93ecb1fdbfb7848e7b7896c0f2d207aed3d8b4c1"
+    }
+  ]
+}
