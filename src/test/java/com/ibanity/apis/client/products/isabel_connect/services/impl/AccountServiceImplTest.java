@@ -2,8 +2,10 @@ package com.ibanity.apis.client.products.isabel_connect.services.impl;
 
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityProduct;
+import com.ibanity.apis.client.models.IsabelCollection;
 import com.ibanity.apis.client.products.isabel_connect.models.Account;
 import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReadQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.read.AccountsReadQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +30,7 @@ public class AccountServiceImplTest {
     private static final String ACCOUNT_ID = "93ecb1fdbfb7848e7b7896c0f2d207aed3d8b4c1";
     private static final String ACCOUNT_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/accounts/{accountId}";
     private static final String GET_ACCOUNT_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/accounts/93ecb1fdbfb7848e7b7896c0f2d207aed3d8b4c1";
-    private static final String LIST_ACCOUNT_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/accounts?page%5Blimit%5D=10";
+    private static final String LIST_ACCOUNT_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/accounts?size=10";
 
     @InjectMocks
     private AccountsServiceImpl accountService;
@@ -55,6 +57,20 @@ public class AccountServiceImplTest {
                 .build());
 
         assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpected());
+    }
+
+    @Test
+    public void list() throws Exception {
+        when(ibanityHttpClient.get(new URI(LIST_ACCOUNT_ENDPOINT), emptyMap(), ACCESS_TOKEN))
+                .thenReturn(loadHttpResponse("json/isabel-connect/accounts.json"));
+
+        IsabelCollection<Account> actual = accountService.list(AccountsReadQuery.builder()
+                .accessToken(ACCESS_TOKEN)
+                .build());
+
+        assertThat(actual.getItems()).containsExactly(createExpected());
+        assertThat(actual.getPagingOffset()).isEqualTo(10);
+        assertThat(actual.getPagingTotal()).isEqualTo(11);
     }
 
     private Account createExpected() {
