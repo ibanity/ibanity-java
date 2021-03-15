@@ -1,11 +1,20 @@
 package com.ibanity.apis.client.products.isabel_connect.models;
 
 import com.ibanity.apis.client.models.GenericModel;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-public interface IsabelModel extends GenericModel<String> {
-    String URL_PARAMETER_ID_POSTFIX = "Id";
+@Data
+@SuperBuilder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public abstract class IsabelModel<T> implements GenericModel<T> {
+    public static String URL_PARAMETER_ID_POSTFIX = "Id";
 
-    void setSelfLink(String selfLink);
-
-    void setRequestId(String requestId);
+    private T id;
+    private String selfLink;
+    private String requestId;
 }
