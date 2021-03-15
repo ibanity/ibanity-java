@@ -1,0 +1,27 @@
+{
+  "data": [
+    {
+      "attributes": {
+        "amount": 80000,
+        "counterpartAccountReference": "BE21210123456703",
+        "counterpartFinancialInstitutionBic": "GEBABEBB",
+        "counterpartName": "MYBESTCLIENT",
+        "endToEndId": "UNIQUE CODE CUSTOMER",
+        "executionDate": "2018-10-15T08:34:17.417Z",
+        "internalId": "UNIQUE CODE BANK",
+        "remittanceInformation": "123456789002",
+        "remittanceInformationType": "structured-be",
+        "status": "Booked",
+        "valueDate": "2018-10-15T08:52:43.962Z"
+      },
+      "id": "14e2bff5-e365-4bc7-bf48-76b7bcd464e9",
+      "type": "intradayTransaction"
+    }
+  ],
+  "meta": {
+    "paging": {
+      "offset": 0,
+      "total": 3
+    }
+  }
+}
