@@ -12,10 +12,9 @@ import java.time.Instant;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Balance implements IsabelModel {
+public class Balance  {
     public static final String RESOURCE_TYPE = "balance";
 
-    private String id;
     private String selfLink;
     private String requestId;
 
