@@ -10,13 +10,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Account implements IsabelModel {
+public class Account extends IsabelModel<String> {
     public static final String RESOURCE_TYPE = "account";
     public static final String API_URL_TAG_ID = "{" + RESOURCE_TYPE + URL_PARAMETER_ID_POSTFIX + "}";
-
-    private String id;
-    private String selfLink;
-    private String requestId;
 
     private String country;
     private String currency;
