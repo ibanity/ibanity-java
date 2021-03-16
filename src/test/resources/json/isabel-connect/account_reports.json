@@ -1,0 +1,33 @@
+{
+  "data": [
+    {
+      "attributes": {
+        "accountReference": "BE96153112434405",
+        "accountReferences": [
+          "BE96153112434405"
+        ],
+        "fileFormat": "CODA",
+        "fileName": "CODA_20181009_BE96153112434405",
+        "fileSize": 29680,
+        "financialInstitutionName": "GringotBank",
+        "receivedAt": "2018-10-09T03:55:00.710Z"
+      },
+      "id": "1234001",
+      "links": {
+        "self": {
+          "href": "https://api.ibanity.com/isabel-connect/account-reports/1234001",
+          "meta": {
+            "contentType": "text/plain"
+          }
+        }
+      },
+      "type": "accountReport"
+    }
+  ],
+  "meta": {
+    "paging": {
+      "offset": 0,
+      "total": 2
+    }
+  }
+}
