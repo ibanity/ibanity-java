@@ -17,7 +17,7 @@ public class SynchronizationApIModel {
     private Instant createdAt;
     private String resourceId;
     private String resourceType;
-    private Boolean customerOnline;
+    private boolean customerOnline;
     private String customerIpAddress;
     private String status;
     private String subtype;

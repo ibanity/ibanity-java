@@ -19,7 +19,7 @@ public class SynchronizationReadQuery {
     private String subtype;
     private String resourceId;
     private String resourceType;
-    private Boolean customerOnline;
+    private boolean customerOnline;
     private String customerIpAddress;
     private UUID synchronizationId;
     private String customerAccessToken;
