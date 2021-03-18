@@ -6,6 +6,12 @@ import java.util.Map;
 
 import static java.util.Collections.emptyMap;
 
+/**
+ * @deprecated
+ * <p>Use {@link com.ibanity.apis.client.products.oauth2.models.revoke.TokenRevokeQuery} instead</p>
+ */
+
+@Deprecated
 @Data
 @Builder
 @NoArgsConstructor

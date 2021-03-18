@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.products.ponto_connect.models.refresh;
+package com.ibanity.apis.client.products.oauth2.models.revoke;
 
 import lombok.*;
 
@@ -6,19 +6,13 @@ import java.util.Map;
 
 import static java.util.Collections.emptyMap;
 
-/**
- * @deprecated
- * <p>Use {@link com.ibanity.apis.client.products.oauth2.models.refresh.TokenRefreshQuery} instead</p>
- */
-
-@Deprecated
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class TokenRefreshQuery {
+public class TokenRevokeQuery {
 
-    private String refreshToken;
+    private String token;
     private String clientSecret;
 
     @Builder.Default

@@ -1,12 +1,12 @@
-package com.ibanity.apis.client.products.ponto_connect.services.impl;
+package com.ibanity.apis.client.products.oauth2.services.impl;
 
 import com.ibanity.apis.client.http.OAuthHttpClient;
 import com.ibanity.apis.client.models.IbanityProduct;
-import com.ibanity.apis.client.products.ponto_connect.models.Token;
-import com.ibanity.apis.client.products.ponto_connect.models.create.TokenCreateQuery;
-import com.ibanity.apis.client.products.ponto_connect.models.refresh.TokenRefreshQuery;
-import com.ibanity.apis.client.products.ponto_connect.models.revoke.TokenRevokeQuery;
-import com.ibanity.apis.client.products.ponto_connect.services.TokenService;
+import com.ibanity.apis.client.products.oauth2.models.Token;
+import com.ibanity.apis.client.products.oauth2.models.create.TokenCreateQuery;
+import com.ibanity.apis.client.products.oauth2.models.refresh.TokenRefreshQuery;
+import com.ibanity.apis.client.products.oauth2.models.revoke.TokenRevokeQuery;
+import com.ibanity.apis.client.products.oauth2.services.TokenService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import com.ibanity.apis.client.utils.IbanityUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,14 +20,7 @@ import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
-import static org.apache.http.util.EntityUtils.consumeQuietly;
 
-/**
- * @deprecated
- * <p>Use {@link com.ibanity.apis.client.products.oauth2.services.impl.TokenServiceImpl} instead</p>
- */
-
-@Deprecated
 public class TokenServiceImpl implements TokenService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenServiceImpl.class);
@@ -44,8 +37,7 @@ public class TokenServiceImpl implements TokenService {
     public void revoke(TokenRevokeQuery tokenRevokeQuery) {
         URI uri = buildUri(getUrl("revoke"));
         Map<String, String> deleteTokenRequestArguments = getDeleteTokenRequestArguments(tokenRevokeQuery.getToken());
-        HttpResponse httpResponse = oAuthHttpClient.post(uri, tokenRevokeQuery.getAdditionalHeaders(), deleteTokenRequestArguments, tokenRevokeQuery.getClientSecret());
-        consumeQuietly(httpResponse.getEntity());
+        oAuthHttpClient.post(uri, tokenRevokeQuery.getAdditionalHeaders(), deleteTokenRequestArguments, tokenRevokeQuery.getClientSecret());
     }
 
     @Override
@@ -64,15 +56,13 @@ public class TokenServiceImpl implements TokenService {
     }
 
     private Token performTokenRequest(Map<String, String> tokenRequestArguments, String clientSecret, Map<String, String> additionalHeaders) {
-        URI uri = buildUri(getUrl("token"));
-        HttpResponse response = oAuthHttpClient.post(uri, additionalHeaders, tokenRequestArguments, clientSecret);
         try {
+            URI uri = buildUri(getUrl("token"));
+            HttpResponse response = oAuthHttpClient.post(uri, additionalHeaders, tokenRequestArguments, clientSecret);
             return IbanityUtils.objectMapper().readValue(response.getEntity().getContent(), Token.class);
         } catch (IOException e) {
             LOGGER.error("oauth token response invalid", e);
             throw new RuntimeException("The response could not be converted.");
-        } finally {
-            consumeQuietly(response.getEntity());
         }
     }
 
