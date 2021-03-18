@@ -19,7 +19,7 @@ public class SynchronizationMapper {
                 .createdAt(synchronizationApiModel.getCreatedAt())
                 .updatedAt(synchronizationApiModel.getUpdatedAt())
                 .resourceType(synchronizationApiModel.getResourceType())
-                .customerOnline(synchronizationApiModel.getCustomerOnline())
+                .customerOnline(synchronizationApiModel.isCustomerOnline())
                 .customerIpAddress(synchronizationApiModel.getCustomerIpAddress())
                 .status(synchronizationApiModel.getStatus())
                 .errors(synchronizationApiModel.getErrors().stream()
