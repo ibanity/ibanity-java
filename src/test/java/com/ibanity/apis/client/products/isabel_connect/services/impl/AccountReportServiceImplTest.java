@@ -4,6 +4,7 @@ import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.IsabelCollection;
 import com.ibanity.apis.client.products.isabel_connect.models.AccountReport;
+import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReportReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReportsReadQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.assertj.core.api.Assertions;
@@ -16,12 +17,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
-import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.*;
 import static java.util.Collections.emptyMap;
 import static org.mockito.Mockito.when;
 
@@ -30,7 +37,8 @@ import static org.mockito.Mockito.when;
 public class AccountReportServiceImplTest {
     private static final String ACCESS_TOKEN = "thisIsAnAccessToken";
     private static final String ACCOUNT_REPORT_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/account-reports/{accountReportId}";
-    private static final String LIST_ACCOUNT_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/account-reports?size=10";
+    private static final String LIST_ACCOUNT_REPORTS_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/account-reports?size=10";
+    private static final String GET_ACCOUNT_REPORTS_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/account-reports/123456";
 
     @InjectMocks
     private AccountReportServiceImpl accountReportService;
@@ -49,7 +57,7 @@ public class AccountReportServiceImplTest {
 
     @Test
     public void list() throws Exception {
-        when(ibanityHttpClient.get(new URI(LIST_ACCOUNT_ENDPOINT), emptyMap(), ACCESS_TOKEN))
+        when(ibanityHttpClient.get(new URI(LIST_ACCOUNT_REPORTS_ENDPOINT), emptyMap(), ACCESS_TOKEN))
                 .thenReturn(loadHttpResponse("json/isabel-connect/account_reports.json"));
 
         IsabelCollection<AccountReport> actual = accountReportService.list(AccountReportsReadQuery.builder()
@@ -59,6 +67,35 @@ public class AccountReportServiceImplTest {
         Assertions.assertThat(actual.getItems()).containsExactly(createExpected());
         Assertions.assertThat(actual.getPagingOffset()).isEqualTo(0);
         Assertions.assertThat(actual.getPagingTotal()).isEqualTo(2);
+    }
+
+    @Test
+    public void find() throws Exception {
+        when(ibanityHttpClient.get(new URI(GET_ACCOUNT_REPORTS_ENDPOINT), emptyMap(), ACCESS_TOKEN))
+                .thenReturn(loadHttpResponse("coda/coda-sample.txt"));
+
+
+        AccountReportReadQuery query = AccountReportReadQuery.builder()
+                .accessToken(ACCESS_TOKEN)
+                .accountReportId("123456")
+                .build();
+
+        String actual = accountReportService.find(query, httpResponse -> {
+            String res = null;
+
+            try {
+                InputStream content = httpResponse.getEntity().getContent();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(content, StandardCharsets.UTF_8));
+                res = reader.lines().collect(Collectors.joining("\n"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return res;
+        });
+
+        String expected = loadFile("coda/coda-sample.txt");
+        Assertions.assertThat(actual).isEqualTo(expected);
     }
 
     private AccountReport createExpected() {

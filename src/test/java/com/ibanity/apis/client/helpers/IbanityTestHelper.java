@@ -29,7 +29,7 @@ public class IbanityTestHelper {
         return postResponse;
     }
 
-    private static String loadFile(String filePath) throws IOException {
+    public static String loadFile(String filePath) throws IOException {
         return IOUtils.toString(
                 requireNonNull(IbanityTestHelper.class.getClassLoader().getResourceAsStream(filePath)), UTF_8);
     }
