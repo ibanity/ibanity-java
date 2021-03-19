@@ -3,12 +3,6 @@ package com.ibanity.apis.client.products.ponto_connect.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-/**
- * @deprecated
- * <p>Use {@link com.ibanity.apis.client.products.oauth2.models.Token} instead</p>
- */
-
-@Deprecated
 @Data
 @Builder
 @NoArgsConstructor

@@ -22,12 +22,6 @@ import static com.google.common.collect.Maps.newHashMap;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static org.apache.http.util.EntityUtils.consumeQuietly;
 
-/**
- * @deprecated
- * <p>Use {@link com.ibanity.apis.client.products.oauth2.services.impl.TokenServiceImpl} instead</p>
- */
-
-@Deprecated
 public class TokenServiceImpl implements TokenService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenServiceImpl.class);
