@@ -2,7 +2,7 @@ package com.ibanity.samples.customer;
 
 import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
-import com.ibanity.apis.client.products.xs2a.models.read.SynchronizationCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.create.SynchronizationCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.read.SynchronizationReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.SynchronizationService;
 import com.ibanity.apis.client.services.IbanityService;
