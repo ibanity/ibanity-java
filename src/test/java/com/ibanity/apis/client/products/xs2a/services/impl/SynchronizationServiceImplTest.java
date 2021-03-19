@@ -8,6 +8,7 @@ import com.ibanity.apis.client.models.FinancialInstitutionResponse;
 import com.ibanity.apis.client.models.IbanityError;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
+import com.ibanity.apis.client.products.xs2a.models.create.SynchronizationCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.read.SynchronizationReadQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,18 +52,19 @@ class SynchronizationServiceImplTest {
 
     @Test
     void create() throws Exception {
-        SynchronizationReadQuery synchronizationReadQuery =
-                SynchronizationReadQuery.builder()
+        SynchronizationCreationQuery synchronizationCreationQuery =
+                SynchronizationCreationQuery.builder()
                         .resourceType("account")
                         .subtype("accountDetails")
                         .resourceId(ACCOUNT_ID)
+                        .customerOnline(true)
                         .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                         .build();
 
-        when(ibanityHttpClient.post(new URI(SYNCHRONIZATION_ENDPOINT), createRequest(synchronizationReadQuery), emptyMap(), CUSTOMER_ACCESS_TOKEN))
+        when(ibanityHttpClient.post(new URI(SYNCHRONIZATION_ENDPOINT), createRequest(SynchronizationCreationQuery), emptyMap(), CUSTOMER_ACCESS_TOKEN))
                 .thenReturn(IbanityTestHelper.loadHttpResponse("json/create_synchronization.json"));
 
-        Synchronization actual = synchronizationService.create(synchronizationReadQuery);
+        Synchronization actual = synchronizationService.create(SynchronizationCreationQuery);
 
         assertThat(actual).isEqualToComparingFieldByField(createExpected("pending", "somehtml"));
     }
