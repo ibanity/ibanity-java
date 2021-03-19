@@ -19,7 +19,7 @@ public class SynchronizationSample {
 
     public Synchronization create(CustomerAccessToken customerAccessToken, UUID accountId) {
         SynchronizationCreationQuery synchronizationCreationQuery =
-                SynchronizationCreationBuilder.builder()
+                SynchronizationCreationQuery.builder()
                         .resourceId(accountId.toString())
                         .subtype("accountDetails")
                         .resourceType("account")
