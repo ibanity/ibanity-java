@@ -61,10 +61,10 @@ class SynchronizationServiceImplTest {
                         .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                         .build();
 
-        when(ibanityHttpClient.post(new URI(SYNCHRONIZATION_ENDPOINT), createRequest(SynchronizationCreationQuery), emptyMap(), CUSTOMER_ACCESS_TOKEN))
+        when(ibanityHttpClient.post(new URI(SYNCHRONIZATION_ENDPOINT), createRequest(synchronizationCreationQuery), emptyMap(), CUSTOMER_ACCESS_TOKEN))
                 .thenReturn(IbanityTestHelper.loadHttpResponse("json/create_synchronization.json"));
 
-        Synchronization actual = synchronizationService.create(SynchronizationCreationQuery);
+        Synchronization actual = synchronizationService.create(synchronizationCreationQuery);
 
         assertThat(actual).isEqualToComparingFieldByField(createExpected("pending", "somehtml"));
     }
