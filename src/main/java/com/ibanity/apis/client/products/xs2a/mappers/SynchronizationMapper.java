@@ -20,7 +20,6 @@ public class SynchronizationMapper {
                 .updatedAt(synchronizationApiModel.getUpdatedAt())
                 .resourceType(synchronizationApiModel.getResourceType())
                 .customerOnline(synchronizationApiModel.isCustomerOnline())
-                .customerIpAddress(synchronizationApiModel.getCustomerIpAddress())
                 .status(synchronizationApiModel.getStatus())
                 .errors(synchronizationApiModel.getErrors().stream()
                         .map(IbanityErrorMapper::map)

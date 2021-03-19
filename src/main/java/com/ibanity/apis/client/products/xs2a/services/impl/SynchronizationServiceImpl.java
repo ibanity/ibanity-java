@@ -27,15 +27,17 @@ public class SynchronizationServiceImpl implements SynchronizationService {
     }
 
     @Override
-    public Synchronization create(SynchronizationReadQuery synchronizationReadQuery) {
+    public Synchronization create(SynchronizationCreationQuery synchronizationCreationQuery) {
         Synchronization synchronization = Synchronization.builder()
-                .resourceId(synchronizationReadQuery.getResourceId())
-                .resourceType(synchronizationReadQuery.getResourceType())
-                .subtype(synchronizationReadQuery.getSubtype())
+                .resourceId(synchronizationCreationQuery.getResourceId())
+                .resourceType(synchronizationCreationQuery.getResourceType())
+                .subtype(synchronizationCreationQuery.getSubtype())
+                .customerOnline(synchronizationCreationQuery.isCustomerOnline())
+                .customerIpAddress(synchronizationCreationQuery.getCustomerIpAddress())
                 .build();
         String url = getUrl();
         RequestApiModel request = IbanityModelMapper.buildRequest(Synchronization.RESOURCE_TYPE, synchronization);
-        HttpResponse response = ibanityHttpClient.post(buildUri(url), request, synchronizationReadQuery.getAdditionalHeaders(), synchronizationReadQuery.getCustomerAccessToken());
+        HttpResponse response = ibanityHttpClient.post(buildUri(url), request, synchronizationCreationQuery.getAdditionalHeaders(), synchronizationCreationQuery.getCustomerAccessToken());
         return mapResource(response, (SynchronizationMapper::map));
     }
 
