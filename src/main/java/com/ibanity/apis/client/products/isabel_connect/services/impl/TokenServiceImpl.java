@@ -1,12 +1,12 @@
-package com.ibanity.apis.client.products.oauth2.services.impl;
+package com.ibanity.apis.client.products.isabel_connect.services.impl;
 
 import com.ibanity.apis.client.http.OAuthHttpClient;
 import com.ibanity.apis.client.models.IbanityProduct;
-import com.ibanity.apis.client.products.oauth2.models.Token;
-import com.ibanity.apis.client.products.oauth2.models.create.TokenCreateQuery;
-import com.ibanity.apis.client.products.oauth2.models.refresh.TokenRefreshQuery;
-import com.ibanity.apis.client.products.oauth2.models.revoke.TokenRevokeQuery;
-import com.ibanity.apis.client.products.oauth2.services.TokenService;
+import com.ibanity.apis.client.products.isabel_connect.models.Token;
+import com.ibanity.apis.client.products.isabel_connect.models.create.TokenCreateQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.refresh.TokenRefreshQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.revoke.TokenRevokeQuery;
+import com.ibanity.apis.client.products.isabel_connect.services.TokenService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import com.ibanity.apis.client.utils.IbanityUtils;
 import org.apache.commons.lang3.StringUtils;

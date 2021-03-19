@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.products.oauth2.models.refresh;
+package com.ibanity.apis.client.products.isabel_connect.models.create;
 
 import lombok.*;
 
@@ -10,9 +10,11 @@ import static java.util.Collections.emptyMap;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class TokenRefreshQuery {
+public class TokenCreateQuery {
 
-    private String refreshToken;
+    private String authorizationCode;
+    private String codeVerifier;
+    private String redirectUri;
     private String clientSecret;
 
     @Builder.Default

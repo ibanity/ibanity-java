@@ -1,11 +1,12 @@
-package com.ibanity.apis.client.products.oauth2.services.impl;
+package com.ibanity.apis.client.products.isabel_connect.services.impl;
 
 import com.ibanity.apis.client.http.OAuthHttpClient;
 import com.ibanity.apis.client.models.IbanityProduct;
-import com.ibanity.apis.client.products.oauth2.models.create.TokenCreateQuery;
-import com.ibanity.apis.client.products.oauth2.models.refresh.TokenRefreshQuery;
-import com.ibanity.apis.client.products.oauth2.models.revoke.TokenRevokeQuery;
-import com.ibanity.apis.client.products.oauth2.models.Token;
+import com.ibanity.apis.client.products.isabel_connect.models.create.TokenCreateQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.refresh.TokenRefreshQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.revoke.TokenRevokeQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.Token;
+import com.ibanity.apis.client.products.isabel_connect.services.impl.TokenServiceImpl;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -115,7 +116,7 @@ public class TokenServiceImplTest {
         return arguments;
     }
 
-    private com.ibanity.apis.client.products.oauth2.models.Token createExcepted() {
+    private Token createExcepted() {
         return Token.builder()
                 .accessToken("MoH3t9zBrnTvlt0qB061Ptjdy0akwwYHm9VY9E6-e4E.a2nK0TfrXsTkVhKzILhKa59_6G1WIUrmvWXko6uYc28")
                 .expiresIn(1799)
