@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.products.oauth2.models;
+package com.ibanity.apis.client.products.isabel_connect.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

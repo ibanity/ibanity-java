@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.products.oauth2.models.revoke;
+package com.ibanity.apis.client.products.isabel_connect.models.revoke;
 
 import lombok.*;
 
