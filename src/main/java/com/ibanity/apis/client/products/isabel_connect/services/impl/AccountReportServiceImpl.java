@@ -8,6 +8,7 @@ import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.IsabelCollection;
 import com.ibanity.apis.client.products.isabel_connect.models.AccountReport;
 import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReportsReadQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReportReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.read.IsabelPagingSpec;
 import com.ibanity.apis.client.products.isabel_connect.services.AccountReportService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
@@ -16,9 +17,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 
 import java.io.IOException;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
+import static org.apache.http.util.EntityUtils.consumeQuietly;
 
 public class AccountReportServiceImpl implements AccountReportService {
     private final ApiUrlProvider apiUrlProvider;
@@ -44,6 +47,16 @@ public class AccountReportServiceImpl implements AccountReportService {
                 query.getAccessToken());
 
         return mapCollection(response);
+    }
+
+    @Override
+    public <T> T find(AccountReportReadQuery query, Function<HttpResponse, T> func) {
+        HttpResponse response = ibanityHttpClient.get(
+                buildUri(getUrl(query.getAccountReportId())),
+                query.getAdditionalHeaders(),
+                query.getAccessToken());
+
+        return func.apply(response);
     }
 
     private String getUrl() {
