@@ -101,11 +101,13 @@ class SynchronizationServiceImplTest {
         assertThat(actual).isEqualToComparingFieldByField(createExpected("error", "{\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"NOT_FOUND\",\"text\":\"3.2 - Not Found\"}]}"));
     }
 
-    private RequestApiModel createRequest(SynchronizationReadQuery synchronizationReadQuery) {
+    private RequestApiModel createRequest(SynchronizationCreationQuery synchronizationCreationQuery) {
         Synchronization synchronization = Synchronization.builder()
-                .resourceId(synchronizationReadQuery.getResourceId())
-                .resourceType(synchronizationReadQuery.getResourceType())
-                .subtype(synchronizationReadQuery.getSubtype())
+                .resourceId(synchronizationCreationQuery.getResourceId())
+                .resourceType(synchronizationCreationQuery.getResourceType())
+                .subtype(synchronizationCreationQuery.getSubtype())
+                .customerOnline(synchronizationCreationQuery.isCustomerOnline())
+                .customerIpAddress(synchronizationCreationQuery.getCustomerIpAddress())
                 .build();
         return RequestApiModel.builder()
                 .data(
