@@ -3,10 +3,16 @@ package com.ibanity.apis.client.http.service.impl;
 import com.google.common.collect.Maps;
 import com.ibanity.apis.client.http.service.IbanityHttpSignatureService;
 import lombok.NonNull;
+import lombok.SneakyThrows;
 import org.apache.commons.codec.digest.MessageDigestAlgorithms;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -29,6 +35,7 @@ import static java.util.stream.Collectors.toList;
 
 public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureService {
 
+    public static final int BUFFER_SIZE = 32_768;
     public static final String SIGNATURE_ALGORITHM = "RSASSA-PSS";
     public static final PSSParameterSpec PARAMETER_SPEC = new PSSParameterSpec("SHA-256", "MGF1", MGF1ParameterSpec.SHA256, 32, 1);
 
@@ -67,15 +74,13 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
         this.ibanityEndpoint = ibanityEndpoint;
     }
 
-
     @Override
     public Map<String, String> getHttpSignatureHeaders(
             @NonNull String httpMethod,
             @NonNull URL url,
             @NonNull Map<String, String> requestHeaders) {
-        return getHttpSignatureHeaders(httpMethod, url, requestHeaders, null);
+        return getHttpSignatureHeaders(httpMethod, url, requestHeaders, "");
     }
-
 
     @Override
     public Map<String, String> getHttpSignatureHeaders(
@@ -83,6 +88,15 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
             @NonNull URL url,
             @NonNull Map<String, String> requestHeaders,
             String payload) {
+        return getHttpSignatureHeaders(httpMethod, url, requestHeaders, IOUtils.toInputStream(payload, UTF8_CHARSET));
+    }
+
+    @Override
+    public Map<String, String> getHttpSignatureHeaders(
+            @NonNull String httpMethod,
+            @NonNull URL url,
+            @NonNull Map<String, String> requestHeaders,
+            InputStream payload) {
         HashMap<String, String> httpSignatureHeaders = Maps.newHashMap();
 
         Long createdTimestamp = getTimestamp();
@@ -92,6 +106,7 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
 
         httpSignatureHeaders.put("Digest", payloadDigestHeaderValue);
         httpSignatureHeaders.put("Signature", signatureHeaderValue);
+
         return httpSignatureHeaders;
     }
 
@@ -103,15 +118,26 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
         }
     }
 
-    private String getDigestHeader(String payload) {
-        try {
-            if(payload == null) {
-                payload = "";
+    public static String getDigestHeader(InputStream payload) {
+        MessageDigest md = getDigest();
+        try (BufferedInputStream stream = new BufferedInputStream(payload, BUFFER_SIZE)) {
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int length;
+            while((length = stream.read(buffer)) != -1) {
+                md.update(buffer, 0, length);
             }
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not read payload");
+        }
 
-            String digest = Base64.getEncoder().encodeToString(MessageDigest.getInstance(DIGEST_ALGORITHM).digest(payload.getBytes(UTF8_CHARSET)));
-            return DIGEST_ALGORITHM + "=" + digest;
-        } catch (NoSuchAlgorithmException exception) {
+        String digest = Base64.getEncoder().encodeToString(md.digest());
+        return DIGEST_ALGORITHM + "=" + digest;
+    }
+
+    private static MessageDigest getDigest() {
+        try {
+            return MessageDigest.getInstance(DIGEST_ALGORITHM);
+        } catch (NoSuchAlgorithmException e) {
             throw new IllegalArgumentException("Unsupported digest algorithm:" + DIGEST_ALGORITHM);
         }
     }
