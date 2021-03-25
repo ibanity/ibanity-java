@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.http.service;
 
+import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
@@ -35,8 +36,8 @@ public interface IbanityHttpSignatureService {
      * @param httpMethod the http method of the current request.
      * @param url the url containing host, path and query parameters.
      * @param requestHeaders the headers of the current request. All ibanity-* headers will included in the signature.
-     * @param payload the payload of the actual request as {@link java.io.InputStream}.
+     * @param payload the payload of the actual request as {@link java.io.File}.
      * @return the map with signature related headers: date, digest and signature headers.
      */
-    Map<String, String> getHttpSignatureHeaders(String httpMethod, URL url, Map<String, String> requestHeaders, InputStream payload);
+    Map<String, String> getHttpSignatureHeaders(String httpMethod, URL url, Map<String, String> requestHeaders, File payload);
 }

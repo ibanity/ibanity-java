@@ -9,10 +9,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -88,7 +85,8 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
             @NonNull URL url,
             @NonNull Map<String, String> requestHeaders,
             String payload) {
-        return getHttpSignatureHeaders(httpMethod, url, requestHeaders, IOUtils.toInputStream(payload, UTF8_CHARSET));
+        String payloadDigestHeaderValue = getDigestHeader(IOUtils.toInputStream(payload, UTF8_CHARSET));
+        return httpSignatureHeaders(httpMethod, url, requestHeaders, payloadDigestHeaderValue);
     }
 
     @Override
@@ -96,11 +94,25 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
             @NonNull String httpMethod,
             @NonNull URL url,
             @NonNull Map<String, String> requestHeaders,
-            InputStream payload) {
+            File payload) {
+        String payloadDigestHeaderValue = null;
+        try {
+            payloadDigestHeaderValue = getDigestHeader(new FileInputStream(payload));
+        } catch (FileNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
+
+        return httpSignatureHeaders(httpMethod, url, requestHeaders, payloadDigestHeaderValue);
+    }
+
+    private Map<String, String> httpSignatureHeaders(
+            @NonNull String httpMethod,
+            @NonNull URL url,
+            @NonNull Map<String, String> requestHeaders,
+            @NonNull String payloadDigestHeaderValue) {
         HashMap<String, String> httpSignatureHeaders = Maps.newHashMap();
 
         Long createdTimestamp = getTimestamp();
-        String payloadDigestHeaderValue = getDigestHeader(payload);
         String signatureDigest = getSignatureDigest(getRequestTarget(httpMethod, url), getHost(), payloadDigestHeaderValue, createdTimestamp, requestHeaders);
         String signatureHeaderValue = getSignatureHeader(certificateId, createdTimestamp, SIGNATURE_HEADER_ALGORITHM, getSignatureHeaders(requestHeaders), signatureDigest);
 
