@@ -1,6 +1,7 @@
 package com.ibanity.apis.client.http.interceptor;
 
 import com.ibanity.apis.client.http.service.IbanityHttpSignatureService;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpRequestWrapper;
@@ -13,10 +14,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,13 +54,13 @@ class IbanitySignatureInterceptorTest {
     @Test
     void process() throws IOException, URISyntaxException {
         String httpMethod = "POST";
-        String body = "aBody";
+        InputStream body = IOUtils.toInputStream("aBody", StandardCharsets.UTF_8);
 
         when(httpRequestWrapper.getURI()).thenReturn(new URI("/path"));
         when(httpRequestWrapper.getAllHeaders()).thenReturn(new BasicHeader[0]);
         when(httpRequestWrapper.getMethod()).thenReturn(httpMethod);
         when(httpRequestWrapper.getOriginal()).thenReturn(httpRequest);
-        when(httpRequest.getEntity()).thenReturn(EntityBuilder.create().setText(body).build());
+        when(httpRequest.getEntity()).thenReturn(EntityBuilder.create().setStream(body).build());
 
         HashMap<String, String> headers = getSignatureHeaders();
         when(ibanityHttpSignatureService.getHttpSignatureHeaders(httpMethod, getUrl(), getRequestedHeaders(), body))

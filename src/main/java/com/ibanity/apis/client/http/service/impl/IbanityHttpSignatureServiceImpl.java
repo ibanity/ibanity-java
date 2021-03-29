@@ -86,8 +86,7 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
             @NonNull URL url,
             @NonNull Map<String, String> requestHeaders,
             String payload) {
-        String payloadDigestHeaderValue = getDigestHeader(IOUtils.toInputStream(payload, UTF8_CHARSET));
-        return httpSignatureHeaders(httpMethod, url, requestHeaders, payloadDigestHeaderValue);
+        return getHttpSignatureHeaders(httpMethod, url, requestHeaders, IOUtils.toInputStream(payload, UTF8_CHARSET));
     }
 
     @Override
@@ -97,10 +96,18 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
             @NonNull Map<String, String> requestHeaders,
             File payload) {
         try (InputStream stream = new FileInputStream(payload)) {
-            return httpSignatureHeaders(httpMethod, url, requestHeaders, getDigestHeader(stream));
+            return getHttpSignatureHeaders(httpMethod, url, requestHeaders, stream);
         } catch (IOException e) {
             throw new IllegalStateException("Couldn't read the payload");
         }
+    }
+
+    public Map<String, String> getHttpSignatureHeaders(
+            @NonNull String httpMethod,
+            @NonNull URL url,
+            @NonNull Map<String, String> requestHeaders,
+            InputStream inputStream) {
+        return httpSignatureHeaders(httpMethod, url, requestHeaders, getDigestHeader(inputStream));
     }
 
     private Map<String, String> httpSignatureHeaders(

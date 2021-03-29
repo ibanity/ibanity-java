@@ -10,6 +10,7 @@ import org.apache.http.client.methods.HttpRequestWrapper;
 import org.apache.http.protocol.HttpContext;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -35,13 +36,12 @@ public class IbanitySignatureInterceptor implements HttpRequestInterceptor {
     public void process(final HttpRequest httpRequest, final HttpContext httpContext) throws IOException {
         try {
             HttpRequestWrapper requestWrapper = (HttpRequestWrapper) httpRequest;
-            String payload;
+            InputStream payload;
             if (requestWrapper.getOriginal() instanceof HttpEntityEnclosingRequestBase) {
-                payload = IOUtils.toString(
-                        ((HttpEntityEnclosingRequestBase) requestWrapper.getOriginal())
-                                .getEntity().getContent(), DEFAULT_CHARSET);
+                HttpEntityEnclosingRequestBase original = (HttpEntityEnclosingRequestBase) requestWrapper.getOriginal();
+                payload = original.getEntity().getContent();
             } else {
-                payload = "";
+                payload = IOUtils.toInputStream("", DEFAULT_CHARSET);
             }
 
             httpSignatureService.getHttpSignatureHeaders(
