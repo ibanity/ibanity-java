@@ -7,6 +7,8 @@ import com.ibanity.apis.client.http.factory.IbanityHttpClientFactory;
 import com.ibanity.apis.client.http.factory.OauthHttpClientFactory;
 import com.ibanity.apis.client.models.SignatureCredentials;
 import com.ibanity.apis.client.models.TlsCredentials;
+import com.ibanity.apis.client.products.isabel_connect.services.IsabelConnectService;
+import com.ibanity.apis.client.products.isabel_connect.services.impl.IsabelConnectServiceImpl;
 import com.ibanity.apis.client.products.ponto_connect.services.PontoConnectService;
 import com.ibanity.apis.client.products.ponto_connect.services.impl.PontoConnectServiceImpl;
 import com.ibanity.apis.client.products.xs2a.services.Xs2aService;
@@ -27,6 +29,7 @@ public class IbanityServiceImpl implements IbanityService {
     private final Xs2aService xs2aService;
     private final PontoConnectService pontoConnectService;
     private final OAuthHttpClient oauthHttpClient;
+    private final IsabelConnectService isabelConnectService;
 
     /**
      * @deprecated  Replaced by {@link #IbanityServiceImpl(IbanityConfiguration)}
@@ -46,12 +49,18 @@ public class IbanityServiceImpl implements IbanityService {
         if (isBlank(clientId)) {
             this.oauthHttpClient = null;
             this.pontoConnectService = null;
+            this.isabelConnectService = null;
         } else {
             this.oauthHttpClient = new OauthHttpClientFactory().create(caCertificate, tlsCredentials, signatureCredentials, apiEndpoint, clientId);
             this.pontoConnectService = new PontoConnectServiceImpl(apiUrlProvider, ibanityHttpClient, oauthHttpClient);
+            this.isabelConnectService = new IsabelConnectServiceImpl(apiUrlProvider, ibanityHttpClient, oauthHttpClient);
         }
     }
 
+    /**
+     * @deprecated  Use {@link #IbanityServiceImpl(ApiUrlProvider, IbanityHttpClient, Xs2aService, PontoConnectService, IsabelConnectService, OAuthHttpClient)}
+     */
+    @Deprecated
     public IbanityServiceImpl(ApiUrlProvider apiUrlProvider,
                               IbanityHttpClient ibanityHttpClient,
                               Xs2aService xs2aService,
@@ -61,6 +70,21 @@ public class IbanityServiceImpl implements IbanityService {
         this.ibanityHttpClient = ibanityHttpClient;
         this.xs2aService = xs2aService;
         this.pontoConnectService = pontoConnectService;
+        this.oauthHttpClient = oauthHttpClient;
+        this.isabelConnectService = null;
+    }
+
+    public IbanityServiceImpl(ApiUrlProvider apiUrlProvider,
+                              IbanityHttpClient ibanityHttpClient,
+                              Xs2aService xs2aService,
+                              PontoConnectService pontoConnectService,
+                              IsabelConnectService isabelConnectService,
+                              OAuthHttpClient oauthHttpClient) {
+        this.apiUrlProvider = apiUrlProvider;
+        this.ibanityHttpClient = ibanityHttpClient;
+        this.xs2aService = xs2aService;
+        this.pontoConnectService = pontoConnectService;
+        this.isabelConnectService = isabelConnectService;
         this.oauthHttpClient = oauthHttpClient;
     }
 
@@ -75,9 +99,11 @@ public class IbanityServiceImpl implements IbanityService {
         if (isBlank(clientId)) {
             this.oauthHttpClient = null;
             this.pontoConnectService = null;
+            this.isabelConnectService = null;
         } else {
             this.oauthHttpClient = new OauthHttpClientFactory().create(clientId, httpClient);
             this.pontoConnectService = new PontoConnectServiceImpl(apiUrlProvider, ibanityHttpClient, oauthHttpClient);
+            this.isabelConnectService = new IsabelConnectServiceImpl(apiUrlProvider, ibanityHttpClient, oauthHttpClient);
         }
     }
 
@@ -111,5 +137,14 @@ public class IbanityServiceImpl implements IbanityService {
         }
 
         return pontoConnectService;
+    }
+
+    @Override
+    public IsabelConnectService isabelConnectService() {
+        if (isabelConnectService == null) {
+            throw new IllegalStateException("IsabelConnectService was not properly initialized.");
+        }
+
+        return isabelConnectService;
     }
 }

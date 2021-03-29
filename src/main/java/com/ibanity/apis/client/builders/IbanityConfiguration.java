@@ -17,6 +17,7 @@ public class IbanityConfiguration {
 
     private String apiEndpoint;
     private String proxyEndpoint;
+    // TODO: Rename to oauth2ClientId ?
     private String pontoConnectOauth2ClientId;
     private TlsCredentials tlsCredentials;
     private SignatureCredentials signatureCredentials;
