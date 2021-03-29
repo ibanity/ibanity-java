@@ -24,6 +24,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.IntUnaryOperator;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -95,14 +96,11 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
             @NonNull URL url,
             @NonNull Map<String, String> requestHeaders,
             File payload) {
-        String payloadDigestHeaderValue = null;
-        try {
-            payloadDigestHeaderValue = getDigestHeader(new FileInputStream(payload));
-        } catch (FileNotFoundException e) {
-            throw new IllegalStateException(e);
+        try (InputStream stream = new FileInputStream(payload)) {
+            return httpSignatureHeaders(httpMethod, url, requestHeaders, getDigestHeader(stream));
+        } catch (IOException e) {
+            throw new IllegalStateException("Couldn't read the payload");
         }
-
-        return httpSignatureHeaders(httpMethod, url, requestHeaders, payloadDigestHeaderValue);
     }
 
     private Map<String, String> httpSignatureHeaders(
