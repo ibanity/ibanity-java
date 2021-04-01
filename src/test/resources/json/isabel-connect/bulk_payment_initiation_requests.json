@@ -1,0 +1,9 @@
+{
+  "data": {
+    "attributes": {
+      "status": "processed-ok"
+    },
+    "id": "90000410224108",
+    "type": "bulkPaymentInitiationRequest"
+  }
+}
