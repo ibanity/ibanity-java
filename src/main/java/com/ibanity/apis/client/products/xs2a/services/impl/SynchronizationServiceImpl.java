@@ -6,6 +6,7 @@ import com.ibanity.apis.client.mappers.IbanityModelMapper;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.mappers.SynchronizationMapper;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
+import com.ibanity.apis.client.products.xs2a.models.create.SynchronizationCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.read.SynchronizationReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.SynchronizationService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
@@ -27,15 +28,17 @@ public class SynchronizationServiceImpl implements SynchronizationService {
     }
 
     @Override
-    public Synchronization create(SynchronizationReadQuery synchronizationReadQuery) {
+    public Synchronization create(SynchronizationCreationQuery synchronizationCreationQuery) {
         Synchronization synchronization = Synchronization.builder()
-                .resourceId(synchronizationReadQuery.getResourceId())
-                .resourceType(synchronizationReadQuery.getResourceType())
-                .subtype(synchronizationReadQuery.getSubtype())
+                .resourceId(synchronizationCreationQuery.getResourceId())
+                .resourceType(synchronizationCreationQuery.getResourceType())
+                .subtype(synchronizationCreationQuery.getSubtype())
+                .customerOnline(synchronizationCreationQuery.isCustomerOnline())
+                .customerIpAddress(synchronizationCreationQuery.getCustomerIpAddress())
                 .build();
         String url = getUrl();
         RequestApiModel request = IbanityModelMapper.buildRequest(Synchronization.RESOURCE_TYPE, synchronization);
-        HttpResponse response = ibanityHttpClient.post(buildUri(url), request, synchronizationReadQuery.getAdditionalHeaders(), synchronizationReadQuery.getCustomerAccessToken());
+        HttpResponse response = ibanityHttpClient.post(buildUri(url), request, synchronizationCreationQuery.getAdditionalHeaders(), synchronizationCreationQuery.getCustomerAccessToken());
         return mapResource(response, (SynchronizationMapper::map));
     }
 

@@ -2,6 +2,7 @@ package com.ibanity.samples.customer;
 
 import com.ibanity.apis.client.products.xs2a.models.CustomerAccessToken;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
+import com.ibanity.apis.client.products.xs2a.models.create.SynchronizationCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.read.SynchronizationReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.SynchronizationService;
 import com.ibanity.apis.client.services.IbanityService;
@@ -17,14 +18,16 @@ public class SynchronizationSample {
     }
 
     public Synchronization create(CustomerAccessToken customerAccessToken, UUID accountId) {
-        SynchronizationReadQuery synchronizationReadQuery =
-                SynchronizationReadQuery.builder()
+        SynchronizationCreationQuery synchronizationCreationQuery =
+                SynchronizationCreationQuery.builder()
                         .resourceId(accountId.toString())
                         .subtype("accountDetails")
                         .resourceType("account")
+                        .customerOnline(true)
+                        .customerIpAddress("123.123.123.123")
                         .customerAccessToken(customerAccessToken.getToken())
                         .build();
-        return synchronizationService.create(synchronizationReadQuery);
+        return synchronizationService.create(synchronizationCreationQuery);
     }
 
     public Synchronization find(CustomerAccessToken customerAccessToken, UUID synchronizationId) {

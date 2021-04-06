@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.products.xs2a.models.read;
+package com.ibanity.apis.client.products.xs2a.models.create;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -14,13 +14,13 @@ import static java.util.Collections.emptyMap;
 @Builder
 @ToString
 @EqualsAndHashCode
-public class SynchronizationReadQuery {
+public class SynchronizationCreationQuery {
 
     private String subtype;
     private String resourceId;
     private String resourceType;
     private boolean customerOnline;
-    private UUID synchronizationId;
+    private String customerIpAddress;
     private String customerAccessToken;
 
     @Builder.Default

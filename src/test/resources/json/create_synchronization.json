@@ -6,6 +6,8 @@
       "resourceId": "d0027fc6-0097-41f7-a9bb-3c400b5a3e2a",
       "resourceType": "account",
       "status": "pending",
+      "customerOnline": true,
+      "customerIpAddress": "123.123.123.123",
       "subtype": "accountDetails",
       "updatedAt": "2019-05-09T09:18:59.012Z"
     },

@@ -8,6 +8,7 @@ import com.ibanity.apis.client.models.FinancialInstitutionResponse;
 import com.ibanity.apis.client.models.IbanityError;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
+import com.ibanity.apis.client.products.xs2a.models.create.SynchronizationCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.read.SynchronizationReadQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,18 +52,19 @@ class SynchronizationServiceImplTest {
 
     @Test
     void create() throws Exception {
-        SynchronizationReadQuery synchronizationReadQuery =
-                SynchronizationReadQuery.builder()
+        SynchronizationCreationQuery synchronizationCreationQuery =
+                SynchronizationCreationQuery.builder()
                         .resourceType("account")
                         .subtype("accountDetails")
                         .resourceId(ACCOUNT_ID)
+                        .customerOnline(true)
                         .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                         .build();
 
-        when(ibanityHttpClient.post(new URI(SYNCHRONIZATION_ENDPOINT), createRequest(synchronizationReadQuery), emptyMap(), CUSTOMER_ACCESS_TOKEN))
+        when(ibanityHttpClient.post(new URI(SYNCHRONIZATION_ENDPOINT), createRequest(synchronizationCreationQuery), emptyMap(), CUSTOMER_ACCESS_TOKEN))
                 .thenReturn(IbanityTestHelper.loadHttpResponse("json/create_synchronization.json"));
 
-        Synchronization actual = synchronizationService.create(synchronizationReadQuery);
+        Synchronization actual = synchronizationService.create(synchronizationCreationQuery);
 
         assertThat(actual).isEqualToComparingFieldByField(createExpected("pending", "somehtml"));
     }
@@ -99,11 +101,13 @@ class SynchronizationServiceImplTest {
         assertThat(actual).isEqualToComparingFieldByField(createExpected("error", "{\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"NOT_FOUND\",\"text\":\"3.2 - Not Found\"}]}"));
     }
 
-    private RequestApiModel createRequest(SynchronizationReadQuery synchronizationReadQuery) {
+    private RequestApiModel createRequest(SynchronizationCreationQuery synchronizationCreationQuery) {
         Synchronization synchronization = Synchronization.builder()
-                .resourceId(synchronizationReadQuery.getResourceId())
-                .resourceType(synchronizationReadQuery.getResourceType())
-                .subtype(synchronizationReadQuery.getSubtype())
+                .resourceId(synchronizationCreationQuery.getResourceId())
+                .resourceType(synchronizationCreationQuery.getResourceType())
+                .subtype(synchronizationCreationQuery.getSubtype())
+                .customerOnline(synchronizationCreationQuery.isCustomerOnline())
+                .customerIpAddress(synchronizationCreationQuery.getCustomerIpAddress())
                 .build();
         return RequestApiModel.builder()
                 .data(
@@ -122,6 +126,7 @@ class SynchronizationServiceImplTest {
                 .resourceType("account")
                 .status(status)
                 .subtype("accountDetails")
+                .customerOnline(true)
                 .createdAt(Instant.parse("2019-05-09T09:18:58.358Z"))
                 .updatedAt(Instant.parse("2019-05-09T09:18:59.012Z"));
         if ("error".equalsIgnoreCase(status)) {
