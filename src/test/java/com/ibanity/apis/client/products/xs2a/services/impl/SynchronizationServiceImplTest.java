@@ -126,6 +126,8 @@ class SynchronizationServiceImplTest {
                 .resourceType("account")
                 .status(status)
                 .subtype("accountDetails")
+                .customerOnline(true)
+                .customerIpAddress("123.123.123.123")
                 .createdAt(Instant.parse("2019-05-09T09:18:58.358Z"))
                 .updatedAt(Instant.parse("2019-05-09T09:18:59.012Z"));
         if ("error".equalsIgnoreCase(status)) {
