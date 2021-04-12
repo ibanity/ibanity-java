@@ -20,6 +20,7 @@ import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
+import static org.apache.http.util.EntityUtils.consumeQuietly;
 
 public class TokenServiceImpl implements TokenService {
 
@@ -37,7 +38,8 @@ public class TokenServiceImpl implements TokenService {
     public void revoke(TokenRevokeQuery tokenRevokeQuery) {
         URI uri = buildUri(getUrl("revoke"));
         Map<String, String> deleteTokenRequestArguments = getDeleteTokenRequestArguments(tokenRevokeQuery.getToken());
-        oAuthHttpClient.post(uri, tokenRevokeQuery.getAdditionalHeaders(), deleteTokenRequestArguments, tokenRevokeQuery.getClientSecret());
+        HttpResponse httpResponse = oAuthHttpClient.post(uri, tokenRevokeQuery.getAdditionalHeaders(), deleteTokenRequestArguments, tokenRevokeQuery.getClientSecret());
+        consumeQuietly(httpResponse.getEntity());
     }
 
     @Override
@@ -56,13 +58,15 @@ public class TokenServiceImpl implements TokenService {
     }
 
     private Token performTokenRequest(Map<String, String> tokenRequestArguments, String clientSecret, Map<String, String> additionalHeaders) {
+        URI uri = buildUri(getUrl("token"));
+        HttpResponse response = oAuthHttpClient.post(uri, additionalHeaders, tokenRequestArguments, clientSecret);
         try {
-            URI uri = buildUri(getUrl("token"));
-            HttpResponse response = oAuthHttpClient.post(uri, additionalHeaders, tokenRequestArguments, clientSecret);
             return IbanityUtils.objectMapper().readValue(response.getEntity().getContent(), Token.class);
         } catch (IOException e) {
             LOGGER.error("oauth token response invalid", e);
             throw new RuntimeException("The response could not be converted.");
+        } finally {
+            consumeQuietly(response.getEntity());
         }
     }
 

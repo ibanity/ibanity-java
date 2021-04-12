@@ -21,6 +21,7 @@ import static com.ibanity.apis.client.mappers.IbanityModelMapper.getRequestId;
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.readResponseContent;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static org.apache.commons.lang3.StringUtils.removeEnd;
+import static org.apache.http.util.EntityUtils.consumeQuietly;
 
 public class FinancialInstitutionCountriesServiceImpl implements FinancialInstitutionCountriesService {
 
@@ -71,6 +72,8 @@ public class FinancialInstitutionCountriesServiceImpl implements FinancialInstit
                     .build();
         } catch (IOException exception) {
             throw new IllegalArgumentException("Response cannot be parsed", exception);
+        } finally {
+            consumeQuietly(httpResponse.getEntity());
         }
     }
 
