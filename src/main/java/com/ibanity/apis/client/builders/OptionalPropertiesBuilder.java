@@ -22,4 +22,10 @@ public interface OptionalPropertiesBuilder {
     OptionalPropertiesBuilder withHttpRequestInterceptors(HttpRequestInterceptor... httpRequestInterceptor);
 
     OptionalPropertiesBuilder withHttpResponseInterceptors(HttpResponseInterceptor... httpResponseInterceptor);
+
+    OptionalPropertiesBuilder socketTimeout(int socketTimeout);
+
+    OptionalPropertiesBuilder connectTimeout(int connectTimeout);
+
+    OptionalPropertiesBuilder connectionRequestTimeout(int connectionRequestTimeout);
 }

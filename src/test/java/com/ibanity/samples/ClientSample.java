@@ -67,6 +67,9 @@ public class ClientSample {
                 .tlsCertificate(certificate)
                 .withHttpRequestInterceptors((request, context) -> LOGGER.info("This is a HttpRequestInterceptor"))
                 .withHttpResponseInterceptors((response, context) -> LOGGER.info("This is a HttpResponseInterceptor"))
+                .connectTimeout(10_000)
+                .socketTimeout(60_000)
+                .connectionRequestTimeout(10_000)
                 ;
 
         if (getConfiguration(IBANITY_CLIENT_TLS_CA_CERTIFICATE_PATH_PROPERTY_KEY) != null) {
