@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.URI;
 
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
+import static org.apache.http.util.EntityUtils.consumeQuietly;
 
 public class UserinfoServiceImpl implements UserinfoService {
 
@@ -30,13 +31,15 @@ public class UserinfoServiceImpl implements UserinfoService {
 
     @Override
     public Userinfo getUserinfo(UserinfoReadQuery readQuery) {
+        URI uri = buildUri(getUrl());
+        HttpResponse response = ibanityHttpClient.get(uri, readQuery.getAdditionalHeaders(), readQuery.getAccessToken());
         try {
-            URI uri = buildUri(getUrl());
-            HttpResponse response = ibanityHttpClient.get(uri, readQuery.getAdditionalHeaders(), readQuery.getAccessToken());
             return IbanityUtils.objectMapper().readValue(response.getEntity().getContent(), Userinfo.class);
         } catch (IOException e) {
             LOGGER.error("userinfo response invalid", e);
             throw new RuntimeException("The response could not be parsed.");
+        } finally {
+            consumeQuietly(response.getEntity());
         }
     }
 

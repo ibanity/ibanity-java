@@ -7,6 +7,7 @@ import com.ibanity.apis.client.products.ponto_connect.models.create.TokenCreateQ
 import com.ibanity.apis.client.products.ponto_connect.models.refresh.TokenRefreshQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.revoke.TokenRevokeQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;
+import org.apache.http.message.BasicHttpResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,9 +22,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.HTTP;
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -85,6 +88,9 @@ public class TokenServiceImplTest {
 
     @Test
     public void revoke() throws Exception {
+        when(oAuthHttpClient.post(any(), any(), any(), any()))
+                .thenReturn(new BasicHttpResponse(HTTP, 204, null));
+
         tokenService.revoke(TokenRevokeQuery.builder()
                 .clientSecret(CLIENT_SECRET)
                 .token(TOKEN)
