@@ -4,6 +4,7 @@ import com.ibanity.apis.client.models.SignatureCredentials;
 import com.ibanity.apis.client.models.TlsCredentials;
 import com.ibanity.apis.client.services.IbanityService;
 import com.ibanity.apis.client.services.impl.IbanityServiceImpl;
+import com.ibanity.apis.client.utils.IbanityUtils;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponseInterceptor;
 
@@ -44,6 +45,9 @@ public class IbanityServiceBuilder implements
     private boolean disableTlsClientCertificate;
     private List<HttpRequestInterceptor> requestInterceptors = newArrayList();
     private List<HttpResponseInterceptor> responseInterceptors = newArrayList();
+    private int connectionRequestTimeout = IbanityUtils.DEFAULT_REQUEST_TIMEOUT;
+    private int connectTimeout = IbanityUtils.DEFAULT_REQUEST_TIMEOUT;
+    private int socketTimeout = IbanityUtils.DEFAULT_REQUEST_TIMEOUT;
 
     public static IbanityApiEndpointBuilder builder() {
         return new IbanityServiceBuilder();
@@ -80,6 +84,9 @@ public class IbanityServiceBuilder implements
                 .pontoConnectOauth2ClientId(pontoConnectOauth2ClientId)
                 .httpRequestInterceptors(requestInterceptors)
                 .httpResponseInterceptors(responseInterceptors)
+                .connectionRequestTimeout(connectionRequestTimeout)
+                .connectTimeout(connectTimeout)
+                .socketTimeout(socketTimeout)
                 .build();
 
         return new IbanityServiceImpl(ibanityConfiguration);
@@ -127,6 +134,24 @@ public class IbanityServiceBuilder implements
     @Override
     public OptionalPropertiesBuilder withHttpResponseInterceptors(HttpResponseInterceptor... httpResponseInterceptor) {
         this.responseInterceptors.addAll(asList(httpResponseInterceptor));
+        return this;
+    }
+
+    @Override
+    public OptionalPropertiesBuilder socketTimeout(int socketTimeout) {
+        this.socketTimeout = socketTimeout;
+        return this;
+    }
+
+    @Override
+    public OptionalPropertiesBuilder connectTimeout(int connectTimeout) {
+        this.connectTimeout = connectTimeout;
+        return this;
+    }
+
+    @Override
+    public OptionalPropertiesBuilder connectionRequestTimeout(int connectionRequestTimeout) {
+        this.connectionRequestTimeout = connectionRequestTimeout;
         return this;
     }
 

@@ -144,6 +144,40 @@ public interface OptionalPropertiesBuilder {
                 .withHttpResponseInterceptors((response, context) -> LOGGER.info("This is a HttpResponseInterceptor"));
 ```
 
+
+
+### Configure Http timeouts
+
+The following Http timeouts can be configured
+
+- Connect Timeout (default 30 000 milliseconds)
+- Socket Timeout (default 30 000 milliseconds)
+- Connection Request Timeout (default 30 000 milliseconds)
+
+```java
+public interface OptionalPropertiesBuilder {
+
+...
+
+    OptionalPropertiesBuilder socketTimeout(int socketTimeout);
+
+    OptionalPropertiesBuilder connectTimeout(int connectTimeout);
+
+    OptionalPropertiesBuilder connectionRequestTimeout(int connectionRequestTimeout);
+}
+```
+
+```java
+        OptionalPropertiesBuilder ibanityServiceBuilder = IbanityServiceBuilder.builder()
+                .ibanityApiEndpoint("https://api.ibanity.com")
+                .tlsPrivateKey(privateKey)
+                .passphrase(passphrase)
+                .tlsCertificate(certificate)
+                .connectTimeout(10_000)
+                .socketTimeout(60_000)
+                .connectionRequestTimeout(10_000);
+```
+
 ## Requirements
 * Java 8 (or above)
 * Maven (for compilation)

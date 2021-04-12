@@ -23,5 +23,8 @@ public class IbanityConfiguration {
     private Certificate caCertificate;
     private List<HttpRequestInterceptor> httpRequestInterceptors;
     private List<HttpResponseInterceptor> httpResponseInterceptors;
+    private int socketTimeout;
+    private int connectTimeout;
+    private int connectionRequestTimeout;
 
 }

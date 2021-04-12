@@ -25,8 +25,9 @@ import java.security.cert.Certificate;
 
 public final class IbanityUtils {
 
+    public static final int DEFAULT_REQUEST_TIMEOUT = 30_000;
+
     private static final int RETRY_COUNTS = 10;
-    private static final int DEFAULT_REQUEST_TIMEOUT = 10_000;
 
     private static final String ALIAS_KEY_STORE = "application certificate";
     private static final String CA_TRUST_STORE_KEY = "ibanity-ca";
@@ -47,7 +48,11 @@ public final class IbanityUtils {
         try {
             SSLContext sslContext = getSSLContext(caCertificate, tlsCredentials);
             HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
-            configureHttpClient(sslContext, httpClientBuilder, signatureCertificate, basePath);
+            IbanityConfiguration ibanityConfiguration = IbanityConfiguration.builder()
+                    .signatureCredentials(signatureCertificate)
+                    .apiEndpoint(basePath)
+                    .build();
+            configureHttpClient(sslContext, httpClientBuilder, ibanityConfiguration);
             return httpClientBuilder.build();
         } catch (Exception exception) {
             throw new IllegalArgumentException("An exception occurred while creating IbanityHttpClient", exception);
@@ -58,7 +63,7 @@ public final class IbanityUtils {
         try {
             SSLContext sslContext = getSSLContext(configuration.getCaCertificate(), configuration.getTlsCredentials());
             HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
-            configureHttpClient(sslContext, httpClientBuilder, configuration.getSignatureCredentials(), configuration.getApiEndpoint());
+            configureHttpClient(sslContext, httpClientBuilder, configuration);
             configuration.getHttpRequestInterceptors().forEach(httpClientBuilder::addInterceptorLast);
             configuration.getHttpResponseInterceptors().forEach(httpClientBuilder::addInterceptorFirst);
             return httpClientBuilder.build();
@@ -78,20 +83,21 @@ public final class IbanityUtils {
 
     private static void configureHttpClient(SSLContext sslContext,
                                             HttpClientBuilder httpClientBuilder,
-                                            SignatureCredentials signatureCertificate,
-                                            String basePath) {
+                                            IbanityConfiguration configuration) {
         httpClientBuilder.setSSLContext(sslContext);
         httpClientBuilder.setSSLSocketFactory(new SSLConnectionSocketFactory(sslContext));
         httpClientBuilder.setRetryHandler(new CustomHttpRequestRetryHandler(RETRY_COUNTS, true));
         httpClientBuilder.addInterceptorLast(new IdempotencyInterceptor());
-        if (signatureCertificate != null) {
-            IbanityHttpSignatureServiceImpl httpSignatureService = getIbanityHttpSignatureService(signatureCertificate, basePath);
-            httpClientBuilder.addInterceptorLast(new IbanitySignatureInterceptor(httpSignatureService, basePath));
+        SignatureCredentials signatureCredentials = configuration.getSignatureCredentials();
+        String apiEndpoint = configuration.getApiEndpoint();
+        if (signatureCredentials != null) {
+            IbanityHttpSignatureServiceImpl httpSignatureService = getIbanityHttpSignatureService(signatureCredentials, apiEndpoint);
+            httpClientBuilder.addInterceptorLast(new IbanitySignatureInterceptor(httpSignatureService, apiEndpoint));
         }
         RequestConfig requestConfig = RequestConfig.custom()
-                .setConnectTimeout(DEFAULT_REQUEST_TIMEOUT)
-                .setSocketTimeout(DEFAULT_REQUEST_TIMEOUT)
-                .setConnectionRequestTimeout(DEFAULT_REQUEST_TIMEOUT)
+                .setConnectTimeout(configuration.getConnectTimeout())
+                .setSocketTimeout(configuration.getSocketTimeout())
+                .setConnectionRequestTimeout(configuration.getConnectionRequestTimeout())
                 .build();
         httpClientBuilder.setDefaultRequestConfig(requestConfig);
         httpClientBuilder.setConnectionReuseStrategy(new DefaultClientConnectionReuseStrategy());
