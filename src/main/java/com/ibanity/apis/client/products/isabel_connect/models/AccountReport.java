@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.math.BigInteger;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -22,7 +23,7 @@ public class AccountReport {
         CODA, MT940, MT940N, MT940E, MT941, MT942, MT942N, CAMT52, CAMT53, CAMT54
     }
 
-    private List<String> accountReferences;
+    private List<String> accountReferences = Collections.emptyList();
     private String fileFormat;
     private String fileName;
     private BigInteger fileSize;
