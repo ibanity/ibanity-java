@@ -47,7 +47,8 @@ public class BulkPaymentInitiationRequestServiceImpl implements BulkPaymentIniti
         URI url = buildUri(getUrl());
         HttpPost httpPost = new HttpPost(url);
         httpPost.setHeader("Accept", "application/vnd.api+json");
-        httpPost.setHeader("Content-type", "application/xml");
+        httpPost.setHeader("Content-Type", "application/xml");
+        httpPost.setHeader("Content-Disposition", "inline; filename=" + query.getFilename());
         InputStreamEntity entity = new InputStreamEntity(query.getStream());
         entity.setChunked(true);
         httpPost.setEntity(entity);
