@@ -2,7 +2,6 @@ package com.ibanity.apis.client.products.isabel_connect.services.impl;
 
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.http.handler.IbanityResponseHandler;
-import com.ibanity.apis.client.jsonapi.DataApiModel;
 import com.ibanity.apis.client.mappers.IsabelModelMapper;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.isabel_connect.models.BulkPaymentInitiationRequest;
@@ -10,15 +9,13 @@ import com.ibanity.apis.client.products.isabel_connect.models.create.BulkPayment
 import com.ibanity.apis.client.products.isabel_connect.models.read.BulkPaymentInitiationRequestReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.services.BulkPaymentInitiationRequestService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
-import com.ibanity.apis.client.utils.IbanityUtils;
-import com.ibanity.apis.client.utils.URIHelper;
 import lombok.NonNull;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.FileEntity;
+import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.message.BasicHeader;
 
 import java.io.IOException;
@@ -51,7 +48,7 @@ public class BulkPaymentInitiationRequestServiceImpl implements BulkPaymentIniti
         HttpPost httpPost = new HttpPost(url);
         httpPost.setHeader("Accept", "application/vnd.api+json");
         httpPost.setHeader("Content-type", "application/xml");
-        FileEntity entity = new FileEntity(query.getFile());
+        InputStreamEntity entity = new InputStreamEntity(query.getStream());
         entity.setChunked(true);
         httpPost.setEntity(entity);
 
