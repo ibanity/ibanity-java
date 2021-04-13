@@ -94,19 +94,6 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
             @NonNull String httpMethod,
             @NonNull URL url,
             @NonNull Map<String, String> requestHeaders,
-            File payload) {
-        try (InputStream stream = new FileInputStream(payload)) {
-            return getHttpSignatureHeaders(httpMethod, url, requestHeaders, stream);
-        } catch (IOException e) {
-            throw new IllegalStateException("Couldn't read the payload");
-        }
-    }
-
-    @Override
-    public Map<String, String> getHttpSignatureHeaders(
-            @NonNull String httpMethod,
-            @NonNull URL url,
-            @NonNull Map<String, String> requestHeaders,
             InputStream inputStream) {
         return httpSignatureHeaders(httpMethod, url, requestHeaders, getDigestHeader(inputStream));
     }
