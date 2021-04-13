@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import java.math.BigDecimal;
 import java.net.URI;
 
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
@@ -65,7 +66,7 @@ public class BalanceServiceImplTest {
     private Balance createExpected() {
         return Balance.builder()
                 .datetime(parse("2018-10-12T22:46:32.417Z"))
-                .amount(123456.78)
+                .amount(BigDecimal.valueOf(123456.78))
                 .subtype("CLBD")
                 .build();
     }

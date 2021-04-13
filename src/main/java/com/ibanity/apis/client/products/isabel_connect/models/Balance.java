@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Data
@@ -19,6 +20,6 @@ public class Balance  {
     private String requestId;
 
     private Instant datetime;
-    private Double amount;
+    private BigDecimal amount;
     private String subtype;
 }
