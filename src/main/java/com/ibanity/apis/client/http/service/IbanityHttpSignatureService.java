@@ -36,17 +36,6 @@ public interface IbanityHttpSignatureService {
      * @param httpMethod the http method of the current request.
      * @param url the url containing host, path and query parameters.
      * @param requestHeaders the headers of the current request. All ibanity-* headers will included in the signature.
-     * @param payload the payload of the actual request as {@link java.io.File}.
-     * @return the map with signature related headers: date, digest and signature headers.
-     */
-    Map<String, String> getHttpSignatureHeaders(String httpMethod, URL url, Map<String, String> requestHeaders, File payload);
-
-    /**
-     * Allows you to create the needed headers to sign an http request following draft http signature
-     * @see <a href="https://tools.ietf.org/html/draft-cavage-http-signatures-12">https://tools.ietf.org/html/draft-cavage-http-signatures-12</a>
-     * @param httpMethod the http method of the current request.
-     * @param url the url containing host, path and query parameters.
-     * @param requestHeaders the headers of the current request. All ibanity-* headers will included in the signature.
      * @param payload the payload of the actual request as {@link java.io.InputStream}.
      * @return the map with signature related headers: date, digest and signature headers.
      */
