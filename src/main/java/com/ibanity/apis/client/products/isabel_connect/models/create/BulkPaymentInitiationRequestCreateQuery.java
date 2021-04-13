@@ -3,7 +3,7 @@ package com.ibanity.apis.client.products.isabel_connect.models.create;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.io.File;
+import java.io.InputStream;
 import java.util.Map;
 
 import static java.util.Collections.emptyMap;
@@ -14,7 +14,7 @@ import static java.util.Collections.emptyMap;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class BulkPaymentInitiationRequestCreateQuery {
     private String accessToken;
-    private File file;
+    private InputStream stream;
 
     @Builder.Default
     private Map<String, String> additionalHeaders = emptyMap();
