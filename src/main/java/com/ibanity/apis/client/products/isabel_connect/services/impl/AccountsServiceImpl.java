@@ -33,7 +33,7 @@ public class AccountsServiceImpl implements AccountsService {
     public Account find(AccountReadQuery query) {
         String url = getUrl(query.getAccountId());
         HttpResponse response = ibanityHttpClient.get(buildUri(url), query.getAdditionalHeaders(), query.getAccessToken());
-        return IsabelModelMapper.mapResource(response, customMappingFunction());
+        return IsabelModelMapper.mapResource(response, Account.class);
     }
 
     @Override
