@@ -15,6 +15,7 @@ import static java.util.Collections.emptyMap;
 public class BulkPaymentInitiationRequestCreateQuery {
     private String accessToken;
     private InputStream stream;
+    private String filename;
 
     @Builder.Default
     private Map<String, String> additionalHeaders = emptyMap();
