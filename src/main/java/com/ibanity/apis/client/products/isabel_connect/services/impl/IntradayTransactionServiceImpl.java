@@ -43,7 +43,7 @@ public class IntradayTransactionServiceImpl implements IntradayTransactionServic
                 query.getAdditionalHeaders(),
                 query.getAccessToken());
 
-        return IsabelModelMapper.mapCollection(response, customMappingFunction());
+        return IsabelModelMapper.mapCollection(response, IntradayTransaction.class);
     }
 
     private String getUrl(String accountId) {
@@ -52,9 +52,5 @@ public class IntradayTransactionServiceImpl implements IntradayTransactionServic
                 .replace(IntradayTransaction.API_URL_TAG_ID, accountId);
 
         return StringUtils.removeEnd(url, "/");
-    }
-
-    private Function<DataApiModel, IntradayTransaction> customMappingFunction() {
-        return dataApiModel -> toIsabelModel(dataApiModel, IntradayTransaction.class);
     }
 }
