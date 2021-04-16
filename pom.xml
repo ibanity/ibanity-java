@@ -76,7 +76,7 @@
         <httpclient.version>4.5.12</httpclient.version>
         <jackson.version>2.10.3</jackson.version>
         <bcpkix-jdk14.version>1.65</bcpkix-jdk14.version>
-        <lombok.version>1.18.16</lombok.version>
+        <lombok.version>1.18.20</lombok.version>
         <google-guava.version>30.0-jre</google-guava.version>
 
         <!-- IBAN Generator -->
