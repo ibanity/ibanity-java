@@ -28,7 +28,6 @@ public class IsabelConnectClientSample {
 
     private static final String clientId = getConfiguration("isabel-connect.oauth2.client_id");
     private static final String clientSecret = getConfiguration("isabel-connect.oauth2.client_secret");
-    private static final String codeVerifier = getConfiguration("isabel-connect.oauth2.code_verifier");
     private static final String authorizationCode = getConfiguration("isabel-connect.oauth2.authorization_code");
 
     public static void main(String[] args) throws CertificateException, IOException {
@@ -61,19 +60,22 @@ public class IsabelConnectClientSample {
     private static String createToken(TokenService tokenService) {
         LOGGER.info("Token samples");
 
-        Token token = tokenService.create(TokenCreateQuery.builder()
+        Token refreshToken = tokenService.create(TokenCreateQuery.builder()
                 .authorizationCode(authorizationCode)
+                .clientId(clientId)
                 .clientSecret(clientSecret)
-                .codeVerifier(codeVerifier)
                 .build());
-        LOGGER.info("Token {}", token);
 
-        token = tokenService.refresh(TokenRefreshQuery.builder()
+        LOGGER.info("Token {}", refreshToken);
+
+        Token accessToken = tokenService.refresh(TokenRefreshQuery.builder()
+                .clientId(clientId)
                 .clientSecret(clientSecret)
-                .refreshToken(token.getRefreshToken())
+                .refreshToken(refreshToken.getRefreshToken())
                 .build());
-        LOGGER.info("Token {}", token);
 
-        return token.getAccessToken();
+        LOGGER.info("Token {}", accessToken);
+
+        return accessToken.getAccessToken();
     }
 }
