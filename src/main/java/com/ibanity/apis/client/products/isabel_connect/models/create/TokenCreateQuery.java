@@ -1,22 +1,38 @@
 package com.ibanity.apis.client.products.isabel_connect.models.create;
 
-import lombok.*;
+import com.ibanity.apis.client.products.isabel_connect.models.TokenQuery;
+import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 import java.util.Map;
 
-import static java.util.Collections.emptyMap;
+import static com.google.common.collect.Maps.newHashMap;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class TokenCreateQuery {
+@SuperBuilder
+public class TokenCreateQuery extends TokenQuery {
+    public static final String[] PATH = new String[]{"oAuth2", "refreshTokens", "create"};
 
     private String authorizationCode;
-    private String codeVerifier;
     private String redirectUri;
-    private String clientSecret;
 
-    @Builder.Default
-    private Map<String, String> additionalHeaders = emptyMap();
+    @Override
+    public String[] path() {
+        return PATH;
+    }
+
+    @Override
+    public Map<String, String> requestArguments() {
+        Map<String, String> arguments = newHashMap();
+        arguments.put("grant_type", "authorization_code");
+        arguments.put("client_id", clientId);
+        arguments.put("client_secret", clientSecret);
+        arguments.put("code", authorizationCode);
+
+        if (redirectUri != null) {
+            arguments.put("redirect_uri", redirectUri);
+        }
+
+        return arguments;
+    }
 }
