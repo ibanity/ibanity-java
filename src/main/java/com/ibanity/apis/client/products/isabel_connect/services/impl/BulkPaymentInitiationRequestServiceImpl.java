@@ -72,7 +72,7 @@ public class BulkPaymentInitiationRequestServiceImpl implements BulkPaymentIniti
 
     private String getUrl(String bulkPaymentInitiationRequestId) {
         String url = apiUrlProvider
-                .find(IbanityProduct.IsabelConnect, "bulk-payment-initiation-requests")
+                .find(IbanityProduct.IsabelConnect, "bulkPaymentInitiationRequests")
                 .replace("{bulkPaymentInitiationRequestId}", bulkPaymentInitiationRequestId);
 
         return StringUtils.removeEnd(url, "/");

@@ -39,7 +39,7 @@ public class BulkPaymentInitiationRequestImplTest {
 
     @BeforeEach
     void setUp() {
-        when(apiUrlProvider.find(IbanityProduct.IsabelConnect, "bulk-payment-initiation-requests"))
+        when(apiUrlProvider.find(IbanityProduct.IsabelConnect, "bulkPaymentInitiationRequests"))
             .thenReturn(BPIR_ENDPOINT);
     }
 
