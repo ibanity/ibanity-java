@@ -106,6 +106,11 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
         }
     }
 
+    @Override
+    public HttpClient httpClient() {
+        return httpClient;
+    }
+
     private HttpResponse execute(@NonNull Map<String, String> additionalHeaders, String customerAccessToken, HttpRequestBase httpRequestBase) {
         try {
             addHeaders(customerAccessToken, additionalHeaders, httpRequestBase);
