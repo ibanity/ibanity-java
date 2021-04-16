@@ -12,9 +12,9 @@ import com.ibanity.apis.client.services.ApiUrlProvider;
 import lombok.NonNull;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.message.BasicHeader;
 
@@ -46,7 +46,7 @@ public class BulkPaymentInitiationRequestServiceImpl implements BulkPaymentIniti
         httpPost.setHeader("Accept", "application/vnd.api+json");
         httpPost.setHeader("Content-Type", "application/xml");
         httpPost.setHeader("Content-Disposition", "inline; filename=" + query.getFilename());
-        InputStreamEntity entity = new InputStreamEntity(query.getStream());
+        FileEntity entity = new FileEntity(query.getFile());
         entity.setChunked(true);
         httpPost.setEntity(entity);
 
