@@ -6,7 +6,6 @@ import com.ibanity.apis.client.products.isabel_connect.models.create.TokenCreate
 import com.ibanity.apis.client.products.isabel_connect.models.refresh.TokenRefreshQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.revoke.TokenRevokeQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.Token;
-import com.ibanity.apis.client.products.isabel_connect.services.impl.TokenServiceImpl;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.google.common.collect.Maps.newHashMap;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.createHttpResponse;
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,11 +33,11 @@ import static org.mockito.Mockito.when;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class TokenServiceImplTest {
 
-    private static final String TOKEN_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/oauth2/token";
-    private static final String REVOKE_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/oauth2/revoke";
+    private static final String TOKEN_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/oauth2/token";
+    private static final String REVOKE_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/oauth2/revoke";
+    private static final String CLIENT_ID = "clientId";
     private static final String CLIENT_SECRET = "thisIsASecret";
     private static final String REDIRECT_URI = "https://fake-tpp.com/ponto-authorization";
-    private static final String CODE_VERIFIER = "W1qfWXH3sbboERgZFytVIpXOzicKFq1s1-QGQuKzeko.QQRNd24KDohgkrMYleOmDzAGzwMP5PIETP6B267dJ-w_verifier";
     private static final String AUTHORIZATION_CODE = "W1qfWXH3sbboERgZFytVIpXOzicKFq1s1-QGQuKzeko.QQRNd24KDohgkrMYleOmDzAGzwMP5PIETP6B267dJ-w";
     private static final String TOKEN = "I_UnPbrN5wH3-b7fhk5p4GIIL_5c5o-0BhXD4myLDoY.vNxkg6557o3pLCHsweSboi2mmeygG1pXVD6k8M95LLJ";
 
@@ -52,41 +52,47 @@ public class TokenServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        when(apiUrlProvider.find(IbanityProduct.PontoConnect, "oauth2", "token")).thenReturn(TOKEN_ENDPOINT);
-        when(apiUrlProvider.find(IbanityProduct.PontoConnect, "oauth2", "revoke")).thenReturn(REVOKE_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.IsabelConnect, "oAuth2", "accessTokens")).thenReturn(TOKEN_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.IsabelConnect, "oAuth2", "refreshTokens", "create")).thenReturn(TOKEN_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.IsabelConnect, "oAuth2", "refreshTokens", "revoke")).thenReturn(REVOKE_ENDPOINT);
     }
 
     @Test
     public void create() throws Exception {
         when(oAuthHttpClient.post(eq(new URI(TOKEN_ENDPOINT)), eq(emptyMap()), eq(createTokenArguments()), eq(CLIENT_SECRET)))
-                .thenReturn(loadHttpResponse("json/ponto-connect/create_access_token.json"));
+                .thenReturn(loadHttpResponse("json/isabel-connect/create_refresh_token.json"));
 
         Token actual = tokenService.create(TokenCreateQuery.builder()
+                .clientId(CLIENT_ID)
                 .clientSecret(CLIENT_SECRET)
-                .redirectUri(REDIRECT_URI)
-                .codeVerifier(CODE_VERIFIER)
                 .authorizationCode(AUTHORIZATION_CODE)
+                .redirectUri(REDIRECT_URI)
                 .build());
 
-        assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExcepted());
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpectedRefreshToken());
     }
 
     @Test
     public void refresh() throws Exception {
         when(oAuthHttpClient.post(eq(new URI(TOKEN_ENDPOINT)), eq(emptyMap()), eq(refreshTokenArguments()), eq(CLIENT_SECRET)))
-                .thenReturn(loadHttpResponse("json/ponto-connect/create_access_token.json"));
+                .thenReturn(loadHttpResponse("json/isabel-connect/create_access_token.json"));
 
         Token actual = tokenService.refresh(TokenRefreshQuery.builder()
+                .clientId(CLIENT_ID)
                 .clientSecret(CLIENT_SECRET)
                 .refreshToken(TOKEN)
                 .build());
 
-        assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExcepted());
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpectedAccessToken());
     }
 
     @Test
     public void revoke() throws Exception {
+        when(oAuthHttpClient.post(eq(new URI(REVOKE_ENDPOINT)), eq(emptyMap()), eq(revokeTokenArguments()), eq(CLIENT_SECRET)))
+                .thenReturn(createHttpResponse("{}"));
+
         tokenService.revoke(TokenRevokeQuery.builder()
+                .clientId(CLIENT_ID)
                 .clientSecret(CLIENT_SECRET)
                 .token(TOKEN)
                 .build());
@@ -98,8 +104,10 @@ public class TokenServiceImplTest {
         HashMap<String, String> arguments = newHashMap();
         arguments.put("grant_type", "authorization_code");
         arguments.put("code", AUTHORIZATION_CODE);
-        arguments.put("code_verifier", CODE_VERIFIER);
+        arguments.put("client_id", CLIENT_ID);
+        arguments.put("client_secret", CLIENT_SECRET);
         arguments.put("redirect_uri", REDIRECT_URI);
+
         return arguments;
     }
 
@@ -107,22 +115,37 @@ public class TokenServiceImplTest {
         HashMap<String, String> arguments = newHashMap();
         arguments.put("grant_type", "refresh_token");
         arguments.put("refresh_token", TOKEN);
+        arguments.put("client_id", CLIENT_ID);
+        arguments.put("client_secret", CLIENT_SECRET);
+
         return arguments;
     }
 
     private Map<String, String> revokeTokenArguments() {
         HashMap<String, String> arguments = newHashMap();
         arguments.put("token", TOKEN);
+        arguments.put("client_id", CLIENT_ID);
+        arguments.put("client_secret", CLIENT_SECRET);
+
         return arguments;
     }
 
-    private Token createExcepted() {
+    private Token createExpectedRefreshToken() {
         return Token.builder()
-                .accessToken("MoH3t9zBrnTvlt0qB061Ptjdy0akwwYHm9VY9E6-e4E.a2nK0TfrXsTkVhKzILhKa59_6G1WIUrmvWXko6uYc28")
+                .accessToken("access_token_1603365408")
+                .refreshToken("valid_refresh_token")
                 .expiresIn(1799)
-                .scope("offline_access ai pi")
-                .tokenType("bearer")
-                .refreshToken("I_UnPbrN5wH3-b7fhk5p4GIIL_5c5o-0BhXD4myLDoY.vNxkg6557o3pLCHsweSboi2mmeygG1pXVD6k8M95LLM")
+                .scope("cloudconnect")
+                .tokenType("Bearer")
+                .build();
+    }
+
+    private Token createExpectedAccessToken() {
+        return Token.builder()
+                .accessToken("access_token_1603365408")
+                .expiresIn(1799)
+                .scope("cloudconnect")
+                .tokenType("Bearer")
                 .build();
     }
 }
