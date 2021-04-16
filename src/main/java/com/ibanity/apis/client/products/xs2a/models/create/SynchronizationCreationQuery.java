@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.util.Map;
-import java.util.UUID;
 
 import static java.util.Collections.emptyMap;
 
@@ -19,7 +18,7 @@ public class SynchronizationCreationQuery {
     private String subtype;
     private String resourceId;
     private String resourceType;
-    private boolean customerOnline;
+    private Boolean customerOnline;
     private String customerIpAddress;
     private String customerAccessToken;
 

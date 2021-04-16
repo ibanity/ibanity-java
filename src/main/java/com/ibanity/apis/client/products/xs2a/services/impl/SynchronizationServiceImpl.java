@@ -33,7 +33,7 @@ public class SynchronizationServiceImpl implements SynchronizationService {
                 .resourceId(synchronizationCreationQuery.getResourceId())
                 .resourceType(synchronizationCreationQuery.getResourceType())
                 .subtype(synchronizationCreationQuery.getSubtype())
-                .customerOnline(synchronizationCreationQuery.isCustomerOnline())
+                .customerOnline(synchronizationCreationQuery.getCustomerOnline())
                 .customerIpAddress(synchronizationCreationQuery.getCustomerIpAddress())
                 .build();
         String url = getUrl();
