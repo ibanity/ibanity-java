@@ -29,17 +29,14 @@ public class BulkPaymentInitiationRequestServiceImpl implements BulkPaymentIniti
     private final ApiUrlProvider apiUrlProvider;
     private final IbanityResponseHandler ibanityResponseHandler;
     private final IbanityHttpClient ibanityHttpClient;
-    private final HttpClient httpClient;
 
     public BulkPaymentInitiationRequestServiceImpl(
             ApiUrlProvider apiUrlProvider,
             IbanityResponseHandler ibanityResponseHandler,
-            IbanityHttpClient ibanityHttpClient,
-            HttpClient httpClient) {
+            IbanityHttpClient ibanityHttpClient) {
         this.apiUrlProvider = apiUrlProvider;
         this.ibanityResponseHandler = ibanityResponseHandler;
         this.ibanityHttpClient = ibanityHttpClient;
-        this.httpClient = httpClient;
     }
 
     @Override
@@ -83,7 +80,7 @@ public class BulkPaymentInitiationRequestServiceImpl implements BulkPaymentIniti
                                  HttpRequestBase httpRequestBase) {
         try {
             addHeaders(httpRequestBase, customerAccessToken, additionalHeaders);
-            return ibanityResponseHandler.handleResponse(this.httpClient.execute(httpRequestBase));
+            return ibanityResponseHandler.handleResponse(this.ibanityHttpClient.httpClient().execute(httpRequestBase));
         } catch (IOException exception) {
             throw new RuntimeException("An error occurred while connecting to Ibanity", exception);
         }
