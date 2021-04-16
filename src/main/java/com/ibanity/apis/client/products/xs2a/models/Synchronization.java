@@ -27,7 +27,7 @@ public class Synchronization implements IbanityModel {
     private String subtype;
     private String resourceId;
     private String resourceType;
-    private boolean customerOnline;
+    private Boolean customerOnline;
     private String customerIpAddress;
     private String selfLink;
 

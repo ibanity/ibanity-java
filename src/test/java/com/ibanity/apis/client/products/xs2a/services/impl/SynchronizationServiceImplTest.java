@@ -106,7 +106,7 @@ class SynchronizationServiceImplTest {
                 .resourceId(synchronizationCreationQuery.getResourceId())
                 .resourceType(synchronizationCreationQuery.getResourceType())
                 .subtype(synchronizationCreationQuery.getSubtype())
-                .customerOnline(synchronizationCreationQuery.isCustomerOnline())
+                .customerOnline(synchronizationCreationQuery.getCustomerOnline())
                 .customerIpAddress(synchronizationCreationQuery.getCustomerIpAddress())
                 .build();
         return RequestApiModel.builder()
