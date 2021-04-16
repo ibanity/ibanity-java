@@ -8,6 +8,8 @@ public interface IsabelConnectService {
 
     BalanceService balanceService();
 
+    BulkPaymentInitiationRequestService bulkPaymentInitiationRequestService();
+
     IntradayTransactionService intradayTransactionService();
 
     TransactionService transactionService();
