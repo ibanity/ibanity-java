@@ -47,7 +47,7 @@ public class BalanceServiceImpl implements BalanceService {
 
     private String getUrl(String accountId) {
         String url = apiUrlProvider
-                .find(IbanityProduct.IsabelConnect, "accounts", "balances")
+                .find(IbanityProduct.IsabelConnect, "account", "balances")
                 .replace(Account.API_URL_TAG_ID, accountId);
 
         return StringUtils.removeEnd(url, "/");

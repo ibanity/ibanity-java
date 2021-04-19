@@ -44,7 +44,7 @@ public class BalanceServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        when(apiUrlProvider.find(IbanityProduct.IsabelConnect, "accounts", "balances"))
+        when(apiUrlProvider.find(IbanityProduct.IsabelConnect, "account", "balances"))
                 .thenReturn(BALANCES_ENDPOINT);
     }
 

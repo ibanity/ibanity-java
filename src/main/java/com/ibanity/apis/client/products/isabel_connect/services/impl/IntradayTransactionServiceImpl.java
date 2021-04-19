@@ -48,7 +48,7 @@ public class IntradayTransactionServiceImpl implements IntradayTransactionServic
 
     private String getUrl(String accountId) {
         String url = apiUrlProvider
-                .find(IbanityProduct.IsabelConnect, "accounts", "intradayTransactions")
+                .find(IbanityProduct.IsabelConnect, "account", "intradayTransactions")
                 .replace(IntradayTransaction.API_URL_TAG_ID, accountId);
 
         return StringUtils.removeEnd(url, "/");
