@@ -15,6 +15,8 @@ import static java.util.Collections.emptyMap;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class BulkPaymentInitiationRequestCreateQuery {
     private String accessToken;
+    private Boolean shared;
+    private Boolean hideDetails;
     private File file;
     private String filename;
 
