@@ -43,9 +43,8 @@ public class BulkPaymentInitiationRequestServiceImpl implements BulkPaymentIniti
     public BulkPaymentInitiationRequest create(BulkPaymentInitiationRequestCreateQuery query) {
         URI url = buildUri(getUrl());
         HttpPost httpPost = new HttpPost(url);
-        httpPost.setHeader("Accept", "application/vnd.api+json");
-        httpPost.setHeader("Content-Type", "application/xml");
-        httpPost.setHeader("Content-Disposition", "inline; filename=" + query.getFilename());
+        setHeaders(httpPost, query);
+
         FileEntity entity = new FileEntity(query.getFile());
         entity.setChunked(true);
         httpPost.setEntity(entity);
@@ -53,6 +52,20 @@ public class BulkPaymentInitiationRequestServiceImpl implements BulkPaymentIniti
         HttpResponse res = execute(query.getAdditionalHeaders(), query.getAccessToken(), httpPost);
 
         return IsabelModelMapper.mapResource(res, BulkPaymentInitiationRequest.class);
+    }
+
+    private void setHeaders(HttpPost httpPost, BulkPaymentInitiationRequestCreateQuery query) {
+        httpPost.setHeader("Accept", "application/vnd.api+json");
+        httpPost.setHeader("Content-Type", "application/xml");
+        httpPost.setHeader("Content-Disposition", "inline; filename=" + query.getFilename());
+
+        if (query.getShared() != null) {
+            httpPost.setHeader("Is-Shared", query.getShared().toString());
+        }
+
+        if (query.getHideDetails() != null ) {
+            httpPost.setHeader("Hide-Details", query.getHideDetails().toString());
+        }
     }
 
     @Override
