@@ -51,7 +51,7 @@ public class AccountReportServiceImplTest {
 
     @BeforeEach
     void setup() {
-        when(apiUrlProvider.find(IbanityProduct.IsabelConnect, "account-reports"))
+        when(apiUrlProvider.find(IbanityProduct.IsabelConnect, "accountReports"))
                 .thenReturn(ACCOUNT_REPORT_ENDPOINT);
     }
 

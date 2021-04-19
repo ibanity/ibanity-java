@@ -65,7 +65,7 @@ public class AccountReportServiceImpl implements AccountReportService {
 
     private String getUrl(String accountReportId) {
         String url = apiUrlProvider
-                .find(IbanityProduct.IsabelConnect, "account-reports")
+                .find(IbanityProduct.IsabelConnect, "accountReports")
                 .replace(AccountReport.API_URL_TAG_ID, accountReportId);
 
         return StringUtils.removeEnd(url, "/");

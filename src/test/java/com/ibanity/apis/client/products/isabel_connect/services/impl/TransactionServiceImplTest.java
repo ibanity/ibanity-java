@@ -43,7 +43,7 @@ public class TransactionServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        when(apiUrlProvider.find(IbanityProduct.IsabelConnect, "accounts", "transactions")).thenReturn(TRANSACTIONS_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.IsabelConnect, "account", "transactions")).thenReturn(TRANSACTIONS_ENDPOINT);
     }
 
     @Test

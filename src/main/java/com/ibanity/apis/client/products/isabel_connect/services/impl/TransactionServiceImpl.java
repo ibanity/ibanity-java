@@ -45,7 +45,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     private String getUrl(String accountId) {
         String url = apiUrlProvider
-                .find(IbanityProduct.IsabelConnect, "accounts", "transactions")
+                .find(IbanityProduct.IsabelConnect, "account", "transactions")
                 .replace(Transaction.API_URL_TAG_ID, accountId);
 
         return StringUtils.removeEnd(url, "/");

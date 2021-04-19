@@ -43,7 +43,7 @@ public class IntradayTransactionServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        when(apiUrlProvider.find(IbanityProduct.IsabelConnect, "accounts", "intradayTransactions"))
+        when(apiUrlProvider.find(IbanityProduct.IsabelConnect, "account", "intradayTransactions"))
                 .thenReturn(INTRADAY_TRANSACTIONS_ENDPOINT);
     }
 
