@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.products.isabel_connect.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +29,7 @@ public class AccountReport {
     private String fileName;
     private BigInteger fileSize;
     private String financialInstitutionName;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", timezone = "UTC")
     private Instant receivedAt;
 
     private String requestId;
