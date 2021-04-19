@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class BulkPaymentInitiationRequestImplTest {
+public class BulkPaymentInitiationRequestServiceImplTest {
     public static final String ACCESS_TOKEN = "thisIsAnAccessToken";
     public static final String BPIR_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/bulk-payment-initiation-requests/{bulkPaymentInitiationRequestId}";
     public static final String FIND_BPIR_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/bulk-payment-initiation-requests/93ecb1fdbfb7848e7b7896c0f2d207aed3d8b4c1";
