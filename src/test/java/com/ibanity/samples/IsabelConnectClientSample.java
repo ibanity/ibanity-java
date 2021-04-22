@@ -7,15 +7,18 @@ import com.ibanity.apis.client.models.IsabelCollection;
 import com.ibanity.apis.client.products.isabel_connect.models.AccountReport;
 import com.ibanity.apis.client.products.isabel_connect.models.Token;
 import com.ibanity.apis.client.products.isabel_connect.models.create.TokenCreateQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReportReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReportsReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.refresh.TokenRefreshQuery;
 import com.ibanity.apis.client.products.isabel_connect.services.AccountReportService;
 import com.ibanity.apis.client.products.isabel_connect.services.IsabelConnectService;
 import com.ibanity.apis.client.products.isabel_connect.services.TokenService;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
 
 import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.*;
@@ -61,6 +64,8 @@ public class IsabelConnectClientSample {
         Token token = createToken(isabelConnectService.tokenService());
 
         listAccountReports(isabelConnectService.accountReportService(), token);
+
+        getAccountReport(isabelConnectService.accountReportService(), token);
     }
 
     private static Token createToken(TokenService tokenService) {
@@ -93,5 +98,26 @@ public class IsabelConnectClientSample {
 
         IsabelCollection<AccountReport> reports = accountReportService.list(query);
         LOGGER.info("Account reports {}", reports);
+    }
+
+    private static void getAccountReport(AccountReportService service, Token token) {
+        LOGGER.info("Account reports");
+
+        AccountReportReadQuery query = AccountReportReadQuery.builder()
+                .accessToken(token.getAccessToken())
+                .accountReportId("<report-id>")
+                .build();
+
+        String content = service.find(query, resp -> {
+            try {
+                return IOUtils.toString(resp.getEntity().getContent(), StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        });
+
+        LOGGER.info("Account report {}", content);
     }
 }
