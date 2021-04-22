@@ -48,16 +48,18 @@ public class IsabelConnectClientSample {
                     .signatureCertificateId(getConfiguration(IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY));
         }
 
-        IsabelConnectService pontoConnectService = ibanityServiceBuilder
+        IsabelConnectService isabelConnectService = ibanityServiceBuilder
                 .pontoConnectOauth2ClientId(clientId)
                 .build()
                 .isabelConnectService();
 
 
-        String accessToken = createToken(pontoConnectService.tokenService());
+        Token token = createToken(isabelConnectService.tokenService());
+
+        listAccountReports(isabelConnectService.accountReportService(), token);
     }
 
-    private static String createToken(TokenService tokenService) {
+    private static Token createToken(TokenService tokenService) {
         LOGGER.info("Token samples");
 
         Token refreshToken = tokenService.create(TokenCreateQuery.builder()
@@ -76,6 +78,7 @@ public class IsabelConnectClientSample {
 
         LOGGER.info("Token {}", accessToken);
 
-        return accessToken.getAccessToken();
+        return accessToken;
+    }
     }
 }
