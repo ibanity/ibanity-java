@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
+import static com.ibanity.apis.client.mappers.ModelMapperHelper.buildRequest;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 
 public class SynchronizationServiceImpl implements SynchronizationService {
@@ -33,7 +34,7 @@ public class SynchronizationServiceImpl implements SynchronizationService {
                 .resourceType(synchronizationCreateQuery.getResourceType())
                 .subtype(synchronizationCreateQuery.getSubtype())
                 .build();
-        RequestApiModel request = IbanityModelMapper.buildRequest(Synchronization.RESOURCE_TYPE, synchronization);
+        RequestApiModel request = buildRequest(Synchronization.RESOURCE_TYPE, synchronization);
         HttpResponse response = ibanityHttpClient.post(buildUri(getUrl()), request, synchronizationCreateQuery.getAdditionalHeaders(), synchronizationCreateQuery.getAccessToken());
         return mapResource(response, Synchronization.class);
     }

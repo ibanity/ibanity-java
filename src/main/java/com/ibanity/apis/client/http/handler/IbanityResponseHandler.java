@@ -13,7 +13,7 @@ import org.apache.http.client.ResponseHandler;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.ibanity.apis.client.mappers.IbanityModelMapper.readResponseContent;
+import static com.ibanity.apis.client.mappers.ModelMapperHelper.readResponseContent;
 import static com.ibanity.apis.client.utils.IbanityUtils.objectMapper;
 
 public class IbanityResponseHandler implements ResponseHandler<HttpResponse> {
