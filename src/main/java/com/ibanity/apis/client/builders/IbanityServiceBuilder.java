@@ -42,6 +42,7 @@ public class IbanityServiceBuilder implements
     private String signaturePrivateKeyPassphrase;
     private String signatureCertificateId;
     private String pontoConnectOauth2ClientId;
+    private String isabelConnectOauth2ClientId;
     private boolean disableTlsClientCertificate;
     private List<HttpRequestInterceptor> requestInterceptors = newArrayList();
     private List<HttpResponseInterceptor> responseInterceptors = newArrayList();
@@ -82,6 +83,7 @@ public class IbanityServiceBuilder implements
                 .signatureCredentials(signatureCredentials)
                 .proxyEndpoint(proxyEndpoint)
                 .pontoConnectOauth2ClientId(pontoConnectOauth2ClientId)
+                .isabelConnectOauth2ClientId(isabelConnectOauth2ClientId)
                 .httpRequestInterceptors(requestInterceptors)
                 .httpResponseInterceptors(responseInterceptors)
                 .connectionRequestTimeout(connectionRequestTimeout)
@@ -116,6 +118,12 @@ public class IbanityServiceBuilder implements
     @Override
     public OptionalPropertiesBuilder pontoConnectOauth2ClientId(String clientId) {
         this.pontoConnectOauth2ClientId = clientId;
+        return this;
+    }
+
+    @Override
+    public OptionalPropertiesBuilder isabelConnectOauth2ClientId(String clientId) {
+        this.isabelConnectOauth2ClientId = clientId;
         return this;
     }
 

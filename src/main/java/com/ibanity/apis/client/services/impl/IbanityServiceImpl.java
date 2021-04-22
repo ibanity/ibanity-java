@@ -28,8 +28,9 @@ public class IbanityServiceImpl implements IbanityService {
     private final IbanityHttpClient ibanityHttpClient;
     private final Xs2aService xs2aService;
     private final PontoConnectService pontoConnectService;
-    private final OAuthHttpClient oauthHttpClient;
+    private final OAuthHttpClient pontoConnectOAuthHttpClient;
     private final IsabelConnectService isabelConnectService;
+    private final OAuthHttpClient isabelConnectOAuthHttpClient;
 
     /**
      * @deprecated  Replaced by {@link #IbanityServiceImpl(IbanityConfiguration)}
@@ -39,39 +40,47 @@ public class IbanityServiceImpl implements IbanityService {
                               Certificate caCertificate,
                               TlsCredentials tlsCredentials,
                               SignatureCredentials signatureCredentials,
-                              String clientId,
+                              String pontoConnectClientId,
+                              String isabelConnectClientId,
                               String proxyEndpoint) {
         this.ibanityHttpClient = new IbanityHttpClientFactory().create(caCertificate, tlsCredentials, signatureCredentials, apiEndpoint);
         this.apiUrlProvider = new ApiUrlProviderImpl(ibanityHttpClient, apiEndpoint, proxyEndpoint);
 
         this.xs2aService = new Xs2aServiceImpl(apiUrlProvider, ibanityHttpClient);
 
-        if (isBlank(clientId)) {
-            this.oauthHttpClient = null;
+        if (isBlank(pontoConnectClientId)) {
+            this.pontoConnectOAuthHttpClient = null;
             this.pontoConnectService = null;
+        } else {
+            this.pontoConnectOAuthHttpClient = new OauthHttpClientFactory().create(caCertificate, tlsCredentials, signatureCredentials, apiEndpoint, pontoConnectClientId);
+            this.pontoConnectService = new PontoConnectServiceImpl(apiUrlProvider, ibanityHttpClient, pontoConnectOAuthHttpClient);
+        }
+
+        if (isBlank(isabelConnectClientId)) {
+            this.isabelConnectOAuthHttpClient = null;
             this.isabelConnectService = null;
         } else {
-            this.oauthHttpClient = new OauthHttpClientFactory().create(caCertificate, tlsCredentials, signatureCredentials, apiEndpoint, clientId);
-            this.pontoConnectService = new PontoConnectServiceImpl(apiUrlProvider, ibanityHttpClient, oauthHttpClient);
-            this.isabelConnectService = new IsabelConnectServiceImpl(apiUrlProvider, ibanityHttpClient, oauthHttpClient);
+            this.isabelConnectOAuthHttpClient = new OauthHttpClientFactory().create(caCertificate, tlsCredentials, signatureCredentials, apiEndpoint, isabelConnectClientId);
+            this.isabelConnectService = new IsabelConnectServiceImpl(apiUrlProvider, ibanityHttpClient, isabelConnectOAuthHttpClient);
         }
     }
 
     /**
-     * @deprecated  Use {@link #IbanityServiceImpl(ApiUrlProvider, IbanityHttpClient, Xs2aService, PontoConnectService, IsabelConnectService, OAuthHttpClient)}
+     * @deprecated  Use {@link #IbanityServiceImpl(ApiUrlProvider, IbanityHttpClient, Xs2aService, PontoConnectService, IsabelConnectService, OAuthHttpClient, OAuthHttpClient)}
      */
     @Deprecated
     public IbanityServiceImpl(ApiUrlProvider apiUrlProvider,
                               IbanityHttpClient ibanityHttpClient,
                               Xs2aService xs2aService,
                               PontoConnectService pontoConnectService,
-                              OAuthHttpClient oauthHttpClient) {
+                              OAuthHttpClient pontoConnectOAuthHttpClient) {
         this.apiUrlProvider = apiUrlProvider;
         this.ibanityHttpClient = ibanityHttpClient;
         this.xs2aService = xs2aService;
         this.pontoConnectService = pontoConnectService;
-        this.oauthHttpClient = oauthHttpClient;
+        this.pontoConnectOAuthHttpClient = pontoConnectOAuthHttpClient;
         this.isabelConnectService = null;
+        this.isabelConnectOAuthHttpClient = null;
     }
 
     public IbanityServiceImpl(ApiUrlProvider apiUrlProvider,
@@ -79,31 +88,40 @@ public class IbanityServiceImpl implements IbanityService {
                               Xs2aService xs2aService,
                               PontoConnectService pontoConnectService,
                               IsabelConnectService isabelConnectService,
-                              OAuthHttpClient oauthHttpClient) {
+                              OAuthHttpClient pontoConnectOAuthHttpClient,
+                              OAuthHttpClient isabelConnectOAuthHttpClient) {
         this.apiUrlProvider = apiUrlProvider;
         this.ibanityHttpClient = ibanityHttpClient;
         this.xs2aService = xs2aService;
         this.pontoConnectService = pontoConnectService;
         this.isabelConnectService = isabelConnectService;
-        this.oauthHttpClient = oauthHttpClient;
+        this.pontoConnectOAuthHttpClient = pontoConnectOAuthHttpClient;
+        this.isabelConnectOAuthHttpClient = isabelConnectOAuthHttpClient;
     }
 
     public IbanityServiceImpl(IbanityConfiguration ibanityConfiguration) {
-        String clientId = ibanityConfiguration.getPontoConnectOauth2ClientId();
+        String pontoConnectClientId = ibanityConfiguration.getPontoConnectOauth2ClientId();
+        String isabelConnectClientId = ibanityConfiguration.getIsabelConnectOauth2ClientId();
         HttpClient httpClient = IbanityUtils.httpClient(ibanityConfiguration);
         this.ibanityHttpClient = new IbanityHttpClientFactory().create(httpClient);
         this.apiUrlProvider = new ApiUrlProviderImpl(ibanityHttpClient, ibanityConfiguration.getApiEndpoint(), ibanityConfiguration.getProxyEndpoint());
 
         this.xs2aService = new Xs2aServiceImpl(apiUrlProvider, ibanityHttpClient);
 
-        if (isBlank(clientId)) {
-            this.oauthHttpClient = null;
+        if (isBlank(pontoConnectClientId)) {
+            this.pontoConnectOAuthHttpClient = null;
             this.pontoConnectService = null;
-            this.isabelConnectService = null;
         } else {
-            this.oauthHttpClient = new OauthHttpClientFactory().create(clientId, httpClient);
-            this.pontoConnectService = new PontoConnectServiceImpl(apiUrlProvider, ibanityHttpClient, oauthHttpClient);
-            this.isabelConnectService = new IsabelConnectServiceImpl(apiUrlProvider, ibanityHttpClient, oauthHttpClient);
+            this.pontoConnectOAuthHttpClient = new OauthHttpClientFactory().create(pontoConnectClientId, httpClient);
+            this.pontoConnectService = new PontoConnectServiceImpl(apiUrlProvider, ibanityHttpClient, pontoConnectOAuthHttpClient);
+        }
+
+        if (isBlank(isabelConnectClientId)) {
+            this.isabelConnectService = null;
+            this.isabelConnectOAuthHttpClient = null;
+        } else {
+            this.isabelConnectOAuthHttpClient = new OauthHttpClientFactory().create(isabelConnectClientId, httpClient);
+            this.isabelConnectService = new IsabelConnectServiceImpl(apiUrlProvider, ibanityHttpClient, isabelConnectOAuthHttpClient);
         }
     }
 
@@ -122,18 +140,26 @@ public class IbanityServiceImpl implements IbanityService {
         return xs2aService;
     }
 
-    public OAuthHttpClient oAuthHttpClient() {
-        if (oauthHttpClient == null) {
-            throw new IllegalStateException("OauthHttpClient was not properly initialized. Did you configure pontoConnectOauth2ClientId?");
+    public OAuthHttpClient pontoConnectOAuthHttpClient() {
+        if (pontoConnectOAuthHttpClient == null) {
+            throw new IllegalStateException("Ponto-connect OauthHttpClient was not properly initialized. Did you configure pontoConnectOAuth2ClientId?");
         }
 
-        return oauthHttpClient;
+        return pontoConnectOAuthHttpClient;
+    }
+
+    public OAuthHttpClient isabelConnectOAuthHttpClient() {
+        if (isabelConnectOAuthHttpClient == null) {
+            throw new IllegalStateException("IsabelConnect OauthHttpClient was not properly initialized. Did you configure isabelConnectOAuth2ClientId?");
+        }
+
+        return pontoConnectOAuthHttpClient;
     }
 
     @Override
     public PontoConnectService pontoConnectService() {
         if (pontoConnectService == null) {
-            throw new IllegalStateException("PontoConnectService was not properly initialized. Did you configure pontoConnectOauth2ClientId?");
+            throw new IllegalStateException("PontoConnectService was not properly initialized. Did you configure pontoConnectOAuth2ClientId?");
         }
 
         return pontoConnectService;
@@ -142,7 +168,7 @@ public class IbanityServiceImpl implements IbanityService {
     @Override
     public IsabelConnectService isabelConnectService() {
         if (isabelConnectService == null) {
-            throw new IllegalStateException("IsabelConnectService was not properly initialized.");
+            throw new IllegalStateException("IsabelConnectService was not properly initialized. Did you configure isabelConnectOAuth2ClientId?");
         }
 
         return isabelConnectService;

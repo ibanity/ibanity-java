@@ -17,6 +17,8 @@ public interface OptionalPropertiesBuilder {
 
     OptionalPropertiesBuilder pontoConnectOauth2ClientId(String clientId);
 
+    OptionalPropertiesBuilder isabelConnectOauth2ClientId(String clientId);
+
     OptionalPropertiesBuilder proxyEndpoint(String proxyEndpoint);
 
     OptionalPropertiesBuilder withHttpRequestInterceptors(HttpRequestInterceptor... httpRequestInterceptor);
