@@ -10,7 +10,7 @@ import com.ibanity.apis.client.products.xs2a.services.CustomerAccessTokensServic
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.apache.http.HttpResponse;
 
-import static com.ibanity.apis.client.mappers.IbanityModelMapper.buildRequest;
+import static com.ibanity.apis.client.mappers.ModelMapperHelper.buildRequest;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 
 public class CustomerAccessTokensServiceImpl implements CustomerAccessTokensService {

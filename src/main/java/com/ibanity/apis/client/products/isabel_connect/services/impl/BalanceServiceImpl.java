@@ -3,7 +3,6 @@ package com.ibanity.apis.client.products.isabel_connect.services.impl;
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.jsonapi.isabel_connect.CollectionApiModel;
 import com.ibanity.apis.client.jsonapi.isabel_connect.DataApiModel;
-import com.ibanity.apis.client.mappers.IsabelModelMapper;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.IsabelCollection;
 import com.ibanity.apis.client.products.isabel_connect.models.Account;
@@ -20,6 +19,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.stream.Collectors;
 
+import static com.ibanity.apis.client.mappers.ModelMapperHelper.getRequestId;
+import static com.ibanity.apis.client.mappers.ModelMapperHelper.readResponseContent;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 
 public class BalanceServiceImpl implements BalanceService {
@@ -55,9 +56,9 @@ public class BalanceServiceImpl implements BalanceService {
 
     private IsabelCollection<Balance> mapCollection(HttpResponse httpResponse) {
         try {
-            String jsonPayload = IsabelModelMapper.readResponseContent(httpResponse.getEntity());
+            String jsonPayload = readResponseContent(httpResponse.getEntity());
             CollectionApiModel collectionApiModel = IbanityUtils.objectMapper().readValue(jsonPayload, CollectionApiModel.class);
-            String requestId = IsabelModelMapper.getRequestId(httpResponse);
+            String requestId = getRequestId(httpResponse);
             return IsabelCollection.<Balance>builder()
                     .requestId(requestId)
                     .pagingOffset(collectionApiModel.getPaginationOffset())

@@ -16,8 +16,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import static com.ibanity.apis.client.mappers.IbanityModelMapper.buildRequest;
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
+import static com.ibanity.apis.client.mappers.ModelMapperHelper.buildRequest;
 import static com.ibanity.apis.client.products.xs2a.mappers.PaymentInitiationRequestMapper.getRequestMapping;
 import static com.ibanity.apis.client.products.xs2a.mappers.PaymentInitiationRequestMapper.getResponseMapping;
 import static com.ibanity.apis.client.products.xs2a.services.impl.PaymentInitiationRequestServiceImpl.PaymentInitiationRequest.RESOURCE_TYPE;

@@ -18,8 +18,8 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import static com.ibanity.apis.client.mappers.IbanityModelMapper.buildRequest;
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
+import static com.ibanity.apis.client.mappers.ModelMapperHelper.buildRequest;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 
 public class PaymentServiceImpl implements PaymentService {

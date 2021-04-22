@@ -17,8 +17,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.stream.Collectors;
 
-import static com.ibanity.apis.client.mappers.IbanityModelMapper.getRequestId;
-import static com.ibanity.apis.client.mappers.IbanityModelMapper.readResponseContent;
+import static com.ibanity.apis.client.mappers.ModelMapperHelper.getRequestId;
+import static com.ibanity.apis.client.mappers.ModelMapperHelper.readResponseContent;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static org.apache.commons.lang3.StringUtils.removeEnd;
 import static org.apache.http.util.EntityUtils.consumeQuietly;

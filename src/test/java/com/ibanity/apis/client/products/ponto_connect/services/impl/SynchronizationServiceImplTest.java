@@ -21,6 +21,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
+import static com.ibanity.apis.client.mappers.ModelMapperHelper.buildRequest;
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -55,7 +56,7 @@ public class SynchronizationServiceImplTest {
     @Test
     public void create() throws Exception {
         when(ibanityHttpClient.post(new URI(CREATE_SYNCHRONIZATION_ENDPOINT),
-                IbanityModelMapper.buildRequest(Synchronization.RESOURCE_TYPE, Synchronization.builder()
+                buildRequest(Synchronization.RESOURCE_TYPE, Synchronization.builder()
                         .subtype(SUBTYPE)
                         .resourceId(RESOURCE_ID)
                         .resourceType(RESOURCE_TYPE)

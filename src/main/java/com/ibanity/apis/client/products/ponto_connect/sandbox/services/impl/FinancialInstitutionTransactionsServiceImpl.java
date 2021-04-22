@@ -13,7 +13,9 @@ import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.apache.http.HttpResponse;
 
-import static com.ibanity.apis.client.mappers.IbanityModelMapper.*;
+import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapCollection;
+import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
+import static com.ibanity.apis.client.mappers.ModelMapperHelper.buildRequest;
 import static com.ibanity.apis.client.models.IbanityProduct.PontoConnect;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static org.apache.commons.lang3.StringUtils.removeEnd;

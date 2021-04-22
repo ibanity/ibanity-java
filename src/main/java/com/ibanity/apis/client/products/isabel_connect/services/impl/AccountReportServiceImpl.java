@@ -3,12 +3,11 @@ package com.ibanity.apis.client.products.isabel_connect.services.impl;
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.jsonapi.isabel_connect.CollectionApiModel;
 import com.ibanity.apis.client.jsonapi.isabel_connect.DataApiModel;
-import com.ibanity.apis.client.mappers.IsabelModelMapper;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.IsabelCollection;
 import com.ibanity.apis.client.products.isabel_connect.models.AccountReport;
-import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReportsReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReportReadQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReportsReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.read.IsabelPagingSpec;
 import com.ibanity.apis.client.products.isabel_connect.services.AccountReportService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
@@ -20,8 +19,9 @@ import java.io.IOException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.ibanity.apis.client.mappers.ModelMapperHelper.getRequestId;
+import static com.ibanity.apis.client.mappers.ModelMapperHelper.readResponseContent;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
-import static org.apache.http.util.EntityUtils.consumeQuietly;
 
 public class AccountReportServiceImpl implements AccountReportService {
     private final ApiUrlProvider apiUrlProvider;
@@ -73,9 +73,9 @@ public class AccountReportServiceImpl implements AccountReportService {
 
     private IsabelCollection<AccountReport> mapCollection(HttpResponse httpResponse) {
         try {
-            String jsonPayload = IsabelModelMapper.readResponseContent(httpResponse.getEntity());
+            String jsonPayload = readResponseContent(httpResponse.getEntity());
             CollectionApiModel collectionApiModel = IbanityUtils.objectMapper().readValue(jsonPayload, CollectionApiModel.class);
-            String requestId = IsabelModelMapper.getRequestId(httpResponse);
+            String requestId = getRequestId(httpResponse);
             return IsabelCollection.<AccountReport>builder()
                     .requestId(requestId)
                     .pagingOffset(collectionApiModel.getPaginationOffset())
