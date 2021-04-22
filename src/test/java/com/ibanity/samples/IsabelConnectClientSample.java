@@ -3,9 +3,13 @@ package com.ibanity.samples;
 import com.ibanity.apis.client.builders.IbanityServiceBuilder;
 import com.ibanity.apis.client.builders.OptionalPropertiesBuilder;
 import com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys;
+import com.ibanity.apis.client.models.IsabelCollection;
+import com.ibanity.apis.client.products.isabel_connect.models.AccountReport;
 import com.ibanity.apis.client.products.isabel_connect.models.Token;
 import com.ibanity.apis.client.products.isabel_connect.models.create.TokenCreateQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReportsReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.refresh.TokenRefreshQuery;
+import com.ibanity.apis.client.products.isabel_connect.services.AccountReportService;
 import com.ibanity.apis.client.products.isabel_connect.services.IsabelConnectService;
 import com.ibanity.apis.client.products.isabel_connect.services.TokenService;
 import org.apache.logging.log4j.LogManager;
@@ -80,5 +84,14 @@ public class IsabelConnectClientSample {
 
         return accessToken;
     }
+
+    private static void listAccountReports(AccountReportService accountReportService, Token token) {
+        LOGGER.info("List account reports");
+        AccountReportsReadQuery query = AccountReportsReadQuery.builder()
+                .accessToken(token.getAccessToken())
+                .build();
+
+        IsabelCollection<AccountReport> reports = accountReportService.list(query);
+        LOGGER.info("Account reports {}", reports);
     }
 }
