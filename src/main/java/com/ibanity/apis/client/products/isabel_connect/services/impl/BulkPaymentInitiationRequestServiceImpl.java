@@ -10,15 +10,19 @@ import com.ibanity.apis.client.products.isabel_connect.models.read.BulkPaymentIn
 import com.ibanity.apis.client.products.isabel_connect.services.BulkPaymentInitiationRequestService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import lombok.NonNull;
+import lombok.SneakyThrows;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.AbstractHttpEntity;
 import org.apache.http.entity.FileEntity;
-import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.Map;
 
@@ -40,12 +44,17 @@ public class BulkPaymentInitiationRequestServiceImpl implements BulkPaymentIniti
     }
 
     @Override
+    @SneakyThrows(UnsupportedEncodingException.class)
     public BulkPaymentInitiationRequest create(BulkPaymentInitiationRequestCreateQuery query) {
         URI url = buildUri(getUrl());
         HttpPost httpPost = new HttpPost(url);
         setHeaders(httpPost, query);
 
-        FileEntity entity = new FileEntity(query.getFile());
+        AbstractHttpEntity entity =
+                query.getFile() != null ?
+                        new FileEntity(query.getFile()) :
+                        new StringEntity(query.getContent());
+
         entity.setChunked(true);
         httpPost.setEntity(entity);
 
