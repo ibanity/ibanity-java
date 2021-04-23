@@ -4,13 +4,17 @@ import com.ibanity.apis.client.builders.IbanityServiceBuilder;
 import com.ibanity.apis.client.builders.OptionalPropertiesBuilder;
 import com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys;
 import com.ibanity.apis.client.models.IsabelCollection;
+import com.ibanity.apis.client.products.isabel_connect.models.Account;
 import com.ibanity.apis.client.products.isabel_connect.models.AccountReport;
 import com.ibanity.apis.client.products.isabel_connect.models.Token;
 import com.ibanity.apis.client.products.isabel_connect.models.create.TokenCreateQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReportReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReportsReadQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.read.AccountsReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.refresh.TokenRefreshQuery;
 import com.ibanity.apis.client.products.isabel_connect.services.AccountReportService;
+import com.ibanity.apis.client.products.isabel_connect.services.AccountsService;
 import com.ibanity.apis.client.products.isabel_connect.services.IsabelConnectService;
 import com.ibanity.apis.client.products.isabel_connect.services.TokenService;
 import org.apache.commons.io.IOUtils;
@@ -65,6 +69,8 @@ public class IsabelConnectClientSample {
         listAccountReports(isabelConnectService.accountReportService(), token);
 
         getAccountReport(isabelConnectService.accountReportService(), token);
+        listAccounts(isabelConnectService.accountsService(), token);
+        getAccount(isabelConnectService.accountsService(), token);
     }
 
     private static Token createToken(TokenService tokenService) {
@@ -119,5 +125,26 @@ public class IsabelConnectClientSample {
         });
 
         LOGGER.info("Account report {}", content);
+    }
+
+    private static void listAccounts(AccountsService service, Token token) {
+        LOGGER.info("List accounts");
+        AccountsReadQuery query = AccountsReadQuery.builder()
+                .accessToken(token.getAccessToken())
+                .build();
+
+        IsabelCollection<Account> accounts = service.list(query);
+        LOGGER.info("Accounts {}", accounts);
+    }
+
+    private static void getAccount(AccountsService accountsService, Token token) {
+        LOGGER.info("Get account");
+        AccountReadQuery query = AccountReadQuery.builder()
+                .accessToken(token.getAccessToken())
+                .accountId("<account-id>")
+                .build();
+
+        Account account = accountsService.find(query);
+        LOGGER.info("Account {}", account);
     }
 }
