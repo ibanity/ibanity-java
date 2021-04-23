@@ -4,10 +4,7 @@ import com.ibanity.apis.client.builders.IbanityServiceBuilder;
 import com.ibanity.apis.client.builders.OptionalPropertiesBuilder;
 import com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys;
 import com.ibanity.apis.client.models.IsabelCollection;
-import com.ibanity.apis.client.products.isabel_connect.models.Account;
-import com.ibanity.apis.client.products.isabel_connect.models.AccountReport;
-import com.ibanity.apis.client.products.isabel_connect.models.Balance;
-import com.ibanity.apis.client.products.isabel_connect.models.Token;
+import com.ibanity.apis.client.products.isabel_connect.models.*;
 import com.ibanity.apis.client.products.isabel_connect.models.create.TokenCreateQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.read.*;
 import com.ibanity.apis.client.products.isabel_connect.models.refresh.TokenRefreshQuery;
@@ -66,6 +63,8 @@ public class IsabelConnectClientSample {
         listAccounts(isabelConnectService.accountsService(), token);
         getAccount(isabelConnectService.accountsService(), token);
         listBalances(isabelConnectService.balanceService(), token);
+        listTransactions(isabelConnectService.transactionService(), token);
+        listIntradayTransactions(isabelConnectService.intradayTransactionService(), token);
     }
 
     private static Token createToken(TokenService tokenService) {
@@ -152,5 +151,27 @@ public class IsabelConnectClientSample {
                 .build();
         IsabelCollection<Balance> balances = service.list(query);
         LOGGER.info("Balances: {}", balances);
+    }
+
+    private static void listTransactions(TransactionService service, Token token) {
+        LOGGER.info("List transactions");
+
+        TransactionsReadQuery query = TransactionsReadQuery.builder()
+                .accessToken(token.getAccessToken())
+                .accountId(accountId)
+                .build();
+        IsabelCollection<Transaction> transactions = service.list(query);
+        LOGGER.info("Transactions {}", transactions);
+    }
+
+    private static void listIntradayTransactions(IntradayTransactionService service, Token token) {
+        LOGGER.info("List transactions");
+
+        IntradayTransactionsReadQuery query = IntradayTransactionsReadQuery.builder()
+                .accessToken(token.getAccessToken())
+                .accountId(accountId)
+                .build();
+        IsabelCollection<IntradayTransaction> transactions = service.list(query);
+        LOGGER.info("Intraday transactions {}", transactions);
     }
 }
