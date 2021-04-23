@@ -3,7 +3,7 @@
     {
       "attributes": {
         "amount": 123456.78,
-        "datetime": "2018-10-12T22:46:32.417Z",
+        "datetime": "2018-10-12T22:46:32.417",
         "subtype": "CLBD"
       },
       "type": "balance"
