@@ -6,17 +6,12 @@ import com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesK
 import com.ibanity.apis.client.models.IsabelCollection;
 import com.ibanity.apis.client.products.isabel_connect.models.Account;
 import com.ibanity.apis.client.products.isabel_connect.models.AccountReport;
+import com.ibanity.apis.client.products.isabel_connect.models.Balance;
 import com.ibanity.apis.client.products.isabel_connect.models.Token;
 import com.ibanity.apis.client.products.isabel_connect.models.create.TokenCreateQuery;
-import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReadQuery;
-import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReportReadQuery;
-import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReportsReadQuery;
-import com.ibanity.apis.client.products.isabel_connect.models.read.AccountsReadQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.read.*;
 import com.ibanity.apis.client.products.isabel_connect.models.refresh.TokenRefreshQuery;
-import com.ibanity.apis.client.products.isabel_connect.services.AccountReportService;
-import com.ibanity.apis.client.products.isabel_connect.services.AccountsService;
-import com.ibanity.apis.client.products.isabel_connect.services.IsabelConnectService;
-import com.ibanity.apis.client.products.isabel_connect.services.TokenService;
+import com.ibanity.apis.client.products.isabel_connect.services.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,6 +34,7 @@ public class IsabelConnectClientSample {
     private static final String clientSecret = getConfiguration("isabel-connect.oauth2.client_secret");
     private static final String authorizationCode = getConfiguration("isabel-connect.oauth2.authorization_code");
     private static final String redirectUrl = getConfiguration("ibanity.isabel-connect.oauth2.redirect_url");
+    private static final String accountId = getConfiguration("ibanity.isabel-connect.account_id");
 
     public static void main(String[] args) throws CertificateException, IOException {
         String passphrase = getConfiguration(IBANITY_CLIENT_TLS_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY);
@@ -63,14 +59,13 @@ public class IsabelConnectClientSample {
                 .build()
                 .isabelConnectService();
 
-
         Token token = createToken(isabelConnectService.tokenService());
 
         listAccountReports(isabelConnectService.accountReportService(), token);
-
         getAccountReport(isabelConnectService.accountReportService(), token);
         listAccounts(isabelConnectService.accountsService(), token);
         getAccount(isabelConnectService.accountsService(), token);
+        listBalances(isabelConnectService.balanceService(), token);
     }
 
     private static Token createToken(TokenService tokenService) {
@@ -146,5 +141,16 @@ public class IsabelConnectClientSample {
 
         Account account = accountsService.find(query);
         LOGGER.info("Account {}", account);
+    }
+
+    private static void listBalances(BalanceService service, Token token) {
+        LOGGER.info("List balances");
+
+        BalanceReadQuery query = BalanceReadQuery.builder()
+                .accessToken(token.getAccessToken())
+                .accountId(accountId)
+                .build();
+        IsabelCollection<Balance> balances = service.list(query);
+        LOGGER.info("Balances: {}", balances);
     }
 }
