@@ -130,6 +130,7 @@ public class BulkPaymentInitiationRequestCreateQuery {
             sb.append(", shared=").append(shared);
             sb.append(", hideDetails=").append(hideDetails);
             if (file != null) sb.append(", file=").append(file);
+            if (content != null) sb.append(", content=").append(content);
             sb.append(", filename='").append(filename).append('\'');
             sb.append(", additionalHeaders=").append(additionalHeaders);
             sb.append(", hasAdditionalHeaders=").append(hasAdditionalHeaders);
