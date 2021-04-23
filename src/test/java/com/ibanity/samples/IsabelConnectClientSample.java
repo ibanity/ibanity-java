@@ -22,9 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
 
 import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.*;
-import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.IBANITY_CLIENT_TLS_CA_CERTIFICATE_PATH_PROPERTY_KEY;
 import static com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys.*;
-import static com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys.IBANITY_CLIENT_SIGNATURE_CERTIFICATE_ID_PROPERTY_KEY;
 import static com.ibanity.apis.client.helpers.IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY;
 import static com.ibanity.apis.client.helpers.IbanityConfiguration.getConfiguration;
 import static com.ibanity.samples.helper.SampleHelper.loadCertificate;
