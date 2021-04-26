@@ -10,6 +10,8 @@ import org.apache.http.client.utils.URIBuilder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
@@ -23,6 +25,8 @@ public class URIHelper {
             URIBuilder uriBuilder = new URIBuilder(removeEnd(url, "/"));
             addIfNotNull(uriBuilder, "offset", pagingSpec.getOffset());
             addIfNotNull(uriBuilder, "size", pagingSpec.getSize());
+            addIfNotNull(uriBuilder, "from", pagingSpec.getFrom());
+            addIfNotNull(uriBuilder, "to", pagingSpec.getTo());
             return uriBuilder.build();
         } catch (URISyntaxException exception) {
             throw new IllegalStateException("URL cannot be build", exception);
@@ -75,6 +79,12 @@ public class URIHelper {
     private static void addIfNotNull(URIBuilder uriBuilder, String paramName, Object paramValue) {
         if (paramValue != null) {
             uriBuilder.addParameter(paramName, paramValue.toString());
+        }
+    }
+
+    private static void addIfNotNull(URIBuilder uriBuilder, String paramName, LocalDate paramValue) {
+        if (paramValue != null) {
+            uriBuilder.addParameter(paramName, paramValue.format(DateTimeFormatter.ISO_LOCAL_DATE));
         }
     }
 }

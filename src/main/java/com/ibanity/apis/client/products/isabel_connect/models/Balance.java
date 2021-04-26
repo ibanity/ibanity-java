@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Data
 @SuperBuilder(toBuilder = true)
@@ -21,7 +21,7 @@ public class Balance  {
     private String requestId;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", timezone = "UTC")
-    private Instant datetime;
+    private LocalDateTime datetime;
     private BigDecimal amount;
     private String subtype;
 }

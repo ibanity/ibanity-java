@@ -18,6 +18,7 @@ import org.mockito.quality.Strictness;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.time.LocalDateTime;
 
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static java.time.Instant.parse;
@@ -65,7 +66,7 @@ public class BalanceServiceImplTest {
 
     private Balance createExpected() {
         return Balance.builder()
-                .datetime(parse("2018-10-12T22:46:32.417Z"))
+                .datetime(LocalDateTime.parse("2018-10-12T22:46:32.417"))
                 .amount(BigDecimal.valueOf(123456.78))
                 .subtype("CLBD")
                 .build();

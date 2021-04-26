@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.time.Instant;
 import java.util.Map;
 
 import static java.util.Collections.emptyMap;
@@ -17,8 +16,6 @@ import static java.util.Collections.emptyMap;
 public class TransactionsReadQuery {
     private String accessToken;
     private String accountId;
-    private Instant from;
-    private Instant to;
     private IsabelPagingSpec pagingSpec;
 
     @Builder.Default
