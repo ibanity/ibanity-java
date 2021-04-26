@@ -2,6 +2,8 @@ package com.ibanity.apis.client.products.isabel_connect.models.read;
 
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -12,4 +14,6 @@ public class IsabelPagingSpec {
     @Builder.Default
     private Long size = 10L;
     private Long offset;
+    private LocalDate from;
+    private LocalDate to;
 }

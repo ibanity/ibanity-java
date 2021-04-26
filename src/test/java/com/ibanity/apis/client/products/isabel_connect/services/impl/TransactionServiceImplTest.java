@@ -17,7 +17,10 @@ import org.mockito.quality.Strictness;
 
 import java.math.BigDecimal;
 import java.net.URI;
-import java.time.Instant;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static java.util.Collections.emptyMap;
@@ -66,12 +69,12 @@ public class TransactionServiceImplTest {
                 .counterpartAccountReference("BE21210123456703")
                 .counterpartFinancialInstitutionBic("GEBABEBB")
                 .endToEndId("UNIQUE CODE CUSTOMER")
-                .executionDate(Instant.parse("2018-10-15T08:34:17.417Z"))
+                .executionDate(LocalDate.parse("2018-10-15"))
                 .remittanceInformation("123456789002")
                 .internalId("UNIQUE CODE BANK")
                 .remittanceInformationType("structured-be")
                 .status("Booked")
-                .valueDate(Instant.parse("2018-10-15T08:52:43.962Z"))
+                .valueDate(LocalDate.parse("2018-10-15"))
                 .build();
     }
 }

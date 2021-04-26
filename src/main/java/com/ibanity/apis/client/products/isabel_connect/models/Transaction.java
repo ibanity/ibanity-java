@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -28,6 +28,6 @@ public class Transaction extends IsabelModel<UUID> {
     private String remittanceInformationType;
     private String status;
 
-    private Instant valueDate;
-    private Instant executionDate;
+    private LocalDate valueDate;
+    private LocalDate executionDate;
 }
