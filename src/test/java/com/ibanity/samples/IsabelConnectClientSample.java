@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
+import java.time.LocalDate;
 
 import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.*;
 import static com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys.*;
@@ -163,9 +164,13 @@ public class IsabelConnectClientSample {
     private static void listBalances(BalanceService service, Token token) {
         LOGGER.info("List balances");
 
+        LocalDate today = LocalDate.now();
         BalanceReadQuery query = BalanceReadQuery.builder()
                 .accessToken(token.getAccessToken())
                 .accountId(accountId)
+                .pagingSpec(IsabelPagingSpec.builder()
+                        .from(today.minusDays(15))
+                        .to(today).build())
                 .build();
         IsabelCollection<Balance> balances = service.list(query);
         LOGGER.info("Balances: {}", balances);
@@ -174,9 +179,13 @@ public class IsabelConnectClientSample {
     private static void listTransactions(TransactionService service, Token token) {
         LOGGER.info("List transactions");
 
+        LocalDate now = LocalDate.now();
         TransactionsReadQuery query = TransactionsReadQuery.builder()
                 .accessToken(token.getAccessToken())
                 .accountId(accountId)
+                .pagingSpec(IsabelPagingSpec.builder()
+                        .from(now.minusDays(60))
+                        .to(now).build())
                 .build();
         IsabelCollection<Transaction> transactions = service.list(query);
         LOGGER.info("Transactions {}", transactions);
