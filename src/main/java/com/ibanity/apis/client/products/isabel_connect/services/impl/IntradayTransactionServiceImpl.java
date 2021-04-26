@@ -1,24 +1,17 @@
 package com.ibanity.apis.client.products.isabel_connect.services.impl;
 
 import com.ibanity.apis.client.http.IbanityHttpClient;
-import com.ibanity.apis.client.jsonapi.isabel_connect.DataApiModel;
 import com.ibanity.apis.client.mappers.IsabelModelMapper;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.IsabelCollection;
 import com.ibanity.apis.client.products.isabel_connect.models.IntradayTransaction;
-import com.ibanity.apis.client.products.isabel_connect.models.Transaction;
 import com.ibanity.apis.client.products.isabel_connect.models.read.IntradayTransactionsReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.read.IsabelPagingSpec;
-import com.ibanity.apis.client.products.isabel_connect.models.read.TransactionsReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.services.IntradayTransactionService;
-import com.ibanity.apis.client.products.isabel_connect.services.TransactionService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 
-import java.util.function.Function;
-
-import static com.ibanity.apis.client.mappers.IsabelModelMapper.toIsabelModel;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 
 public class IntradayTransactionServiceImpl implements IntradayTransactionService {
