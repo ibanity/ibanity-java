@@ -34,10 +34,6 @@ public class IntradayTransactionServiceImpl implements IntradayTransactionServic
     public IsabelCollection<IntradayTransaction> list(IntradayTransactionsReadQuery query) {
         IsabelPagingSpec pagingSpec = query.getPagingSpec();
 
-        if (pagingSpec == null) {
-            pagingSpec = IsabelPagingSpec.DEFAULT_PAGING_SPEC;
-        }
-
         HttpResponse response = ibanityHttpClient.get(
                 buildUri(getUrl(query.getAccountId()), pagingSpec),
                 query.getAdditionalHeaders(),
