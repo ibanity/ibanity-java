@@ -35,6 +35,7 @@ public class IsabelConnectClientSample {
     private static final String redirectUrl = getConfiguration("isabel-connect.oauth2.redirect_url");
     private static final String accountId = getConfiguration("isabel-connect.account_id");
     private static final String bulkPaymentFile = getConfiguration("isabel-connect.bulk_payment.file");
+    private static final String reportId = getConfiguration("isabel-connect.report_id");
 
     public static void main(String[] args) throws CertificateException, IOException {
         String passphrase = getConfiguration(IBANITY_CLIENT_TLS_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY);
@@ -122,7 +123,7 @@ public class IsabelConnectClientSample {
 
         AccountReportReadQuery query = AccountReportReadQuery.builder()
                 .accessToken(token.getAccessToken())
-                .accountReportId("<report-id>")
+                .accountReportId(reportId)
                 .build();
 
         String content = service.find(query, resp -> {
