@@ -32,9 +32,9 @@ public class IsabelConnectClientSample {
     private static final String clientId = getConfiguration("isabel-connect.oauth2.client_id");
     private static final String clientSecret = getConfiguration("isabel-connect.oauth2.client_secret");
     private static final String authorizationCode = getConfiguration("isabel-connect.oauth2.authorization_code");
-    private static final String redirectUrl = getConfiguration("ibanity.isabel-connect.oauth2.redirect_url");
-    private static final String accountId = getConfiguration("ibanity.isabel-connect.account_id");
-    private static final String bulkPaymentFile = getConfiguration("ibanity.isabel-connect.bulk_payment.file");
+    private static final String redirectUrl = getConfiguration("isabel-connect.oauth2.redirect_url");
+    private static final String accountId = getConfiguration("isabel-connect.account_id");
+    private static final String bulkPaymentFile = getConfiguration("isabel-connect.bulk_payment.file");
 
     public static void main(String[] args) throws CertificateException, IOException {
         String passphrase = getConfiguration(IBANITY_CLIENT_TLS_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY);
