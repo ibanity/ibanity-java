@@ -6,7 +6,6 @@ import com.ibanity.apis.client.mappers.IsabelModelMapper;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.IsabelCollection;
 import com.ibanity.apis.client.products.isabel_connect.models.Transaction;
-import com.ibanity.apis.client.products.isabel_connect.models.read.IsabelPagingSpec;
 import com.ibanity.apis.client.products.isabel_connect.models.read.TransactionsReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.services.TransactionService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
