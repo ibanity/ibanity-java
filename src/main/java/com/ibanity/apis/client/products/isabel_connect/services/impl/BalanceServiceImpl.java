@@ -37,10 +37,6 @@ public class BalanceServiceImpl implements BalanceService {
     public IsabelCollection<Balance> list(BalanceReadQuery query) {
         IsabelPagingSpec pagingSpec = query.getPagingSpec();
 
-        if (pagingSpec == null) {
-            pagingSpec = IsabelPagingSpec.DEFAULT_PAGING_SPEC;
-        }
-
         URI uri = buildUri(getUrl(query.getAccountId()), pagingSpec);
         HttpResponse response = ibanityHttpClient.get(uri, query.getAdditionalHeaders(), query.getAccessToken());
         return mapCollection(response);

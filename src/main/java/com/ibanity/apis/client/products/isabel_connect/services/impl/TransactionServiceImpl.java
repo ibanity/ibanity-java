@@ -29,14 +29,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public IsabelCollection<Transaction> list(TransactionsReadQuery query) {
-        IsabelPagingSpec pagingSpec = query.getPagingSpec();
-
-        if (pagingSpec == null) {
-            pagingSpec = IsabelPagingSpec.DEFAULT_PAGING_SPEC;
-        }
-
         HttpResponse response = ibanityHttpClient.get(
-                buildUri(getUrl(query.getAccountId()), pagingSpec),
+                buildUri(getUrl(query.getAccountId()), query.getPagingSpec()),
                 query.getAdditionalHeaders(),
                 query.getAccessToken());
 
