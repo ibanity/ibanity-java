@@ -5,6 +5,7 @@ import com.ibanity.apis.client.builders.OptionalPropertiesBuilder;
 import com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys;
 import com.ibanity.apis.client.models.IsabelCollection;
 import com.ibanity.apis.client.products.isabel_connect.models.*;
+import com.ibanity.apis.client.products.isabel_connect.models.create.BulkPaymentInitiationRequestCreateQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.create.TokenCreateQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.read.*;
 import com.ibanity.apis.client.products.isabel_connect.models.refresh.TokenRefreshQuery;
@@ -13,6 +14,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.CertificateException;
@@ -32,6 +34,7 @@ public class IsabelConnectClientSample {
     private static final String authorizationCode = getConfiguration("isabel-connect.oauth2.authorization_code");
     private static final String redirectUrl = getConfiguration("ibanity.isabel-connect.oauth2.redirect_url");
     private static final String accountId = getConfiguration("ibanity.isabel-connect.account_id");
+    private static final String bulkPaymentFile = getConfiguration("ibanity.isabel-connect.bulk_payment.file");
 
     public static void main(String[] args) throws CertificateException, IOException {
         String passphrase = getConfiguration(IBANITY_CLIENT_TLS_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY);
@@ -52,7 +55,7 @@ public class IsabelConnectClientSample {
         }
 
         IsabelConnectService isabelConnectService = ibanityServiceBuilder
-                .pontoConnectOauth2ClientId(clientId)
+                .isabelConnectOauth2ClientId(clientId)
                 .build()
                 .isabelConnectService();
 
@@ -65,8 +68,22 @@ public class IsabelConnectClientSample {
         listBalances(isabelConnectService.balanceService(), token);
         listTransactions(isabelConnectService.transactionService(), token);
         listIntradayTransactions(isabelConnectService.intradayTransactionService(), token);
+        createBulkPaymentInitiationRequest(isabelConnectService.bulkPaymentInitiationRequestService(), token);
     }
 
+    private static BulkPaymentInitiationRequest createBulkPaymentInitiationRequest(
+            BulkPaymentInitiationRequestService bpir,
+            Token token) throws IOException {
+        LOGGER.info("Bulk payments");
+
+        BulkPaymentInitiationRequestCreateQuery query = BulkPaymentInitiationRequestCreateQuery.builder()
+                .accessToken(token.getAccessToken())
+                .filename("foo.xml")
+                .file(new File(bulkPaymentFile))
+                .build();
+
+        return bpir.create(query);
+    }
     private static Token createToken(TokenService tokenService) {
         LOGGER.info("Token samples");
 
