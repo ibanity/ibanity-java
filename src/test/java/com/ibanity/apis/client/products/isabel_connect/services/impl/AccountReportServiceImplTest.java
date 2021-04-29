@@ -25,6 +25,7 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -99,17 +100,15 @@ public class AccountReportServiceImplTest {
     }
 
     private AccountReport createExpected() {
-        String refs[] = {"BE96153112434405"};
+        String[] refs = {"BE96153112434405"};
 
-        AccountReport report = AccountReport.builder()
+        return AccountReport.builder()
                 .accountReferences(Arrays.asList(refs))
                 .fileFormat("CODA")
                 .fileName("CODA_20181009_BE96153112434405")
                 .fileSize(BigInteger.valueOf(29680L))
                 .financialInstitutionName("GringotBank")
-                .receivedAt(Instant.parse("2018-10-09T03:55:00.710Z"))
+                .receivedAt(LocalDateTime.parse("2018-10-09T03:55:00.710"))
                 .build();
-
-        return report;
     }
 }
