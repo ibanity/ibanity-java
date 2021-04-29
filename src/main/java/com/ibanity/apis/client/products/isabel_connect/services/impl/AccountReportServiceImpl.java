@@ -35,18 +35,10 @@ public class AccountReportServiceImpl implements AccountReportService {
 
     @Override
     public IsabelCollection<AccountReport> list(AccountReportsReadQuery query) {
-        IsabelPagingSpec pagingSpec = query.getPagingSpec();
-
-        if (pagingSpec == null) {
-            pagingSpec = IsabelPagingSpec.DEFAULT_PAGING_SPEC;
-        }
-
-        HttpResponse response = ibanityHttpClient.get(
-                buildUri(getUrl(), pagingSpec),
+        return mapCollection(ibanityHttpClient.get(
+                buildUri(getUrl(), query.getPagingSpec()),
                 query.getAdditionalHeaders(),
-                query.getAccessToken());
-
-        return mapCollection(response);
+                query.getAccessToken()));
     }
 
     @Override
