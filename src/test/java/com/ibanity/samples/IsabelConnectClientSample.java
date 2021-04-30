@@ -36,6 +36,7 @@ public class IsabelConnectClientSample {
     private static final String redirectUrl = getConfiguration("isabel-connect.oauth2.redirect_url");
     private static final String accountId = getConfiguration("isabel-connect.account_id");
     private static final String bulkPaymentFile = getConfiguration("isabel-connect.bulk_payment.file");
+    private static final String bulkPaymentFilename = getConfiguration("isabel-connect.bulk_payment.file_name");
     private static final String reportId = getConfiguration("isabel-connect.report_id");
 
     public static void main(String[] args) throws CertificateException, IOException {
@@ -75,12 +76,12 @@ public class IsabelConnectClientSample {
 
     private static BulkPaymentInitiationRequest createBulkPaymentInitiationRequest(
             BulkPaymentInitiationRequestService bpir,
-            Token token) throws IOException {
+            Token token) {
         LOGGER.info("Bulk payments");
 
         BulkPaymentInitiationRequestCreateQuery query = BulkPaymentInitiationRequestCreateQuery.builder()
                 .accessToken(token.getAccessToken())
-                .filename("foo.xml")
+                .filename(bulkPaymentFilename)
                 .file(new File(bulkPaymentFile))
                 .build();
 
@@ -131,10 +132,8 @@ public class IsabelConnectClientSample {
             try {
                 return IOUtils.toString(resp.getEntity().getContent(), StandardCharsets.UTF_8);
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new IllegalStateException(e);
             }
-
-            return null;
         });
 
         LOGGER.info("Account report {}", content);
@@ -154,7 +153,7 @@ public class IsabelConnectClientSample {
         LOGGER.info("Get account");
         AccountReadQuery query = AccountReadQuery.builder()
                 .accessToken(token.getAccessToken())
-                .accountId("<account-id>")
+                .accountId(accountId)
                 .build();
 
         Account account = accountsService.find(query);
