@@ -40,23 +40,23 @@
     "attributes": {
       "subtype": "checking",
       "referenceType": "IBAN",
-      "reference": "BE10635516044616",
-      "product": null,
-      "internalReference": "BE10635516044616",
-      "holderName": null,
-      "description": "Ullam omnis illum.",
+      "reference": "BE53586671384412",
+      "product": "Current account",
+      "internalReference": "99f0c729-c51a-4b4c-a4e4-abb8a52c1e12",
+      "holderName": "Malvina Dibbert",
+      "description": "Repellat voluptatem aut.",
       "deprecated": false,
-      "currentBalanceVariationObservedAt": "2020-10-20T11:09:41.956Z",
-      "currentBalanceReferenceDate": null,
-      "currentBalanceChangedAt": null,
-      "currentBalance": 60.9,
+      "currentBalanceVariationObservedAt": "2020-09-17T12:30:23.467Z",
+      "currentBalanceReferenceDate": "2020-06-20T00:00:00.000Z",
+      "currentBalanceChangedAt": "2020-09-17T12:30:23.405Z",
+      "currentBalance": 6386.04,
       "currency": "EUR",
-      "availableBalanceVariationObservedAt": "2020-10-20T11:09:41.956Z",
-      "availableBalanceReferenceDate": null,
-      "availableBalanceChangedAt": null,
-      "availableBalance": 61.9,
-      "authorizedAt": "2020-10-19T11:02:11.084Z",
-      "authorizationExpirationExpectedAt": "2021-01-17T11:02:11.084Z"
+      "availableBalanceVariationObservedAt": "2020-09-17T12:30:23.467Z",
+      "availableBalanceReferenceDate": "2020-06-20T00:00:00.000Z",
+      "availableBalanceChangedAt": "2020-09-17T12:30:23.405Z",
+      "availableBalance": 6386.04,
+      "authorizedAt": "2020-07-15T12:01:44.166Z",
+      "authorizationExpirationExpectedAt": "2020-10-13T12:01:44.166Z"
     }
   }
 }
