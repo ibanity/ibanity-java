@@ -40,15 +40,24 @@
       },
       "id": "a4a47c21-b606-464f-ae17-f8e3af6772c9",
       "attributes": {
-        "valueDate": "2019-05-05T00:00:00.000Z",
+        "valueDate": "2020-06-19T00:00:00.000Z",
         "remittanceInformationType": "unstructured",
-        "remittanceInformation": "Nisi omnis sint.",
-        "executionDate": "2019-05-08T00:00:00.000Z",
+        "remittanceInformation": "Tempora animi qui!",
+        "purposeCode": "CASH",
+        "proprietaryBankTransactionCode": "63058",
+        "mandateId": "486",
+        "internalReference": "ae7976b0-78b7-492f-99d2-8e85ab5ea006",
+        "executionDate": "2020-06-19T00:00:00.000Z",
+        "endToEndId": "a965fa0788c241f3b13df3fbda744a07",
+        "digest": "2acc87e558b508f7b4bd21829adee7aaace14eedde2b65ec8459201ea7a76050",
         "description": "Wire transfer",
         "currency": "EUR",
-        "counterpartReference": "BE82230387495521",
-        "counterpartName": "Lind, Predovic and Hessel",
-        "amount": 6
+        "creditorId": "315",
+        "counterpartReference": "BE62467153327786",
+        "counterpartName": "Rice Ltd",
+        "bankTransactionCode": "PMNT-IRCT-ESCT",
+        "amount": 2.76,
+        "additionalInformation": "Aut."
       }
     }
   ]

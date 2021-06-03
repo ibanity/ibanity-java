@@ -32,7 +32,17 @@ public class Account implements IbanityModel {
 
     private Instant synchronizedAt;
     private Synchronization latestSynchronization;
-    
+
     private Instant authorizedAt;
     private Instant authorizationExpirationExpectedAt;
+
+    private String internalReference;
+    private String product;
+    private String holderName;
+    private Instant currentBalanceChangedAt;
+    private Instant currentBalanceReferenceDate;
+    private Instant currentBalanceVariationObservedAt;
+    private Instant availableBalanceChangedAt;
+    private Instant availableBalanceReferenceDate;
+    private Instant availableBalanceVariationObservedAt;
 }

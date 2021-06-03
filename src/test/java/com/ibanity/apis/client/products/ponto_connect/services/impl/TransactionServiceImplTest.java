@@ -3,7 +3,6 @@ package com.ibanity.apis.client.products.ponto_connect.services.impl;
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityProduct;
-import com.ibanity.apis.client.products.ponto_connect.models.Synchronization;
 import com.ibanity.apis.client.products.ponto_connect.models.Transaction;
 import com.ibanity.apis.client.products.ponto_connect.models.read.TransactionReadQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.read.TransactionsReadQuery;
@@ -84,27 +83,24 @@ public class TransactionServiceImplTest {
     private Transaction createExpected() {
         return Transaction.builder()
                 .id(TRANSACTION_ID)
-                .valueDate(parse("2019-05-05T00:00:00.000Z"))
-                .executionDate(parse("2019-05-08T00:00:00.000Z"))
-                .amount(new BigDecimal("6"))
-                .counterpartName("Lind, Predovic and Hessel")
-                .counterpartReference("BE82230387495521")
+                .valueDate(parse("2020-06-19T00:00:00.000Z"))
+                .executionDate(parse("2020-06-19T00:00:00.000Z"))
+                .amount(new BigDecimal("2.76"))
+                .counterpartName("Rice Ltd")
+                .counterpartReference("BE62467153327786")
                 .description("Wire transfer")
                 .currency("EUR")
                 .remittanceInformationType("unstructured")
-                .remittanceInformation("Nisi omnis sint.")
-                .build();
-    }
-
-    private Synchronization createSynchronization() {
-        return Synchronization.builder()
-                .id(fromString("1b3e3011-d018-4785-bbba-9aa75ba14d45"))
-                .createdAt(parse("2019-09-02T11:28:35.971Z"))
-                .updatedAt(parse("2019-09-02T11:28:36.551Z"))
-                .resourceId("8804e34f-12b0-4b70-86bf-265f013ca232")
-                .resourceType("account")
-                .status("success")
-                .subtype("accountDetails")
+                .remittanceInformation("Tempora animi qui!")
+                .bankTransactionCode("PMNT-IRCT-ESCT")
+                .proprietaryBankTransactionCode("63058")
+                .endToEndId("a965fa0788c241f3b13df3fbda744a07")
+                .purposeCode("CASH")
+                .mandateId("486")
+                .creditorId("315")
+                .additionalInformation("Aut.")
+                .digest("2acc87e558b508f7b4bd21829adee7aaace14eedde2b65ec8459201ea7a76050")
+                .internalReference("ae7976b0-78b7-492f-99d2-8e85ab5ea006")
                 .build();
     }
 }
