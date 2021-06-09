@@ -1,6 +1,7 @@
 package com.ibanity.apis.client.products.ponto_connect.services.impl;
 
 import com.ibanity.apis.client.http.IbanityHttpClient;
+import com.ibanity.apis.client.jsonapi.DataApiModel;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.ponto_connect.models.Account;
@@ -17,8 +18,10 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.UUID;
+import java.util.function.Function;
 
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
+import static com.ibanity.apis.client.mappers.IbanityModelMapper.toIbanityModel;
 import static com.ibanity.apis.client.mappers.ModelMapperHelper.buildRequest;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 
@@ -49,7 +52,18 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = toRequest(paymentCreateQuery);
         RequestApiModel requestApiModel = buildRequest(com.ibanity.apis.client.products.ponto_connect.models.Payment.RESOURCE_TYPE, payment);
         HttpResponse response = ibanityHttpClient.post(uri, requestApiModel, paymentCreateQuery.getAdditionalHeaders(), paymentCreateQuery.getAccessToken());
-        return mapResource(response, com.ibanity.apis.client.products.ponto_connect.models.Payment.class);
+        return mapResource(response, customMapping());
+    }
+
+    private Function<DataApiModel, com.ibanity.apis.client.products.ponto_connect.models.Payment> customMapping() {
+        return dataApiModel -> {
+            com.ibanity.apis.client.products.ponto_connect.models.Payment payment = toIbanityModel(dataApiModel, com.ibanity.apis.client.products.ponto_connect.models.Payment.class);
+            if (dataApiModel.getLinks() != null) {
+                payment.setRedirectLink(dataApiModel.getLinks().getRedirect());
+            }
+
+            return payment;
+        };
     }
 
     @Override
@@ -82,6 +96,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .remittanceInformation(paymentCreateQuery.getRemittanceInformation())
                 .remittanceInformationType(paymentCreateQuery.getRemittanceInformationType())
                 .requestedExecutionDate(paymentCreateQuery.getRequestedExecutionDate())
+                .redirectUri(paymentCreateQuery.getRedirectUri())
                 .build();
     }
 
@@ -100,5 +115,6 @@ public class PaymentServiceImpl implements PaymentService {
         private String creditorAgent;
         private String creditorAccountReferenceType;
         private String creditorAccountReference;
+        private String redirectUri;
     }
 }

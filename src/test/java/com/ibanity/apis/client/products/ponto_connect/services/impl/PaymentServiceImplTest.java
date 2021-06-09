@@ -64,7 +64,7 @@ class PaymentServiceImplTest {
 
         Payment actual = paymentService.find(paymentReadQuery);
 
-        assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpected());
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpected(null));
     }
 
     @Test
@@ -74,11 +74,11 @@ class PaymentServiceImplTest {
                 .accessToken(ACCESS_TOKEN)
                 .build();
         when(ibanityHttpClient.post(eq(buildUri(PAYMENT_ENDPOINT_FOR_CREATE)), any(),eq(emptyMap()), eq(ACCESS_TOKEN)))
-                .thenReturn(loadHttpResponse("json/ponto-connect/payment.json"));
+                .thenReturn(loadHttpResponse("json/ponto-connect/payment_create.json"));
 
         Payment actual = paymentService.create(paymentCreateQuery);
 
-        assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpected());
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpected("https://authorize.myponto.com/organizations/6680437c-8ed8-425b-84b7-2c31e5ca625d/sandbox/integrations/236d8f5c-9e19-45c7-8138-1a50910020ae/accounts/44f261ec-2cc9-47f8-8cad-bcd6994629ed/payments/c3a13020-61a4-4d9e-ab57-1f0df1f20d7d"));
     }
 
     @Test
@@ -93,10 +93,10 @@ class PaymentServiceImplTest {
 
         Payment actual = paymentService.delete(paymentDeleteQuery);
 
-        assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpected());
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpected(null));
     }
 
-    private Payment createExpected() {
+    private Payment createExpected(String redirect) {
         return Payment.builder()
                 .amount(ONE)
                 .creditorAccountReference("BE84732645584359")
@@ -110,6 +110,7 @@ class PaymentServiceImplTest {
                 .remittanceInformationType("unstructured")
                 .requestedExecutionDate(LocalDate.parse("2019-01-01"))
                 .status("pending")
+                .redirectLink(redirect)
                 .build();
     }
 }
