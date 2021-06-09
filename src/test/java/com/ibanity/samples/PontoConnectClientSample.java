@@ -5,9 +5,11 @@ import com.ibanity.apis.client.builders.OptionalPropertiesBuilder;
 import com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.products.ponto_connect.models.*;
+import com.ibanity.apis.client.products.ponto_connect.models.create.BulkPaymentCreateQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.create.PaymentCreateQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.create.SynchronizationCreateQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.create.TokenCreateQuery;
+import com.ibanity.apis.client.products.ponto_connect.models.delete.BulkPaymentDeleteQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.delete.PaymentDeleteQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.read.*;
 import com.ibanity.apis.client.products.ponto_connect.models.refresh.TokenRefreshQuery;
@@ -34,6 +36,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.*;
 import static com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys.*;
 import static com.ibanity.apis.client.helpers.IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY;
@@ -97,6 +100,8 @@ public class PontoConnectClientSample {
         LOGGER.info("List of transactions {}", transactions);
         Payment payment = payments(pontoConnectService.paymentService(), accountId, accessToken);
         LOGGER.info("payment {}", payment);
+        BulkPayment bulkPayment = bulkPayments(pontoConnectService.bulkPaymentService(), accountId, accessToken);
+        LOGGER.info("bulk payment {}", bulkPayment);
 
         revokeToken(pontoConnectService.tokenService(), accessToken);
     }
@@ -261,7 +266,7 @@ public class PontoConnectClientSample {
                 .accountId(accountId)
                 .remittanceInformation("payment")
                 .remittanceInformationType("unstructured")
-                .requestedExecutionDate(LocalDate.parse("2020-02-05"))
+                .requestedExecutionDate(LocalDate.now().plusDays(1))
                 .currency("EUR")
                 .amount(BigDecimal.valueOf(59))
                 .creditorName("Alex Creditor")
@@ -284,6 +289,47 @@ public class PontoConnectClientSample {
                 .build());
 
         return payment;
+    }
+
+    private static BulkPayment bulkPayments(BulkPaymentService bulkPaymentService, UUID accountId, String accessToken) {
+        LOGGER.info("BulkPayments samples");
+        BulkPayment bulkPayment = bulkPaymentService.create(BulkPaymentCreateQuery.builder()
+                .accessToken(accessToken)
+                .batchBookingPreferred(true)
+                .reference("myReference")
+                .requestedExecutionDate(LocalDate.now().plusDays(1))
+                .redirectUri(pontoConnectRedirectUrl)
+                .accountId(accountId)
+                .payments(newArrayList(createPayment()))
+                .build());
+
+        bulkPayment = bulkPaymentService.find(BulkPaymentReadQuery.builder()
+                .accessToken(accessToken)
+                .accountId(accountId)
+                .bulkPaymentId(bulkPayment.getId())
+                .build());
+
+        bulkPaymentService.delete(BulkPaymentDeleteQuery.builder()
+                .accessToken(accessToken)
+                .accountId(accountId)
+                .bulkPaymentId(bulkPayment.getId())
+                .build());
+
+        return bulkPayment;
+    }
+
+    private static BulkPaymentCreateQuery.Payment createPayment() {
+        return BulkPaymentCreateQuery.Payment.builder()
+                .remittanceInformation("payment")
+                .remittanceInformationType("unstructured")
+                .currency("EUR")
+                .amount(BigDecimal.valueOf(59))
+                .creditorName("Alex Creditor")
+                .creditorAccountReference("BE55732022998044")
+                .creditorAccountReferenceType("IBAN")
+                .creditorAgent("NBBEBEBB203")
+                .creditorAgentType("BIC")
+                .build();
     }
 
 }

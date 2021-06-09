@@ -25,4 +25,6 @@ public interface PontoConnectService {
     IntegrationService integrationService();
 
     OnboardingDetailsService onboardingDetailsService();
+
+    BulkPaymentService bulkPaymentService();
 }

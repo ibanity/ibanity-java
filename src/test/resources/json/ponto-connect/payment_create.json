@@ -2,6 +2,9 @@
   "data": {
     "type": "payment",
     "id": "6c0350b5-a724-42e5-b4ce-ca3a6994df3d",
+    "links": {
+      "redirect": "https://authorize.myponto.com/organizations/6680437c-8ed8-425b-84b7-2c31e5ca625d/sandbox/integrations/236d8f5c-9e19-45c7-8138-1a50910020ae/accounts/44f261ec-2cc9-47f8-8cad-bcd6994629ed/payments/c3a13020-61a4-4d9e-ab57-1f0df1f20d7d"
+    },
     "attributes": {
       "status": "pending",
       "requestedExecutionDate": "2019-01-01",

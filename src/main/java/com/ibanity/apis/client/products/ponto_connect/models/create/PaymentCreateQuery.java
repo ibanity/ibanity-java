@@ -34,5 +34,6 @@ public class PaymentCreateQuery {
     private String creditorAgent;
     private String creditorAccountReferenceType;
     private String creditorAccountReference;
+    private String redirectUri;
 
 }
