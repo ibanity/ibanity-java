@@ -85,6 +85,21 @@ public class FinancialInstitutionTransactionsServiceImpl implements FinancialIns
         return mapResource(response, responseMapping());
     }
 
+    @Override
+    public FinancialInstitutionTransaction update(FinancialInstitutionTransactionUpdateQuery updateQuery) {
+        FinancialInstitutionTransaction transaction = requestMapping(updateQuery);
+        String url =
+                getUrl(updateQuery.getFinancialInstitutionId().toString(),
+                        updateQuery.getFinancialInstitutionUserId().toString(),
+                        updateQuery.getFinancialInstitutionAccountId().toString(),
+                        updateQuery.getFinancialInstitutionTransactionId().toString(),
+                        "");
+
+        RequestApiModel request = buildRequest(FinancialInstitutionTransaction.RESOURCE_TYPE, transaction);
+        HttpResponse response = ibanityHttpClient.patch(buildUri(url), request);
+        return mapResource(response, responseMapping());
+    }
+
     private String getUrl(
             String financialInstitutionId,
             String financialInstitutionUserId,

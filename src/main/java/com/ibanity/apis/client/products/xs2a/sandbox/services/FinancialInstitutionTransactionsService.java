@@ -15,5 +15,7 @@ public interface FinancialInstitutionTransactionsService {
 
     FinancialInstitutionTransaction create(FinancialInstitutionTransactionCreationQuery transactionCreationQuery);
 
+    FinancialInstitutionTransaction update(FinancialInstitutionTransactionUpdateQuery transactionUpdateQuery);
+
     FinancialInstitutionTransaction delete(FinancialInstitutionTransactionDeleteQuery transactionDeleteQuery);
 }
