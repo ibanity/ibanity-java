@@ -10,4 +10,5 @@ public class Userinfo {
 
     private String name;
     private String sub;
+    private boolean paymentsActivated;
 }
