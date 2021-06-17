@@ -74,7 +74,7 @@ public class FinancialInstitutionTransactionsServiceImpl implements FinancialIns
 
     @Override
     public FinancialInstitutionTransaction create(FinancialInstitutionTransactionCreationQuery creationQuery) {
-        FinancialInstitutionTransaction transaction = requestMapping(creationQuery);
+        FinancialInstitutionTransaction transaction = createRequestMapping(creationQuery);
         String url =
                 getUrl(creationQuery.getFinancialInstitutionId().toString(),
                         creationQuery.getFinancialInstitutionUserId().toString(),
@@ -88,7 +88,7 @@ public class FinancialInstitutionTransactionsServiceImpl implements FinancialIns
 
     @Override
     public FinancialInstitutionTransaction update(FinancialInstitutionTransactionUpdateQuery updateQuery) {
-        FinancialInstitutionTransaction transaction = requestMapping(updateQuery);
+        FinancialInstitutionTransaction transaction = updateRequestMapping(updateQuery);
         String url =
                 getUrl(updateQuery.getFinancialInstitutionId().toString(),
                         updateQuery.getFinancialInstitutionUserId().toString(),
@@ -113,7 +113,28 @@ public class FinancialInstitutionTransactionsServiceImpl implements FinancialIns
                 .replace(FinancialInstitutionTransaction.API_URL_TAG_ID, financialInstitutionTransactionId), "/");
     }
 
-    private FinancialInstitutionTransaction requestMapping(FinancialInstitutionTransactionCreationQuery transactionCreationQuery) {
+    private FinancialInstitutionTransaction createRequestMapping(FinancialInstitutionTransactionCreationQuery transactionCreationQuery) {
+        return FinancialInstitutionTransaction.builder()
+                .amount(transactionCreationQuery.getAmount())
+                .currency(transactionCreationQuery.getCurrency())
+                .remittanceInformation(transactionCreationQuery.getRemittanceInformation())
+                .remittanceInformationType(transactionCreationQuery.getRemittanceInformationType())
+                .counterpartName(transactionCreationQuery.getCounterpartName())
+                .counterpartReference(transactionCreationQuery.getCounterpartReference())
+                .valueDate(transactionCreationQuery.getValueDate())
+                .executionDate(transactionCreationQuery.getExecutionDate())
+                .description(transactionCreationQuery.getDescription())
+                .bankTransactionCode(transactionCreationQuery.getBankTransactionCode())
+                .proprietaryBankTransactionCode(transactionCreationQuery.getProprietaryBankTransactionCode())
+                .endToEndId(transactionCreationQuery.getEndToEndId())
+                .purposeCode(transactionCreationQuery.getPurposeCode())
+                .mandateId(transactionCreationQuery.getMandateId())
+                .creditorId(transactionCreationQuery.getCreditorId())
+                .additionalInformation(transactionCreationQuery.getAdditionalInformation())
+                .build();
+    }
+
+    private FinancialInstitutionTransaction updateRequestMapping(FinancialInstitutionTransactionUpdateQuery transactionUpdateQuery) {
         return FinancialInstitutionTransaction.builder()
                 .amount(transactionCreationQuery.getAmount())
                 .currency(transactionCreationQuery.getCurrency())
