@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.products.xs2a.sandbox.models.factory.create;
+package com.ibanity.apis.client.products.xs2a.sandbox.models.factory.update;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
