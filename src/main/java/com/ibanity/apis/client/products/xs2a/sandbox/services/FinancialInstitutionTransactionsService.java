@@ -6,6 +6,7 @@ import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.create.Finan
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.delete.FinancialInstitutionTransactionDeleteQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.read.FinancialInstitutionTransactionReadQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.read.FinancialInstitutionTransactionsReadQuery;
+import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.update.FinancialInstitutionTransactionUpdateQuery;
 
 public interface FinancialInstitutionTransactionsService {
 
