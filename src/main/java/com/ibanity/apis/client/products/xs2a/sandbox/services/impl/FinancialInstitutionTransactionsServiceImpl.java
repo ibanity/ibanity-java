@@ -93,8 +93,8 @@ public class FinancialInstitutionTransactionsServiceImpl implements FinancialIns
                 getUrl(updateQuery.getFinancialInstitutionId().toString(),
                         updateQuery.getFinancialInstitutionUserId().toString(),
                         updateQuery.getFinancialInstitutionAccountId().toString(),
-                        updateQuery.getFinancialInstitutionTransactionId().toString(),
-                        "");
+                        updateQuery.getFinancialInstitutionTransactionId().toString()
+                        );
 
         RequestApiModel request = buildRequest(FinancialInstitutionTransaction.RESOURCE_TYPE, transaction);
         HttpResponse response = ibanityHttpClient.patch(buildUri(url), request);
@@ -136,22 +136,22 @@ public class FinancialInstitutionTransactionsServiceImpl implements FinancialIns
 
     private FinancialInstitutionTransaction updateRequestMapping(FinancialInstitutionTransactionUpdateQuery transactionUpdateQuery) {
         return FinancialInstitutionTransaction.builder()
-                .amount(transactionCreationQuery.getAmount())
-                .currency(transactionCreationQuery.getCurrency())
-                .remittanceInformation(transactionCreationQuery.getRemittanceInformation())
-                .remittanceInformationType(transactionCreationQuery.getRemittanceInformationType())
-                .counterpartName(transactionCreationQuery.getCounterpartName())
-                .counterpartReference(transactionCreationQuery.getCounterpartReference())
-                .valueDate(transactionCreationQuery.getValueDate())
-                .executionDate(transactionCreationQuery.getExecutionDate())
-                .description(transactionCreationQuery.getDescription())
-                .bankTransactionCode(transactionCreationQuery.getBankTransactionCode())
-                .proprietaryBankTransactionCode(transactionCreationQuery.getProprietaryBankTransactionCode())
-                .endToEndId(transactionCreationQuery.getEndToEndId())
-                .purposeCode(transactionCreationQuery.getPurposeCode())
-                .mandateId(transactionCreationQuery.getMandateId())
-                .creditorId(transactionCreationQuery.getCreditorId())
-                .additionalInformation(transactionCreationQuery.getAdditionalInformation())
+                .amount(transactionUpdateQuery.getAmount())
+                .currency(transactionUpdateQuery.getCurrency())
+                .remittanceInformation(transactionUpdateQuery.getRemittanceInformation())
+                .remittanceInformationType(transactionUpdateQuery.getRemittanceInformationType())
+                .counterpartName(transactionUpdateQuery.getCounterpartName())
+                .counterpartReference(transactionUpdateQuery.getCounterpartReference())
+                .valueDate(transactionUpdateQuery.getValueDate())
+                .executionDate(transactionUpdateQuery.getExecutionDate())
+                .description(transactionUpdateQuery.getDescription())
+                .bankTransactionCode(transactionUpdateQuery.getBankTransactionCode())
+                .proprietaryBankTransactionCode(transactionUpdateQuery.getProprietaryBankTransactionCode())
+                .endToEndId(transactionUpdateQuery.getEndToEndId())
+                .purposeCode(transactionUpdateQuery.getPurposeCode())
+                .mandateId(transactionUpdateQuery.getMandateId())
+                .creditorId(transactionUpdateQuery.getCreditorId())
+                .additionalInformation(transactionUpdateQuery.getAdditionalInformation())
                 .build();
     }
 
