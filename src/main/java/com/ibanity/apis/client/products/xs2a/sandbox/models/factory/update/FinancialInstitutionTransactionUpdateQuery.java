@@ -17,6 +17,7 @@ public class FinancialInstitutionTransactionUpdateQuery {
     private UUID financialInstitutionId;
     private UUID financialInstitutionUserId;
     private UUID financialInstitutionAccountId;
+    private UUID financialInstitutionTransactionId;
 
     private BigDecimal amount;
     private String currency;
