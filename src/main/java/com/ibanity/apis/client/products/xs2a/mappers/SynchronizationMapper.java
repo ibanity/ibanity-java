@@ -4,6 +4,7 @@ import com.ibanity.apis.client.jsonapi.DataApiModel;
 import com.ibanity.apis.client.jsonapi.SynchronizationApIModel;
 import com.ibanity.apis.client.mappers.IbanityErrorMapper;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
+import com.ibanity.apis.client.products.xs2a.models.links.UpdatedTransactionsLinks;
 import com.ibanity.apis.client.utils.IbanityUtils;
 
 import java.util.UUID;
@@ -29,6 +30,13 @@ public class SynchronizationMapper {
 
         if (dataApiModel.getLinks() != null) {
             result.setSelfLink(dataApiModel.getLinks().getSelf());
+        }
+        if (dataApiModel.getRelationships() != null
+                && dataApiModel.getRelationships().get("updatedTransactions") != null
+                && dataApiModel.getRelationships().get("updatedTransactions").getLinks() != null) {
+            result.setUpdatedTransactionsLinks(UpdatedTransactionsLinks.builder()
+                    .related(dataApiModel.getRelationships().get("updatedTransactions").getLinks().getRelated())
+                    .build());
         }
 
         return result;
