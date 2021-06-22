@@ -41,7 +41,7 @@ public class UpdatedTransactionsServiceImpl implements UpdatedTransactionsServic
     }
 
     private String getUrl(UUID synchronizationId) {
-        String url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "synchronizations", "updatedTransactions");
+        String url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "synchronization", "updatedTransactions");
         return StringUtils.removeEnd(url
                         .replace(Synchronization.API_URL_TAG_ID, synchronizationId.toString()),
                 "/");

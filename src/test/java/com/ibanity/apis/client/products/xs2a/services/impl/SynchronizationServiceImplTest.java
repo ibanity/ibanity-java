@@ -9,6 +9,7 @@ import com.ibanity.apis.client.models.IbanityError;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
 import com.ibanity.apis.client.products.xs2a.models.create.SynchronizationCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.links.UpdatedTransactionsLinks;
 import com.ibanity.apis.client.products.xs2a.models.read.SynchronizationReadQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,7 +67,7 @@ class SynchronizationServiceImplTest {
 
         Synchronization actual = synchronizationService.create(synchronizationCreationQuery);
 
-        assertThat(actual).isEqualToComparingFieldByField(createExpected("pending", "somehtml"));
+        assertThat(actual).isEqualToComparingFieldByField(createExpected("pending", "somehtml", false));
     }
 
     @Test
@@ -82,7 +83,7 @@ class SynchronizationServiceImplTest {
 
         Synchronization actual = synchronizationService.find(synchronizationReadQuery);
 
-        assertThat(actual).isEqualToComparingFieldByField(createExpected("error", "somehtml"));
+        assertThat(actual).isEqualToComparingFieldByField(createExpected("error", "somehtml", true));
     }
 
     @Test
@@ -98,7 +99,7 @@ class SynchronizationServiceImplTest {
 
         Synchronization actual = synchronizationService.find(synchronizationReadQuery);
 
-        assertThat(actual).isEqualToComparingFieldByField(createExpected("error", "{\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"NOT_FOUND\",\"text\":\"3.2 - Not Found\"}]}"));
+        assertThat(actual).isEqualToComparingFieldByField(createExpected("error", "{\"tppMessages\":[{\"category\":\"ERROR\",\"code\":\"NOT_FOUND\",\"text\":\"3.2 - Not Found\"}]}", false));
     }
 
     private RequestApiModel createRequest(SynchronizationCreationQuery synchronizationCreationQuery) {
@@ -119,7 +120,7 @@ class SynchronizationServiceImplTest {
                 .build();
     }
 
-    private Synchronization createExpected(String status, String body) {
+    private Synchronization createExpected(String status, String body, boolean withUpdatedTransactionsLinks) {
         Synchronization.SynchronizationBuilder synchronizationBuilder = Synchronization.builder()
                 .id(SYNCHRONIZATION_ID)
                 .resourceId(ACCOUNT_ID)
@@ -144,6 +145,13 @@ class SynchronizationServiceImplTest {
                             .build())
                     .build()));
 
+        }
+        if (withUpdatedTransactionsLinks) {
+            synchronizationBuilder = synchronizationBuilder.updatedTransactionsLinks(
+                    UpdatedTransactionsLinks.builder()
+                        .related("https://api.ibanity.com/xs2a/customer/synchronizations/38ea8333-81be-443e-9852-6d86468f5b45/updated-transactions")
+                        .build()
+            );
         }
         return synchronizationBuilder
                 .build();

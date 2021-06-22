@@ -46,7 +46,7 @@ public class UpdatedTransactionsServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "synchronizations", "updatedTransactions")).thenReturn(UPDATED_TRANSACTIONS_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "synchronization", "updatedTransactions")).thenReturn(UPDATED_TRANSACTIONS_ENDPOINT);
     }
 
     @Test

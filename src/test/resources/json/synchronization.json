@@ -25,6 +25,16 @@
       "updatedAt": "2019-05-09T09:18:59.012Z"
     },
     "id": "04e98b21-8213-4aec-b373-13eb51f948e9",
-    "type": "synchronization"
+    "type": "synchronization",
+    "relationships": {
+      "updatedTransactions": {
+        "links": {
+          "meta": {
+            "type": "transaction"
+          },
+          "related": "https://api.ibanity.com/xs2a/customer/synchronizations/38ea8333-81be-443e-9852-6d86468f5b45/updated-transactions"
+        }
+      }
+    }
   }
 }
