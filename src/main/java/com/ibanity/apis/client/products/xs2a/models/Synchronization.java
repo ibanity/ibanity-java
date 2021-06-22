@@ -2,6 +2,7 @@ package com.ibanity.apis.client.products.xs2a.models;
 
 import com.ibanity.apis.client.models.IbanityError;
 import com.ibanity.apis.client.models.IbanityModel;
+import com.ibanity.apis.client.products.xs2a.models.links.UpdatedTransactionsLinks;
 import lombok.*;
 
 import java.time.Instant;
@@ -34,5 +35,6 @@ public class Synchronization implements IbanityModel {
     private Instant createdAt;
     private Instant updatedAt;
 
+    private UpdatedTransactionsLinks updatedTransactionsLinks;
 }
 
