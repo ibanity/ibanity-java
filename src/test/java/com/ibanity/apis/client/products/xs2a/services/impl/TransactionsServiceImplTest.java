@@ -49,7 +49,7 @@ public class TransactionsServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "transactions")).thenReturn(TRANSACTION_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "account", "transactions")).thenReturn(TRANSACTION_ENDPOINT);
     }
 
     @Test

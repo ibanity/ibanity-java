@@ -20,6 +20,7 @@ public final class TransactionsReadQuery {
     private String customerAccessToken;
     private UUID financialInstitutionId;
     private UUID accountId;
+    private UUID synchronizationId;
     private IbanityPagingSpec pagingSpec;
 
     @Builder.Default
