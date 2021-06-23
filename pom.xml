@@ -331,7 +331,7 @@
                 </configuration>
             </plugin>
             <!-- To sign the artifacts -->
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>${maven-gpg-plugin.version}</version>
@@ -343,15 +343,15 @@
                             <goal>sign</goal>
                         </goals>
                         <configuration>
-                            <!-- Prevent `gpg` from using pinentry programs -->
+                            &lt;!&ndash; Prevent `gpg` from using pinentry programs &ndash;&gt;
                             <gpgArguments>
-                                <arg>--pinentry-mode</arg>
+                                <arg>&#45;&#45;pinentry-mode</arg>
                                 <arg>loopback</arg>
                             </gpgArguments>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

@@ -6,6 +6,7 @@ import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.products.xs2a.models.Account;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
+import com.ibanity.apis.client.products.xs2a.models.Synchronization;
 import com.ibanity.apis.client.products.xs2a.models.Transaction;
 import com.ibanity.apis.client.products.xs2a.models.read.TransactionReadQuery;
 import com.ibanity.apis.client.products.xs2a.models.read.TransactionsReadQuery;
@@ -37,7 +38,7 @@ public class TransactionsServiceImpl implements TransactionsService {
             pagingSpec = IbanityPagingSpec.DEFAULT_PAGING_SPEC;
         }
 
-        String url = getUrl(transactionsReadQuery.getFinancialInstitutionId(), transactionsReadQuery.getAccountId());
+        String url = getUrl(transactionsReadQuery.getFinancialInstitutionId(), transactionsReadQuery.getAccountId(), transactionsReadQuery.getSynchronizationId());
         HttpResponse response = ibanityHttpClient.get(buildUri(url, pagingSpec), transactionsReadQuery.getAdditionalHeaders(), transactionsReadQuery.getCustomerAccessToken());
 
         return mapCollection(response, Transaction.class);
@@ -46,19 +47,24 @@ public class TransactionsServiceImpl implements TransactionsService {
     @Override
     public Transaction find(TransactionReadQuery transactionReadQuery) {
         String url =
-                getUrl(transactionReadQuery.getFinancialInstitutionId(), transactionReadQuery.getAccountId())
+                getUrl(transactionReadQuery.getFinancialInstitutionId(), transactionReadQuery.getAccountId(), null)
                         + "/"
                         + transactionReadQuery.getTransactionId().toString();
         HttpResponse response = ibanityHttpClient.get(buildUri(url), transactionReadQuery.getAdditionalHeaders(), transactionReadQuery.getCustomerAccessToken());
         return mapResource(response, Transaction.class);
     }
 
-    private String getUrl(UUID financialInstitutionId, UUID accountId) {
-        String url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "transactions");
-        return StringUtils.removeEnd(url
-                        .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
-                        .replace(Account.API_URL_TAG_ID, accountId.toString())
-                        .replace(Transaction.API_URL_TAG_ID, ""),
-                "/");
+    private String getUrl(UUID financialInstitutionId, UUID accountId, UUID synchronizationId) {
+        String url;
+        if (synchronizationId != null) {
+            url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "synchronization", "updatedTransactions")
+                    .replace(Synchronization.API_URL_TAG_ID, synchronizationId.toString());
+        }else{
+            url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "account", "transactions")
+                    .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
+                    .replace(Account.API_URL_TAG_ID, accountId.toString())
+                    .replace(Transaction.API_URL_TAG_ID, "");
+        }
+        return StringUtils.removeEnd(url, "/");
     }
 }
