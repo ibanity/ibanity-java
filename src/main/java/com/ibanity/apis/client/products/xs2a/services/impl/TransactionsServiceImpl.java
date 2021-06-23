@@ -60,7 +60,7 @@ public class TransactionsServiceImpl implements TransactionsService {
             url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "synchronization", "updatedTransactions")
                     .replace(Synchronization.API_URL_TAG_ID, synchronizationId.toString());
         }else{
-            url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "account", "transactions")
+            url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "transactions")
                     .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
                     .replace(Account.API_URL_TAG_ID, accountId.toString())
                     .replace(Transaction.API_URL_TAG_ID, "");
