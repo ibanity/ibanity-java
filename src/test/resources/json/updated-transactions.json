@@ -1,0 +1,85 @@
+{
+  "data": [
+    {
+      "attributes": {
+        "amount": 6.99,
+        "counterpartName": "ABBOTSTONE AGRICULTURAL PROPERTY UNIT TRUST",
+        "counterpartReference": "BE4779002273920627",
+        "currency": "EUR",
+        "description": "Small Cotton Shoes",
+        "executionDate": "2018-10-25T00:00:00.000Z",
+        "remittanceInformation": "NEW SHOES",
+        "remittanceInformationType": "unstructured",
+        "valueDate": "2018-10-22T00:00:00.000Z",
+        "internalReference": "transaction_12345",
+        "bankTransactionCode": "PMNT-IRCT-ESCT",
+        "proprietaryBankTransactionCode": "prop123",
+        "endToEndId": "61dd468606594217af9965ad3928280d",
+        "purposeCode": "CASH",
+        "mandateId": "12345678",
+        "creditorId": "98765",
+        "additionalInformation": "addional"
+      },
+      "id": "eb535c31-f619-4092-9db2-4db84149ddcb",
+      "links": {
+        "self": "https://api.ibanity.com/xs2a/customer/financial-institutions/99477654-a061-414c-afb4-19e37d13c5a3/accounts/1c020714-759c-4ee6-ae87-5ce667937e77/transactions/eb535c31-f619-4092-9db2-4db84149ddcb"
+      },
+      "relationships": {
+        "account": {
+          "data": {
+            "id": "1c020714-759c-4ee6-ae87-5ce667937e77",
+            "type": "account"
+          },
+          "links": {
+            "related": "https://api.ibanity.com/xs2a/customer/financial-institutions/99477654-a061-414c-afb4-19e37d13c5a3/accounts/1c020714-759c-4ee6-ae87-5ce667937e77"
+          }
+        }
+      },
+      "type": "transaction"
+    }
+  ],
+  "links": {
+    "first": "https://api.ibanity.com/xs2a/customer/financial-institutions/99477654-a061-414c-afb4-19e37d13c5a3/accounts/1c020714-759c-4ee6-ae87-5ce667937e77/transactions"
+  },
+  "meta": {
+    "latestSynchronization": {
+      "attributes": {
+        "createdAt": "2019-04-25T09:06:07.171Z",
+        "errors": [
+          {
+            "code": "authorizationInvalid",
+            "detail": "The authorization is invalid, you should ask the customer to reauthorize the account",
+            "meta": {
+              "financialInstitutionResponse": {
+                "statusCode": 500,
+                "body": {
+                  "tppMessages": [
+                    {
+                      "category": "ERROR",
+                      "code": "NOT_FOUND",
+                      "text": "3.2 - Not Found"
+                    }
+                  ]
+                },
+                "requestId": "354fwfwef4w684",
+                "timestamp": "2019-05-09T09:18:00.000Z",
+                "requestUri": "http://google.com"
+              }
+            }
+          }
+        ],
+        "resourceId": "1c020714-759c-4ee6-ae87-5ce667937e77",
+        "resourceType": "account",
+        "status": "success",
+        "subtype": "accountTransactions",
+        "updatedAt": "2019-04-25T09:06:08.044Z"
+      },
+      "id": "b49dff7e-ad7b-4992-9753-8f2a004cf343",
+      "type": "synchronization"
+    },
+    "paging": {
+      "limit": 10
+    },
+    "synchronizedAt": "2019-04-25T09:06:08.044Z"
+  }
+}
