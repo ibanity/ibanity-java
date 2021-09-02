@@ -8,13 +8,19 @@ import com.ibanity.apis.client.products.isabel_connect.models.IsabelModel;
 import com.ibanity.apis.client.utils.IbanityUtils;
 import org.apache.http.HttpResponse;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.io.IOException;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import org.apache.commons.beanutils.PropertyUtils;
 
 import static com.ibanity.apis.client.mappers.ModelMapperHelper.getRequestId;
 import static com.ibanity.apis.client.mappers.ModelMapperHelper.readResponseContent;
 import static java.lang.String.format;
+import static java.util.UUID.fromString;
 
 public class IsabelModelMapper {
 
@@ -64,10 +70,28 @@ public class IsabelModelMapper {
             if (clientObject == null) {
                 clientObject = classType.newInstance();
             }
-            clientObject.setId(data.getId());
+
+            Class<?> idFieldType = null;
+            try {
+                Field field = classType.getDeclaredField("id");
+                idFieldType = field.getType();
+            } catch(NoSuchFieldException noSuchFieldException) {
+                if (classType.getSuperclass() == null) {
+                    throw noSuchFieldException;
+                }
+
+                ParameterizedType genericSuperClass = (ParameterizedType) classType.getGenericSuperclass();
+                idFieldType = (Class) genericSuperClass.getActualTypeArguments()[0];
+            }
+
+            if (idFieldType.isAssignableFrom(UUID.class)) {
+                clientObject.setId(fromString(data.getId()));
+            } else {
+                clientObject.setId(data.getId());
+            }
 
             return clientObject;
-        } catch (InstantiationException | IllegalAccessException exception) {
+        } catch (InstantiationException | IllegalAccessException | NoSuchFieldException exception) {
             throw new RuntimeException(format("Instantiation of class %s is impossible for default constructor", classType), exception);
         }
     }
