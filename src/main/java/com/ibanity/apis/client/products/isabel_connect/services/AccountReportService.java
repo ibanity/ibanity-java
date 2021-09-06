@@ -11,5 +11,7 @@ import java.util.function.Function;
 public interface AccountReportService {
     IsabelCollection<AccountReport> list(AccountReportsReadQuery query);
 
+    String find(AccountReportReadQuery query);
+
     <T> T find(AccountReportReadQuery query, Function<HttpResponse, T> func);
 }
