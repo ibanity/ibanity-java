@@ -72,7 +72,7 @@ public class AccountReportServiceImplTest {
     }
 
     @Test
-    public void find() throws Exception {
+    public void findWithCustomMapping() throws Exception {
         when(ibanityHttpClient.get(new URI(GET_ACCOUNT_REPORTS_ENDPOINT), emptyMap(), ACCESS_TOKEN))
                 .thenReturn(loadHttpResponse("coda/coda-sample.txt"));
 
@@ -95,6 +95,23 @@ public class AccountReportServiceImplTest {
 
             return res;
         });
+
+        String expected = loadFile("coda/coda-sample.txt");
+        Assertions.assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void find() throws Exception {
+        when(ibanityHttpClient.get(new URI(GET_ACCOUNT_REPORTS_ENDPOINT), emptyMap(), ACCESS_TOKEN))
+                .thenReturn(loadHttpResponse("coda/coda-sample.txt"));
+
+
+        AccountReportReadQuery query = AccountReportReadQuery.builder()
+                .accessToken(ACCESS_TOKEN)
+                .accountReportId("123456")
+                .build();
+
+        String actual = accountReportService.find(query);
 
         String expected = loadFile("coda/coda-sample.txt");
         Assertions.assertThat(actual).isEqualTo(expected);

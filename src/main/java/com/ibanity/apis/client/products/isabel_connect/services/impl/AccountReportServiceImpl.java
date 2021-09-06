@@ -43,6 +43,19 @@ public class AccountReportServiceImpl implements AccountReportService {
     }
 
     @Override
+    public String find(AccountReportReadQuery query) {
+        HttpResponse response = ibanityHttpClient.get(
+                buildUri(getUrl(query.getAccountReportId())),
+                query.getAdditionalHeaders(),
+                query.getAccessToken());
+        try {
+            return readResponseContent(response.getEntity());
+        } catch (IOException exception) {
+            throw new IllegalArgumentException("Response cannot be parsed", exception);
+        }
+    }
+
+    @Override
     public <T> T find(AccountReportReadQuery query, Function<HttpResponse, T> func) {
         HttpResponse response = ibanityHttpClient.get(
                 buildUri(getUrl(query.getAccountReportId())),
