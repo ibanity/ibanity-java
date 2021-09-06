@@ -21,9 +21,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.UUID;
 
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static java.util.Collections.emptyMap;
+import static java.util.UUID.fromString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -31,6 +33,7 @@ import static org.mockito.Mockito.when;
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class TransactionServiceImplTest {
     private static final String ACCOUNT_ID = "93ecb1fdbfb7848e7b7896c0f2d207aed3d8b4c1";
+    private static final UUID TRANSACTION_ID = fromString("14e2bff5-e365-4bc7-bf48-76b7bcd464e9");
     private static final String ACCESS_TOKEN = "thisIsAnAccessToken";
     private static final String TRANSACTIONS_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/accounts/{accountId}/transactions";
     private static final String LIST_TRANSACTIONS_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/accounts/93ecb1fdbfb7848e7b7896c0f2d207aed3d8b4c1/transactions?size=10";
@@ -64,6 +67,7 @@ public class TransactionServiceImplTest {
 
     private Transaction createExpected() {
         return Transaction.builder()
+                .id(TRANSACTION_ID)
                 .amount(new BigDecimal(80000))
                 .counterpartName("MYBESTCLIENT")
                 .counterpartAccountReference("BE21210123456703")

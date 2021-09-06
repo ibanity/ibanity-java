@@ -8,7 +8,7 @@ import com.ibanity.apis.client.services.ApiUrlProvider;
 
 public class IsabelConnectServiceImpl implements IsabelConnectService {
     private final AccountReportService accountReportService;
-    private final AccountsService accountsService;
+    private final AccountService accountService;
     private final BalanceService balanceService;
     private final BulkPaymentInitiationRequestService bulkPaymentInitiationRequestService;
     private final IntradayTransactionService intradayTransactionService;
@@ -20,7 +20,7 @@ public class IsabelConnectServiceImpl implements IsabelConnectService {
             IbanityHttpClient ibanityHttpClient,
             OAuthHttpClient oAuthHttpClient) {
         accountReportService = new AccountReportServiceImpl(apiUrlProvider, ibanityHttpClient);
-        accountsService = new AccountsServiceImpl(apiUrlProvider, ibanityHttpClient);
+        accountService = new AccountServiceImpl(apiUrlProvider, ibanityHttpClient);
         balanceService = new BalanceServiceImpl(apiUrlProvider, ibanityHttpClient);
         intradayTransactionService = new IntradayTransactionServiceImpl(apiUrlProvider, ibanityHttpClient);
         transactionService = new TransactionServiceImpl(apiUrlProvider, ibanityHttpClient);
@@ -32,7 +32,7 @@ public class IsabelConnectServiceImpl implements IsabelConnectService {
     public AccountReportService accountReportService() { return accountReportService; }
 
     @Override
-    public AccountsService accountsService() { return accountsService; }
+    public AccountService accountService() { return accountService; }
 
     @Override
     public BalanceService balanceService() { return balanceService; }

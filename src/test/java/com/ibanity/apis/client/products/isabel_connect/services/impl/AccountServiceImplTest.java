@@ -33,7 +33,7 @@ public class AccountServiceImplTest {
     private static final String LIST_ACCOUNT_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/accounts?size=10";
 
     @InjectMocks
-    private AccountsServiceImpl accountService;
+    private AccountServiceImpl accountService;
 
     @Mock
     private ApiUrlProvider apiUrlProvider;

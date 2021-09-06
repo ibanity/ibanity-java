@@ -9,7 +9,7 @@ import com.ibanity.apis.client.products.isabel_connect.models.Account;
 import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.read.AccountsReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.read.IsabelPagingSpec;
-import com.ibanity.apis.client.products.isabel_connect.services.AccountsService;
+import com.ibanity.apis.client.products.isabel_connect.services.AccountService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
@@ -19,12 +19,12 @@ import java.util.function.Function;
 import static com.ibanity.apis.client.mappers.IsabelModelMapper.toIsabelModel;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 
-public class AccountsServiceImpl implements AccountsService {
+public class AccountServiceImpl implements AccountService {
 
     private final ApiUrlProvider apiUrlProvider;
     private final IbanityHttpClient ibanityHttpClient;
 
-    public AccountsServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
+    public AccountServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
         this.apiUrlProvider = apiUrlProvider;
         this.ibanityHttpClient = ibanityHttpClient;
     }

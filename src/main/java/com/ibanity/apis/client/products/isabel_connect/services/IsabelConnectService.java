@@ -4,7 +4,7 @@ public interface IsabelConnectService {
 
     AccountReportService accountReportService();
 
-    AccountsService accountsService();
+    AccountService accountService();
 
     BalanceService balanceService();
 
