@@ -15,7 +15,7 @@ import java.util.List;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class AccountReport {
+public class AccountReport extends IsabelModel<String> {
     public static final String API_URL_TAG_ID = "{accountReportId}";
     public static final String RESOURCE_TYPE = "accountReport";
 

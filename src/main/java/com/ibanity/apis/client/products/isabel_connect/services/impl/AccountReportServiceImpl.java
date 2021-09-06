@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.ibanity.apis.client.mappers.IsabelModelMapper.toIsabelModel;
 import static com.ibanity.apis.client.mappers.ModelMapperHelper.getRequestId;
 import static com.ibanity.apis.client.mappers.ModelMapperHelper.readResponseContent;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
@@ -86,6 +87,6 @@ public class AccountReportServiceImpl implements AccountReportService {
     }
 
     private AccountReport mapItem(DataApiModel data) {
-        return IbanityUtils.objectMapper().convertValue(data.getAttributes(), AccountReport.class);
+        return toIsabelModel(data, AccountReport.class);
     }
 }
