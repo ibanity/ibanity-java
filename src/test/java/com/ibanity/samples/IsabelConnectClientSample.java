@@ -66,8 +66,8 @@ public class IsabelConnectClientSample {
 
         listAccountReports(isabelConnectService.accountReportService(), token);
         getAccountReport(isabelConnectService.accountReportService(), token);
-        listAccounts(isabelConnectService.accountsService(), token);
-        getAccount(isabelConnectService.accountsService(), token);
+        listAccounts(isabelConnectService.accountService(), token);
+        getAccount(isabelConnectService.accountService(), token);
         listBalances(isabelConnectService.balanceService(), token);
         listTransactions(isabelConnectService.transactionService(), token);
         listIntradayTransactions(isabelConnectService.intradayTransactionService(), token);
@@ -139,7 +139,7 @@ public class IsabelConnectClientSample {
         LOGGER.info("Account report {}", content);
     }
 
-    private static void listAccounts(AccountsService service, Token token) {
+    private static void listAccounts(AccountService service, Token token) {
         LOGGER.info("List accounts");
         AccountsReadQuery query = AccountsReadQuery.builder()
                 .accessToken(token.getAccessToken())
@@ -149,14 +149,14 @@ public class IsabelConnectClientSample {
         LOGGER.info("Accounts {}", accounts);
     }
 
-    private static void getAccount(AccountsService accountsService, Token token) {
+    private static void getAccount(AccountService service, Token token) {
         LOGGER.info("Get account");
         AccountReadQuery query = AccountReadQuery.builder()
                 .accessToken(token.getAccessToken())
                 .accountId(accountId)
                 .build();
 
-        Account account = accountsService.find(query);
+        Account account = service.find(query);
         LOGGER.info("Account {}", account);
     }
 
