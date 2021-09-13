@@ -28,6 +28,6 @@ public class IntradayTransaction extends IsabelModel<UUID> {
     private String remittanceInformationType;
     private String status;
 
-    private Instant valueDate;
-    private Instant executionDate;
+    private LocalDate valueDate;
+    private LocalDate executionDate;
 }
