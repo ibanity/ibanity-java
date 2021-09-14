@@ -6,7 +6,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.Map;
 
-import static com.ibanity.apis.client.products.isabel_connect.models.refresh.TokenRefreshQuery.PATH;
 import static java.util.Collections.emptyMap;
 
 @SuperBuilder

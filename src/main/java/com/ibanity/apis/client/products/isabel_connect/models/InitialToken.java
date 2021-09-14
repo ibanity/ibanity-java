@@ -8,12 +8,11 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public abstract class Token {
+public class InitialToken extends Token {
 
-    @JsonProperty("token_type")
-    private String tokenType;
-    @JsonProperty("expires_in")
-    private int expiresIn;
-    private String scope;
-
+    @JsonProperty("access_token")
+    private String accessToken;
+    @JsonProperty("refresh_token")
+    private String refreshToken;
+        
 }

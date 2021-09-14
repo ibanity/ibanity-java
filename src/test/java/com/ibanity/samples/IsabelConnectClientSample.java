@@ -5,10 +5,8 @@ import com.ibanity.apis.client.builders.OptionalPropertiesBuilder;
 import com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys;
 import com.ibanity.apis.client.models.IsabelCollection;
 import com.ibanity.apis.client.products.isabel_connect.models.*;
-import com.ibanity.apis.client.products.isabel_connect.models.create.BulkPaymentInitiationRequestCreateQuery;
-import com.ibanity.apis.client.products.isabel_connect.models.create.TokenCreateQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.create.*;
 import com.ibanity.apis.client.products.isabel_connect.models.read.*;
-import com.ibanity.apis.client.products.isabel_connect.models.refresh.TokenRefreshQuery;
 import com.ibanity.apis.client.products.isabel_connect.services.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -62,7 +60,7 @@ public class IsabelConnectClientSample {
                 .build()
                 .isabelConnectService();
 
-        Token token = createToken(isabelConnectService.tokenService());
+        AccessToken token = createToken(isabelConnectService.tokenService());
 
         listAccountReports(isabelConnectService.accountReportService(), token);
         getAccountReport(isabelConnectService.accountReportService(), token);
@@ -76,7 +74,7 @@ public class IsabelConnectClientSample {
 
     private static BulkPaymentInitiationRequest createBulkPaymentInitiationRequest(
             BulkPaymentInitiationRequestService bpir,
-            Token token) {
+            AccessToken token) {
         LOGGER.info("Bulk payments");
 
         BulkPaymentInitiationRequestCreateQuery query = BulkPaymentInitiationRequestCreateQuery.builder()
@@ -87,30 +85,31 @@ public class IsabelConnectClientSample {
 
         return bpir.create(query);
     }
-    private static Token createToken(TokenService tokenService) {
+
+    private static AccessToken createToken(TokenService tokenService) {
         LOGGER.info("Token samples");
 
-        Token refreshToken = tokenService.create(TokenCreateQuery.builder()
+        InitialToken initialToken = tokenService.create(InitialTokenCreateQuery.builder()
                 .authorizationCode(authorizationCode)
                 .redirectUri(redirectUrl)
                 .clientId(clientId)
                 .clientSecret(clientSecret)
                 .build());
 
-        LOGGER.info("Token {}", refreshToken);
+        LOGGER.info("InitialToken {}", initialToken);
 
-        Token accessToken = tokenService.refresh(TokenRefreshQuery.builder()
+        AccessToken accessToken = tokenService.create(AccessTokenCreateQuery.builder()
                 .clientId(clientId)
                 .clientSecret(clientSecret)
-                .refreshToken(refreshToken.getRefreshToken())
+                .refreshToken(initialToken.getRefreshToken())
                 .build());
 
-        LOGGER.info("Token {}", accessToken);
+        LOGGER.info("AccessToken {}", accessToken);
 
         return accessToken;
     }
 
-    private static void listAccountReports(AccountReportService accountReportService, Token token) {
+    private static void listAccountReports(AccountReportService accountReportService, AccessToken token) {
         LOGGER.info("List account reports");
         AccountReportsReadQuery query = AccountReportsReadQuery.builder()
                 .accessToken(token.getAccessToken())
@@ -120,7 +119,7 @@ public class IsabelConnectClientSample {
         LOGGER.info("Account reports {}", reports);
     }
 
-    private static void getAccountReport(AccountReportService service, Token token) {
+    private static void getAccountReport(AccountReportService service, AccessToken token) {
         LOGGER.info("Account reports");
 
         AccountReportReadQuery query = AccountReportReadQuery.builder()
@@ -139,7 +138,7 @@ public class IsabelConnectClientSample {
         LOGGER.info("Account report {}", content);
     }
 
-    private static void listAccounts(AccountService service, Token token) {
+    private static void listAccounts(AccountService service, AccessToken token) {
         LOGGER.info("List accounts");
         AccountsReadQuery query = AccountsReadQuery.builder()
                 .accessToken(token.getAccessToken())
@@ -149,7 +148,7 @@ public class IsabelConnectClientSample {
         LOGGER.info("Accounts {}", accounts);
     }
 
-    private static void getAccount(AccountService service, Token token) {
+    private static void getAccount(AccountService service, AccessToken token) {
         LOGGER.info("Get account");
         AccountReadQuery query = AccountReadQuery.builder()
                 .accessToken(token.getAccessToken())
@@ -160,7 +159,7 @@ public class IsabelConnectClientSample {
         LOGGER.info("Account {}", account);
     }
 
-    private static void listBalances(BalanceService service, Token token) {
+    private static void listBalances(BalanceService service, AccessToken token) {
         LOGGER.info("List balances");
 
         LocalDate today = LocalDate.now();
@@ -175,7 +174,7 @@ public class IsabelConnectClientSample {
         LOGGER.info("Balances: {}", balances);
     }
 
-    private static void listTransactions(TransactionService service, Token token) {
+    private static void listTransactions(TransactionService service, AccessToken token) {
         LOGGER.info("List transactions");
 
         LocalDate now = LocalDate.now();
@@ -190,7 +189,7 @@ public class IsabelConnectClientSample {
         LOGGER.info("Transactions {}", transactions);
     }
 
-    private static void listIntradayTransactions(IntradayTransactionService service, Token token) {
+    private static void listIntradayTransactions(IntradayTransactionService service, AccessToken token) {
         LOGGER.info("List transactions");
 
         IntradayTransactionsReadQuery query = IntradayTransactionsReadQuery.builder()

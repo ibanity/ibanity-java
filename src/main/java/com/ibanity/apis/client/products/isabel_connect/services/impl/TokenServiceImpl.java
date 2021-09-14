@@ -2,10 +2,12 @@ package com.ibanity.apis.client.products.isabel_connect.services.impl;
 
 import com.ibanity.apis.client.http.OAuthHttpClient;
 import com.ibanity.apis.client.models.IbanityProduct;
+import com.ibanity.apis.client.products.isabel_connect.models.AccessToken;
+import com.ibanity.apis.client.products.isabel_connect.models.InitialToken;
 import com.ibanity.apis.client.products.isabel_connect.models.Token;
 import com.ibanity.apis.client.products.isabel_connect.models.TokenQuery;
-import com.ibanity.apis.client.products.isabel_connect.models.create.TokenCreateQuery;
-import com.ibanity.apis.client.products.isabel_connect.models.refresh.TokenRefreshQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.create.AccessTokenCreateQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.create.InitialTokenCreateQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.revoke.TokenRevokeQuery;
 import com.ibanity.apis.client.products.isabel_connect.services.TokenService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
@@ -33,24 +35,24 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public void revoke(TokenRevokeQuery tokenRevokeQuery) {
-        performTokenRequest(tokenRevokeQuery);
+        performTokenRequest(tokenRevokeQuery, InitialToken.class);
     }
 
     @Override
-    public Token refresh(TokenRefreshQuery tokenCreateQuery) {
-        return performTokenRequest(tokenCreateQuery);
+    public InitialToken create(InitialTokenCreateQuery initialTokenCreateQuery) {
+        return performTokenRequest(initialTokenCreateQuery, InitialToken.class);
     }
 
     @Override
-    public Token create(TokenCreateQuery tokenRefreshQuery) {
-        return performTokenRequest(tokenRefreshQuery);
+    public AccessToken create(AccessTokenCreateQuery accessTokenCreateQuery) {
+        return performTokenRequest(accessTokenCreateQuery, AccessToken.class);
     }
 
-    private Token performTokenRequest(TokenQuery query) {
+    private <T extends Token> T performTokenRequest(TokenQuery query, Class<T> type) {
         try {
             URI uri = buildUri(getUrl(query.path()));
             HttpResponse response = oAuthHttpClient.post(uri, query.getAdditionalHeaders(), query.requestArguments(), query.getClientSecret());
-            return IbanityUtils.objectMapper().readValue(response.getEntity().getContent(), Token.class);
+            return IbanityUtils.objectMapper().readValue(response.getEntity().getContent(), type);
         } catch (IOException e) {
             LOGGER.error("oauth token response invalid", e);
             throw new RuntimeException("The response could not be converted.");

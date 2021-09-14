@@ -10,11 +10,10 @@ import static com.google.common.collect.Maps.newHashMap;
 
 @Data
 @SuperBuilder
-public class TokenCreateQuery extends TokenQuery {
-    public static final String[] PATH = new String[]{"oAuth2", "refreshTokens", "create"};
+public class AccessTokenCreateQuery extends TokenQuery {
+    public static final String[] PATH = new String[] {"oAuth2", "accessTokens"};
 
-    private String authorizationCode;
-    private String redirectUri;
+    private String refreshToken;
 
     @Override
     public String[] path() {
@@ -24,15 +23,12 @@ public class TokenCreateQuery extends TokenQuery {
     @Override
     public Map<String, String> requestArguments() {
         Map<String, String> arguments = newHashMap();
-        arguments.put("grant_type", "authorization_code");
+        arguments.put("grant_type", "refresh_token");
+        arguments.put("refresh_token", refreshToken);
         arguments.put("client_id", clientId);
         arguments.put("client_secret", clientSecret);
-        arguments.put("code", authorizationCode);
-
-        if (redirectUri != null) {
-            arguments.put("redirect_uri", redirectUri);
-        }
 
         return arguments;
     }
+
 }
