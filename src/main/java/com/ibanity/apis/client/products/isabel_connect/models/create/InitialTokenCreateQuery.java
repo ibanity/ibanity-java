@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.products.isabel_connect.models.refresh;
+package com.ibanity.apis.client.products.isabel_connect.models.create;
 
 import com.ibanity.apis.client.products.isabel_connect.models.TokenQuery;
 import lombok.Data;
@@ -10,10 +10,11 @@ import static com.google.common.collect.Maps.newHashMap;
 
 @Data
 @SuperBuilder
-public class TokenRefreshQuery extends TokenQuery {
-    public static final String[] PATH = new String[] {"oAuth2", "accessTokens"};
+public class InitialTokenCreateQuery extends TokenQuery {
+    public static final String[] PATH = new String[]{"oAuth2", "refreshTokens", "create"};
 
-    private String refreshToken;
+    private String authorizationCode;
+    private String redirectUri;
 
     @Override
     public String[] path() {
@@ -23,12 +24,15 @@ public class TokenRefreshQuery extends TokenQuery {
     @Override
     public Map<String, String> requestArguments() {
         Map<String, String> arguments = newHashMap();
-        arguments.put("grant_type", "refresh_token");
-        arguments.put("refresh_token", refreshToken);
+        arguments.put("grant_type", "authorization_code");
         arguments.put("client_id", clientId);
         arguments.put("client_secret", clientSecret);
+        arguments.put("code", authorizationCode);
+
+        if (redirectUri != null) {
+            arguments.put("redirect_uri", redirectUri);
+        }
 
         return arguments;
     }
-
 }

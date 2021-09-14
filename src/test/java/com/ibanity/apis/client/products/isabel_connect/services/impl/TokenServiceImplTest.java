@@ -2,9 +2,11 @@ package com.ibanity.apis.client.products.isabel_connect.services.impl;
 
 import com.ibanity.apis.client.http.OAuthHttpClient;
 import com.ibanity.apis.client.models.IbanityProduct;
-import com.ibanity.apis.client.products.isabel_connect.models.create.TokenCreateQuery;
-import com.ibanity.apis.client.products.isabel_connect.models.refresh.TokenRefreshQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.create.AccessTokenCreateQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.create.InitialTokenCreateQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.revoke.TokenRevokeQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.AccessToken;
+import com.ibanity.apis.client.products.isabel_connect.models.InitialToken;
 import com.ibanity.apis.client.products.isabel_connect.models.Token;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,26 +60,26 @@ public class TokenServiceImplTest {
     }
 
     @Test
-    public void create() throws Exception {
-        when(oAuthHttpClient.post(eq(new URI(TOKEN_ENDPOINT)), eq(emptyMap()), eq(createTokenArguments()), eq(CLIENT_SECRET)))
-                .thenReturn(loadHttpResponse("json/isabel-connect/create_refresh_token.json"));
+    public void createInitialToken() throws Exception {
+        when(oAuthHttpClient.post(eq(new URI(TOKEN_ENDPOINT)), eq(emptyMap()), eq(createInitialTokenArguments()), eq(CLIENT_SECRET)))
+                .thenReturn(loadHttpResponse("json/isabel-connect/create_initial_token.json"));
 
-        Token actual = tokenService.create(TokenCreateQuery.builder()
+        Token actual = tokenService.create(InitialTokenCreateQuery.builder()
                 .clientId(CLIENT_ID)
                 .clientSecret(CLIENT_SECRET)
                 .authorizationCode(AUTHORIZATION_CODE)
                 .redirectUri(REDIRECT_URI)
                 .build());
 
-        assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpectedRefreshToken());
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(createExpectedInitialToken());
     }
 
     @Test
-    public void refresh() throws Exception {
-        when(oAuthHttpClient.post(eq(new URI(TOKEN_ENDPOINT)), eq(emptyMap()), eq(refreshTokenArguments()), eq(CLIENT_SECRET)))
+    public void createAccessToken() throws Exception {
+        when(oAuthHttpClient.post(eq(new URI(TOKEN_ENDPOINT)), eq(emptyMap()), eq(createAccessTokenArguments()), eq(CLIENT_SECRET)))
                 .thenReturn(loadHttpResponse("json/isabel-connect/create_access_token.json"));
 
-        Token actual = tokenService.refresh(TokenRefreshQuery.builder()
+        Token actual = tokenService.create(AccessTokenCreateQuery.builder()
                 .clientId(CLIENT_ID)
                 .clientSecret(CLIENT_SECRET)
                 .refreshToken(TOKEN)
@@ -100,7 +102,7 @@ public class TokenServiceImplTest {
         verify(oAuthHttpClient).post(eq(new URI(REVOKE_ENDPOINT)), eq(emptyMap()), eq(revokeTokenArguments()), eq(CLIENT_SECRET));
     }
 
-    private Map<String, String> createTokenArguments() {
+    private Map<String, String> createInitialTokenArguments() {
         HashMap<String, String> arguments = newHashMap();
         arguments.put("grant_type", "authorization_code");
         arguments.put("code", AUTHORIZATION_CODE);
@@ -111,7 +113,7 @@ public class TokenServiceImplTest {
         return arguments;
     }
 
-    private Map<String, String> refreshTokenArguments() {
+    private Map<String, String> createAccessTokenArguments() {
         HashMap<String, String> arguments = newHashMap();
         arguments.put("grant_type", "refresh_token");
         arguments.put("refresh_token", TOKEN);
@@ -130,8 +132,8 @@ public class TokenServiceImplTest {
         return arguments;
     }
 
-    private Token createExpectedRefreshToken() {
-        return Token.builder()
+    private Token createExpectedInitialToken() {
+        return InitialToken.builder()
                 .accessToken("access_token_1603365408")
                 .refreshToken("valid_refresh_token")
                 .expiresIn(1799)
@@ -141,7 +143,7 @@ public class TokenServiceImplTest {
     }
 
     private Token createExpectedAccessToken() {
-        return Token.builder()
+        return AccessToken.builder()
                 .accessToken("access_token_1603365408")
                 .expiresIn(1799)
                 .scope("cloudconnect")
