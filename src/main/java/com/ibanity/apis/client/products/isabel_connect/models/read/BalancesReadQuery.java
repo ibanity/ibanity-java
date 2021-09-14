@@ -11,7 +11,7 @@ import static java.util.Collections.emptyMap;
 @Builder
 @ToString
 @EqualsAndHashCode
-public class BalanceReadQuery {
+public class BalancesReadQuery {
     private String accessToken;
     private String accountId;
     private IsabelPagingSpec pagingSpec;
