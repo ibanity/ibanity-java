@@ -4,7 +4,7 @@ import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.IsabelCollection;
 import com.ibanity.apis.client.products.isabel_connect.models.Balance;
-import com.ibanity.apis.client.products.isabel_connect.models.read.BalanceReadQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.read.BalancesReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.read.IsabelPagingSpec;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,7 +54,7 @@ public class BalanceServiceImplTest {
         when(ibanityHttpClient.get(new URI(LIST_BALANCES_ENDPOINT), emptyMap(), ACCESS_TOKEN))
                 .thenReturn(loadHttpResponse("json/isabel-connect/balances.json"));
 
-        IsabelCollection<Balance> actual = balanceService.list(BalanceReadQuery.builder()
+        IsabelCollection<Balance> actual = balanceService.list(BalancesReadQuery.builder()
                 .accountId(ACCOUNT_ID)
                 .accessToken(ACCESS_TOKEN)
                 .build());

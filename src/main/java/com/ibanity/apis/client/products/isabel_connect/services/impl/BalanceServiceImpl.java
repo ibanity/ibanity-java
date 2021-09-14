@@ -7,7 +7,7 @@ import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.IsabelCollection;
 import com.ibanity.apis.client.products.isabel_connect.models.Account;
 import com.ibanity.apis.client.products.isabel_connect.models.Balance;
-import com.ibanity.apis.client.products.isabel_connect.models.read.BalanceReadQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.read.BalancesReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.read.IsabelPagingSpec;
 import com.ibanity.apis.client.products.isabel_connect.services.BalanceService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
@@ -34,7 +34,7 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     @Override
-    public IsabelCollection<Balance> list(BalanceReadQuery query) {
+    public IsabelCollection<Balance> list(BalancesReadQuery query) {
         IsabelPagingSpec pagingSpec = query.getPagingSpec();
 
         URI uri = buildUri(getUrl(query.getAccountId()), pagingSpec);

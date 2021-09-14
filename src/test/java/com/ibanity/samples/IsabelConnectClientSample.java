@@ -163,7 +163,7 @@ public class IsabelConnectClientSample {
         LOGGER.info("List balances");
 
         LocalDate today = LocalDate.now();
-        BalanceReadQuery query = BalanceReadQuery.builder()
+        BalancesReadQuery query = BalancesReadQuery.builder()
                 .accessToken(token.getAccessToken())
                 .accountId(accountId)
                 .pagingSpec(IsabelPagingSpec.builder()
