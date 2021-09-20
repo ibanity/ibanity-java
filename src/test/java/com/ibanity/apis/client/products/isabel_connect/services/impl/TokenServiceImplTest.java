@@ -39,7 +39,7 @@ public class TokenServiceImplTest {
     private static final String REVOKE_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/oauth2/revoke";
     private static final String CLIENT_ID = "clientId";
     private static final String CLIENT_SECRET = "thisIsASecret";
-    private static final String REDIRECT_URI = "https://fake-tpp.com/ponto-authorization";
+    private static final String REDIRECT_URI = "https://fake-tpp.com/isabel-connect-authorization";
     private static final String AUTHORIZATION_CODE = "W1qfWXH3sbboERgZFytVIpXOzicKFq1s1-QGQuKzeko.QQRNd24KDohgkrMYleOmDzAGzwMP5PIETP6B267dJ-w";
     private static final String TOKEN = "I_UnPbrN5wH3-b7fhk5p4GIIL_5c5o-0BhXD4myLDoY.vNxkg6557o3pLCHsweSboi2mmeygG1pXVD6k8M95LLJ";
 
