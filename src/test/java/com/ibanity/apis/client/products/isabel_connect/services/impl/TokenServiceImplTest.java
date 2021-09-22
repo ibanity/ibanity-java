@@ -54,9 +54,8 @@ public class TokenServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        when(apiUrlProvider.find(IbanityProduct.IsabelConnect, "oAuth2", "accessTokens")).thenReturn(TOKEN_ENDPOINT);
-        when(apiUrlProvider.find(IbanityProduct.IsabelConnect, "oAuth2", "refreshTokens", "create")).thenReturn(TOKEN_ENDPOINT);
-        when(apiUrlProvider.find(IbanityProduct.IsabelConnect, "oAuth2", "refreshTokens", "revoke")).thenReturn(REVOKE_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.IsabelConnect, "oAuth2", "token")).thenReturn(TOKEN_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.IsabelConnect, "oAuth2", "revoke")).thenReturn(REVOKE_ENDPOINT);
     }
 
     @Test

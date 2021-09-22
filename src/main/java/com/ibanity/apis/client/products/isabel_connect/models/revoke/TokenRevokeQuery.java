@@ -11,7 +11,7 @@ import static com.google.common.collect.Maps.newHashMap;
 @Data
 @SuperBuilder
 public class TokenRevokeQuery extends TokenQuery {
-    public static final String[] PATH = new String[]{"oAuth2", "refreshTokens", "revoke"};
+    public static final String[] PATH = new String[]{"oAuth2", "revoke"};
 
     private String token;
 
