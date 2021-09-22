@@ -11,7 +11,7 @@ import static com.google.common.collect.Maps.newHashMap;
 @Data
 @SuperBuilder
 public class InitialTokenCreateQuery extends TokenQuery {
-    public static final String[] PATH = new String[]{"oAuth2", "refreshTokens", "create"};
+    public static final String[] PATH = new String[]{"oAuth2", "token"};
 
     private String authorizationCode;
     private String redirectUri;
