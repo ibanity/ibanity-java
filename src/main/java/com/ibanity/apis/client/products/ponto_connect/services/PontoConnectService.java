@@ -27,4 +27,6 @@ public interface PontoConnectService {
     OnboardingDetailsService onboardingDetailsService();
 
     BulkPaymentService bulkPaymentService();
+
+    ReauthorizationRequestService reauthorizationRequestService();
 }
