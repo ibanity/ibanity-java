@@ -21,6 +21,7 @@ import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.rea
 import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.read.FinancialInstitutionAccountsReadQuery;
 import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.read.FinancialInstitutionTransactionReadQuery;
 import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.read.FinancialInstitutionTransactionsReadQuery;
+import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.update.FinancialInstitutionTransactionUpdateQuery;
 import com.ibanity.apis.client.products.ponto_connect.sandbox.services.FinancialInstitutionAccountsService;
 import com.ibanity.apis.client.products.ponto_connect.sandbox.services.FinancialInstitutionTransactionsService;
 import com.ibanity.apis.client.products.ponto_connect.sandbox.services.SandboxService;
@@ -122,34 +123,50 @@ public class PontoConnectClientSample {
     }
 
     private static List<FinancialInstitutionTransaction> financialInstitutionTransactions(FinancialInstitutionTransactionsService financialInstitutionTransactionsService, UUID financialInstitutionId, UUID financialInstitutionAccountId, String accessToken) {
-        financialInstitutionTransactionsService.create(FinancialInstitutionTransactionCreationQuery.builder()
+        UUID financialInstitutionTransactionId = financialInstitutionTransactionsService.create(FinancialInstitutionTransactionCreationQuery.builder()
                 .accessToken(accessToken)
                 .remittanceInformationType("unstructured")
                 .remittanceInformation("NEW SHOES")
                 .description("Small Cotton Shoes")
                 .currency("EUR")
                 .counterpartName("Otro Bank")
+                .purposeCode("DEBIT")
                 .counterpartReference("BE9786154282554")
                 .amount(new BigDecimal("84.42"))
                 .valueDate(Instant.parse("2020-05-22T00:00:00Z"))
                 .executionDate(Instant.parse("2020-05-25T00:00:00Z"))
                 .financialInstitutionAccountId(financialInstitutionAccountId)
                 .financialInstitutionId(financialInstitutionId)
-                .build());
-        IbanityCollection<FinancialInstitutionTransaction> list = financialInstitutionTransactionsService.list(FinancialInstitutionTransactionsReadQuery.builder()
+                .build()).getId();
+
+        financialInstitutionTransactionsService.update(FinancialInstitutionTransactionUpdateQuery.builder()
                 .accessToken(accessToken)
                 .financialInstitutionId(financialInstitutionId)
                 .financialInstitutionAccountId(financialInstitutionAccountId)
+                .financialInstitutionTransactionId(financialInstitutionTransactionId)
+                .remittanceInformation("NEW SHOES")
+                .description("Hole foods")
+                .bankTransactionCode("PMNT-IRCT-ESCT")
+                .proprietaryBankTransactionCode("12267")
+                .additionalInformation("Online payment on fake-tpp.com")
+                .creditorId("123498765421")
+                .mandateId("234")
+                .purposeCode("CASH")
+                .endToEndId("ref.243435343")
                 .build());
 
-        UUID financialInstitutionTransactionId = list.getItems().stream().map(FinancialInstitutionTransaction::getId).findFirst().orElseThrow(RuntimeException::new);
         financialInstitutionTransactionsService.find(FinancialInstitutionTransactionReadQuery.builder()
                 .accessToken(accessToken)
                 .financialInstitutionId(financialInstitutionId)
                 .financialInstitutionAccountId(financialInstitutionAccountId)
                 .financialInstitutionTransactionId(financialInstitutionTransactionId)
                 .build());
-        return list.getItems();
+
+        return financialInstitutionTransactionsService.list(FinancialInstitutionTransactionsReadQuery.builder()
+                .accessToken(accessToken)
+                .financialInstitutionId(financialInstitutionId)
+                .financialInstitutionAccountId(financialInstitutionAccountId)
+                .build()).getItems();
     }
 
     private static List<FinancialInstitutionAccount> financialInstitutionAccounts(FinancialInstitutionAccountsService financialInstitutionAccountsService, UUID financialInstitutionId, String accessToken) {

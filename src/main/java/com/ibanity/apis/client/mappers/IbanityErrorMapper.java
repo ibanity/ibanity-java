@@ -3,6 +3,7 @@ package com.ibanity.apis.client.mappers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ibanity.apis.client.jsonapi.FinancialInstitutionResponseApiModel;
 import com.ibanity.apis.client.jsonapi.IbanityErrorApiModel;
+import com.ibanity.apis.client.jsonapi.OAuth2ErrorResourceApiModel;
 import com.ibanity.apis.client.models.ErrorMeta;
 import com.ibanity.apis.client.models.FinancialInstitutionResponse;
 import com.ibanity.apis.client.models.IbanityError;
@@ -51,4 +52,10 @@ public class IbanityErrorMapper {
         }
     }
 
+    public static IbanityError map(OAuth2ErrorResourceApiModel oAuth2ErrorResourceApiModel) {
+        return IbanityError.builder()
+                .code(oAuth2ErrorResourceApiModel.getError())
+                .detail(oAuth2ErrorResourceApiModel.getErrorDescription())
+                .build();
+    }
 }

@@ -8,6 +8,7 @@ import com.ibanity.apis.client.products.ponto_connect.sandbox.models.FinancialIn
 import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.create.FinancialInstitutionTransactionCreationQuery;
 import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.read.FinancialInstitutionTransactionReadQuery;
 import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.read.FinancialInstitutionTransactionsReadQuery;
+import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.update.FinancialInstitutionTransactionUpdateQuery;
 import com.ibanity.apis.client.products.ponto_connect.sandbox.services.FinancialInstitutionTransactionsService;
 import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
 import com.ibanity.apis.client.services.ApiUrlProvider;
@@ -65,6 +66,19 @@ public class FinancialInstitutionTransactionsServiceImpl implements FinancialIns
         return mapResource(response, FinancialInstitutionTransaction.class);
     }
 
+    @Override
+    public FinancialInstitutionTransaction update(FinancialInstitutionTransactionUpdateQuery transactionUpdateQuery) {
+        FinancialInstitutionTransaction transaction = requestMapping(transactionUpdateQuery);
+        String url =
+                getUrl(transactionUpdateQuery.getFinancialInstitutionId().toString(),
+                        transactionUpdateQuery.getFinancialInstitutionAccountId().toString(),
+                        transactionUpdateQuery.getFinancialInstitutionTransactionId().toString());
+
+        RequestApiModel request = buildRequest(FinancialInstitutionTransaction.RESOURCE_TYPE, transaction);
+        HttpResponse response = ibanityHttpClient.patch(buildUri(url), request, transactionUpdateQuery.getAccessToken());
+        return mapResource(response, FinancialInstitutionTransaction.class);
+    }
+
     private String getUrl(
             String financialInstitutionId,
             String financialInstitutionAccountId,
@@ -93,6 +107,21 @@ public class FinancialInstitutionTransactionsServiceImpl implements FinancialIns
                 .mandateId(transactionCreationQuery.getMandateId())
                 .purposeCode(transactionCreationQuery.getPurposeCode())
                 .endToEndId(transactionCreationQuery.getEndToEndId())
+                .build();
+    }
+
+    private FinancialInstitutionTransaction requestMapping(FinancialInstitutionTransactionUpdateQuery transactionUpdateQuery) {
+        return FinancialInstitutionTransaction.builder()
+                .remittanceInformation(transactionUpdateQuery.getRemittanceInformation())
+                .counterpartName(transactionUpdateQuery.getCounterpartName())
+                .description(transactionUpdateQuery.getDescription())
+                .bankTransactionCode(transactionUpdateQuery.getBankTransactionCode())
+                .proprietaryBankTransactionCode(transactionUpdateQuery.getProprietaryBankTransactionCode())
+                .additionalInformation(transactionUpdateQuery.getAdditionalInformation())
+                .creditorId(transactionUpdateQuery.getCreditorId())
+                .mandateId(transactionUpdateQuery.getMandateId())
+                .purposeCode(transactionUpdateQuery.getPurposeCode())
+                .endToEndId(transactionUpdateQuery.getEndToEndId())
                 .build();
     }
 }

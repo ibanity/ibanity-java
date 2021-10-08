@@ -5,6 +5,7 @@ import com.ibanity.apis.client.products.ponto_connect.sandbox.models.FinancialIn
 import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.create.FinancialInstitutionTransactionCreationQuery;
 import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.read.FinancialInstitutionTransactionReadQuery;
 import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.read.FinancialInstitutionTransactionsReadQuery;
+import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.update.FinancialInstitutionTransactionUpdateQuery;
 
 public interface FinancialInstitutionTransactionsService {
 
@@ -13,4 +14,6 @@ public interface FinancialInstitutionTransactionsService {
     IbanityCollection<FinancialInstitutionTransaction> list(FinancialInstitutionTransactionsReadQuery transactionsReadQuery);
 
     FinancialInstitutionTransaction create(FinancialInstitutionTransactionCreationQuery transactionCreationQuery);
+
+    FinancialInstitutionTransaction update(FinancialInstitutionTransactionUpdateQuery transactionUpdateQuery);
 }

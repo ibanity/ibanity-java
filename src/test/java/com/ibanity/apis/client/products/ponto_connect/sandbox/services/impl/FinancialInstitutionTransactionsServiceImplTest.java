@@ -8,6 +8,7 @@ import com.ibanity.apis.client.products.ponto_connect.sandbox.models.FinancialIn
 import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.create.FinancialInstitutionTransactionCreationQuery;
 import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.read.FinancialInstitutionTransactionReadQuery;
 import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.read.FinancialInstitutionTransactionsReadQuery;
+import com.ibanity.apis.client.products.ponto_connect.sandbox.models.factory.update.FinancialInstitutionTransactionUpdateQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,7 @@ class FinancialInstitutionTransactionsServiceImplTest {
     private static final UUID FINANCIAL_INSTITUTION_ID = fromString("953934eb-229a-4fd2-8675-07794078cc7d");
     private static final String ACCESS_TOKEN = "o8drk02QucaUes24017lj8VfHSvUukpwdOAZ7N_31e4.id1xyaKQjyzxg0ceqxW7FVZSci5C5RbpJVJJSSXpFdI";
     private static final String TRANSACTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/sandbox/financial-institutions/{financialInstitutionId}/financial-institution-accounts/{financialInstitutionAccountId}/financial-institution-transactions/{financialInstitutionTransactionId}";
-    private static final String GET_TRANSACTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/sandbox/financial-institutions/953934eb-229a-4fd2-8675-07794078cc7d/financial-institution-accounts/8a532347-3e21-4783-8aec-685c7ba0ac55/financial-institution-transactions/f87f120d-1dd7-4226-8b0e-fd83c9ed631a";
+    private static final String ID_TRANSACTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/sandbox/financial-institutions/953934eb-229a-4fd2-8675-07794078cc7d/financial-institution-accounts/8a532347-3e21-4783-8aec-685c7ba0ac55/financial-institution-transactions/f87f120d-1dd7-4226-8b0e-fd83c9ed631a";
     private static final String LIST_TRANSACTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/sandbox/financial-institutions/953934eb-229a-4fd2-8675-07794078cc7d/financial-institution-accounts/8a532347-3e21-4783-8aec-685c7ba0ac55/financial-institution-transactions?page%5Blimit%5D=10";
     private static final String CREATE_TRANSACTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/sandbox/financial-institutions/953934eb-229a-4fd2-8675-07794078cc7d/financial-institution-accounts/8a532347-3e21-4783-8aec-685c7ba0ac55/financial-institution-transactions";
 
@@ -58,7 +59,7 @@ class FinancialInstitutionTransactionsServiceImplTest {
 
     @Test
     void find() throws IOException {
-        when(ibanityHttpClient.get(URI.create(GET_TRANSACTION_ENDPOINT), ACCESS_TOKEN)).thenReturn(loadHttpResponse("json/ponto-connect/financialInstitutionTransaction.json"));
+        when(ibanityHttpClient.get(URI.create(ID_TRANSACTION_ENDPOINT), ACCESS_TOKEN)).thenReturn(loadHttpResponse("json/ponto-connect/financialInstitutionTransaction.json"));
         FinancialInstitutionTransactionReadQuery request = FinancialInstitutionTransactionReadQuery.builder()
                 .accessToken(ACCESS_TOKEN)
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
@@ -106,6 +107,53 @@ class FinancialInstitutionTransactionsServiceImplTest {
         FinancialInstitutionTransaction actual = financialInstitutionTransactionsService.create(request);
 
         assertThat(actual).isEqualToComparingFieldByField(createExpected());
+    }
+
+    @Test
+    void update() throws IOException {
+        FinancialInstitutionTransactionUpdateQuery request = FinancialInstitutionTransactionUpdateQuery.builder()
+                .accessToken(ACCESS_TOKEN)
+                .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
+                .financialInstitutionAccountId(ACCOUNT_ID)
+                .financialInstitutionTransactionId(TRANSACTION_ID)
+                .remittanceInformation("NEW SHOES")
+                .description("Hole foods")
+                .bankTransactionCode("PMNT-IRCT-ESCT")
+                .proprietaryBankTransactionCode("12267")
+                .additionalInformation("Online payment on fake-tpp.com")
+                .creditorId("123498765421")
+                .mandateId("234")
+                .purposeCode("CASH")
+                .endToEndId("ref.243435343")
+                .build();
+        when(ibanityHttpClient.patch(URI.create(ID_TRANSACTION_ENDPOINT), createIbanityModel(request), ACCESS_TOKEN)).thenReturn(loadHttpResponse("json/ponto-connect/financialInstitutionTransaction.json"));
+
+        FinancialInstitutionTransaction actual = financialInstitutionTransactionsService.update(request);
+
+        assertThat(actual).isEqualToComparingFieldByField(createExpected());
+    }
+
+    private Object createIbanityModel(FinancialInstitutionTransactionUpdateQuery transactionUpdateQuery) {
+        FinancialInstitutionTransaction transaction = FinancialInstitutionTransaction.builder()
+                .remittanceInformation(transactionUpdateQuery.getRemittanceInformation())
+                .counterpartName(transactionUpdateQuery.getCounterpartName())
+                .description(transactionUpdateQuery.getDescription())
+                .bankTransactionCode(transactionUpdateQuery.getBankTransactionCode())
+                .proprietaryBankTransactionCode(transactionUpdateQuery.getProprietaryBankTransactionCode())
+                .additionalInformation(transactionUpdateQuery.getAdditionalInformation())
+                .creditorId(transactionUpdateQuery.getCreditorId())
+                .mandateId(transactionUpdateQuery.getMandateId())
+                .purposeCode(transactionUpdateQuery.getPurposeCode())
+                .endToEndId(transactionUpdateQuery.getEndToEndId())
+                .build();
+        return RequestApiModel.builder()
+                .data(
+                        RequestApiModel.RequestDataApiModel.builder()
+                                .attributes(transaction)
+                                .type(com.ibanity.apis.client.products.ponto_connect.sandbox.models.FinancialInstitutionTransaction.RESOURCE_TYPE)
+                                .build()
+                )
+                .build();
     }
 
     private Object createIbanityModel(FinancialInstitutionTransactionCreationQuery query) {
