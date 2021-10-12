@@ -29,8 +29,8 @@
             <url>https://github.com/ibanity/ibanity-java/wiki</url>
         </site>
         <snapshotRepository>
-            <id>artifactory</id>
-            <url>https://artifactory.ibanity.net/artifactory/maven-snapshots-local/</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
         <repository>
             <id>ossrh</id>
