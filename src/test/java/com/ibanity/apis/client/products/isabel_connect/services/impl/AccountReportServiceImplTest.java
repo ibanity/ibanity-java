@@ -24,12 +24,13 @@ import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.ibanity.apis.client.helpers.IbanityTestHelper.*;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadFile;
+import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static java.util.Collections.emptyMap;
 import static org.mockito.Mockito.when;
 
@@ -82,13 +83,12 @@ public class AccountReportServiceImplTest {
                 .accountReportId("123456")
                 .build();
 
-        String actual = accountReportService.find(query, httpResponse -> {
-            String res = null;
-
+        List<String> actual = accountReportService.find(query, httpResponse -> {
+            List<String> res = null;
             try {
                 InputStream content = httpResponse.getEntity().getContent();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(content, StandardCharsets.UTF_8));
-                res = reader.lines().collect(Collectors.joining("\n"));
+                res = reader.lines().collect(Collectors.toList());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -96,8 +96,7 @@ public class AccountReportServiceImplTest {
             return res;
         });
 
-        String expected = loadFile("coda/coda-sample.txt");
-        Assertions.assertThat(actual).isEqualTo(expected);
+        Assertions.assertThat(actual).hasSize(24);
     }
 
     @Test
