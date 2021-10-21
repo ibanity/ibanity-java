@@ -1,9 +1,6 @@
 package com.ibanity.apis.client.products.isabel_connect.models;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigInteger;
@@ -12,6 +9,8 @@ import java.util.Collections;
 import java.util.List;
 
 @Data
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
