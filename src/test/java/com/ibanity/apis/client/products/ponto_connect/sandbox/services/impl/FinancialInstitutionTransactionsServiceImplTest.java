@@ -101,6 +101,9 @@ class FinancialInstitutionTransactionsServiceImplTest {
                 .amount(new BigDecimal("84.42"))
                 .valueDate(Instant.parse("2020-05-22T00:00:00Z"))
                 .executionDate(Instant.parse("2020-05-25T00:00:00Z"))
+                .cardReference("6666")
+                .cardReferenceType("MASKEDPAN")
+                .fee(new BigDecimal("3.14"))
                 .build();
         when(ibanityHttpClient.post(URI.create(CREATE_TRANSACTION_ENDPOINT), createIbanityModel(request), ACCESS_TOKEN)).thenReturn(loadHttpResponse("json/ponto-connect/financialInstitutionTransaction.json"));
 
@@ -167,6 +170,9 @@ class FinancialInstitutionTransactionsServiceImplTest {
                 .valueDate(query.getValueDate())
                 .executionDate(query.getExecutionDate())
                 .description(query.getDescription())
+                .cardReference(query.getCardReference())
+                .cardReferenceType(query.getCardReferenceType())
+                .fee(query.getFee())
                 .build();
         return RequestApiModel.builder()
                 .data(
@@ -190,6 +196,9 @@ class FinancialInstitutionTransactionsServiceImplTest {
                 .amount(new BigDecimal("84.42"))
                 .valueDate(Instant.parse("2020-05-22T00:00:00Z"))
                 .executionDate(Instant.parse("2020-05-25T00:00:00Z"))
+                .cardReference("6666")
+                .cardReferenceType("MASKEDPAN")
+                .fee(new BigDecimal("3.14"))
                 .build();
     }
 }

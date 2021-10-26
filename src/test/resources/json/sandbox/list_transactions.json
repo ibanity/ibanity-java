@@ -20,7 +20,10 @@
         "purposeCode": "CASH",
         "mandateId": "12345678",
         "creditorId": "98765",
-        "additionalInformation": "addional"
+        "additionalInformation": "addional",
+        "cardReferenceType": "MASKEDPAN",
+        "cardReference": "6666",
+        "fee": 3.14
       },
       "id": "6411162a-fe6f-428e-ae52-850291497f6b",
       "links": {

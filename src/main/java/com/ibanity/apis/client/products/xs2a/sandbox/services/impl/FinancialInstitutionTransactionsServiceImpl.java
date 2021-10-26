@@ -131,6 +131,9 @@ public class FinancialInstitutionTransactionsServiceImpl implements FinancialIns
                 .mandateId(transactionCreationQuery.getMandateId())
                 .creditorId(transactionCreationQuery.getCreditorId())
                 .additionalInformation(transactionCreationQuery.getAdditionalInformation())
+                .cardReference(transactionCreationQuery.getCardReference())
+                .cardReferenceType(transactionCreationQuery.getCardReferenceType())
+                .fee(transactionCreationQuery.getFee())
                 .build();
     }
 

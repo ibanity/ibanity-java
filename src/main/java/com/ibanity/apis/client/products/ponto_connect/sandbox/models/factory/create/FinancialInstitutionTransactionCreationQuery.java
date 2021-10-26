@@ -37,4 +37,7 @@ public class FinancialInstitutionTransactionCreationQuery {
     private String mandateId;
     private String purposeCode;
     private String endToEndId;
+    private BigDecimal fee;
+    private String cardReference;
+    private String cardReferenceType;
 }

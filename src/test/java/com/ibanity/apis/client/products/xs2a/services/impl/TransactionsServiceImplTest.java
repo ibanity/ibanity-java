@@ -168,6 +168,9 @@ public class TransactionsServiceImplTest {
                 .additionalInformation("addional")
                 .selfLink(TRANSACTION_URI)
                 .id(TRANSACTION_ID)
+                .cardReference("6666")
+                .cardReferenceType("MASKEDPAN")
+                .fee(new BigDecimal("3.14"))
                 .build();
     }
 
