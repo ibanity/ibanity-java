@@ -107,6 +107,9 @@ public class FinancialInstitutionTransactionsServiceImpl implements FinancialIns
                 .mandateId(transactionCreationQuery.getMandateId())
                 .purposeCode(transactionCreationQuery.getPurposeCode())
                 .endToEndId(transactionCreationQuery.getEndToEndId())
+                .cardReference(transactionCreationQuery.getCardReference())
+                .cardReferenceType(transactionCreationQuery.getCardReferenceType())
+                .fee(transactionCreationQuery.getFee())
                 .build();
     }
 

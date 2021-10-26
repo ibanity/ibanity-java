@@ -101,6 +101,9 @@ public class TransactionServiceImplTest {
                 .additionalInformation("Aut.")
                 .digest("2acc87e558b508f7b4bd21829adee7aaace14eedde2b65ec8459201ea7a76050")
                 .internalReference("ae7976b0-78b7-492f-99d2-8e85ab5ea006")
+                .cardReference("6666")
+                .cardReferenceType("MASKEDPAN")
+                .fee(new BigDecimal("3.14"))
                 .build();
     }
 }

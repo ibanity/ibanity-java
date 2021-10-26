@@ -31,7 +31,10 @@
       "counterpartName": "Rice Ltd",
       "bankTransactionCode": "PMNT-IRCT-ESCT",
       "amount": 2.76,
-      "additionalInformation": "Aut."
+      "additionalInformation": "Aut.",
+      "cardReferenceType": "MASKEDPAN",
+      "cardReference": "6666",
+      "fee": 3.14
     }
   }
 }

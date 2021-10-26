@@ -41,4 +41,7 @@ public class Transaction implements IbanityModel {
     private String additionalInformation;
     private String digest;
     private String internalReference;
+    private BigDecimal fee;
+    private String cardReference;
+    private String cardReferenceType;
 }

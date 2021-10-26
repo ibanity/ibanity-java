@@ -11,7 +11,10 @@
       "currency": "EUR",
       "counterpartReference": "BE9786154282554",
       "counterpartName": "Otro Bank",
-      "amount": 84.42
+      "amount": 84.42,
+      "cardReference": "6666",
+      "cardReferenceType": "MASKEDPAN",
+      "fee": 3.14
     }
   }
 }
