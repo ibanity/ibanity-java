@@ -60,6 +60,7 @@ class UserinfoServiceImplTest {
     private Userinfo expected() {
         return Userinfo.builder()
                 .paymentsActivated(true)
+                .onboardingComplete(true)
                 .name("New documentation")
                 .sub("6680437c-8ed8-425b-84b7-2c31e5ca625d")
                 .build();
