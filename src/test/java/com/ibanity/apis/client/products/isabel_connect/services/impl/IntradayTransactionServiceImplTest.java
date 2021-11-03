@@ -21,6 +21,7 @@ import java.time.LocalDate;
 
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static java.util.Collections.emptyMap;
+import static java.util.UUID.fromString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -62,6 +63,7 @@ public class IntradayTransactionServiceImplTest {
 
     private IntradayTransaction createExpected() {
         return IntradayTransaction.builder()
+                .id(fromString("14e2bff5-e365-4bc7-bf48-76b7bcd464e9"))
                 .amount(new BigDecimal(80000))
                 .counterpartName("MYBESTCLIENT")
                 .counterpartAccountReference("BE21210123456703")
