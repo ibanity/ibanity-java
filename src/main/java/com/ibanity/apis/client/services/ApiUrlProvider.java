@@ -7,4 +7,6 @@ public interface ApiUrlProvider {
     String find(IbanityProduct ibanityProduct, String... paths);
 
     void loadApiSchema(IbanityProduct ibanityProduct);
+
+    String webhooksJwks();
 }

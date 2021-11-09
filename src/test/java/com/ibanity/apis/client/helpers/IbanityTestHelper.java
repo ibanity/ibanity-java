@@ -1,6 +1,7 @@
 package com.ibanity.apis.client.helpers;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.entity.StringEntity;
@@ -24,8 +25,13 @@ public class IbanityTestHelper {
     }
 
     public static HttpResponse createHttpResponse(String expected) throws UnsupportedEncodingException {
+        return createHttpResponse(expected, new Header[]{});
+    }
+
+    public static HttpResponse createHttpResponse(String expected, Header... headers) throws UnsupportedEncodingException {
         HttpResponse postResponse = new BasicHttpResponse(HTTP, 200, null);
         postResponse.setEntity(new StringEntity(expected));
+        postResponse.setHeaders(headers);
         return postResponse;
     }
 

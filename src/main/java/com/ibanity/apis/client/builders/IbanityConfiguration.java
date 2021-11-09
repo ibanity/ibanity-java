@@ -27,5 +27,8 @@ public class IbanityConfiguration {
     private int socketTimeout;
     private int connectTimeout;
     private int connectionRequestTimeout;
+    private String applicationId;
+    private int webhooksJwksCacheTTL;
+    private int webhooksJwtClockSkew;
 
 }
