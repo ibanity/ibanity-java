@@ -24,8 +24,6 @@ public class TokenRevokeQuery extends TokenQuery {
     public Map<String, String> requestArguments() {
         Map<String, String> arguments = newHashMap();
         arguments.put("token", token);
-        arguments.put("client_id", clientId);
-        arguments.put("client_secret", clientSecret);
 
         return arguments;
     }

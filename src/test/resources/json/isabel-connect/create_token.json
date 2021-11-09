@@ -1,0 +1,8 @@
+{
+  "access_token": "access_token_1603365408",
+  "expires_in": 1799,
+  "refresh_expires_in": 1800,
+  "refresh_token": "valid_refresh_token",
+  "scope": "AI PI offline_access",
+  "token_type": "Bearer"
+}

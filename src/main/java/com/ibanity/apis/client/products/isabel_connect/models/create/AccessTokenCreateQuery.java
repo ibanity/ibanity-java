@@ -25,8 +25,6 @@ public class AccessTokenCreateQuery extends TokenQuery {
         Map<String, String> arguments = newHashMap();
         arguments.put("grant_type", "refresh_token");
         arguments.put("refresh_token", refreshToken);
-        arguments.put("client_id", clientId);
-        arguments.put("client_secret", clientSecret);
 
         return arguments;
     }
