@@ -3,6 +3,7 @@ package com.ibanity.apis.client.http;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 
+import javax.net.ssl.SSLContext;
 import java.net.URI;
 import java.util.Map;
 
@@ -35,4 +36,6 @@ public interface IbanityHttpClient {
     HttpResponse patch(URI path, Object requestApiModel, Map<String, String> additionalHeaders, String customerAccessToken);
 
     HttpClient httpClient();
+
+    SSLContext sslContext();
 }

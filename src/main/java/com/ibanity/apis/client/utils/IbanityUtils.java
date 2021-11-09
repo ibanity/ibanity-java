@@ -26,6 +26,8 @@ import java.security.cert.Certificate;
 public final class IbanityUtils {
 
     public static final int DEFAULT_REQUEST_TIMEOUT = 30_000;
+    public static final int DEFAULT_JWKS_CACHE_TTL = 60_000;
+    public static final int DEFAULT_JWT_CLOCK_SKEW = 30;
 
     private static final int RETRY_COUNTS = 10;
 
@@ -103,21 +105,31 @@ public final class IbanityUtils {
         httpClientBuilder.setConnectionReuseStrategy(new DefaultClientConnectionReuseStrategy());
     }
 
-    private static SSLContext getSSLContext(Certificate caCertificate, TlsCredentials tlsCredentials) throws IOException, GeneralSecurityException {
-        KeyManager[] keyManagers = null;
-        if(tlsCredentials != null) {
-            KeyStore keyStore = createKeyStore(tlsCredentials);
-            keyManagers = createKeyManagers(keyStore, tlsCredentials.getPrivateKeyPassphrase());
+
+    public static SSLContext getSSLContext(IbanityConfiguration ibanityConfiguration) {
+        return getSSLContext(ibanityConfiguration.getCaCertificate(), ibanityConfiguration.getTlsCredentials());
+    }
+
+    public static SSLContext getSSLContext(Certificate caCertificate, TlsCredentials tlsCredentials) {
+        try {
+            KeyManager[] keyManagers = null;
+            if (tlsCredentials != null) {
+                KeyStore keyStore = createKeyStore(tlsCredentials);
+                keyManagers = createKeyManagers(keyStore, tlsCredentials.getPrivateKeyPassphrase());
+            }
+
+            TrustManager[] trustManagers = null;
+            if (caCertificate != null) {
+                KeyStore trustStore = createTrustStore(caCertificate);
+                trustManagers = createTrustManagers(trustStore);
+            }
+            SSLContext sslContext = SSLContext.getInstance(TLS_PROTOCOL);
+            sslContext.init(keyManagers, trustManagers, null);
+            return sslContext;
+        } catch (Exception exception) {
+            throw new IllegalArgumentException("An exception occurred while creating IbanityHttpClient", exception);
         }
 
-        TrustManager[] trustManagers = null;
-        if (caCertificate != null) {
-            KeyStore trustStore = createTrustStore(caCertificate);
-            trustManagers = createTrustManagers(trustStore);
-        }
-        SSLContext sslContext = SSLContext.getInstance(TLS_PROTOCOL);
-        sslContext.init(keyManagers, trustManagers, null);
-        return sslContext;
     }
 
     private static TrustManager[] createTrustManagers(KeyStore trustStore) throws KeyStoreException, NoSuchAlgorithmException {

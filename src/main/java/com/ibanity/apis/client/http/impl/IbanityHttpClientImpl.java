@@ -12,6 +12,7 @@ import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 
+import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
@@ -25,11 +26,18 @@ import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 public class IbanityHttpClientImpl implements IbanityHttpClient {
 
     private final HttpClient httpClient;
+    private final SSLContext sslContext;
     private final IbanityResponseHandler ibanityResponseHandler;
 
-    public IbanityHttpClientImpl(HttpClient httpClient) {
+    public IbanityHttpClientImpl(HttpClient httpClient, SSLContext sslContext) {
         this.httpClient = httpClient;
+        this.sslContext = sslContext;
         ibanityResponseHandler = new IbanityResponseHandler();
+    }
+
+    @Override
+    public SSLContext sslContext() {
+        return sslContext;
     }
 
     @Override
