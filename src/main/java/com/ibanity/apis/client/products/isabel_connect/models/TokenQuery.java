@@ -11,7 +11,6 @@ import static java.util.Collections.emptyMap;
 @SuperBuilder
 @Data
 public abstract class TokenQuery {
-    protected String clientId;
     protected String clientSecret;
 
     @Builder.Default

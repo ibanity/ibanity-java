@@ -25,13 +25,8 @@ public class InitialTokenCreateQuery extends TokenQuery {
     public Map<String, String> requestArguments() {
         Map<String, String> arguments = newHashMap();
         arguments.put("grant_type", "authorization_code");
-        arguments.put("client_id", clientId);
-        arguments.put("client_secret", clientSecret);
         arguments.put("code", authorizationCode);
-
-        if (redirectUri != null) {
-            arguments.put("redirect_uri", redirectUri);
-        }
+        arguments.put("redirect_uri", redirectUri);
 
         return arguments;
     }

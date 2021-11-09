@@ -94,14 +94,12 @@ public class IsabelConnectClientSample {
         InitialToken initialToken = tokenService.create(InitialTokenCreateQuery.builder()
                 .authorizationCode(authorizationCode)
                 .redirectUri(redirectUrl)
-                .clientId(clientId)
                 .clientSecret(clientSecret)
                 .build());
 
         LOGGER.info("InitialToken {}", initialToken);
 
         AccessToken accessToken = tokenService.create(AccessTokenCreateQuery.builder()
-                .clientId(clientId)
                 .clientSecret(clientSecret)
                 .refreshToken(initialToken.getRefreshToken())
                 .build());

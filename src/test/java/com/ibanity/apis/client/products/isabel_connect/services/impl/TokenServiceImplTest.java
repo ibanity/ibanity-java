@@ -61,10 +61,9 @@ public class TokenServiceImplTest {
     @Test
     public void createInitialToken() throws Exception {
         when(oAuthHttpClient.post(eq(new URI(TOKEN_ENDPOINT)), eq(emptyMap()), eq(createInitialTokenArguments()), eq(CLIENT_SECRET)))
-                .thenReturn(loadHttpResponse("json/isabel-connect/create_initial_token.json"));
+                .thenReturn(loadHttpResponse("json/isabel-connect/create_token.json"));
 
         Token actual = tokenService.create(InitialTokenCreateQuery.builder()
-                .clientId(CLIENT_ID)
                 .clientSecret(CLIENT_SECRET)
                 .authorizationCode(AUTHORIZATION_CODE)
                 .redirectUri(REDIRECT_URI)
@@ -76,10 +75,9 @@ public class TokenServiceImplTest {
     @Test
     public void createAccessToken() throws Exception {
         when(oAuthHttpClient.post(eq(new URI(TOKEN_ENDPOINT)), eq(emptyMap()), eq(createAccessTokenArguments()), eq(CLIENT_SECRET)))
-                .thenReturn(loadHttpResponse("json/isabel-connect/create_access_token.json"));
+                .thenReturn(loadHttpResponse("json/isabel-connect/create_token.json"));
 
         Token actual = tokenService.create(AccessTokenCreateQuery.builder()
-                .clientId(CLIENT_ID)
                 .clientSecret(CLIENT_SECRET)
                 .refreshToken(TOKEN)
                 .build());
@@ -93,7 +91,6 @@ public class TokenServiceImplTest {
                 .thenReturn(createHttpResponse("{}"));
 
         tokenService.revoke(TokenRevokeQuery.builder()
-                .clientId(CLIENT_ID)
                 .clientSecret(CLIENT_SECRET)
                 .token(TOKEN)
                 .build());
@@ -105,8 +102,6 @@ public class TokenServiceImplTest {
         HashMap<String, String> arguments = newHashMap();
         arguments.put("grant_type", "authorization_code");
         arguments.put("code", AUTHORIZATION_CODE);
-        arguments.put("client_id", CLIENT_ID);
-        arguments.put("client_secret", CLIENT_SECRET);
         arguments.put("redirect_uri", REDIRECT_URI);
 
         return arguments;
@@ -116,8 +111,6 @@ public class TokenServiceImplTest {
         HashMap<String, String> arguments = newHashMap();
         arguments.put("grant_type", "refresh_token");
         arguments.put("refresh_token", TOKEN);
-        arguments.put("client_id", CLIENT_ID);
-        arguments.put("client_secret", CLIENT_SECRET);
 
         return arguments;
     }
@@ -125,8 +118,6 @@ public class TokenServiceImplTest {
     private Map<String, String> revokeTokenArguments() {
         HashMap<String, String> arguments = newHashMap();
         arguments.put("token", TOKEN);
-        arguments.put("client_id", CLIENT_ID);
-        arguments.put("client_secret", CLIENT_SECRET);
 
         return arguments;
     }
@@ -136,7 +127,8 @@ public class TokenServiceImplTest {
                 .accessToken("access_token_1603365408")
                 .refreshToken("valid_refresh_token")
                 .expiresIn(1799)
-                .scope("cloudconnect")
+                .refreshExpiresIn(1800)
+                .scope("AI PI offline_access")
                 .tokenType("Bearer")
                 .build();
     }
@@ -144,8 +136,10 @@ public class TokenServiceImplTest {
     private Token createExpectedAccessToken() {
         return AccessToken.builder()
                 .accessToken("access_token_1603365408")
+                .refreshToken("valid_refresh_token")
                 .expiresIn(1799)
-                .scope("cloudconnect")
+                .refreshExpiresIn(1800)
+                .scope("AI PI offline_access")
                 .tokenType("Bearer")
                 .build();
     }
