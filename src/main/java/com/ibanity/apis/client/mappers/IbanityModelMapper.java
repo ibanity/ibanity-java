@@ -5,6 +5,7 @@ import com.ibanity.apis.client.jsonapi.DataApiModel;
 import com.ibanity.apis.client.jsonapi.ResourceApiModel;
 import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.models.IbanityModel;
+import com.ibanity.apis.client.models.webhooks.IbanityWebhooks;
 import com.ibanity.apis.client.products.xs2a.mappers.SynchronizationMapper;
 import com.ibanity.apis.client.products.xs2a.models.Synchronization;
 import com.ibanity.apis.client.utils.IbanityUtils;
@@ -26,6 +27,7 @@ public class IbanityModelMapper {
     public static <T extends IbanityModel> T mapResource(HttpResponse httpResponse, Class<T> classType) {
         return mapResource(httpResponse, dataApiModel -> toIbanityModel(dataApiModel, classType));
     }
+
     public static <T extends IbanityModel> T mapResource(HttpResponse httpResponse, Function<DataApiModel, T> customMapping) {
         try {
             String jsonPayload = readResponseContent(httpResponse.getEntity());
@@ -73,6 +75,15 @@ public class IbanityModelMapper {
         }
     }
 
+    public static <T extends IbanityWebhooks> T mapWebhookResource(String payload, Function<DataApiModel, T> customMapping) {
+        try {
+            DataApiModel dataApiModel = IbanityUtils.objectMapper().readValue(payload, ResourceApiModel.class).getData();
+            return customMapping.apply(dataApiModel);
+        } catch (IOException exception) {
+            throw new IllegalArgumentException("Response cannot be parsed", exception);
+        }
+    }
+
     private static Synchronization getLatestSynchronization(CollectionApiModel collectionApiModel) {
         if(collectionApiModel.getMeta().getLatestSynchronization() != null) {
             return SynchronizationMapper.map(collectionApiModel.getMeta().getLatestSynchronization());
@@ -91,6 +102,21 @@ public class IbanityModelMapper {
             if (data.getLinks() != null) {
                 clientObject.setSelfLink(data.getLinks().getSelf());
             }
+
+            return clientObject;
+        } catch (InstantiationException | IllegalAccessException exception) {
+            throw new RuntimeException(format("Instantiation of class %s is impossible for default constructor", classType), exception);
+        }
+    }
+
+    public static <T extends IbanityWebhooks> T toIbanityWebhooks(DataApiModel data, Class<T> classType) {
+        try {
+            T clientObject = IbanityUtils.objectMapper().convertValue(data.getAttributes(), classType);
+            if (clientObject == null) {
+                clientObject = classType.newInstance();
+            }
+
+            clientObject.setId(fromString(data.getId()));
 
             return clientObject;
         } catch (InstantiationException | IllegalAccessException exception) {

@@ -1,13 +1,10 @@
 package com.ibanity.apis.client.services;
 
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
+import com.ibanity.apis.client.models.webhooks.IbanityWebhooks;
 
 public interface WebhooksSignatureService {
 
-    void verify(HttpResponse httpResponse);
-
-    void verify(String payload, Header signatureHeader);
+    IbanityWebhooks verifyAndParseEvent(String payload, String jwt);
 
     void verify(String payload, String jwt);
 
