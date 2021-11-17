@@ -95,6 +95,7 @@ public class WebhooksSignatureServiceImplTest {
                     .setExpectedAudience(audience)
                     .setVerificationKeyResolver(mockedJwkResolver)
                     .setEvaluationTime(NumericDate.fromSeconds(DATE_FROM_JWT_GENERATION))
+                    .setExpectedIssuers(true, "https://api.ibanity.localhost")
                     .setJwsAlgorithmConstraints(new AlgorithmConstraints(PERMIT, RSA_USING_SHA512)).build();
         }
     }
