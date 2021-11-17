@@ -3,6 +3,7 @@ package com.ibanity.apis.client.services.impl;
 import com.ibanity.apis.client.builders.IbanityConfiguration;
 import com.ibanity.apis.client.exceptions.IbanityRuntimeException;
 import com.ibanity.apis.client.factory.JwtConsumerFactory;
+import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.message.BasicHeader;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
@@ -37,9 +39,12 @@ public class WebhooksSignatureServiceImplTest {
 
     private WebhooksSignatureServiceImpl webhooksSignatureService;
 
+    @Mock
+    private ApiUrlProvider apiUrlProvider;
+
     @BeforeEach
     void setUp() throws IOException, JoseException {
-        webhooksSignatureService = new WebhooksSignatureServiceImpl(getJwtConsumer(AUDIENCE, false));
+        webhooksSignatureService = new WebhooksSignatureServiceImpl(apiUrlProvider, getJwtConsumer(AUDIENCE, false));
     }
 
     @Test
@@ -59,7 +64,7 @@ public class WebhooksSignatureServiceImplTest {
 
     @Test
     public void verify_invalidAudience() throws Exception {
-        webhooksSignatureService = new WebhooksSignatureServiceImpl(getJwtConsumer("test-audience", false));
+        webhooksSignatureService = new WebhooksSignatureServiceImpl(apiUrlProvider, getJwtConsumer("test-audience", false));
 
         IbanityRuntimeException thrown = Assertions.assertThrows(IbanityRuntimeException.class, () -> webhooksSignatureService.verify(payload(), SIGNATURE_HEADER));
 
@@ -68,7 +73,7 @@ public class WebhooksSignatureServiceImplTest {
 
     @Test
     public void verify_Expiration() throws Exception {
-        webhooksSignatureService = new WebhooksSignatureServiceImpl(getJwtConsumer(AUDIENCE, true));
+        webhooksSignatureService = new WebhooksSignatureServiceImpl(apiUrlProvider, getJwtConsumer(AUDIENCE, true));
 
         IbanityRuntimeException thrown = Assertions.assertThrows(IbanityRuntimeException.class, () -> webhooksSignatureService.verify(payload(), JWT));
 

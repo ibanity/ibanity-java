@@ -17,7 +17,7 @@ public class HttpsJwksVerificationKeyResolverFactory {
         Get simpleHttpGet = new Get();
         simpleHttpGet.setSslSocketFactory(sslContext.getSocketFactory());
 
-        HttpsJwks httpsJwks = new HttpsJwks(apiUrlProvider.webhooksJwks());
+        HttpsJwks httpsJwks = new HttpsJwks(apiUrlProvider.find("webhooks", "keys"));
         httpsJwks.setRefreshReprieveThreshold(keysCacheExpirationSeconds);
         httpsJwks.setSimpleHttpGet(simpleHttpGet);
 

@@ -10,4 +10,6 @@ public interface WebhooksSignatureService {
     void verify(String payload, Header signatureHeader);
 
     void verify(String payload, String jwt);
+
+    String keys();
 }

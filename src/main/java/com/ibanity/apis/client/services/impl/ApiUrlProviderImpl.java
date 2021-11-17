@@ -48,7 +48,7 @@ public class ApiUrlProviderImpl implements ApiUrlProvider {
         return find(productPath, paths);
     }
 
-    private String find(String rootPath, String[] subPaths) {
+    public String find(String rootPath, String[] subPaths) {
         try {
             JsonNode apiUrls = this.apiUrls.get(rootPath);
 
@@ -89,11 +89,6 @@ public class ApiUrlProviderImpl implements ApiUrlProvider {
         } catch (IOException exception) {
             throw new IllegalArgumentException("Cannot parse api schema", exception);
         }
-    }
-
-    @Override
-    public String webhooksJwks() {
-        return find("webhooks", new String[]{"keys"});
     }
 
     private String targetUrl() {
