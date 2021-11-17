@@ -83,7 +83,7 @@ public class IbanityServiceImpl implements IbanityService {
         VerificationKeyResolver verificationKeyResolver = HttpsJwksVerificationKeyResolverFactory.build(apiUrlProvider, ibanityConfiguration, sslContext);
         JwtConsumer jwtConsumer = JwtConsumerFactory.build(ibanityConfiguration, verificationKeyResolver);
 
-        this.webhooksSignatureService = new WebhooksSignatureServiceImpl(jwtConsumer);
+        this.webhooksSignatureService = new WebhooksSignatureServiceImpl(apiUrlProvider, jwtConsumer);
     }
 
     @Override

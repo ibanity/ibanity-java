@@ -1,6 +1,7 @@
 package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.exceptions.IbanityRuntimeException;
+import com.ibanity.apis.client.services.ApiUrlProvider;
 import com.ibanity.apis.client.services.WebhooksSignatureService;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -17,9 +18,11 @@ import static com.ibanity.apis.client.utils.WebhooksUtils.getDigest;
 public class WebhooksSignatureServiceImpl implements WebhooksSignatureService {
 
     private final JwtConsumer jwtConsumer;
+    private final ApiUrlProvider apiUrlProvider;
 
-    public WebhooksSignatureServiceImpl(JwtConsumer jwtConsumer) {
+    public WebhooksSignatureServiceImpl(ApiUrlProvider apiUrlProvider, JwtConsumer jwtConsumer) {
         this.jwtConsumer = jwtConsumer;
+        this.apiUrlProvider = apiUrlProvider;
     }
 
     @Override
@@ -47,5 +50,10 @@ public class WebhooksSignatureServiceImpl implements WebhooksSignatureService {
         } catch (InvalidJwtException | MalformedClaimException e) {
             throw new IbanityRuntimeException(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public String keys() {
+        return apiUrlProvider.find("webhooks", "keys");
     }
 }
