@@ -16,5 +16,5 @@ public interface IbanityService {
 
     IsabelConnectService isabelConnectService();
 
-    WebhooksSignatureService webhooksSignatureService();
+    WebhooksService webhooksService();
 }

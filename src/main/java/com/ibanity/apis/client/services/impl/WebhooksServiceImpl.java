@@ -6,7 +6,7 @@ import com.ibanity.apis.client.exceptions.IbanityRuntimeException;
 import com.ibanity.apis.client.models.webhooks.IbanityWebhooks;
 import com.ibanity.apis.client.models.webhooks.xs2a.*;
 import com.ibanity.apis.client.services.ApiUrlProvider;
-import com.ibanity.apis.client.services.WebhooksSignatureService;
+import com.ibanity.apis.client.services.WebhooksService;
 import com.ibanity.apis.client.utils.IbanityUtils;
 import org.jose4j.jwt.MalformedClaimException;
 import org.jose4j.jwt.consumer.InvalidJwtException;
@@ -16,12 +16,12 @@ import org.jose4j.jwt.consumer.JwtContext;
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapWebhookResource;
 import static com.ibanity.apis.client.utils.WebhooksUtils.getDigest;
 
-public class WebhooksSignatureServiceImpl implements WebhooksSignatureService {
+public class WebhooksServiceImpl implements WebhooksService {
 
     private final JwtConsumer jwtConsumer;
     private final ApiUrlProvider apiUrlProvider;
 
-    public WebhooksSignatureServiceImpl(ApiUrlProvider apiUrlProvider, JwtConsumer jwtConsumer) {
+    public WebhooksServiceImpl(ApiUrlProvider apiUrlProvider, JwtConsumer jwtConsumer) {
         this.jwtConsumer = jwtConsumer;
         this.apiUrlProvider = apiUrlProvider;
     }

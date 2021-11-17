@@ -2,7 +2,7 @@ package com.ibanity.apis.client.services;
 
 import com.ibanity.apis.client.models.webhooks.IbanityWebhooks;
 
-public interface WebhooksSignatureService {
+public interface WebhooksService {
 
     IbanityWebhooks verifyAndParseEvent(String payload, String jwt);
 

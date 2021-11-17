@@ -30,20 +30,20 @@ import static org.jose4j.jwa.AlgorithmConstraints.ConstraintType.PERMIT;
 import static org.jose4j.jws.AlgorithmIdentifiers.RSA_USING_SHA512;
 
 @ExtendWith({MockitoExtension.class})
-public class WebhooksSignatureServiceImplTest {
+public class WebhooksServiceImplTest {
 
     private static final String JWT = "eyJhbGciOiJSUzUxMiIsImtpZCI6InZlcnlfc2VjdXJlX2tleV8xIn0.eyJhdWQiOiJhZjYxNzM2NS0xYzNmLTQzNTUtOWM4NC0wOWRiNzc1MTIwNWQiLCJkaWdlc3QiOiJyNDNZbHAxN3NjMWF4NWVybHlHaDZWMnBzWGVEVjBWUWM0eTk3cDRoWVVjaEYvS1pPbDVBcGxuL3ZYSkNZZC9maWpWUUZyL1QrSWpBVWtJWXJlcUx5QT09IiwiZXhwIjoxNjM2NTU0NDY0LCJpYXQiOjE2MzY1NTQ0MDQsImlzcyI6Imh0dHBzOi8vYXBpLmliYW5pdHkubG9jYWxob3N0IiwianRpIjoiOWZkODE3YmQtMTcwMC00YmIxLThhNzktNmYzYTc1OTE3ZmI3In0.NxrkGr0X7bYKuUtrDVyDl5GZpNVlcrVIfk6zEHsO6xYdXx78WFjKaZXwa0pATt2p152Ww4PlT262dE2B5KPvbuMvEs1On327IZPD7pgN8dweUgdZMqYj7t3zNo-qboRZhY1K2PU74Tcp4erBOKQYmffm5KSJzAmVPvHFIJgJslk6caRAPYMnS6vGXcTNRPcyNOcDrSq3YVbLvNMCnuGWRSTDB0OHxhDRXWTxdQ5_YihewenWI0GOE7NsbQqewFjmHWdIOiYcS8lAIeqcPxt4k_1lvRPM2cMCIJJ_aXQ_Kekit9i8ERWcvnLqGKMY7SHRiDq_uxO9ujgK4U5o_f_wMZCzKdqLpgEyQDUoUG6zAkqf4-9cEuHZtPir5zzZIOYvS_nOhOYJVfTQ49rW0Y6oIjqQgQziBfqYcK3l8ILt2eAL7nGoBwmihH37BWSiRwKz2UjqRT7RnAPerMtaWd9kfhdus-3UlxZfDqzrxkJYU9Liehc8BP74jyScyByXDxzlBOvftZ7VIKBFkSimmezDbDI76ob0XMCPXYTlq_8tyhQiAnfpRJJkDvJD-a-mWEzCAX8p8Aqf5dY2iVAkQDxCHcv3hc0GgSAlrCQ8H0rzY4BlbPKMw4RiOvPRCRQtXV8FEickFC_fJMMdads4DpK01QpBXQmJcAekIQA1HrfMniI";
     private static final String AUDIENCE = "af617365-1c3f-4355-9c84-09db7751205d";
     private static final int DATE_FROM_JWT_GENERATION = 1636554460;
 
-    private WebhooksSignatureServiceImpl webhooksSignatureService;
+    private WebhooksServiceImpl webhooksSignatureService;
 
     @Mock
     private ApiUrlProvider apiUrlProvider;
 
     @BeforeEach
     void setUp() throws IOException, JoseException {
-        webhooksSignatureService = new WebhooksSignatureServiceImpl(apiUrlProvider, getJwtConsumer(AUDIENCE, false));
+        webhooksSignatureService = new WebhooksServiceImpl(apiUrlProvider, getJwtConsumer(AUDIENCE, false));
     }
 
     @Test
@@ -77,7 +77,7 @@ public class WebhooksSignatureServiceImplTest {
 
     @Test
     public void verify_invalidAudience() throws Exception {
-        webhooksSignatureService = new WebhooksSignatureServiceImpl(apiUrlProvider, getJwtConsumer("test-audience", false));
+        webhooksSignatureService = new WebhooksServiceImpl(apiUrlProvider, getJwtConsumer("test-audience", false));
 
         IbanityRuntimeException thrown = Assertions.assertThrows(IbanityRuntimeException.class, () -> webhooksSignatureService.verify(payload(), JWT));
 
@@ -86,7 +86,7 @@ public class WebhooksSignatureServiceImplTest {
 
     @Test
     public void verify_Expiration() throws Exception {
-        webhooksSignatureService = new WebhooksSignatureServiceImpl(apiUrlProvider, getJwtConsumer(AUDIENCE, true));
+        webhooksSignatureService = new WebhooksServiceImpl(apiUrlProvider, getJwtConsumer(AUDIENCE, true));
 
         IbanityRuntimeException thrown = Assertions.assertThrows(IbanityRuntimeException.class, () -> webhooksSignatureService.verify(payload(), JWT));
 
