@@ -16,6 +16,7 @@ public class JwtConsumerFactory {
                 .setAllowedClockSkewInSeconds(ibanityConfiguration.getWebhooksJwtClockSkew())
                 .setRequireExpirationTime()
                 .setRequireIssuedAt()
+                .setExpectedIssuers(true, ibanityConfiguration.getApiEndpoint())
                 .setExpectedAudience(ibanityConfiguration.getApplicationId())
                 .setVerificationKeyResolver(verificationKeyResolver)
                 .setJwsAlgorithmConstraints(new AlgorithmConstraints(PERMIT, RSA_USING_SHA512))
