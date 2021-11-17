@@ -15,7 +15,7 @@ import com.ibanity.apis.client.products.xs2a.services.Xs2aService;
 import com.ibanity.apis.client.products.xs2a.services.impl.Xs2aServiceImpl;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import com.ibanity.apis.client.services.IbanityService;
-import com.ibanity.apis.client.services.WebhooksSignatureService;
+import com.ibanity.apis.client.services.WebhooksService;
 import com.ibanity.apis.client.utils.IbanityUtils;
 import org.apache.http.client.HttpClient;
 import org.jose4j.jwt.consumer.JwtConsumer;
@@ -34,7 +34,7 @@ public class IbanityServiceImpl implements IbanityService {
     private final OAuthHttpClient pontoConnectOAuthHttpClient;
     private final IsabelConnectService isabelConnectService;
     private final OAuthHttpClient isabelConnectOAuthHttpClient;
-    private final WebhooksSignatureService webhooksSignatureService;
+    private final WebhooksService webhooksService;
 
     public IbanityServiceImpl(ApiUrlProvider apiUrlProvider,
                               IbanityHttpClient ibanityHttpClient,
@@ -43,7 +43,7 @@ public class IbanityServiceImpl implements IbanityService {
                               IsabelConnectService isabelConnectService,
                               OAuthHttpClient pontoConnectOAuthHttpClient,
                               OAuthHttpClient isabelConnectOAuthHttpClient,
-                              WebhooksSignatureService webhooksSignatureService) {
+                              WebhooksService webhooksService) {
         this.apiUrlProvider = apiUrlProvider;
         this.ibanityHttpClient = ibanityHttpClient;
         this.xs2aService = xs2aService;
@@ -51,7 +51,7 @@ public class IbanityServiceImpl implements IbanityService {
         this.isabelConnectService = isabelConnectService;
         this.pontoConnectOAuthHttpClient = pontoConnectOAuthHttpClient;
         this.isabelConnectOAuthHttpClient = isabelConnectOAuthHttpClient;
-        this.webhooksSignatureService = webhooksSignatureService;
+        this.webhooksService = webhooksService;
     }
 
     public IbanityServiceImpl(IbanityConfiguration ibanityConfiguration) {
@@ -83,7 +83,7 @@ public class IbanityServiceImpl implements IbanityService {
         VerificationKeyResolver verificationKeyResolver = HttpsJwksVerificationKeyResolverFactory.build(apiUrlProvider, ibanityConfiguration, sslContext);
         JwtConsumer jwtConsumer = JwtConsumerFactory.build(ibanityConfiguration, verificationKeyResolver);
 
-        this.webhooksSignatureService = new WebhooksSignatureServiceImpl(apiUrlProvider, jwtConsumer);
+        this.webhooksService = new WebhooksServiceImpl(apiUrlProvider, jwtConsumer);
     }
 
     @Override
@@ -97,12 +97,12 @@ public class IbanityServiceImpl implements IbanityService {
     }
 
     @Override
-    public WebhooksSignatureService webhooksSignatureService() {
-        if (webhooksSignatureService == null) {
+    public WebhooksService webhooksService() {
+        if (webhooksService == null) {
             throw new IllegalStateException("webhooksSignatureService was not properly initialized. Did you configure applicationId?");
         }
 
-        return webhooksSignatureService;
+        return webhooksService;
     }
 
     @Override

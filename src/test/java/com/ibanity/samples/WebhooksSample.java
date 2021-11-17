@@ -2,7 +2,7 @@ package com.ibanity.samples;
 
 import com.ibanity.apis.client.builders.IbanityServiceBuilder;
 import com.ibanity.apis.client.builders.OptionalPropertiesBuilder;
-import com.ibanity.apis.client.services.WebhooksSignatureService;
+import com.ibanity.apis.client.services.WebhooksService;
 
 import java.io.IOException;
 import java.security.cert.CertificateException;
@@ -28,7 +28,7 @@ public class WebhooksSample {
                 .applicationId(getConfiguration(IBANITY_APPLICATION_ID))
                 ;
 
-        WebhooksSignatureService webhooksSignatureService = ibanityServiceBuilder.build().webhooksSignatureService();
-        webhooksSignatureService.verify(PAYLOAD, JWT);
+        WebhooksService webhooksService = ibanityServiceBuilder.build().webhooksService();
+        webhooksService.verify(PAYLOAD, JWT);
     }
 }
