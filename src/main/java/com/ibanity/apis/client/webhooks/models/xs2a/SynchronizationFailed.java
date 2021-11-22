@@ -1,8 +1,8 @@
-package com.ibanity.apis.client.models.webhooks.xs2a;
+package com.ibanity.apis.client.webhooks.models.xs2a;
 
 import com.ibanity.apis.client.jsonapi.DataApiModel;
 import com.ibanity.apis.client.jsonapi.RelationshipsApiModel;
-import com.ibanity.apis.client.models.webhooks.IbanityWebhooks;
+import com.ibanity.apis.client.models.IbanityWebhookEvent;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,16 +13,19 @@ import java.time.Instant;
 import java.util.UUID;
 import java.util.function.Function;
 
-import static com.ibanity.apis.client.mappers.IbanityModelMapper.toIbanityWebhooks;
+import static com.ibanity.apis.client.mappers.IbanityWebhookEventMapper.toIbanityWebhooks;
 import static java.util.UUID.fromString;
 
 @Data
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class SynchronizationFailed implements IbanityWebhooks {
+public class SynchronizationFailed implements IbanityWebhookEvent {
+
+    public final static String TYPE = "xs2a.synchronization.failed";
 
     private UUID id;
+    private String type;
     private UUID accountId;
     private UUID synchronizationId;
     private String synchronizationSubtype;

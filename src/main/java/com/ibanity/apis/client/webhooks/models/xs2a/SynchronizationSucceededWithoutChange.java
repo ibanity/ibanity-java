@@ -1,8 +1,8 @@
-package com.ibanity.apis.client.models.webhooks.xs2a;
+package com.ibanity.apis.client.webhooks.models.xs2a;
 
 import com.ibanity.apis.client.jsonapi.DataApiModel;
 import com.ibanity.apis.client.jsonapi.RelationshipsApiModel;
-import com.ibanity.apis.client.models.webhooks.IbanityWebhooks;
+import com.ibanity.apis.client.models.IbanityWebhookEvent;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,24 +13,27 @@ import java.time.Instant;
 import java.util.UUID;
 import java.util.function.Function;
 
-import static com.ibanity.apis.client.mappers.IbanityModelMapper.toIbanityWebhooks;
+import static com.ibanity.apis.client.mappers.IbanityWebhookEventMapper.toIbanityWebhooks;
 import static java.util.UUID.fromString;
 
 @Data
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class AccountDetailsUpdated implements IbanityWebhooks {
+public class SynchronizationSucceededWithoutChange implements IbanityWebhookEvent {
+
+    public final static String TYPE = "xs2a.synchronization.succeededWithoutChange";
 
     private UUID id;
-    private UUID type;
+    private String type;
     private UUID accountId;
     private UUID synchronizationId;
+    private String synchronizationSubtype;
     private Instant createdAt;
 
-    public static Function<DataApiModel, AccountDetailsUpdated> mappingFunction() {
+    public static Function<DataApiModel, SynchronizationSucceededWithoutChange> mappingFunction() {
         return dataApiModel -> {
-            AccountDetailsUpdated accountTransactionsCreated = toIbanityWebhooks(dataApiModel, AccountDetailsUpdated.class);
+            SynchronizationSucceededWithoutChange accountTransactionsCreated = toIbanityWebhooks(dataApiModel, SynchronizationSucceededWithoutChange.class);
 
             RelationshipsApiModel accountRelationship = dataApiModel.getRelationships().get("account");
             if (accountRelationship != null) {
@@ -45,5 +48,4 @@ public class AccountDetailsUpdated implements IbanityWebhooks {
             return accountTransactionsCreated;
         };
     }
-
 }
