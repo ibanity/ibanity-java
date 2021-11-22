@@ -2,7 +2,9 @@ package com.ibanity.samples;
 
 import com.ibanity.apis.client.builders.IbanityServiceBuilder;
 import com.ibanity.apis.client.builders.OptionalPropertiesBuilder;
-import com.ibanity.apis.client.services.WebhooksService;
+import com.ibanity.apis.client.models.IbanityWebhookEvent;
+import com.ibanity.apis.client.webhooks.models.xs2a.*;
+import com.ibanity.apis.client.webhooks.services.WebhooksService;
 
 import java.io.IOException;
 import java.security.cert.CertificateException;
@@ -24,11 +26,30 @@ public class WebhooksSample {
                 .passphrase(passphrase)
                 .tlsCertificate(loadCertificate(getConfiguration(IBANITY_CLIENT_TLS_CERTIFICATE_PATH_PROPERTY_KEY)))
                 .webhooksJwksCacheTTLMillis(30_000)
-                .webhooksJwtClockSkewSeconds(3600)
+                .webhooksJwtClockSkewSeconds(3600000)
                 .applicationId(getConfiguration(IBANITY_APPLICATION_ID))
                 ;
 
         WebhooksService webhooksService = ibanityServiceBuilder.build().webhooksService();
-        webhooksService.verify(PAYLOAD, JWT);
+        IbanityWebhookEvent ibanityWebhookEvent = webhooksService.verifyAndParseEvent(PAYLOAD, JWT);
+        switch (ibanityWebhookEvent.getType()) {
+            case AccountTransactionsCreated.TYPE:
+                System.out.println("AccountTransactionsCreated received");
+                break;
+            case AccountDetailsUpdated.TYPE:
+                System.out.println("AccountDetailsUpdated received");
+                break;
+            case AccountTransactionsUpdated.TYPE:
+                System.out.println("AccountTransactionsUpdated received");
+                break;
+            case SynchronizationFailed.TYPE:
+                System.out.println("SynchronizationFailed received");
+                break;
+            case SynchronizationSucceededWithoutChange.TYPE:
+                System.out.println("SynchronizationSucceededWithoutChange received");
+                break;
+        }
+
+
     }
 }

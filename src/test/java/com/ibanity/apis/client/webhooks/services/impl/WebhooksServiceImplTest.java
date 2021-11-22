@@ -1,11 +1,11 @@
-package com.ibanity.apis.client.services.impl;
+package com.ibanity.apis.client.webhooks.services.impl;
 
 import com.ibanity.apis.client.builders.IbanityConfiguration;
 import com.ibanity.apis.client.exceptions.IbanityRuntimeException;
 import com.ibanity.apis.client.factory.JwtConsumerFactory;
-import com.ibanity.apis.client.models.webhooks.IbanityWebhooks;
-import com.ibanity.apis.client.models.webhooks.xs2a.SynchronizationSucceededWithoutChange;
+import com.ibanity.apis.client.models.IbanityWebhookEvent;
 import com.ibanity.apis.client.services.ApiUrlProvider;
+import com.ibanity.apis.client.webhooks.models.xs2a.SynchronizationSucceededWithoutChange;
 import org.jose4j.jwa.AlgorithmConstraints;
 import org.jose4j.jwk.JsonWebKeySet;
 import org.jose4j.jwt.NumericDate;
@@ -53,7 +53,7 @@ public class WebhooksServiceImplTest {
 
     @Test
     public void verifyAndParseEvent() throws Exception {
-        IbanityWebhooks webhooks = webhooksSignatureService.verifyAndParseEvent(payload(), JWT);
+        IbanityWebhookEvent webhooks = webhooksSignatureService.verifyAndParseEvent(payload(), JWT);
         assertThat(webhooks).isInstanceOf(SynchronizationSucceededWithoutChange.class);
         assertThat(webhooks).isEqualToComparingFieldByFieldRecursively(createExpectedWebhook());
     }

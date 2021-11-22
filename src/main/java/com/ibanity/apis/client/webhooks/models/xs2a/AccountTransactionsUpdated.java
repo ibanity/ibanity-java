@@ -1,8 +1,8 @@
-package com.ibanity.apis.client.models.webhooks.xs2a;
+package com.ibanity.apis.client.webhooks.models.xs2a;
 
 import com.ibanity.apis.client.jsonapi.DataApiModel;
 import com.ibanity.apis.client.jsonapi.RelationshipsApiModel;
-import com.ibanity.apis.client.models.webhooks.IbanityWebhooks;
+import com.ibanity.apis.client.models.IbanityWebhookEvent;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,24 +13,27 @@ import java.time.Instant;
 import java.util.UUID;
 import java.util.function.Function;
 
-import static com.ibanity.apis.client.mappers.IbanityModelMapper.toIbanityWebhooks;
+import static com.ibanity.apis.client.mappers.IbanityWebhookEventMapper.toIbanityWebhooks;
 import static java.util.UUID.fromString;
 
 @Data
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class AccountTransactionsCreated implements IbanityWebhooks {
+public class AccountTransactionsUpdated implements IbanityWebhookEvent {
+
+    public final static String TYPE = "xs2a.account.transactionsUpdated";
 
     private UUID id;
+    private String type;
     private UUID accountId;
-    private int count;
     private UUID synchronizationId;
+    private int count;
     private Instant createdAt;
 
-    public static Function<DataApiModel, AccountTransactionsCreated> mappingFunction() {
+    public static Function<DataApiModel, AccountTransactionsUpdated> mappingFunction() {
         return dataApiModel -> {
-            AccountTransactionsCreated accountTransactionsCreated = toIbanityWebhooks(dataApiModel, AccountTransactionsCreated.class);
+            AccountTransactionsUpdated accountTransactionsCreated = toIbanityWebhooks(dataApiModel, AccountTransactionsUpdated.class);
 
             RelationshipsApiModel accountRelationship = dataApiModel.getRelationships().get("account");
             if (accountRelationship != null) {
