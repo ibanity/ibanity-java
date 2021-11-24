@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.utils;
 
+import com.ibanity.apis.client.exceptions.IbanityRuntimeException;
 import com.ibanity.apis.client.models.IbanityWebhookEvent;
 import com.ibanity.apis.client.webhooks.models.xs2a.*;
 import org.apache.commons.codec.digest.MessageDigestAlgorithms;
@@ -12,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 import static com.ibanity.apis.client.mappers.IbanityWebhookEventMapper.mapWebhookResource;
+import static java.lang.String.format;
 
 public class WebhooksUtils {
 
@@ -42,25 +44,44 @@ public class WebhooksUtils {
     }
 
     public static IbanityWebhookEvent webhookEventParser(String payload, String type) {
-        IbanityWebhookEvent ibanityWebhookEvent = null;
+        if (type.contains("xs2a.")) {
+            return parseXs2aEvent(payload, type);
+        } else {
+            return parsePontoConnectEvent(payload, type);
+        }
+    }
+
+    private static IbanityWebhookEvent parseXs2aEvent(String payload, String type) {
         switch (type) {
-            case "xs2a.account.detailsUpdated":
-                ibanityWebhookEvent = mapWebhookResource(payload, AccountDetailsUpdated.mappingFunction());
-                break;
-            case "xs2a.account.transactionsCreated":
-                ibanityWebhookEvent = mapWebhookResource(payload, AccountTransactionsCreated.mappingFunction());
-                break;
-            case "xs2a.account.transactionsUpdated":
-                ibanityWebhookEvent = mapWebhookResource(payload, AccountTransactionsUpdated.mappingFunction());
-                break;
-            case "xs2a.synchronization.failed":
-                ibanityWebhookEvent = mapWebhookResource(payload, SynchronizationFailed.mappingFunction());
-                break;
-            case "xs2a.synchronization.succeededWithoutChange":
-                ibanityWebhookEvent = mapWebhookResource(payload, SynchronizationSucceededWithoutChange.mappingFunction());
-                break;
+            case AccountDetailsUpdated.TYPE:
+                return mapWebhookResource(payload, AccountDetailsUpdated.mappingFunction());
+            case AccountTransactionsCreated.TYPE:
+                return mapWebhookResource(payload, AccountTransactionsCreated.mappingFunction());
+            case AccountTransactionsUpdated.TYPE:
+                return mapWebhookResource(payload, AccountTransactionsUpdated.mappingFunction());
+            case SynchronizationFailed.TYPE:
+                return mapWebhookResource(payload, SynchronizationFailed.mappingFunction());
+            case SynchronizationSucceededWithoutChange.TYPE:
+                return mapWebhookResource(payload, SynchronizationSucceededWithoutChange.mappingFunction());
         }
 
-        return ibanityWebhookEvent;
+        throw new IbanityRuntimeException(format("Event Type not handled by the java library \"%s\".", type));
+    }
+
+    private static IbanityWebhookEvent parsePontoConnectEvent(String payload, String type) {
+        switch (type) {
+            case com.ibanity.apis.client.webhooks.models.ponto_connect.AccountDetailsUpdated.TYPE:
+                return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.AccountDetailsUpdated.mappingFunction());
+            case com.ibanity.apis.client.webhooks.models.ponto_connect.AccountTransactionsCreated.TYPE:
+                return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.AccountTransactionsCreated.mappingFunction());
+            case com.ibanity.apis.client.webhooks.models.ponto_connect.AccountTransactionsUpdated.TYPE:
+                return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.AccountTransactionsUpdated.mappingFunction());
+            case com.ibanity.apis.client.webhooks.models.ponto_connect.SynchronizationFailed.TYPE:
+                return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.SynchronizationFailed.mappingFunction());
+            case com.ibanity.apis.client.webhooks.models.ponto_connect.SynchronizationSucceededWithoutChange.TYPE:
+                return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.SynchronizationSucceededWithoutChange.mappingFunction());
+        }
+
+        throw new IbanityRuntimeException(format("Event Type not handled by the java library \"%s\".", type));
     }
 }
