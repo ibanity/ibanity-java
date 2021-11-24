@@ -141,6 +141,6 @@ public class WebhooksServiceImplTest {
     }
 
     private String payload() throws IOException {
-        return loadFile("json/webhooks/payload.json").trim();
+        return loadFile("json/webhooks/xs2a/synchronizationSucceededWithoutChange.json").trim();
     }
 }

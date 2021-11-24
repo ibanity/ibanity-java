@@ -36,7 +36,6 @@ public class WebhooksServiceImpl implements WebhooksService {
     @Override
     public IbanityWebhookEvent verifyAndParseEvent(String payload, String jwt) {
         verify(payload, jwt);
-
         try {
             JsonNode jsonNode = IbanityUtils.objectMapper().readTree(payload);
             String type = jsonNode.get("data").get("type").textValue();
