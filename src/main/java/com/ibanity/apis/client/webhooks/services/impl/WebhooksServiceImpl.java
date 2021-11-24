@@ -7,7 +7,7 @@ import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityWebhookEvent;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import com.ibanity.apis.client.utils.IbanityUtils;
-import com.ibanity.apis.client.webhooks.models.xs2a.*;
+import com.ibanity.apis.client.utils.WebhooksUtils;
 import com.ibanity.apis.client.webhooks.services.WebhooksService;
 import org.apache.http.HttpResponse;
 import org.jose4j.jwt.MalformedClaimException;
@@ -17,7 +17,6 @@ import org.jose4j.jwt.consumer.JwtContext;
 
 import java.io.IOException;
 
-import static com.ibanity.apis.client.mappers.IbanityWebhookEventMapper.mapWebhookResource;
 import static com.ibanity.apis.client.mappers.ModelMapperHelper.readResponseContent;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static com.ibanity.apis.client.utils.WebhooksUtils.getDigest;
@@ -41,7 +40,7 @@ public class WebhooksServiceImpl implements WebhooksService {
         try {
             JsonNode jsonNode = IbanityUtils.objectMapper().readTree(payload);
             String type = jsonNode.get("data").get("type").textValue();
-            return webhookEventParser(payload, type);
+            return WebhooksUtils.webhookEventParser(payload, type);
         } catch (JsonProcessingException exception) {
             throw new IllegalArgumentException("Response cannot be parsed", exception);
         }
@@ -68,28 +67,5 @@ public class WebhooksServiceImpl implements WebhooksService {
         } catch (IOException e) {
             throw new IllegalArgumentException("Response cannot be parsed", e);
         }
-    }
-
-    private IbanityWebhookEvent webhookEventParser(String payload, String type) {
-        IbanityWebhookEvent ibanityWebhookEvent = null;
-        switch (type) {
-            case "xs2a.account.detailsUpdated":
-                ibanityWebhookEvent = mapWebhookResource(payload, AccountDetailsUpdated.mappingFunction());
-                break;
-            case "xs2a.account.transactionsCreated":
-                ibanityWebhookEvent = mapWebhookResource(payload, AccountTransactionsCreated.mappingFunction());
-                break;
-            case "xs2a.account.transactionsUpdated":
-                ibanityWebhookEvent = mapWebhookResource(payload, AccountTransactionsUpdated.mappingFunction());
-                break;
-            case "xs2a.synchronization.failed":
-                ibanityWebhookEvent = mapWebhookResource(payload, SynchronizationFailed.mappingFunction());
-                break;
-            case "xs2a.synchronization.succeededWithoutChange":
-                ibanityWebhookEvent = mapWebhookResource(payload, SynchronizationSucceededWithoutChange.mappingFunction());
-                break;
-        }
-
-        return ibanityWebhookEvent;
     }
 }
