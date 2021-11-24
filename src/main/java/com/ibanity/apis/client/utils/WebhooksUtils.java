@@ -1,5 +1,7 @@
 package com.ibanity.apis.client.utils;
 
+import com.ibanity.apis.client.models.IbanityWebhookEvent;
+import com.ibanity.apis.client.webhooks.models.xs2a.*;
 import org.apache.commons.codec.digest.MessageDigestAlgorithms;
 
 import java.io.BufferedInputStream;
@@ -8,6 +10,8 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+
+import static com.ibanity.apis.client.mappers.IbanityWebhookEventMapper.mapWebhookResource;
 
 public class WebhooksUtils {
 
@@ -35,5 +39,28 @@ public class WebhooksUtils {
         }
 
         return Base64.getEncoder().encodeToString(md.digest());
+    }
+
+    public static IbanityWebhookEvent webhookEventParser(String payload, String type) {
+        IbanityWebhookEvent ibanityWebhookEvent = null;
+        switch (type) {
+            case "xs2a.account.detailsUpdated":
+                ibanityWebhookEvent = mapWebhookResource(payload, AccountDetailsUpdated.mappingFunction());
+                break;
+            case "xs2a.account.transactionsCreated":
+                ibanityWebhookEvent = mapWebhookResource(payload, AccountTransactionsCreated.mappingFunction());
+                break;
+            case "xs2a.account.transactionsUpdated":
+                ibanityWebhookEvent = mapWebhookResource(payload, AccountTransactionsUpdated.mappingFunction());
+                break;
+            case "xs2a.synchronization.failed":
+                ibanityWebhookEvent = mapWebhookResource(payload, SynchronizationFailed.mappingFunction());
+                break;
+            case "xs2a.synchronization.succeededWithoutChange":
+                ibanityWebhookEvent = mapWebhookResource(payload, SynchronizationSucceededWithoutChange.mappingFunction());
+                break;
+        }
+
+        return ibanityWebhookEvent;
     }
 }
