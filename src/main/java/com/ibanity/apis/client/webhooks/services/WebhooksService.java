@@ -8,5 +8,5 @@ public interface WebhooksService {
 
     void verify(String payload, String jwt);
 
-    String keys();
+    KeysService keysService();
 }

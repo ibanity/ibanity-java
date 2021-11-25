@@ -31,7 +31,7 @@ public class WebhooksSample {
                 ;
 
         WebhooksService webhooksService = ibanityServiceBuilder.build().webhooksService();
-        System.out.println(webhooksService.keys());
+        System.out.println(webhooksService.keysService().list());
         IbanityWebhookEvent ibanityWebhookEvent = webhooksService.verifyAndParseEvent(PAYLOAD, JWT);
         switch (ibanityWebhookEvent.getType()) {
             case AccountTransactionsCreated.TYPE:
