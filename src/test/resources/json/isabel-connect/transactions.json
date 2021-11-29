@@ -12,7 +12,8 @@
         "remittanceInformation": "123456789002",
         "remittanceInformationType": "structured-be",
         "status": "Booked",
-        "valueDate": "2018-10-15T08:52:43.962Z"
+        "valueDate": "2018-10-15T08:52:43.962Z",
+        "additionalInformation": "this is an important message"
       },
       "id": "14e2bff5-e365-4bc7-bf48-76b7bcd464e9",
       "type": "transaction"

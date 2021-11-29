@@ -76,6 +76,7 @@ public class TransactionServiceImplTest {
                 .remittanceInformationType("structured-be")
                 .status("Booked")
                 .valueDate(LocalDate.parse("2018-10-15"))
+                .additionalInformation("this is an important message")
                 .build();
     }
 }
