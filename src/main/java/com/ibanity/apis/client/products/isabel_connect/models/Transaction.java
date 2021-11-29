@@ -25,6 +25,7 @@ public class Transaction extends IsabelModel<String> {
     private String remittanceInformation;
     private String remittanceInformationType;
     private String status;
+    private String additionalInformation;
 
     private LocalDate valueDate;
     private LocalDate executionDate;
