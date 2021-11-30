@@ -5,7 +5,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Data
 @ToString(callSuper = true)
@@ -13,7 +12,7 @@ import java.util.UUID;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class IntradayTransaction extends IsabelModel<UUID> {
+public class IntradayTransaction extends IsabelModel<String> {
     public static final String RESOURCE_TYPE = "intradayTransaction";
     public static final String API_URL_TAG_ID = "{accountId}";
 
