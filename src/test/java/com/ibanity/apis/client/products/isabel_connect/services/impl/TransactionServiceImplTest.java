@@ -67,7 +67,7 @@ public class TransactionServiceImplTest {
 
     private Transaction createExpected() {
         return Transaction.builder()
-                .id(TRANSACTION_ID)
+                .id(TRANSACTION_ID.toString())
                 .amount(new BigDecimal(80000))
                 .counterpartName("MYBESTCLIENT")
                 .counterpartAccountReference("BE21210123456703")

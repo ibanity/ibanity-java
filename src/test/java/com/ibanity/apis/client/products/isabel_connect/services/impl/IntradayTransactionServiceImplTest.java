@@ -63,7 +63,7 @@ public class IntradayTransactionServiceImplTest {
 
     private IntradayTransaction createExpected() {
         return IntradayTransaction.builder()
-                .id(fromString("14e2bff5-e365-4bc7-bf48-76b7bcd464e9"))
+                .id(fromString("14e2bff5-e365-4bc7-bf48-76b7bcd464e9").toString())
                 .amount(new BigDecimal(80000))
                 .counterpartName("MYBESTCLIENT")
                 .counterpartAccountReference("BE21210123456703")
