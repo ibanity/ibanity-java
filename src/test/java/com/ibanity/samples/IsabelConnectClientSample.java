@@ -5,7 +5,9 @@ import com.ibanity.apis.client.builders.OptionalPropertiesBuilder;
 import com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys;
 import com.ibanity.apis.client.models.IsabelCollection;
 import com.ibanity.apis.client.products.isabel_connect.models.*;
-import com.ibanity.apis.client.products.isabel_connect.models.create.*;
+import com.ibanity.apis.client.products.isabel_connect.models.create.AccessTokenCreateQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.create.BulkPaymentInitiationRequestCreateQuery;
+import com.ibanity.apis.client.products.isabel_connect.models.create.InitialTokenCreateQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.read.*;
 import com.ibanity.apis.client.products.isabel_connect.services.*;
 import org.apache.commons.io.IOUtils;
@@ -32,10 +34,10 @@ public class IsabelConnectClientSample {
     private static final String clientSecret = getConfiguration("isabel-connect.oauth2.client_secret");
     private static final String authorizationCode = getConfiguration("isabel-connect.oauth2.authorization_code");
     private static final String redirectUrl = getConfiguration("isabel-connect.oauth2.redirect_url");
-    private static final String accountId = getConfiguration("isabel-connect.account_id");
     private static final String bulkPaymentFile = getConfiguration("isabel-connect.bulk_payment.file");
     private static final String bulkPaymentFilename = getConfiguration("isabel-connect.bulk_payment.file_name");
-    private static final String reportId = getConfiguration("isabel-connect.report_id");
+    private static String reportId;
+    private static String accountId;
 
     public static void main(String[] args) throws CertificateException, IOException {
         String passphrase = getConfiguration(IBANITY_CLIENT_TLS_PRIVATE_KEY_PASSPHRASE_PROPERTY_KEY);
@@ -116,6 +118,7 @@ public class IsabelConnectClientSample {
                 .build();
 
         IsabelCollection<AccountReport> reports = accountReportService.list(query);
+        reportId = reports.getItems().stream().findFirst().get().getId();
         LOGGER.info("Account reports {}", reports);
     }
 
@@ -145,6 +148,7 @@ public class IsabelConnectClientSample {
                 .build();
 
         IsabelCollection<Account> accounts = service.list(query);
+        accountId = accounts.getItems().stream().findFirst().get().getId();
         LOGGER.info("Accounts {}", accounts);
     }
 
