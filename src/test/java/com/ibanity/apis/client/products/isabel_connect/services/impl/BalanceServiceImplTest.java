@@ -5,7 +5,6 @@ import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.IsabelCollection;
 import com.ibanity.apis.client.products.isabel_connect.models.Balance;
 import com.ibanity.apis.client.products.isabel_connect.models.read.BalancesReadQuery;
-import com.ibanity.apis.client.products.isabel_connect.models.read.IsabelPagingSpec;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,6 @@ import java.net.URI;
 import java.time.LocalDateTime;
 
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
-import static java.time.Instant.parse;
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -32,7 +30,7 @@ public class BalanceServiceImplTest {
     private static final String ACCESS_TOKEN = "thisIsAnAccessToken";
     private static final String ACCOUNT_ID = "93ecb1fdbfb7848e7b7896c0f2d207aed3d8b4c1";
     private static final String BALANCES_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/accounts/{accountId}/balances";
-    private static final String LIST_BALANCES_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/accounts/93ecb1fdbfb7848e7b7896c0f2d207aed3d8b4c1/balances?size=10";
+    private static final String LIST_BALANCES_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/accounts/93ecb1fdbfb7848e7b7896c0f2d207aed3d8b4c1/balances?size=20";
 
     @InjectMocks
     private BalanceServiceImpl balanceService;
