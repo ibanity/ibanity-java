@@ -17,10 +17,7 @@ import org.mockito.quality.Strictness;
 
 import java.math.BigDecimal;
 import java.net.URI;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.UUID;
 
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
@@ -36,7 +33,7 @@ public class TransactionServiceImplTest {
     private static final UUID TRANSACTION_ID = fromString("14e2bff5-e365-4bc7-bf48-76b7bcd464e9");
     private static final String ACCESS_TOKEN = "thisIsAnAccessToken";
     private static final String TRANSACTIONS_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/accounts/{accountId}/transactions";
-    private static final String LIST_TRANSACTIONS_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/accounts/93ecb1fdbfb7848e7b7896c0f2d207aed3d8b4c1/transactions?size=10";
+    private static final String LIST_TRANSACTIONS_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/accounts/93ecb1fdbfb7848e7b7896c0f2d207aed3d8b4c1/transactions?size=20";
 
     @InjectMocks
     private TransactionServiceImpl transactionService;

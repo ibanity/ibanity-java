@@ -40,7 +40,7 @@ public class AccountReportServiceImplTest {
     private static final String ACCESS_TOKEN = "thisIsAnAccessToken";
     private static final String ACCOUNT_REPORT_ID = "1234001";
     private static final String ACCOUNT_REPORT_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/account-reports/{accountReportId}";
-    private static final String LIST_ACCOUNT_REPORTS_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/account-reports?size=10";
+    private static final String LIST_ACCOUNT_REPORTS_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/account-reports?size=20";
     private static final String GET_ACCOUNT_REPORTS_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/account-reports/123456";
 
     @InjectMocks

@@ -31,7 +31,7 @@ public class IntradayTransactionServiceImplTest {
     private static final String ACCOUNT_ID = "93ecb1fdbfb7848e7b7896c0f2d207aed3d8b4c1";
     private static final String ACCESS_TOKEN = "thisIsAnAccessToken";
     private static final String INTRADAY_TRANSACTIONS_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/accounts/{accountId}/intraday-transactions";
-    private static final String LIST_INTRADAY_TRANSACTIONS_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/accounts/93ecb1fdbfb7848e7b7896c0f2d207aed3d8b4c1/intraday-transactions?size=10";
+    private static final String LIST_INTRADAY_TRANSACTIONS_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/accounts/93ecb1fdbfb7848e7b7896c0f2d207aed3d8b4c1/intraday-transactions?size=20";
 
     @InjectMocks
     private IntradayTransactionServiceImpl transactionService;
