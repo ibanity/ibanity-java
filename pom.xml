@@ -70,7 +70,7 @@
         <commons-lang.version>3.10</commons-lang.version>
         <commons-io.version>2.7</commons-io.version>
         <commons-math3.version>3.6.1</commons-math3.version>
-        <log4j.version>2.13.3</log4j.version>
+        <log4j.version>2.15.0</log4j.version>
         <slf4j.version>1.7.30</slf4j.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <httpclient.version>4.5.13</httpclient.version>
