@@ -40,10 +40,9 @@ public class PaymentActivationRequestServiceImpl implements PaymentActivationReq
     }
 
     private PaymentActivationRequest toRequest(PaymentActivationRequestCreateQuery paymentActivationRequestCreateQuery) {
-        PaymentActivationRequest.builder()
+        return PaymentActivationRequest.builder()
                 .redirectUri(paymentActivationRequestCreateQuery.getRedirectUri())
                 .build();
-        return null;
     }
 
     private Function<DataApiModel, com.ibanity.apis.client.products.ponto_connect.models.PaymentActivationRequest> customMapping() {
@@ -56,7 +55,7 @@ public class PaymentActivationRequestServiceImpl implements PaymentActivationReq
     }
 
     private String getUrl() {
-        return StringUtils.removeEnd(apiUrlProvider.find(PontoConnect, "paymentAuthorizationRequests"), "/");
+        return StringUtils.removeEnd(apiUrlProvider.find(PontoConnect, "paymentActivationRequests"), "/");
     }
 
     @Data

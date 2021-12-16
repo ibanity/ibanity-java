@@ -26,8 +26,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class PaymentActivationRequestServiceImplTest {
 
-    private static final String PAYMENT_AUTHORIZATION_REQUEST_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/payment-authorization-request";
-    private static final UUID PAYMENT_AUTHORIZATION_REQUEST_ID = UUID.fromString("7e7fca4c-cc8e-4e23-9a5f-cfa4dc175a88");
+    private static final String PAYMENT_ACTIVATION_REQUEST_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/payment-activation-request";
+    private static final UUID PAYMENT_ACTIVATION_REQUEST_ID = UUID.fromString("7e7fca4c-cc8e-4e23-9a5f-cfa4dc175a88");
     private static final String ACCESS_TOKEN = "anAccessToken";
 
     @InjectMocks
@@ -41,8 +41,8 @@ class PaymentActivationRequestServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        when(apiUrlProvider.find(IbanityProduct.PontoConnect, "paymentAuthorizationRequests"))
-                .thenReturn(PAYMENT_AUTHORIZATION_REQUEST_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.PontoConnect, "paymentActivationRequests"))
+                .thenReturn(PAYMENT_ACTIVATION_REQUEST_ENDPOINT);
     }
 
     @Test
@@ -53,8 +53,8 @@ class PaymentActivationRequestServiceImplTest {
                         .redirectUri("https://example.localhost")
                         .build();
 
-        when(ibanityHttpClient.post(eq(buildUri(PAYMENT_AUTHORIZATION_REQUEST_ENDPOINT)), any(),eq(emptyMap()), eq(ACCESS_TOKEN)))
-                .thenReturn(loadHttpResponse("json/ponto-connect/create_payment_authorization_request.json"));
+        when(ibanityHttpClient.post(eq(buildUri(PAYMENT_ACTIVATION_REQUEST_ENDPOINT)), any(),eq(emptyMap()), eq(ACCESS_TOKEN)))
+                .thenReturn(loadHttpResponse("json/ponto-connect/create_payment_activation_request.json"));
 
 
         PaymentActivationRequest actual = paymentActivationRequestService.create(paymentActivationRequestCreateQuery);
@@ -64,7 +64,7 @@ class PaymentActivationRequestServiceImplTest {
 
     private Object createExpected() {
         return PaymentActivationRequest.builder()
-                .id(PAYMENT_AUTHORIZATION_REQUEST_ID)
+                .id(PAYMENT_ACTIVATION_REQUEST_ID)
                 .redirectLink("https://authorize.development.myponto.net/organizations/6680437c-8ed8-425b-84b7-2c31e5ca625d/sandbox/integrations/1f5caef0-7dcd-41d0-9318-24bf40ba9d16/payment-activation-requests/7e7fca4c-cc8e-4e23-9a5f-cfa4dc175a88")
                 .build();
     }
