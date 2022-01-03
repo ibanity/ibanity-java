@@ -26,6 +26,7 @@ public class IbanityModelMapper {
     public static <T extends IbanityModel> T mapResource(HttpResponse httpResponse, Class<T> classType) {
         return mapResource(httpResponse, dataApiModel -> toIbanityModel(dataApiModel, classType));
     }
+
     public static <T extends IbanityModel> T mapResource(HttpResponse httpResponse, Function<DataApiModel, T> customMapping) {
         try {
             String jsonPayload = readResponseContent(httpResponse.getEntity());

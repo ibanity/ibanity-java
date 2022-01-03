@@ -49,6 +49,9 @@ public class IbanityServiceBuilder implements
     private int connectionRequestTimeout = IbanityUtils.DEFAULT_REQUEST_TIMEOUT;
     private int connectTimeout = IbanityUtils.DEFAULT_REQUEST_TIMEOUT;
     private int socketTimeout = IbanityUtils.DEFAULT_REQUEST_TIMEOUT;
+    private String applicationId;
+    private int webhooksJwksCacheTTLMillis = IbanityUtils.DEFAULT_JWKS_CACHE_TTL;
+    private int webhooksJwtClockSkewSeconds = IbanityUtils.DEFAULT_JWT_CLOCK_SKEW;
 
     public static IbanityApiEndpointBuilder builder() {
         return new IbanityServiceBuilder();
@@ -89,6 +92,9 @@ public class IbanityServiceBuilder implements
                 .connectionRequestTimeout(connectionRequestTimeout)
                 .connectTimeout(connectTimeout)
                 .socketTimeout(socketTimeout)
+                .applicationId(applicationId)
+                .webhooksJwksCacheTTL(webhooksJwksCacheTTLMillis)
+                .webhooksJwtClockSkew(webhooksJwtClockSkewSeconds)
                 .build();
 
         return new IbanityServiceImpl(ibanityConfiguration);
@@ -160,6 +166,24 @@ public class IbanityServiceBuilder implements
     @Override
     public OptionalPropertiesBuilder connectionRequestTimeout(int connectionRequestTimeout) {
         this.connectionRequestTimeout = connectionRequestTimeout;
+        return this;
+    }
+
+    @Override
+    public OptionalPropertiesBuilder webhooksJwksCacheTTLMillis(int webhooksJwksCacheTTLMillis) {
+        this.webhooksJwksCacheTTLMillis = webhooksJwksCacheTTLMillis;
+        return this;
+    }
+
+    @Override
+    public OptionalPropertiesBuilder webhooksJwtClockSkewSeconds(int webhooksJwtClockSkewSeconds) {
+        this.webhooksJwtClockSkewSeconds = webhooksJwtClockSkewSeconds;
+        return this;
+    }
+
+    @Override
+    public OptionalPropertiesBuilder applicationId(String applicationId) {
+        this.applicationId = applicationId;
         return this;
     }
 

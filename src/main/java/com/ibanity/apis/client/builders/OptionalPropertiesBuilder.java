@@ -30,4 +30,10 @@ public interface OptionalPropertiesBuilder {
     OptionalPropertiesBuilder connectTimeout(int connectTimeout);
 
     OptionalPropertiesBuilder connectionRequestTimeout(int connectionRequestTimeout);
+
+    OptionalPropertiesBuilder webhooksJwksCacheTTLMillis(int webhooksJwksCacheTTLMillis);
+
+    OptionalPropertiesBuilder webhooksJwtClockSkewSeconds(int webhooksJwtClockSkewSeconds);
+
+    OptionalPropertiesBuilder applicationId(String applicationId);
 }

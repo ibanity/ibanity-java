@@ -6,11 +6,7 @@ import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.fluent.FileBasedBuilderParameters;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.apache.commons.configuration2.io.ClasspathLocationStrategy;
-import org.apache.commons.configuration2.io.CombinedLocationStrategy;
-import org.apache.commons.configuration2.io.FileLocationStrategy;
-import org.apache.commons.configuration2.io.FileSystemLocationStrategy;
-import org.apache.commons.configuration2.io.ProvidedURLLocationStrategy;
+import org.apache.commons.configuration2.io.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +15,7 @@ public final class IbanityConfiguration {
 
     public static final String IBANITY_PROPERTIES_PREFIX = "ibanity.";
     public static final String IBANITY_API_ENDPOINT_PROPERTY_KEY = "api.endpoint";
+    public static final String IBANITY_APPLICATION_ID = "application.id";
 
     private static final String PROPERTIES_FILE = "ibanity.properties";
 

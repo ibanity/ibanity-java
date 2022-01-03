@@ -28,7 +28,7 @@ public class ApiUrlProviderImpl implements ApiUrlProvider {
     private final String ibanityEndpoint;
     private final String proxyEndpoint;
     private final IbanityHttpClient ibanityHttpClient;
-    private final Map<IbanityProduct, JsonNode> apiUrls = new HashMap<>();
+    private final Map<String, JsonNode> apiUrls = new HashMap<>();
 
     public ApiUrlProviderImpl(IbanityHttpClient ibanityHttpClient, String ibanityEndpoint) {
         this.ibanityHttpClient = ibanityHttpClient;
@@ -44,15 +44,20 @@ public class ApiUrlProviderImpl implements ApiUrlProvider {
 
     @Override
     public String find(IbanityProduct ibanityProduct, String... paths) {
+        String productPath = ibanityProduct.path();
+        return find(productPath, paths);
+    }
+
+    public String find(String rootPath, String[] subPaths) {
         try {
-            JsonNode apiUrls = this.apiUrls.get(ibanityProduct);
+            JsonNode apiUrls = this.apiUrls.get(rootPath);
 
             if (apiUrls == null) {
-                loadApiSchema(ibanityProduct);
-                apiUrls = this.apiUrls.get(ibanityProduct);
+                loadApiSchema(rootPath);
+                apiUrls = this.apiUrls.get(rootPath);
             }
 
-            return Stream.of(paths)
+            return Stream.of(subPaths)
                     .reduce(apiUrls, JsonNode::get, (jsonNode1, jsonNode2) -> jsonNode2)
                     .textValue();
         } catch (Exception exception) {
@@ -62,17 +67,22 @@ public class ApiUrlProviderImpl implements ApiUrlProvider {
 
     @Override
     public void loadApiSchema(IbanityProduct ibanityProduct) {
-        LOGGER.debug("loading schema for {}", ibanityProduct);
+        String path = ibanityProduct.path();
+        loadApiSchema(path);
+    }
+
+    private void loadApiSchema(String rootPath) {
+        LOGGER.debug("loading schema for {}", rootPath);
         String ibanityApiUrl = removeEnd(targetUrl(), "/");
         try {
-            HttpResponse httpResponse = ibanityHttpClient.get(new URI(ibanityApiUrl + "/" + ibanityProduct.path()), null);
+            HttpResponse httpResponse = ibanityHttpClient.get(new URI(ibanityApiUrl + "/" + rootPath), null);
             String schema = EntityUtils.toString(httpResponse.getEntity());
-            if(useProxy()) {
+            if (useProxy()) {
                 schema = schema.replace(ibanityEndpoint, proxyEndpoint);
             }
 
             JsonNode jsonNode = mapJsonToMap(schema);
-            apiUrls.put(ibanityProduct, jsonNode);
+            apiUrls.put(rootPath, jsonNode);
             LOGGER.debug("schema loaded");
         } catch (URISyntaxException exception) {
             throw new IllegalArgumentException(format("Cannot create api schema URI for string %s", ibanityApiUrl), exception);

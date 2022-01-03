@@ -6,5 +6,7 @@ public interface ApiUrlProvider {
 
     String find(IbanityProduct ibanityProduct, String... paths);
 
+    String find(String rootPath, String... paths);
+
     void loadApiSchema(IbanityProduct ibanityProduct);
 }

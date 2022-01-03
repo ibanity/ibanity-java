@@ -1,12 +1,12 @@
 package com.ibanity.apis.client.services.impl;
 
 import com.ibanity.apis.client.builders.IbanityConfiguration;
+import com.ibanity.apis.client.factory.HttpsJwksVerificationKeyResolverFactory;
+import com.ibanity.apis.client.factory.JwtConsumerFactory;
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.http.OAuthHttpClient;
 import com.ibanity.apis.client.http.factory.IbanityHttpClientFactory;
 import com.ibanity.apis.client.http.factory.OauthHttpClientFactory;
-import com.ibanity.apis.client.models.SignatureCredentials;
-import com.ibanity.apis.client.models.TlsCredentials;
 import com.ibanity.apis.client.products.isabel_connect.services.IsabelConnectService;
 import com.ibanity.apis.client.products.isabel_connect.services.impl.IsabelConnectServiceImpl;
 import com.ibanity.apis.client.products.ponto_connect.services.PontoConnectService;
@@ -16,9 +16,13 @@ import com.ibanity.apis.client.products.xs2a.services.impl.Xs2aServiceImpl;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import com.ibanity.apis.client.services.IbanityService;
 import com.ibanity.apis.client.utils.IbanityUtils;
+import com.ibanity.apis.client.webhooks.services.WebhooksService;
+import com.ibanity.apis.client.webhooks.services.impl.WebhooksServiceImpl;
 import org.apache.http.client.HttpClient;
+import org.jose4j.jwt.consumer.JwtConsumer;
+import org.jose4j.keys.resolvers.VerificationKeyResolver;
 
-import java.security.cert.Certificate;
+import javax.net.ssl.SSLContext;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -31,57 +35,7 @@ public class IbanityServiceImpl implements IbanityService {
     private final OAuthHttpClient pontoConnectOAuthHttpClient;
     private final IsabelConnectService isabelConnectService;
     private final OAuthHttpClient isabelConnectOAuthHttpClient;
-
-    /**
-     * @deprecated  Replaced by {@link #IbanityServiceImpl(IbanityConfiguration)}
-     */
-    @Deprecated
-    public IbanityServiceImpl(String apiEndpoint,
-                              Certificate caCertificate,
-                              TlsCredentials tlsCredentials,
-                              SignatureCredentials signatureCredentials,
-                              String pontoConnectClientId,
-                              String isabelConnectClientId,
-                              String proxyEndpoint) {
-        this.ibanityHttpClient = new IbanityHttpClientFactory().create(caCertificate, tlsCredentials, signatureCredentials, apiEndpoint);
-        this.apiUrlProvider = new ApiUrlProviderImpl(ibanityHttpClient, apiEndpoint, proxyEndpoint);
-
-        this.xs2aService = new Xs2aServiceImpl(apiUrlProvider, ibanityHttpClient);
-
-        if (isBlank(pontoConnectClientId)) {
-            this.pontoConnectOAuthHttpClient = null;
-            this.pontoConnectService = null;
-        } else {
-            this.pontoConnectOAuthHttpClient = new OauthHttpClientFactory().create(caCertificate, tlsCredentials, signatureCredentials, apiEndpoint, pontoConnectClientId);
-            this.pontoConnectService = new PontoConnectServiceImpl(apiUrlProvider, ibanityHttpClient, pontoConnectOAuthHttpClient);
-        }
-
-        if (isBlank(isabelConnectClientId)) {
-            this.isabelConnectOAuthHttpClient = null;
-            this.isabelConnectService = null;
-        } else {
-            this.isabelConnectOAuthHttpClient = new OauthHttpClientFactory().create(caCertificate, tlsCredentials, signatureCredentials, apiEndpoint, isabelConnectClientId);
-            this.isabelConnectService = new IsabelConnectServiceImpl(apiUrlProvider, ibanityHttpClient, isabelConnectOAuthHttpClient);
-        }
-    }
-
-    /**
-     * @deprecated  Use {@link #IbanityServiceImpl(ApiUrlProvider, IbanityHttpClient, Xs2aService, PontoConnectService, IsabelConnectService, OAuthHttpClient, OAuthHttpClient)}
-     */
-    @Deprecated
-    public IbanityServiceImpl(ApiUrlProvider apiUrlProvider,
-                              IbanityHttpClient ibanityHttpClient,
-                              Xs2aService xs2aService,
-                              PontoConnectService pontoConnectService,
-                              OAuthHttpClient pontoConnectOAuthHttpClient) {
-        this.apiUrlProvider = apiUrlProvider;
-        this.ibanityHttpClient = ibanityHttpClient;
-        this.xs2aService = xs2aService;
-        this.pontoConnectService = pontoConnectService;
-        this.pontoConnectOAuthHttpClient = pontoConnectOAuthHttpClient;
-        this.isabelConnectService = null;
-        this.isabelConnectOAuthHttpClient = null;
-    }
+    private final WebhooksService webhooksService;
 
     public IbanityServiceImpl(ApiUrlProvider apiUrlProvider,
                               IbanityHttpClient ibanityHttpClient,
@@ -89,7 +43,8 @@ public class IbanityServiceImpl implements IbanityService {
                               PontoConnectService pontoConnectService,
                               IsabelConnectService isabelConnectService,
                               OAuthHttpClient pontoConnectOAuthHttpClient,
-                              OAuthHttpClient isabelConnectOAuthHttpClient) {
+                              OAuthHttpClient isabelConnectOAuthHttpClient,
+                              WebhooksService webhooksService) {
         this.apiUrlProvider = apiUrlProvider;
         this.ibanityHttpClient = ibanityHttpClient;
         this.xs2aService = xs2aService;
@@ -97,13 +52,15 @@ public class IbanityServiceImpl implements IbanityService {
         this.isabelConnectService = isabelConnectService;
         this.pontoConnectOAuthHttpClient = pontoConnectOAuthHttpClient;
         this.isabelConnectOAuthHttpClient = isabelConnectOAuthHttpClient;
+        this.webhooksService = webhooksService;
     }
 
     public IbanityServiceImpl(IbanityConfiguration ibanityConfiguration) {
         String pontoConnectClientId = ibanityConfiguration.getPontoConnectOauth2ClientId();
         String isabelConnectClientId = ibanityConfiguration.getIsabelConnectOauth2ClientId();
         HttpClient httpClient = IbanityUtils.httpClient(ibanityConfiguration);
-        this.ibanityHttpClient = new IbanityHttpClientFactory().create(httpClient);
+        SSLContext sslContext = IbanityUtils.getSSLContext(ibanityConfiguration);
+        this.ibanityHttpClient = new IbanityHttpClientFactory().create(httpClient, sslContext);
         this.apiUrlProvider = new ApiUrlProviderImpl(ibanityHttpClient, ibanityConfiguration.getApiEndpoint(), ibanityConfiguration.getProxyEndpoint());
 
         this.xs2aService = new Xs2aServiceImpl(apiUrlProvider, ibanityHttpClient);
@@ -123,6 +80,11 @@ public class IbanityServiceImpl implements IbanityService {
             this.isabelConnectOAuthHttpClient = new OauthHttpClientFactory().create(isabelConnectClientId, httpClient);
             this.isabelConnectService = new IsabelConnectServiceImpl(apiUrlProvider, ibanityHttpClient, isabelConnectOAuthHttpClient);
         }
+
+        VerificationKeyResolver verificationKeyResolver = HttpsJwksVerificationKeyResolverFactory.build(apiUrlProvider, ibanityConfiguration, sslContext);
+        JwtConsumer jwtConsumer = JwtConsumerFactory.build(ibanityConfiguration, verificationKeyResolver);
+
+        this.webhooksService = new WebhooksServiceImpl(apiUrlProvider, ibanityHttpClient, jwtConsumer);
     }
 
     @Override
@@ -133,6 +95,15 @@ public class IbanityServiceImpl implements IbanityService {
     @Override
     public IbanityHttpClient ibanityHttpClient() {
         return ibanityHttpClient;
+    }
+
+    @Override
+    public WebhooksService webhooksService() {
+        if (webhooksService == null) {
+            throw new IllegalStateException("webhooksSignatureService was not properly initialized. Did you configure applicationId?");
+        }
+
+        return webhooksService;
     }
 
     @Override
