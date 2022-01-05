@@ -54,7 +54,7 @@
     <properties>
 
         <!-- Artifact Version parts -->
-        <revision>4.0</revision>
+        <revision>5.0</revision>
         <changelist>-SNAPSHOT</changelist>
         <timestamp>${maven.build.timestamp}</timestamp>
 
