@@ -26,8 +26,8 @@ import com.ibanity.apis.client.products.ponto_connect.sandbox.services.Financial
 import com.ibanity.apis.client.products.ponto_connect.sandbox.services.FinancialInstitutionTransactionsService;
 import com.ibanity.apis.client.products.ponto_connect.sandbox.services.SandboxService;
 import com.ibanity.apis.client.products.ponto_connect.services.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -47,7 +47,7 @@ import static com.ibanity.samples.helper.SampleHelper.loadPrivateKey;
 
 public class PontoConnectClientSample {
 
-    private static final Logger LOGGER = LogManager.getLogger(PontoConnectClientSample.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PontoConnectClientSample.class);
 
     private static final String pontoConnectRedirectUrl = getConfiguration("ponto-connect.oauth2.redirect-url");
     private static final String clientId = getConfiguration("ponto-connect.oauth2.client_id");

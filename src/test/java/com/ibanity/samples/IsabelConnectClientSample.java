@@ -11,8 +11,8 @@ import com.ibanity.apis.client.products.isabel_connect.models.create.InitialToke
 import com.ibanity.apis.client.products.isabel_connect.models.read.*;
 import com.ibanity.apis.client.products.isabel_connect.services.*;
 import org.apache.commons.io.IOUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +28,7 @@ import static com.ibanity.samples.helper.SampleHelper.loadCertificate;
 import static com.ibanity.samples.helper.SampleHelper.loadPrivateKey;
 
 public class IsabelConnectClientSample {
-    private static final Logger LOGGER = LogManager.getLogger(IsabelConnectClientSample.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IsabelConnectClientSample.class);
 
     private static final String clientId = getConfiguration("isabel-connect.oauth2.client_id");
     private static final String clientSecret = getConfiguration("isabel-connect.oauth2.client_secret");

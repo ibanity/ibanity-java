@@ -11,8 +11,8 @@ import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitution
 import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitutionUser;
 import com.ibanity.apis.client.services.IbanityService;
 import com.ibanity.samples.sandbox.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.security.cert.CertificateException;
@@ -24,7 +24,7 @@ import static com.ibanity.apis.client.helpers.IbanityConfiguration.getConfigurat
 import static com.ibanity.samples.helper.SampleHelper.*;
 
 public class ClientSandboxSample {
-    private static final Logger LOGGER = LogManager.getLogger(ClientSandboxSample.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientSandboxSample.class);
 
     private final FinancialInstitutionSample financialInstitutionSample;
     private final FinancialInstitutionUserSample financialInstitutionUserSample;
