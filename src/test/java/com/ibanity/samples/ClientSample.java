@@ -8,8 +8,8 @@ import com.ibanity.apis.client.products.xs2a.models.read.FinancialInstitutionCou
 import com.ibanity.apis.client.services.IbanityService;
 import com.ibanity.samples.customer.*;
 import com.ibanity.samples.helper.SampleHelper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.security.PrivateKey;
@@ -26,7 +26,7 @@ import static com.ibanity.samples.helper.SampleHelper.*;
 
 public class ClientSample {
 
-    private static final Logger LOGGER = LogManager.getLogger(ClientSample.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientSample.class);
 
     private final CustomerAccessTokenSample customerAccessTokenSample;
     private final FinancialInstitutionSample financialInstitutionSample;

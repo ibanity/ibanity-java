@@ -36,8 +36,8 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.RequestWrapper;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.Args;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.SSLException;
 import java.io.IOException;
@@ -55,7 +55,7 @@ import java.util.Set;
  * @since 4.0
  */
 public class CustomHttpRequestRetryHandler implements HttpRequestRetryHandler {
-    private static final Logger LOGGER = LogManager.getLogger(CustomHttpRequestRetryHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomHttpRequestRetryHandler.class);
     private static final int DEFAULT_RETRY_COUNT = 3;
 
     /** the number of times a method will be retried */

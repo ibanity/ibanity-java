@@ -3,13 +3,14 @@ package com.ibanity.apis.client.http.service.impl;
 import com.google.common.collect.Maps;
 import com.ibanity.apis.client.http.service.IbanityHttpSignatureService;
 import lombok.NonNull;
-import lombok.SneakyThrows;
 import org.apache.commons.codec.digest.MessageDigestAlgorithms;
 import org.apache.commons.io.IOUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -24,7 +25,6 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.IntUnaryOperator;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -37,7 +37,7 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
     public static final String SIGNATURE_ALGORITHM = "RSASSA-PSS";
     public static final PSSParameterSpec PARAMETER_SPEC = new PSSParameterSpec("SHA-256", "MGF1", MGF1ParameterSpec.SHA256, 32, 1);
 
-    private static final Logger LOGGER = LogManager.getLogger(IbanityHttpSignatureServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IbanityHttpSignatureServiceImpl.class);
     private static final String SIGNATURE_HEADER_TEMPLATE = "keyId=\"%s\",created=\"%s\",algorithm=\"%s\",headers=\"%s\",signature=\"%s\"";
     private static final String DIGEST_ALGORITHM = MessageDigestAlgorithms.SHA_512;
     private static final Charset UTF8_CHARSET = StandardCharsets.UTF_8;

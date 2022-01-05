@@ -10,10 +10,10 @@ import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitution
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.create.FinancialInstitutionHoldingCreationQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.create.FinancialInstitutionTransactionCreationQuery;
 import org.apache.commons.math3.util.Precision;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -31,7 +31,7 @@ import java.util.UUID;
 import static java.math.BigDecimal.TEN;
 
 public class SampleHelper {
-    private static final Logger LOGGER = LogManager.getLogger(SampleHelper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SampleHelper.class);
 
     public static BigDecimal generateRandomAmount() {
         Random random = new Random();
