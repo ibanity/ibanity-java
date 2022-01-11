@@ -76,7 +76,7 @@ class IbanityHttpSignatureServiceImplTest {
         PublicKey publicKey = loadPublicKey();
         publicSignature.initVerify(publicKey);
 
-        publicSignature.update(EXPECTED_SIGNING_STRING.getBytes());
+        publicSignature.update(EXPECTED_SIGNING_STRING.getBytes(UTF_8));
 
         String signaturePart = getSignaturePart(actual);
         byte[] signatureBytes = Base64.getDecoder().decode(signaturePart);
