@@ -67,19 +67,19 @@
 
         <!-- Artifact Dependencies Version-->
         <commons-configuration2.version>2.7</commons-configuration2.version>
-        <commons-lang.version>3.10</commons-lang.version>
-        <commons-io.version>2.7</commons-io.version>
+        <commons-lang.version>3.12.0</commons-lang.version>
+        <commons-io.version>2.11.0</commons-io.version>
         <commons-math3.version>3.6.1</commons-math3.version>
-        <slf4j.version>1.7.32</slf4j.version>
+        <slf4j.version>1.7.35</slf4j.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <httpclient.version>4.5.13</httpclient.version>
-        <jackson.version>2.10.3</jackson.version>
-        <bcpkix-jdk14.version>1.65</bcpkix-jdk14.version>
-        <lombok.version>1.18.20</lombok.version>
-        <google-guava.version>30.0-jre</google-guava.version>
+        <jackson.version>2.13.1</jackson.version>
+        <bcpkix-jdk14.version>1.70</bcpkix-jdk14.version>
+        <lombok.version>1.18.22</lombok.version>
+        <google-guava.version>31.0.1-jre</google-guava.version>
 
         <!-- IBAN Generator -->
-        <iban4j.version>3.2.1</iban4j.version>
+        <iban4j.version>3.2.3-RELEASE</iban4j.version>
 
         <!-- Maven Pluging Version -->
         <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
@@ -93,10 +93,10 @@
         <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
 
         <!-- Tests version -->
-        <junit.version>5.2.0</junit.version>
-        <junit-platform-launcher.version>1.2.0</junit-platform-launcher.version>
+        <junit.version>5.8.2</junit.version>
+        <junit-platform-launcher.version>1.8.2</junit-platform-launcher.version>
         <junit-platform-surefire-provider.version>1.2.0</junit-platform-surefire-provider.version>
-        <mockito.version>2.27.0</mockito.version>
+        <mockito.version>4.3.1</mockito.version>
 
         <!-- Sonar -->
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -104,7 +104,7 @@
         <sonar.projectKey>com.ibanity.apis:ibanity-java</sonar.projectKey>
         <sonar.language>java</sonar.language>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-        <sonar.version>3.7.0.1746</sonar.version>
+        <sonar.version>3.9.1.2184</sonar.version>
 
     </properties>
 
@@ -160,7 +160,7 @@
         <dependency>
             <groupId>org.apache.maven.surefire</groupId>
             <artifactId>surefire-logger-api</artifactId>
-            <version>2.21.0</version>
+            <version>2.22.2</version>
             <!-- to get around bug https://github.com/junit-team/junit5/issues/801 -->
             <optional>true</optional>
         </dependency>
@@ -223,7 +223,7 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.12.2</version>
+            <version>3.22.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
