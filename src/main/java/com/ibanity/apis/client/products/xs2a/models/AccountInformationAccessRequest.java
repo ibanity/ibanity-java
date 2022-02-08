@@ -3,6 +3,7 @@ package com.ibanity.apis.client.products.xs2a.models;
 import com.ibanity.apis.client.models.IbanityModel;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountInformationAccessLinks;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountLinks;
+import com.ibanity.apis.client.products.xs2a.models.links.InitialAccountTransactionsSynchronizationsLinks;
 import lombok.*;
 
 import java.util.Collections;
@@ -32,6 +33,7 @@ public class AccountInformationAccessRequest implements IbanityModel {
     private List<String> allowedAccountSubtypes = Collections.emptyList();
 
     private AccountInformationAccessLinks accountInformationAccessLinks;
+    private InitialAccountTransactionsSynchronizationsLinks initialAccountTransactionsSynchronizationsLinks;
     private AccountLinks accountLinks;
 
 }
