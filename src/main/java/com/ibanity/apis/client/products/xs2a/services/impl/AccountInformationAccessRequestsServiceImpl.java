@@ -14,10 +14,15 @@ import com.ibanity.apis.client.products.xs2a.models.create.AuthorizationPortalCr
 import com.ibanity.apis.client.products.xs2a.models.create.MetaRequestCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountInformationAccessLinks;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountLinks;
+import com.ibanity.apis.client.products.xs2a.models.links.InitialAccountTransactionsSynchronizationsLinks;
 import com.ibanity.apis.client.products.xs2a.models.read.AccountInformationAccessRequestReadQuery;
 import com.ibanity.apis.client.products.xs2a.services.AccountInformationAccessRequestsService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.http.HttpResponse;
 
 import java.net.URI;
@@ -93,12 +98,19 @@ public class AccountInformationAccessRequestsServiceImpl implements AccountInfor
                     .redirect(dataApiModel.getLinks() == null ? null : dataApiModel.getLinks().getRedirect())
                     .build());
 
-            if (dataApiModel.getRelationships() != null
-                    && dataApiModel.getRelationships().get("accounts") != null
-                    && dataApiModel.getRelationships().get("accounts").getLinks() != null) {
-                aiar.setAccountLinks(AccountLinks.builder()
-                        .related(dataApiModel.getRelationships().get("accounts").getLinks().getRelated())
-                        .build());
+            if (dataApiModel.getRelationships() != null) {
+                if (dataApiModel.getRelationships().get("accounts") != null
+                        && dataApiModel.getRelationships().get("accounts").getLinks() != null) {
+                    aiar.setAccountLinks(AccountLinks.builder()
+                            .related(dataApiModel.getRelationships().get("accounts").getLinks().getRelated())
+                            .build());
+                }
+                if (dataApiModel.getRelationships().get("initialAccountTransactionsSynchronizations") != null
+                        && dataApiModel.getRelationships().get("initialAccountTransactionsSynchronizations").getLinks() != null) {
+                    aiar.setInitialAccountTransactionsSynchronizationsLinks(InitialAccountTransactionsSynchronizationsLinks.builder()
+                            .related(dataApiModel.getRelationships().get("initialAccountTransactionsSynchronizations").getLinks().getRelated())
+                            .build());
+                }
             }
 
             return aiar;

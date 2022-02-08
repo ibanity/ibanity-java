@@ -9,6 +9,7 @@ import com.ibanity.apis.client.products.xs2a.models.create.AuthorizationPortalCr
 import com.ibanity.apis.client.products.xs2a.models.create.MetaRequestCreationQuery;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountInformationAccessLinks;
 import com.ibanity.apis.client.products.xs2a.models.links.AccountLinks;
+import com.ibanity.apis.client.products.xs2a.models.links.InitialAccountTransactionsSynchronizationsLinks;
 import com.ibanity.apis.client.products.xs2a.models.read.AccountInformationAccessRequestReadQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -142,6 +143,9 @@ class AccountInformationAccessRequestsServiceImplTest {
                 .accountInformationAccessLinks(AccountInformationAccessLinks.builder().build())
                 .accountLinks(AccountLinks.builder()
                         .related("https://api.ibanity.com/xs2a/customer/financial-institutions/4876fdd6-7333-4f9f-b142-ba520ca497b1/account-information-access-requests/cd273ba1-cb2a-464d-b85d-62c9fc4dc8d9/accounts")
+                        .build())
+                .initialAccountTransactionsSynchronizationsLinks(InitialAccountTransactionsSynchronizationsLinks.builder()
+                        .related("https://api.ibanity.com/xs2a/customer/financial-institutions/4876fdd6-7333-4f9f-b142-ba520ca497b1/account-information-access-requests/cd273ba1-cb2a-464d-b85d-62c9fc4dc8d9/initial-account-transactions-synchronizations")
                         .build())
                 .build();
     }
