@@ -65,7 +65,7 @@ public class SynchronizationServiceImpl implements SynchronizationService {
 
     @Override
     public Synchronization find(SynchronizationReadQuery synchronizationReadQuery) {
-        String url = getUrl(synchronizationReadQuery.getSynchronizationId(), null, null)
+        String url = getUrl(null, null, synchronizationReadQuery.getSynchronizationId())
                 + "/"
                 + synchronizationReadQuery.getSynchronizationId().toString();
         HttpResponse response = ibanityHttpClient.get(buildUri(url), synchronizationReadQuery.getAdditionalHeaders(), synchronizationReadQuery.getCustomerAccessToken());
