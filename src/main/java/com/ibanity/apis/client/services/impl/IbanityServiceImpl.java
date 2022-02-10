@@ -111,6 +111,7 @@ public class IbanityServiceImpl implements IbanityService {
         return xs2aService;
     }
 
+    @Override
     public OAuthHttpClient pontoConnectOAuthHttpClient() {
         if (pontoConnectOAuthHttpClient == null) {
             throw new IllegalStateException("Ponto-connect OauthHttpClient was not properly initialized. Did you configure pontoConnectOAuth2ClientId?");
@@ -119,12 +120,13 @@ public class IbanityServiceImpl implements IbanityService {
         return pontoConnectOAuthHttpClient;
     }
 
+    @Override
     public OAuthHttpClient isabelConnectOAuthHttpClient() {
         if (isabelConnectOAuthHttpClient == null) {
             throw new IllegalStateException("IsabelConnect OauthHttpClient was not properly initialized. Did you configure isabelConnectOAuth2ClientId?");
         }
 
-        return pontoConnectOAuthHttpClient;
+        return isabelConnectOAuthHttpClient;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.ibanity.apis.client.services;
 
 import com.ibanity.apis.client.http.IbanityHttpClient;
+import com.ibanity.apis.client.http.OAuthHttpClient;
 import com.ibanity.apis.client.products.isabel_connect.services.IsabelConnectService;
 import com.ibanity.apis.client.products.ponto_connect.services.PontoConnectService;
 import com.ibanity.apis.client.products.xs2a.services.Xs2aService;
@@ -12,6 +13,10 @@ public interface IbanityService {
     IbanityHttpClient ibanityHttpClient();
 
     Xs2aService xs2aService();
+
+    OAuthHttpClient pontoConnectOAuthHttpClient();
+
+    OAuthHttpClient isabelConnectOAuthHttpClient();
 
     PontoConnectService pontoConnectService();
 
