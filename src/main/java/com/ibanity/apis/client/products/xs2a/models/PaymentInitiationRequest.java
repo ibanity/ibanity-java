@@ -39,6 +39,7 @@ public class PaymentInitiationRequest implements IbanityModel {
     private String creditorAgent;
     private String creditorAgentType;
     private String status;
+    private String statusReason;
     private String financialInstitutionCustomerReference;
 
     private BigDecimal amount;

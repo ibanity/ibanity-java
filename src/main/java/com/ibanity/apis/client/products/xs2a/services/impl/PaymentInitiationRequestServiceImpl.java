@@ -104,6 +104,7 @@ public class PaymentInitiationRequestServiceImpl implements PaymentInitiationReq
         private String creditorAgent;
         private String creditorAgentType;
         private String status;
+        private String statusReason;
         private String redirectUri;
         private String locale;
         private String customerIpAddress;
