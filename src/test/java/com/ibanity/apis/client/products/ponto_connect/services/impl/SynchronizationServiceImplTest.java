@@ -60,6 +60,7 @@ public class SynchronizationServiceImplTest {
                         .subtype(SUBTYPE)
                         .resourceId(RESOURCE_ID)
                         .resourceType(RESOURCE_TYPE)
+                        .customerIpAddress("0.0.0.0")
                         .build()),
                 emptyMap(),
                 ACCESS_TOKEN))
@@ -70,6 +71,7 @@ public class SynchronizationServiceImplTest {
                 .resourceId(RESOURCE_ID)
                 .accessToken(ACCESS_TOKEN)
                 .resourceType(RESOURCE_TYPE)
+                .customerIpAddress("0.0.0.0")
                 .build());
 
         assertThat(actual).isEqualTo(createExpected());

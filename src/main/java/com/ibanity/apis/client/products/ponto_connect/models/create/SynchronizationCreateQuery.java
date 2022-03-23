@@ -19,6 +19,7 @@ public class SynchronizationCreateQuery {
     private String resourceId;
     private String resourceType;
     private String accessToken;
+    private String customerIpAddress;
 
     @Builder.Default
     private Map<String, String> additionalHeaders = emptyMap();

@@ -59,6 +59,7 @@ class SynchronizationServiceImplTest {
                         .subtype("accountDetails")
                         .resourceId(ACCOUNT_ID)
                         .customerOnline(true)
+                        .customerIpAddress("0.0.0.0")
                         .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                         .build();
 
