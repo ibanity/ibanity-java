@@ -1,0 +1,51 @@
+{
+  "data": [
+    {
+      "attributes": {
+        "valueDate": "2020-06-19T00:00:00.000Z",
+        "remittanceInformationType": "unstructured",
+        "remittanceInformation": "Tempora animi qui!",
+        "purposeCode": "CASH",
+        "proprietaryBankTransactionCode": "63058",
+        "mandateId": "486",
+        "internalReference": "ae7976b0-78b7-492f-99d2-8e85ab5ea006",
+        "executionDate": "2020-06-19T00:00:00.000Z",
+        "endToEndId": "a965fa0788c241f3b13df3fbda744a07",
+        "digest": "2acc87e558b508f7b4bd21829adee7aaace14eedde2b65ec8459201ea7a76050",
+        "description": "Wire transfer",
+        "currency": "EUR",
+        "creditorId": "315",
+        "counterpartReference": "BE62467153327786",
+        "counterpartName": "Rice Ltd",
+        "bankTransactionCode": "PMNT-IRCT-ESCT",
+        "amount": 2.76,
+        "additionalInformation": "Aut.",
+        "cardReferenceType": "MASKEDPAN",
+        "cardReference": "6666",
+        "fee": 3.14
+      },
+      "id": "a4a47c21-b606-464f-ae17-f8e3af6772c9",
+      "relationships": {
+        "account": {
+          "links": {
+            "related": "https://api.ibanity.com/ponto-connect/accounts/8804e34f-12b0-4b70-86bf-265f013ca232"
+          },
+          "data": {
+            "type": "account",
+            "id": "8804e34f-12b0-4b70-86bf-265f013ca232"
+          }
+        }
+      },
+      "type": "transaction"
+    }
+  ],
+  "links": {
+    "first": "https://api.ibanity.com/ponto-connect/synchronizations/9d36e759-b606-41dd-8d18-c882bd8db03d/updated-transactions"
+  },
+  "meta": {
+    "paging": {
+      "limit": 10
+    },
+    "synchronizedAt": "2019-04-25T09:06:08.044Z"
+  }
+}

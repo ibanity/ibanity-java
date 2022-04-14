@@ -6,6 +6,7 @@ import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.ponto_connect.models.Synchronization;
 import com.ibanity.apis.client.products.ponto_connect.models.create.SynchronizationCreateQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.read.SynchronizationReadQuery;
+import com.ibanity.apis.client.products.ponto_connect.models.links.UpdatedTransactionsLinks;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,7 +65,7 @@ public class SynchronizationServiceImplTest {
                         .build()),
                 emptyMap(),
                 ACCESS_TOKEN))
-                .thenReturn(loadHttpResponse("json/ponto-connect/synchronization.json"));
+                .thenReturn(loadHttpResponse("json/ponto-connect/synchronization_with_updated_transactions.json"));
 
         Synchronization actual = synchronizationService.create(SynchronizationCreateQuery.builder()
                 .subtype(SUBTYPE)
@@ -74,7 +75,7 @@ public class SynchronizationServiceImplTest {
                 .customerIpAddress("0.0.0.0")
                 .build());
 
-        assertThat(actual).isEqualTo(createExpected());
+        assertThat(actual).isEqualTo(createExpected(true));
     }
 
     @Test
@@ -89,19 +90,28 @@ public class SynchronizationServiceImplTest {
                 .accessToken(ACCESS_TOKEN)
                 .build());
 
-        assertThat(actual).isEqualTo(createExpected());
+        assertThat(actual).isEqualTo(createExpected(false));
     }
 
-    private Synchronization createExpected() {
-        return Synchronization.builder()
+    private Synchronization createExpected(boolean withUpdatedTransactionsLinks) {
+        Synchronization.SynchronizationBuilder synchronizationBuilder = Synchronization.builder()
                 .subtype(SUBTYPE)
                 .resourceId(RESOURCE_ID)
                 .resourceType(RESOURCE_TYPE)
                 .id(SYNCHRONIZATION_ID)
                 .updatedAt(Instant.parse("2019-09-02T11:28:35.971Z"))
                 .status("pending")
-                .createdAt(Instant.parse("2019-09-02T11:28:35.971Z"))
-                .build();
+                .createdAt(Instant.parse("2019-09-02T11:28:35.971Z"));
+
+        if (withUpdatedTransactionsLinks) {
+            synchronizationBuilder = synchronizationBuilder.updatedTransactionsLinks(
+                    UpdatedTransactionsLinks.builder()
+                        .related("https://api.ibanity.com/ponto-connect/synchronizations/38ea8333-81be-443e-9852-6d86468f5b45/updated-transactions")
+                        .build()
+            );
+        }
+
+        return synchronizationBuilder.build();
     }
 
 }

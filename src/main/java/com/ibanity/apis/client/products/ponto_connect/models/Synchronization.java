@@ -2,6 +2,7 @@ package com.ibanity.apis.client.products.ponto_connect.models;
 
 import com.ibanity.apis.client.models.IbanityError;
 import com.ibanity.apis.client.models.IbanityModel;
+import com.ibanity.apis.client.products.ponto_connect.models.links.UpdatedTransactionsLinks;
 import lombok.*;
 
 import java.time.Instant;
@@ -32,4 +33,6 @@ public class Synchronization implements IbanityModel {
 
     private Instant createdAt;
     private Instant updatedAt;
+
+    private UpdatedTransactionsLinks updatedTransactionsLinks;
 }

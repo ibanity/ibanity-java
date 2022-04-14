@@ -1,0 +1,25 @@
+{
+  "data": {
+    "type": "synchronization",
+    "relationships": {
+      "updatedTransactions": {
+        "links": {
+          "meta": {
+            "type": "transaction"
+          },
+          "related": "https://api.ibanity.com/ponto-connect/synchronizations/38ea8333-81be-443e-9852-6d86468f5b45/updated-transactions"
+        }
+      }
+    },
+    "id": "1b3e3011-d018-4785-bbba-9aa75ba14d45",
+    "attributes": {
+      "updatedAt": "2019-09-02T11:28:35.971Z",
+      "subtype": "accountDetails",
+      "status": "pending",
+      "resourceType": "account",
+      "resourceId": "8804e34f-12b0-4b70-86bf-265f013ca232",
+      "errors": [],
+      "createdAt": "2019-09-02T11:28:35.971Z"
+    }
+  }
+}

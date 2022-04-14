@@ -37,7 +37,7 @@ public class SynchronizationServiceImpl implements SynchronizationService {
                 .build();
         RequestApiModel request = buildRequest(Synchronization.RESOURCE_TYPE, synchronization);
         HttpResponse response = ibanityHttpClient.post(buildUri(getUrl()), request, synchronizationCreateQuery.getAdditionalHeaders(), synchronizationCreateQuery.getAccessToken());
-        return mapResource(response, Synchronization.class);
+        return mapResource(response, SynchronizationMapper::map);
     }
 
     @Override
