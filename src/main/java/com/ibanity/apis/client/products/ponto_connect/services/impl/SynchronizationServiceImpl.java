@@ -33,6 +33,7 @@ public class SynchronizationServiceImpl implements SynchronizationService {
                 .resourceId(synchronizationCreateQuery.getResourceId())
                 .resourceType(synchronizationCreateQuery.getResourceType())
                 .subtype(synchronizationCreateQuery.getSubtype())
+                .customerIpAddress(synchronizationCreateQuery.getCustomerIpAddress())
                 .build();
         RequestApiModel request = buildRequest(Synchronization.RESOURCE_TYPE, synchronization);
         HttpResponse response = ibanityHttpClient.post(buildUri(getUrl()), request, synchronizationCreateQuery.getAdditionalHeaders(), synchronizationCreateQuery.getAccessToken());
