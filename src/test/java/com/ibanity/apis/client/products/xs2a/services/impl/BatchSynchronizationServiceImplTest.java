@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.net.URI;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.UUID;
 
 import static java.util.Collections.emptyMap;
@@ -52,7 +53,7 @@ class BatchSynchronizationServiceImplTest {
                         .resourceType("account")
                         .cancelAfter(BATCH_SYNCHRONIZATION_X_DATE)
                         .unlessSynchronizedAfter(BATCH_SYNCHRONIZATION_X_DATE)
-                        .subtypes(new String[]{ "accountDetails", "accountTransactions" })
+                        .subtypes(Arrays.asList("accountDetails", "accountTransactions"))
                         .build();
 
         when(ibanityHttpClient.post(new URI(BATCH_SYNCHRONIZATION_ENDPOINT), createRequest(batchSynchronizationCreationQuery), emptyMap(), null))
@@ -60,7 +61,7 @@ class BatchSynchronizationServiceImplTest {
 
         BatchSynchronization actual = batchSynchronizationService.create(batchSynchronizationCreationQuery);
 
-        assertThat(actual).isEqualToComparingFieldByField(createExpected( ));
+        assertThat(actual).isEqualToComparingFieldByField(createExpected());
     }
 
     private RequestApiModel createRequest(BatchSynchronizationCreationQuery batchSynchronizationCreationQuery) {
@@ -86,7 +87,7 @@ class BatchSynchronizationServiceImplTest {
                 .resourceType("account")
                 .cancelAfter(BATCH_SYNCHRONIZATION_X_DATE)
                 .unlessSynchronizedAfter(BATCH_SYNCHRONIZATION_X_DATE)
-                .subtypes(new String[] { "accountDetails", "accountTransactions" });
+                .subtypes(Arrays.asList("accountDetails", "accountTransactions"));
 
         return batchSynchronizationBuilder
                 .build();
