@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.emptyMap;
@@ -16,7 +17,7 @@ import static java.util.Collections.emptyMap;
 @EqualsAndHashCode
 public class BatchSynchronizationCreationQuery {
 
-    private String[] subtypes;
+    private List<String> subtypes;
     private String resourceType;
     private Instant cancelAfter;
     private Instant unlessSynchronizedAfter;

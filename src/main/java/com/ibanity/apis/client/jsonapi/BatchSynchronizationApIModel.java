@@ -23,7 +23,7 @@ public class BatchSynchronizationApIModel {
 
     private Instant createdAt;
     private String resourceType;
-    private String[] subtypes;
+    private List<String> subtypes;
     private Instant cancelAfter;
     private Instant unlessSynchronizedAfter;
     private List<IbanityErrorApiModel> errors;
