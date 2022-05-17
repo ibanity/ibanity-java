@@ -1,7 +1,7 @@
 package com.ibanity.apis.client.products.ponto_connect.mappers;
 
 import com.ibanity.apis.client.jsonapi.DataApiModel;
-import com.ibanity.apis.client.jsonapi.SynchronizationApIModel;
+import com.ibanity.apis.client.jsonapi.SynchronizationApiModel;
 import com.ibanity.apis.client.mappers.IbanityErrorMapper;
 import com.ibanity.apis.client.products.ponto_connect.models.Synchronization;
 import com.ibanity.apis.client.utils.IbanityUtils;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class SynchronizationMapper {
 
     public static Synchronization map(DataApiModel dataApiModel) {
-        SynchronizationApIModel synchronizationApiModel = IbanityUtils.objectMapper().convertValue(dataApiModel.getAttributes(), SynchronizationApIModel.class);
+        SynchronizationApiModel synchronizationApiModel = IbanityUtils.objectMapper().convertValue(dataApiModel.getAttributes(), SynchronizationApiModel.class);
         Synchronization result = Synchronization.builder()
                 .resourceId(synchronizationApiModel.getResourceId())
                 .subtype(synchronizationApiModel.getSubtype())
