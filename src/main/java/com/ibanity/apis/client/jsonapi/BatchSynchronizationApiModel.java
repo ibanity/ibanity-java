@@ -19,7 +19,7 @@ import java.util.List;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class BatchSynchronizationApIModel {
+public class BatchSynchronizationApiModel {
 
     private Instant createdAt;
     private String resourceType;

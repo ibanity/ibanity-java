@@ -1,6 +1,6 @@
 package com.ibanity.apis.client.products.xs2a.mappers;
 
-import com.ibanity.apis.client.jsonapi.BatchSynchronizationApIModel;
+import com.ibanity.apis.client.jsonapi.BatchSynchronizationApiModel;
 import com.ibanity.apis.client.jsonapi.DataApiModel;
 import com.ibanity.apis.client.mappers.IbanityErrorMapper;
 import com.ibanity.apis.client.products.xs2a.models.BatchSynchronization;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class BatchSynchronizationMapper {
 
     public static BatchSynchronization map(DataApiModel dataApiModel) {
-        BatchSynchronizationApIModel batchSynchronizationApiModel = IbanityUtils.objectMapper().convertValue(dataApiModel.getAttributes(), BatchSynchronizationApIModel.class);
+        BatchSynchronizationApiModel batchSynchronizationApiModel = IbanityUtils.objectMapper().convertValue(dataApiModel.getAttributes(), BatchSynchronizationApiModel.class);
         BatchSynchronization result = BatchSynchronization.builder()
                 .subtypes(batchSynchronizationApiModel.getSubtypes())
                 .cancelAfter(batchSynchronizationApiModel.getCancelAfter())

@@ -12,7 +12,7 @@ import java.util.List;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class SynchronizationApIModel {
+public class SynchronizationApiModel {
 
     private Instant createdAt;
     private String resourceId;
