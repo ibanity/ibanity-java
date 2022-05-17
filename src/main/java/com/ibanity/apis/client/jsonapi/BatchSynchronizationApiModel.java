@@ -26,5 +26,4 @@ public class BatchSynchronizationApiModel {
     private List<String> subtypes;
     private Instant cancelAfter;
     private Instant unlessSynchronizedAfter;
-    private List<IbanityErrorApiModel> errors;
 }

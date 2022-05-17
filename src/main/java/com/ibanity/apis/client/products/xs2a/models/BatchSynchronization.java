@@ -1,6 +1,5 @@
 package com.ibanity.apis.client.products.xs2a.models;
 
-import com.ibanity.apis.client.models.IbanityError;
 import com.ibanity.apis.client.models.IbanityModel;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -25,8 +24,6 @@ public class BatchSynchronization implements IbanityModel {
     private UUID id;
     private String requestId;
 
-    @Builder.Default
-    private List<IbanityError> errors = Collections.emptyList();
     @Builder.Default
     private List<String> subtypes = Collections.emptyList();
     private String resourceType;
