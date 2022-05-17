@@ -1,0 +1,13 @@
+{
+  "data": {
+    "attributes": {
+      "errors": [],
+      "resourceType": "account",
+      "cancelAfter": "2022-05-17T00:00:00.000Z",
+      "unlessSynchronizedAfter": "2022-05-17T00:00:00.000Z",
+      "subtypes": ["accountDetails", "accountTransactions"]
+    },
+    "id": "04e98b21-8213-4aec-b373-13eb51f948e9",
+    "type": "batchSynchronization"
+  }
+}
