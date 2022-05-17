@@ -27,6 +27,7 @@ public class BatchSynchronization implements IbanityModel {
 
     @Builder.Default
     private List<IbanityError> errors = Collections.emptyList();
+    @Builder.Default
     private List<String> subtypes = Collections.emptyList();
     private String resourceType;
     private Instant cancelAfter;
