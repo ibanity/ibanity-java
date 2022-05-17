@@ -90,7 +90,7 @@ public class TransactionServiceImplTest {
         when(ibanityHttpClient.get(new URI(UPDATED_TRANSACTIONS_URI), emptyMap(), ACCESS_TOKEN))
                 .thenReturn(loadHttpResponse("json/ponto-connect/updated-transactions.json"));
 
-        IbanityCollection<Transaction> actual = transactionService.list(TransactionsReadQuery.builder()
+        IbanityCollection<Transaction> actual = transactionService.listUpdatedForSynchronization(TransactionsReadQuery.builder()
                 .accessToken(ACCESS_TOKEN)
                 .synchronizationId(SYNCHRONIZATION_ID)
                 .build());

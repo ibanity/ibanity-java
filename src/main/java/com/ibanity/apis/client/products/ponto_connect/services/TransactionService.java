@@ -10,4 +10,6 @@ public interface TransactionService {
     Transaction find(TransactionReadQuery transactionReadQuery);
 
     IbanityCollection<Transaction> list(TransactionsReadQuery transactionsReadQuery);
+
+    IbanityCollection<Transaction> listUpdatedForSynchronization(TransactionsReadQuery transactionsReadQuery);
 }
