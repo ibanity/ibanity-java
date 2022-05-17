@@ -16,6 +16,8 @@ public interface Xs2aService {
 
     TransactionsService transactionService();
 
+    BatchSynchronizationService batchSynchronizationService();
+
     SynchronizationService synchronizationService();
 
     SandboxService sandbox();
