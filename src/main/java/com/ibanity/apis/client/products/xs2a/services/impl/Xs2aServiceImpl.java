@@ -11,6 +11,7 @@ public class Xs2aServiceImpl implements Xs2aService {
     private final AccountsService accountService;
     private final TransactionsService transactionService;
     private final SynchronizationService synchronizationService;
+    private final BatchSynchronizationService batchSynchronizationService;
     private final CustomerAccessTokensService customerAccessTokensService;
     private final FinancialInstitutionsService financialInstitutionsService;
     private final PaymentInitiationRequestService paymentInitiationRequestService;
@@ -26,6 +27,7 @@ public class Xs2aServiceImpl implements Xs2aService {
         accountService = new AccountsServiceImpl(apiUrlProvider, ibanityHttpClient);
         transactionService = new TransactionsServiceImpl(apiUrlProvider, ibanityHttpClient);
         synchronizationService = new SynchronizationServiceImpl(apiUrlProvider, ibanityHttpClient);
+        batchSynchronizationService = new BatchSynchronizationServiceImpl(apiUrlProvider, ibanityHttpClient);
         customerAccessTokensService = new CustomerAccessTokensServiceImpl(apiUrlProvider, ibanityHttpClient);
         financialInstitutionsService = new FinancialInstitutionsServiceImpl(apiUrlProvider, ibanityHttpClient);
         paymentInitiationRequestService = new PaymentInitiationRequestServiceImpl(apiUrlProvider, ibanityHttpClient);
@@ -72,6 +74,11 @@ public class Xs2aServiceImpl implements Xs2aService {
     @Override
     public SynchronizationService synchronizationService() {
         return synchronizationService;
+    }
+
+    @Override
+    public BatchSynchronizationService batchSynchronizationService() {
+        return batchSynchronizationService;
     }
 
     @Override
