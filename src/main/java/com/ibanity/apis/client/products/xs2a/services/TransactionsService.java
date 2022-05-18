@@ -9,5 +9,7 @@ public interface TransactionsService {
 
     IbanityCollection<Transaction> list(TransactionsReadQuery transactionsReadQuery);
 
+    IbanityCollection<Transaction> listUpdatedForSynchronization(TransactionsReadQuery transactionsReadQuery);
+
     Transaction find(TransactionReadQuery transactionReadQuery);
 }

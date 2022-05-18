@@ -142,7 +142,7 @@ public class TransactionsServiceImplTest {
         when(ibanityHttpClient.get(new URI(UPDATED_TRANSACTIONS_URI), emptyMap(), CUSTOMER_ACCESS_TOKEN))
                 .thenReturn(IbanityTestHelper.loadHttpResponse("json/updated-transactions.json"));
 
-        IbanityCollection<Transaction> actual = transactionsService.list(transactionReadQuery);
+        IbanityCollection<Transaction> actual = transactionsService.listUpdatedForSynchronization(transactionReadQuery);
 
         assertThat(actual).isEqualToComparingFieldByFieldRecursively(expected);
     }
