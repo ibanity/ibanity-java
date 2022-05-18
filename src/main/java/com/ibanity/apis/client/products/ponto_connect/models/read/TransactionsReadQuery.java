@@ -19,6 +19,7 @@ public class TransactionsReadQuery {
 
     private String accessToken;
     private UUID accountId;
+    private UUID synchronizationId;
     private IbanityPagingSpec pagingSpec;
 
     @Builder.Default

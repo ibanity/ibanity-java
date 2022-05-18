@@ -34,9 +34,13 @@ public class TransactionServiceImplTest {
     private static final String ACCESS_TOKEN = "thisIsAnAccessToken";
     private static final UUID ACCOUNT_ID = fromString("8804e34f-12b0-4b70-86bf-265f013ca232");
     private static final UUID TRANSACTION_ID = fromString("a4a47c21-b606-464f-ae17-f8e3af6772c9");
+    private static final UUID SYNCHRONIZATION_ID = UUID.fromString("9d36e759-b606-41dd-8d18-c882bd8db03d");
+
     private static final String TRANSACTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/accounts/{accountId}/transactions/{transactionId}";
     private static final String GET_TRANSACTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/accounts/8804e34f-12b0-4b70-86bf-265f013ca232/transactions/a4a47c21-b606-464f-ae17-f8e3af6772c9";
     private static final String LIST_TRANSACTION_ENDPOINT = "https://api.ibanity.localhost/ponto-connect/accounts/8804e34f-12b0-4b70-86bf-265f013ca232/transactions?page%5Blimit%5D=10";
+    private static final String UPDATED_TRANSACTIONS_ENDPOINT = "https://api.ibanity.com/ponto-connect/synchronizations/{synchronizationId}/updated-transactions";
+    private static final String UPDATED_TRANSACTIONS_URI = "https://api.ibanity.com/ponto-connect/synchronizations/9d36e759-b606-41dd-8d18-c882bd8db03d/updated-transactions?page%5Blimit%5D=10";
 
     @InjectMocks
     private TransactionServiceImpl transactionService;
@@ -74,6 +78,21 @@ public class TransactionServiceImplTest {
         IbanityCollection<Transaction> actual = transactionService.list(TransactionsReadQuery.builder()
                 .accessToken(ACCESS_TOKEN)
                 .accountId(ACCOUNT_ID)
+                .build());
+
+        assertThat(actual.getItems()).containsExactly(createExpected());
+        assertThat(actual.getPageLimit()).isEqualTo(10);
+    }
+
+    @Test
+    public void listUpdatedForSynchronization() throws Exception {
+        when(apiUrlProvider.find(IbanityProduct.PontoConnect, "synchronization", "updatedTransactions")).thenReturn(UPDATED_TRANSACTIONS_ENDPOINT);
+        when(ibanityHttpClient.get(new URI(UPDATED_TRANSACTIONS_URI), emptyMap(), ACCESS_TOKEN))
+                .thenReturn(loadHttpResponse("json/ponto-connect/updated-transactions.json"));
+
+        IbanityCollection<Transaction> actual = transactionService.listUpdatedForSynchronization(TransactionsReadQuery.builder()
+                .accessToken(ACCESS_TOKEN)
+                .synchronizationId(SYNCHRONIZATION_ID)
                 .build());
 
         assertThat(actual.getItems()).containsExactly(createExpected());

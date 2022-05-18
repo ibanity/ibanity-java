@@ -38,7 +38,20 @@ public class TransactionsServiceImpl implements TransactionsService {
             pagingSpec = IbanityPagingSpec.DEFAULT_PAGING_SPEC;
         }
 
-        String url = getUrl(transactionsReadQuery.getFinancialInstitutionId(), transactionsReadQuery.getAccountId(), transactionsReadQuery.getSynchronizationId());
+        String url = getUrl(transactionsReadQuery.getFinancialInstitutionId(), transactionsReadQuery.getAccountId());
+        HttpResponse response = ibanityHttpClient.get(buildUri(url, pagingSpec), transactionsReadQuery.getAdditionalHeaders(), transactionsReadQuery.getCustomerAccessToken());
+
+        return mapCollection(response, Transaction.class);
+    }
+
+    @Override
+    public IbanityCollection<Transaction> listUpdatedForSynchronization(TransactionsReadQuery transactionsReadQuery) {
+        IbanityPagingSpec pagingSpec = transactionsReadQuery.getPagingSpec();
+        if (pagingSpec == null) {
+            pagingSpec = IbanityPagingSpec.DEFAULT_PAGING_SPEC;
+        }
+
+        String url = getUrlForSynchronizationId(transactionsReadQuery.getSynchronizationId());
         HttpResponse response = ibanityHttpClient.get(buildUri(url, pagingSpec), transactionsReadQuery.getAdditionalHeaders(), transactionsReadQuery.getCustomerAccessToken());
 
         return mapCollection(response, Transaction.class);
@@ -47,24 +60,26 @@ public class TransactionsServiceImpl implements TransactionsService {
     @Override
     public Transaction find(TransactionReadQuery transactionReadQuery) {
         String url =
-                getUrl(transactionReadQuery.getFinancialInstitutionId(), transactionReadQuery.getAccountId(), null)
+                getUrl(transactionReadQuery.getFinancialInstitutionId(), transactionReadQuery.getAccountId())
                         + "/"
                         + transactionReadQuery.getTransactionId().toString();
         HttpResponse response = ibanityHttpClient.get(buildUri(url), transactionReadQuery.getAdditionalHeaders(), transactionReadQuery.getCustomerAccessToken());
         return mapResource(response, Transaction.class);
     }
 
-    private String getUrl(UUID financialInstitutionId, UUID accountId, UUID synchronizationId) {
-        String url;
-        if (synchronizationId != null) {
-            url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "synchronization", "updatedTransactions")
-                    .replace(Synchronization.API_URL_TAG_ID, synchronizationId.toString());
-        }else{
-            url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "transactions")
-                    .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
-                    .replace(Account.API_URL_TAG_ID, accountId.toString())
-                    .replace(Transaction.API_URL_TAG_ID, "");
-        }
+    private String getUrl(UUID financialInstitutionId, UUID accountId) {
+        String url = apiUrlProvider
+            .find(IbanityProduct.Xs2a, "customer", "financialInstitution", "transactions")
+            .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
+            .replace(Account.API_URL_TAG_ID, accountId.toString())
+            .replace(Transaction.API_URL_TAG_ID, "");
+        return StringUtils.removeEnd(url, "/");
+    }
+
+    private String getUrlForSynchronizationId(UUID synchronizationId) {
+        String url = apiUrlProvider
+            .find(IbanityProduct.Xs2a, "customer", "synchronization", "updatedTransactions")
+            .replace(Synchronization.API_URL_TAG_ID, synchronizationId.toString());
         return StringUtils.removeEnd(url, "/");
     }
 }

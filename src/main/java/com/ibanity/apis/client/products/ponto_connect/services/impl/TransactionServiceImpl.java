@@ -6,6 +6,7 @@ import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.paging.IbanityPagingSpec;
 import com.ibanity.apis.client.products.ponto_connect.models.Account;
 import com.ibanity.apis.client.products.ponto_connect.models.Transaction;
+import com.ibanity.apis.client.products.ponto_connect.models.Synchronization;
 import com.ibanity.apis.client.products.ponto_connect.models.read.TransactionReadQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.read.TransactionsReadQuery;
 import com.ibanity.apis.client.products.ponto_connect.services.TransactionService;
@@ -52,11 +53,31 @@ public class TransactionServiceImpl implements TransactionService {
         return mapCollection(response, Transaction.class);
     }
 
+    @Override
+    public IbanityCollection<Transaction> listUpdatedForSynchronization(TransactionsReadQuery transactionsReadQuery) {
+        IbanityPagingSpec pagingSpec = transactionsReadQuery.getPagingSpec();
+        if (pagingSpec == null) {
+            pagingSpec = IbanityPagingSpec.DEFAULT_PAGING_SPEC;
+        }
+
+        URI uri = buildUri(getUrlForSynchronizationId(transactionsReadQuery.getSynchronizationId()), pagingSpec);
+
+        HttpResponse response = ibanityHttpClient.get(uri, transactionsReadQuery.getAdditionalHeaders(), transactionsReadQuery.getAccessToken());
+        return mapCollection(response, Transaction.class);
+    }
+
     private String getUrl(UUID accountId) {
         String url = apiUrlProvider
                 .find(IbanityProduct.PontoConnect, "account", "transactions")
                 .replace(Account.API_URL_TAG_ID, accountId.toString())
                 .replace(Transaction.API_URL_TAG_ID, "");
+        return StringUtils.removeEnd(url, "/");
+    }
+
+    private String getUrlForSynchronizationId(UUID synchronizationId) {
+        String url = apiUrlProvider
+                .find(IbanityProduct.PontoConnect, "synchronization", "updatedTransactions")
+                .replace(Synchronization.API_URL_TAG_ID, synchronizationId.toString());
         return StringUtils.removeEnd(url, "/");
     }
 }
