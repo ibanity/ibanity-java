@@ -1,6 +1,5 @@
 package com.ibanity.apis.client.http.service.impl;
 
-import com.google.common.collect.Maps;
 import com.ibanity.apis.client.http.service.IbanityHttpSignatureService;
 import lombok.NonNull;
 import org.apache.commons.codec.digest.MessageDigestAlgorithms;
@@ -21,6 +20,8 @@ import java.security.spec.MGF1ParameterSpec;
 import java.security.spec.PSSParameterSpec;
 import java.time.Clock;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +29,6 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static java.util.stream.Collectors.toList;
 
 public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureService {
@@ -103,7 +103,7 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
             @NonNull URL url,
             @NonNull Map<String, String> requestHeaders,
             @NonNull String payloadDigestHeaderValue) {
-        HashMap<String, String> httpSignatureHeaders = Maps.newHashMap();
+        HashMap<String, String> httpSignatureHeaders = new HashMap<>();
 
         Long createdTimestamp = getTimestamp();
         String signatureDigest = getSignatureDigest(getRequestTarget(httpMethod, url), getHost(), payloadDigestHeaderValue, createdTimestamp, requestHeaders);
@@ -156,7 +156,7 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
     }
 
     private String getSignatureHeaders(Map<String, String> requestHeaders) {
-        List<String> headers = newArrayList("(request-target)", "host", "digest", "(created)");
+        List<String> headers = new ArrayList<>(Arrays.asList("(request-target)", "host", "digest", "(created)"));
         List<String> additionalHeaders = getAdditionalHeaders(requestHeaders).keySet().stream()
                 .map(String::toLowerCase)
                 .collect(toList());
@@ -193,11 +193,11 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
     }
 
     private String getSignatureString(String requestTarget, String host, String payloadDigest, Long timestamp, Map<String, String> requestHeaders) {
-        List<String> values = newArrayList(
+        List<String> values = new ArrayList<>(Arrays.asList(
                 "(request-target): " + requestTarget,
                 "host: " + host,
                 "digest: " + payloadDigest,
-                "(created): " + timestamp);
+                "(created): " + timestamp));
 
         values.addAll(getAdditionalHeaders(requestHeaders).entrySet().stream()
                 .map(entry -> String.format("%s: %s", entry.getKey().toLowerCase(), entry.getValue()))

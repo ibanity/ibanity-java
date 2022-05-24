@@ -4,9 +4,8 @@ import com.ibanity.apis.client.products.isabel_connect.models.TokenQuery;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import static com.google.common.collect.Maps.newHashMap;
 
 @Data
 @SuperBuilder
@@ -23,7 +22,7 @@ public class InitialTokenCreateQuery extends TokenQuery {
 
     @Override
     public Map<String, String> requestArguments() {
-        Map<String, String> arguments = newHashMap();
+        Map<String, String> arguments = new HashMap<>();
         arguments.put("grant_type", "authorization_code");
         arguments.put("code", authorizationCode);
         arguments.put("redirect_uri", redirectUri);

@@ -14,10 +14,10 @@ import org.apache.http.message.BasicNameValuePair;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.google.common.collect.Maps.newHashMap;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
@@ -36,7 +36,7 @@ public class OAuthHttpClientImpl implements OAuthHttpClient {
 
     @Override
     public HttpResponse post(URI path, Map<String, String> arguments, String clientSecret) {
-        return post(path, newHashMap(), arguments, clientSecret);
+        return post(path, new HashMap<>(), arguments, clientSecret);
     }
 
     @Override
