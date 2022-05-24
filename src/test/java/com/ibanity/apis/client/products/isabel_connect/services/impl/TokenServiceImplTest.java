@@ -99,7 +99,7 @@ public class TokenServiceImplTest {
     }
 
     private Map<String, String> createInitialTokenArguments() {
-        HashMap<String, String> arguments = newHashMap();
+        Map<String, String> arguments = newHashMap();
         arguments.put("grant_type", "authorization_code");
         arguments.put("code", AUTHORIZATION_CODE);
         arguments.put("redirect_uri", REDIRECT_URI);
@@ -108,7 +108,7 @@ public class TokenServiceImplTest {
     }
 
     private Map<String, String> createAccessTokenArguments() {
-        HashMap<String, String> arguments = newHashMap();
+        Map<String, String> arguments = newHashMap();
         arguments.put("grant_type", "refresh_token");
         arguments.put("refresh_token", TOKEN);
 
@@ -116,7 +116,7 @@ public class TokenServiceImplTest {
     }
 
     private Map<String, String> revokeTokenArguments() {
-        HashMap<String, String> arguments = newHashMap();
+        Map<String, String> arguments = newHashMap();
         arguments.put("token", TOKEN);
 
         return arguments;

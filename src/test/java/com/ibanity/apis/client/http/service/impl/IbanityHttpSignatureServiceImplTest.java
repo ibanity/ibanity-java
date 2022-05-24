@@ -89,8 +89,8 @@ class IbanityHttpSignatureServiceImplTest {
         return signatureParts[4].replace("\"", "");
     }
 
-    private HashMap<String, String> getRequestHeaders() {
-        HashMap<String, String> headers = newHashMap();
+    private Map<String, String> getRequestHeaders() {
+        Map<String, String> headers = newHashMap();
         headers.put("Ibanity-Idempotency-key", IDEMPOTENCY_KEY);
         return headers;
     }

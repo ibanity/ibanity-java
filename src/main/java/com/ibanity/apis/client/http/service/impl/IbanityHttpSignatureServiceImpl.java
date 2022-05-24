@@ -103,7 +103,7 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
             @NonNull URL url,
             @NonNull Map<String, String> requestHeaders,
             @NonNull String payloadDigestHeaderValue) {
-        HashMap<String, String> httpSignatureHeaders = new HashMap<>();
+        Map<String, String> httpSignatureHeaders = new HashMap<>();
 
         Long createdTimestamp = getTimestamp();
         String signatureDigest = getSignatureDigest(getRequestTarget(httpMethod, url), getHost(), payloadDigestHeaderValue, createdTimestamp, requestHeaders);
