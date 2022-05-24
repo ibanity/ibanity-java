@@ -22,7 +22,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.google.common.collect.Maps.newHashMap;
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.createHttpResponse;
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static java.util.Collections.emptyMap;
@@ -99,7 +98,7 @@ public class TokenServiceImplTest {
     }
 
     private Map<String, String> createInitialTokenArguments() {
-        Map<String, String> arguments = newHashMap();
+        Map<String, String> arguments = new HashMap<>();
         arguments.put("grant_type", "authorization_code");
         arguments.put("code", AUTHORIZATION_CODE);
         arguments.put("redirect_uri", REDIRECT_URI);
@@ -108,7 +107,7 @@ public class TokenServiceImplTest {
     }
 
     private Map<String, String> createAccessTokenArguments() {
-        Map<String, String> arguments = newHashMap();
+        Map<String, String> arguments = new HashMap<>();
         arguments.put("grant_type", "refresh_token");
         arguments.put("refresh_token", TOKEN);
 
@@ -116,7 +115,7 @@ public class TokenServiceImplTest {
     }
 
     private Map<String, String> revokeTokenArguments() {
-        Map<String, String> arguments = newHashMap();
+        Map<String, String> arguments = new HashMap<>();
         arguments.put("token", TOKEN);
 
         return arguments;

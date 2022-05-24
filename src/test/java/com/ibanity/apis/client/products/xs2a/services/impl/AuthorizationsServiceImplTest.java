@@ -16,10 +16,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.google.common.collect.Maps.newHashMap;
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static java.util.Collections.emptyMap;
@@ -60,7 +60,7 @@ class AuthorizationsServiceImplTest {
 
     @Test
     void create() throws IOException {
-        Map<String, String> queryParams = newHashMap();
+        Map<String, String> queryParams = new HashMap<>();
         queryParams.put("code", AUTHORIZATION_CODE);
         AuthorizationCreationQuery creationQuery = AuthorizationCreationQuery.builder()
                 .customerAccessToken(CUSTOMER_ACCESS_TOKEN)

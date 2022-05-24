@@ -19,9 +19,9 @@ import org.mockito.quality.Strictness;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.util.Collections;
 import java.util.UUID;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static java.time.Instant.parse;
 import static java.util.Collections.emptyMap;
@@ -206,7 +206,7 @@ class AccountsServiceImplTest {
                 .resourceId(ACCOUNT_ID.toString())
                 .resourceType("account")
                 .status("error")
-                .errors(newArrayList(IbanityError.builder()
+                .errors(Collections.singletonList(IbanityError.builder()
                         .code("authorizationInvalid")
                         .detail("The authorization is invalid, you should ask the customer to reauthorize the account")
                         .meta(ErrorMeta.builder()

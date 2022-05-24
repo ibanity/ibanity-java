@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.UUID;
 
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
@@ -85,7 +86,7 @@ class FinancialInstitutionAccountsServiceImplTest {
                 IbanityCollection.builder()
                         .pageLimit(10)
                         .firstLink(FIRST_LINK)
-                        .items(newArrayList(createExpectedForFind()))
+                        .items(Collections.singletonList(createExpectedForFind()))
                         .build()
         );
     }

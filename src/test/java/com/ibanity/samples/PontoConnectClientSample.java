@@ -34,10 +34,10 @@ import java.math.BigDecimal;
 import java.security.cert.CertificateException;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.ibanity.apis.client.helpers.IbanityClientSecurityAuthenticationPropertiesKeys.*;
 import static com.ibanity.apis.client.helpers.IbanityClientSecuritySignaturePropertiesKeys.*;
 import static com.ibanity.apis.client.helpers.IbanityConfiguration.IBANITY_API_ENDPOINT_PROPERTY_KEY;
@@ -317,7 +317,7 @@ public class PontoConnectClientSample {
                 .requestedExecutionDate(LocalDate.now().plusDays(1))
                 .redirectUri(pontoConnectRedirectUrl)
                 .accountId(accountId)
-                .payments(newArrayList(createPayment()))
+                .payments(Collections.singletonList(createPayment()))
                 .build());
 
         bulkPayment = bulkPaymentService.find(BulkPaymentReadQuery.builder()

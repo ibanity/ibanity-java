@@ -15,10 +15,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static com.ibanity.apis.client.models.IbanityProduct.Xs2a;
 import static java.util.UUID.fromString;
@@ -33,7 +33,7 @@ class SandboxFinancialInstitutionsServiceImplTest {
     private static final String API_ENDPOINT = "https://api.ibanity.com/sandbox/financial-institutions";
     private static final String API_SCHEMA_ENDPOINT = "https://api.ibanity.com/sandbox/financial-institutions/{financialInstitutionId}";
     private static final String API_ENDPOINT_WITH_ID = API_ENDPOINT + "/" + FINANCIAL_INSTITUTION_ID;
-    private static final List<String> AUTHORIZATION_MODELS = newArrayList("detailed", "financialInstitutionOffered");
+    private static final List<String> AUTHORIZATION_MODELS = Arrays.asList("detailed", "financialInstitutionOffered");
 
     @InjectMocks
     private SandboxFinancialInstitutionsServiceImpl sandboxFinancialInstitutionsService;

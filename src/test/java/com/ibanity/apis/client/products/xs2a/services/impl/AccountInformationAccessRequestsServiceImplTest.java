@@ -23,9 +23,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.UUID;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static java.util.Collections.emptyMap;
@@ -74,13 +75,13 @@ class AccountInformationAccessRequestsServiceImplTest {
                         .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                         .redirectUri("https://fake-tpp.com/access-granted")
                         .consentReference(CONSENT_REFERENCE)
-                        .requestedAccountReferences(newArrayList("BE9766801628897565"))
+                        .requestedAccountReferences(Collections.singletonList("BE9766801628897565"))
                         .locale("fr")
                         .customerIpAddress("0.0.0.0")
                         .state("aCustomState")
                         .allowMulticurrencyAccounts(true)
                         .financialInstitutionCustomerReference("jdoe0001")
-                        .allowedAccountSubtypes(newArrayList("checking", "savings"))
+                        .allowedAccountSubtypes(Arrays.asList("checking", "savings"))
                         .metaRequestCreationQuery(MetaRequestCreationQuery.builder()
                                 .requestedPastTransactionDays(BigDecimal.TEN)
                                 .authorizationPortalCreationQuery(AuthorizationPortalCreationQuery.builder()
@@ -138,7 +139,7 @@ class AccountInformationAccessRequestsServiceImplTest {
     private AccountInformationAccessRequest expectedForFind() {
         return AccountInformationAccessRequest.builder()
                 .id(ACCOUNT_INFORMATION_ACCESS_REQUEST_ID)
-                .requestedAccountReferences(newArrayList("BE9386908098818901"))
+                .requestedAccountReferences(Collections.singletonList("BE9386908098818901"))
                 .status("received")
                 .accountInformationAccessLinks(AccountInformationAccessLinks.builder().build())
                 .accountLinks(AccountLinks.builder()
@@ -154,7 +155,7 @@ class AccountInformationAccessRequestsServiceImplTest {
         return AccountInformationAccessRequest.builder()
                 .id(ACCOUNT_INFORMATION_ACCESS_REQUEST_ID)
                 .status("received")
-                .requestedAccountReferences(newArrayList("BE9386908098818901"))
+                .requestedAccountReferences(Collections.singletonList("BE9386908098818901"))
                 .accountInformationAccessLinks(AccountInformationAccessLinks.builder()
                         .redirect(CALLBACK)
                         .build())

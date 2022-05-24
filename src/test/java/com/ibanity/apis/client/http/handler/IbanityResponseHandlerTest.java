@@ -17,9 +17,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
@@ -86,7 +86,7 @@ class IbanityResponseHandlerTest {
     }
 
     private List<IbanityError> createExpectedErrors(String body) {
-        return newArrayList(IbanityError.builder()
+        return Collections.singletonList(IbanityError.builder()
                 .code("invalidCredentials")
                 .detail("Your credentials are invalid.")
                 .meta(ErrorMeta.builder()

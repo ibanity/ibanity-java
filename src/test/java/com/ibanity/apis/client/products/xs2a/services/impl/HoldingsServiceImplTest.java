@@ -23,9 +23,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.UUID;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static java.math.BigDecimal.TEN;
 import static java.util.Collections.emptyMap;
 import static org.mockito.Mockito.when;
@@ -64,7 +64,7 @@ class HoldingsServiceImplTest {
                 IbanityCollection.<Holding>builder()
                         .pageLimit(10)
                         .firstLink(FIRST_LINK)
-                        .items(newArrayList(createExpected()))
+                        .items(Collections.singletonList(createExpected()))
                         .latestSynchronization(Synchronization.builder()
                                 .resourceId("9fe37230-9103-49bd-a432-2bad72d5abb2")
                                 .resourceType("account")

@@ -23,7 +23,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.google.common.collect.Maps.newHashMap;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -72,7 +71,7 @@ class IbanitySignatureInterceptorTest {
     }
 
     private Map<String, String> getSignatureHeaders() {
-        Map<String, String> headers = newHashMap();
+        Map<String, String> headers = new HashMap<>();
         headers.put("digest", "value");
         return headers;
     }
@@ -82,6 +81,6 @@ class IbanitySignatureInterceptorTest {
     }
 
     private Map<String, String> getRequestedHeaders() {
-        return newHashMap();
+        return new HashMap<>();
     }
 }
