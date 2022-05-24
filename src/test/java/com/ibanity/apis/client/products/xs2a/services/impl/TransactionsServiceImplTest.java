@@ -21,9 +21,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.UUID;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -82,13 +82,13 @@ public class TransactionsServiceImplTest {
                 IbanityCollection.<Transaction>builder()
                         .pageLimit(10)
                         .firstLink(FIRST_LINK)
-                        .items(newArrayList(createExpected()))
+                        .items(Collections.singletonList(createExpected()))
                         .latestSynchronization(Synchronization.builder()
                                 .resourceId("1c020714-759c-4ee6-ae87-5ce667937e77")
                                 .resourceType("account")
                                 .subtype("accountTransactions")
                                 .status("success")
-                                .errors(newArrayList(IbanityError.builder()
+                                .errors(Collections.singletonList(IbanityError.builder()
                                         .code("authorizationInvalid")
                                         .detail("The authorization is invalid, you should ask the customer to reauthorize the account")
                                         .meta(ErrorMeta.builder()
@@ -130,7 +130,7 @@ public class TransactionsServiceImplTest {
                 IbanityCollection.<Transaction>builder()
                         .pageLimit(10)
                         .firstLink("https://api.ibanity.com/xs2a/customer/synchronizations/9d36e759-b606-41dd-8d18-c882bd8db03d/updated-transactions")
-                        .items(newArrayList(createExpected()))
+                        .items(Collections.singletonList(createExpected()))
                         .build();
 
         TransactionsReadQuery transactionReadQuery =

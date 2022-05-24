@@ -25,7 +25,6 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.google.common.collect.Maps.newHashMap;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -90,7 +89,7 @@ class IbanityHttpSignatureServiceImplTest {
     }
 
     private Map<String, String> getRequestHeaders() {
-        Map<String, String> headers = newHashMap();
+        Map<String, String> headers = new HashMap<>();
         headers.put("Ibanity-Idempotency-key", IDEMPOTENCY_KEY);
         return headers;
     }

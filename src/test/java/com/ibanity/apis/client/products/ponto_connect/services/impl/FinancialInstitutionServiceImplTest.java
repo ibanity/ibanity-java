@@ -20,9 +20,9 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.UUID;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static java.util.Collections.emptyMap;
 import static java.util.UUID.fromString;
@@ -99,7 +99,7 @@ public class FinancialInstitutionServiceImplTest {
                 .thenReturn(loadHttpResponse("json/ponto-connect/financial_institutions.json"));
 
         IbanityCollection<FinancialInstitution> actual = financialInstitutionService.list(FinancialInstitutionsReadQuery.builder()
-                .filters(newArrayList(Filter.builder()
+                .filters(Collections.singletonList(Filter.builder()
                         .field("name")
                         .contains("Bank")
                         .build()))

@@ -12,10 +12,9 @@ import com.ibanity.apis.client.products.xs2a.services.AccountInformationAccessRe
 import com.ibanity.apis.client.products.xs2a.services.AuthorizationsService;
 import com.ibanity.apis.client.services.IbanityService;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
-
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Maps.newHashMap;
 
 public class AuthorizationSample {
 
@@ -40,7 +39,7 @@ public class AuthorizationSample {
                         .consentReference(consentReference)
                         .allowFinancialInstitutionRedirectUri(true)
                         .customerIpAddress("1.1.1.1")
-                        .allowedAccountSubtypes(newArrayList("checking", "savings", "securities"))
+                        .allowedAccountSubtypes(Arrays.asList("checking", "savings", "securities"))
                         .skipIbanityCompletionCallback(true)
                         .state("myCustomState")
                         .metaRequestCreationQuery(MetaRequestCreationQuery.builder()
@@ -57,7 +56,7 @@ public class AuthorizationSample {
     }
 
     public Authorization create(AccountInformationAccessRequest accountInformationAccessRequest, FinancialInstitution financialInstitution, CustomerAccessToken customerAccessToken, String code) {
-        Map<String, String> authorizationCode = newHashMap();
+        Map<String, String> authorizationCode = new HashMap<>();
         authorizationCode.put("code", code);
         AuthorizationCreationQuery authorizationCreationQuery = AuthorizationCreationQuery.builder()
                 .accountInformationAccessRequestId(accountInformationAccessRequest.getId())
