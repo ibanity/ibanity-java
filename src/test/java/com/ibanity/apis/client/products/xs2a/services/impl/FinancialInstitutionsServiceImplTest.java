@@ -20,10 +20,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static java.time.Instant.parse;
 import static java.util.Collections.emptyMap;
@@ -57,7 +58,7 @@ class FinancialInstitutionsServiceImplTest {
 
     @Test
     void list() throws Exception {
-        List<Filter> filters = newArrayList(Filter.builder().field("country").eq("be").build());
+        List<Filter> filters = Collections.singletonList(Filter.builder().field("country").eq("be").build());
         FinancialInstitutionsReadQuery financialInstitutionsReadQuery = FinancialInstitutionsReadQuery.builder()
                 .filters(filters)
                 .build();
@@ -73,7 +74,7 @@ class FinancialInstitutionsServiceImplTest {
 
     @Test
     void list_offsetBased() throws Exception {
-        List<Filter> filters = newArrayList(Filter.builder().field("country").eq("be").build());
+        List<Filter> filters = Collections.singletonList(Filter.builder().field("country").eq("be").build());
         IbanityOffsetPagingSpec offsetPagingSpec = IbanityOffsetPagingSpec.builder()
                 .pageNumber(2)
                 .pageSize(1)
@@ -133,13 +134,13 @@ class FinancialInstitutionsServiceImplTest {
                 .bic("NBBEBEBB203")
                 .country("BE")
                 .status("stable")
-                .authorizationModels(newArrayList("single", "financialInstitutionOffered"))
+                .authorizationModels(Arrays.asList("single", "financialInstitutionOffered"))
                 .periodicPaymentsEnabled(true)
-                .periodicPaymentsProductTypes(newArrayList("sepaCreditTransfer"))
+                .periodicPaymentsProductTypes(Collections.singletonList("sepaCreditTransfer"))
                 .bulkPaymentsEnabled(true)
-                .bulkPaymentsProductTypes(newArrayList("sepaCreditTransfer"))
+                .bulkPaymentsProductTypes(Collections.singletonList("sepaCreditTransfer"))
                 .paymentsEnabled(true)
-                .paymentsProductTypes(newArrayList("sepaCreditTransfer"))
+                .paymentsProductTypes(Collections.singletonList("sepaCreditTransfer"))
                 .name("ALKEN ASSET MANAGEMENT 0")
                 .futureDatedPaymentsAllowed(true)
                 .logoUrl("https://s3.eu-central-1.amazonaws.com/ibanity-production-financial-institution-assets/sandbox.png")
