@@ -62,7 +62,7 @@ class IbanitySignatureInterceptorTest {
         when(httpRequestWrapper.getOriginal()).thenReturn(httpRequest);
         when(httpRequest.getEntity()).thenReturn(EntityBuilder.create().setStream(body).build());
 
-        HashMap<String, String> headers = getSignatureHeaders();
+        Map<String, String> headers = getSignatureHeaders();
         when(ibanityHttpSignatureService.getHttpSignatureHeaders(httpMethod, getUrl(), getRequestedHeaders(), body))
                 .thenReturn(headers);
 
@@ -71,8 +71,8 @@ class IbanitySignatureInterceptorTest {
         verify(httpRequestWrapper).addHeader("digest", "value");
     }
 
-    private HashMap<String, String> getSignatureHeaders() {
-        HashMap<String, String> headers = newHashMap();
+    private Map<String, String> getSignatureHeaders() {
+        Map<String, String> headers = newHashMap();
         headers.put("digest", "value");
         return headers;
     }

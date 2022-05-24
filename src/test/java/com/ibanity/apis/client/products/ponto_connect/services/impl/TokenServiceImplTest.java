@@ -100,7 +100,7 @@ public class TokenServiceImplTest {
     }
 
     private Map<String, String> createTokenArguments() {
-        HashMap<String, String> arguments = newHashMap();
+        Map<String, String> arguments = newHashMap();
         arguments.put("grant_type", "authorization_code");
         arguments.put("code", AUTHORIZATION_CODE);
         arguments.put("code_verifier", CODE_VERIFIER);
@@ -109,14 +109,14 @@ public class TokenServiceImplTest {
     }
 
     private Map<String, String> refreshTokenArguments() {
-        HashMap<String, String> arguments = newHashMap();
+        Map<String, String> arguments = newHashMap();
         arguments.put("grant_type", "refresh_token");
         arguments.put("refresh_token", TOKEN);
         return arguments;
     }
 
     private Map<String, String> revokeTokenArguments() {
-        HashMap<String, String> arguments = newHashMap();
+        Map<String, String> arguments = newHashMap();
         arguments.put("token", TOKEN);
         return arguments;
     }
