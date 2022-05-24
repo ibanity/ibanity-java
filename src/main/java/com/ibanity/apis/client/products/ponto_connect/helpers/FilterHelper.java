@@ -4,9 +4,9 @@ import com.ibanity.apis.client.products.ponto_connect.models.Filter;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -17,7 +17,7 @@ public class FilterHelper {
     private static final String CONTAINS_PATTERN = "filter[%s][contains]";
 
     public static List<NameValuePair> encode(Filter filter) {
-        List<NameValuePair> filters = newArrayList();
+        List<NameValuePair> filters = new ArrayList<>();
 
         addPattern(IN_PATTERN, filter.getField(), filter.getIn(), filters);
         addPattern(EQUALS_PATTERN, filter.getField(), filter.getEq(), filters);

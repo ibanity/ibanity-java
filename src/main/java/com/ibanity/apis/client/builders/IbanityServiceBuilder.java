@@ -11,9 +11,9 @@ import org.apache.http.HttpResponseInterceptor;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -44,8 +44,8 @@ public class IbanityServiceBuilder implements
     private String pontoConnectOauth2ClientId;
     private String isabelConnectOauth2ClientId;
     private boolean disableTlsClientCertificate;
-    private List<HttpRequestInterceptor> requestInterceptors = newArrayList();
-    private List<HttpResponseInterceptor> responseInterceptors = newArrayList();
+    private List<HttpRequestInterceptor> requestInterceptors = new ArrayList<>();
+    private List<HttpResponseInterceptor> responseInterceptors = new ArrayList<>();
     private int connectionRequestTimeout = IbanityUtils.DEFAULT_REQUEST_TIMEOUT;
     private int connectTimeout = IbanityUtils.DEFAULT_REQUEST_TIMEOUT;
     private int socketTimeout = IbanityUtils.DEFAULT_REQUEST_TIMEOUT;

@@ -11,10 +11,10 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ResponseHandler;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.ibanity.apis.client.mappers.ModelMapperHelper.readResponseContent;
 import static com.ibanity.apis.client.utils.IbanityUtils.objectMapper;
 import static java.util.Collections.emptyList;
@@ -55,7 +55,7 @@ public class IbanityResponseHandler implements ResponseHandler<HttpResponse> {
 
             OAuth2ErrorResourceApiModel oAuth2ErrorResourceApiModel = objectMapper().readValue(payload, OAuth2ErrorResourceApiModel.class);
             if (isNotBlank(oAuth2ErrorResourceApiModel.getError())) {
-                return newArrayList(IbanityErrorMapper.map(oAuth2ErrorResourceApiModel));
+                return Collections.singletonList(IbanityErrorMapper.map(oAuth2ErrorResourceApiModel));
             }
 
             return emptyList();

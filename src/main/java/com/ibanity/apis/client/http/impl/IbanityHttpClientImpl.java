@@ -16,9 +16,9 @@ import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
-import static com.google.common.collect.Maps.newHashMap;
 import static com.ibanity.apis.client.utils.IbanityUtils.objectMapper;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
@@ -47,7 +47,7 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
 
     @Override
     public HttpResponse get(@NonNull URI path, String customerAccessToken) {
-        return get(path, newHashMap(), customerAccessToken);
+        return get(path, new HashMap<>(), customerAccessToken);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
 
     @Override
     public HttpResponse post(@NonNull URI path, @NonNull Object requestApiModel, String customerAccessToken) {
-        return post(path, requestApiModel, newHashMap(), customerAccessToken);
+        return post(path, requestApiModel, new HashMap<>(), customerAccessToken);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
 
     @Override
     public HttpResponse patch(@NonNull URI path, @NonNull Object requestApiModel, String customerAccessToken) {
-        return patch(path, requestApiModel, newHashMap(), customerAccessToken);
+        return patch(path, requestApiModel, new HashMap<>(), customerAccessToken);
     }
 
     @Override

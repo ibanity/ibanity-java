@@ -11,8 +11,9 @@ import lombok.ToString;
 import java.util.List;
 import java.util.Map;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyMap;
+
+import java.util.ArrayList;
 
 @Getter
 @Builder
@@ -28,5 +29,5 @@ public final class FinancialInstitutionsReadQuery {
     private Map<String, String> additionalHeaders = emptyMap();
 
     @Builder.Default
-    private List<Filter> filters = newArrayList();
+    private List<Filter> filters = new ArrayList<>();
 }
