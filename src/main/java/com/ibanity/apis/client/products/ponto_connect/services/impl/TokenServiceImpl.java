@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
 
-import static com.google.common.collect.Maps.newHashMap;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static org.apache.http.util.EntityUtils.consumeQuietly;
 
@@ -75,13 +75,13 @@ public class TokenServiceImpl implements TokenService {
     }
 
     private Map<String, String> getDeleteTokenRequestArguments(String token) {
-        Map<String, String> arguments = newHashMap();
+        Map<String, String> arguments = new HashMap<>();
         arguments.put("token", token);
         return arguments;
     }
 
     private Map<String, String> getAccessTokenRequestArguments(String authorizationCode, String codeVerifier, String redirectUri) {
-        Map<String, String> arguments = newHashMap();
+        Map<String, String> arguments = new HashMap<>();
         if (StringUtils.isBlank(authorizationCode)) {
             arguments.put("grant_type", "client_credentials");
         } else {
@@ -94,7 +94,7 @@ public class TokenServiceImpl implements TokenService {
     }
 
     private Map<String, String> getRefreshTokenRequestArguments(String refreshToken) {
-        Map<String, String> arguments = newHashMap();
+        Map<String, String> arguments = new HashMap<>();
         arguments.put("refresh_token", refreshToken);
         arguments.put("grant_type", "refresh_token");
         return arguments;
