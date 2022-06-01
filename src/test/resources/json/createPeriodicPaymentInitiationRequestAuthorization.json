@@ -1,0 +1,12 @@
+{
+  "data": {
+    "attributes": {
+      "status": "succeeded"
+    },
+    "id": "cd273ba1-cb2a-464d-b85d-62c9fc4dc8d9",
+    "type": "authorization",
+    "links": {
+      "nextRedirect": "https://www.bnpp.com/next-step"
+    }
+  }
+}

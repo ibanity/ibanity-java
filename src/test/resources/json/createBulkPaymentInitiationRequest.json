@@ -1,0 +1,42 @@
+{
+  "data": {
+    "attributes": {
+      "consentReference": "ad8f28f9-7ba1-4caf-9e7d-df2c04f88dd8",
+      "debtorAccountReference": "BE5283671456644082",
+      "debtorAccountReferenceType": "IBAN",
+      "debtorName": "Delmer Hermann",
+      "productType": "sepa-credit-transfer",
+      "payments": [{
+        "amount": 59,
+        "creditorAccountReference": "BE4215561520006651",
+        "creditorAccountReferenceType": "IBAN",
+        "creditorAgent": "NBBEBEBB203",
+        "creditorAgentType": "BIC",
+        "creditorName": "Alex Creditor",
+        "currency": "EUR",
+        "endToEndId": "f4fdab3742af4a1386df4ca82c05ced6",
+        "remittanceInformation": "payment",
+        "remittanceInformationType": "unstructured"
+      }],
+      "requestedExecutionDate": "2020-02-05",
+      "financialInstitutionCustomerReference": "jdoe001",
+      "status": null
+    },
+    "id": "7fbdf174-325a-4c1a-808e-4eec951c1b4d",
+    "links": {
+      "redirect": "https://callback.ibanity.com/sandbox/fi/pir/i?state=dmF1bHQ6djE6OWNXTHNwRkxoSk9vUjRoVk0rN1k2Z1N0SXBqNjNPNXdkSDZBTHpXaDVMZW9DSFEwTTBweVdpdFNXUlp2UC8wc0dId1NvVmVsT2lPaGxWK2J5SUlOb1JhbjlNUjBLei81UER2ZzNpcVF4TDRWUE5rUVMvRnhpUTFMZkhsT3ZHeDB2Uy9nLzhwRGd3VG1XTzkxR3pPSEUwQkxQR3YxS3AweDBpRzFaS0tiMVhlL3g5L1UzcEZkV1doMllVRWZ5bHZhMWJiUzAvTllXZUV0ZVhMYTJsT01YMFJ6UURTM3VOMDNvWE9nWlAzcmZrYUtiZENQMzFld1VVVDdHVjBhNWpQci9ZTmswUVVoWTBYVXZVY0VMVVRSdU9rM2psTnU0STQ2UzN5TlMxeCtybFFuVDNtQjN1OTk0aDdxbEk2OXcxbEdsbGlvUjZtR3pyZU0xR2psQlVzdG8zcmRNazlkK3lPK0hwS0tlbitRSkFEa2loS0kweklwWnBvK0dCdEFwSWNMakhUTEtCQ2pBaFgwQlRiSkhXZmFYVlR3a2NveUV1M05WSEZ6Qjg0cTNoQ1ZtN28xdlNaU0Mvd21TV2RRMWJGK0lTRWFXY2ZQQ1d2SGx1SjFmOVRJWGt3dzhFeGVROXRESWlMVUF5L0l3TTBWb2F4VWYyR0MrT1hMWkpzZkR0NGJ1YzdSdmRiVUFKaGhpSkhlZG0wVTMxN2JGTmRObXNLc3NLUVRSY2Rwb2NXaWh4YWxJS3hjTDVjNWpNNTRiaGVYNzVpTStGekZFTDk1MnQ2SVp5L2tITWJoUDNzVkN4d0M1SElpT29PUGp1a3BQbm1xVDRqWC8zQlNwVS8rbUhOOTBsSmVXK2c2Q3F0bWJ1MVNUWGsrQmxhNGZOZW9ETHFhbjM1Yk5TUEh2Y2xPdXRBWExKVjBSMXV6U3phMThXV3MrYU9vMUh5NE9OMEQxeklhK0tnS2Z1VU1JMXVLdXFBSGJHQ0hzOXZVcjRWRjQ0bEJ4WEZzTDlaM21KRDlXMkdzTEtJZzc2R2RubnFVTjUvOVhkZ1NZWXdnYU01b2pjanAyR0NseFozRjEyT0ZFTlN1c25ZUldtb3J1S1cxOUhVMENHYXlNeS80MDQ3b05qdUZnM0NlKy9QUk5ZNktqRVdUOXA0Q3d2b2Y5UGtXbnJYU2lLYkc1dGt6d3BMdzBSTWdSWnlIM2F4NHRxSHN3UDF2Vnh0SlVzMWhNMXpzS2VTMTRXeWRNc3QrU3c9PQ=="
+    },
+    "relationships": {
+      "financialInstitution": {
+        "data": {
+          "id": "9c6dad12-4927-4a40-af87-20f8ff4a4433",
+          "type": "financialInstitution"
+        },
+        "links": {
+          "related": "https://api.ibanity.com/xs2a/financial-institutions/9c6dad12-4927-4a40-af87-20f8ff4a4433"
+        }
+      }
+    },
+    "type": "bulkPaymentInitiationRequest"
+  }
+}

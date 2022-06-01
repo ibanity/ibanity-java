@@ -1,0 +1,39 @@
+{
+  "data": {
+    "attributes": {
+      "payments": [{
+        "amount": 59,
+        "creditorAccountReference": "BE4215561520006651",
+        "creditorAccountReferenceType": "IBAN",
+        "creditorAgent": "NBBEBEBB203",
+        "creditorAgentType": "BIC",
+        "creditorName": "Alex Creditor",
+        "currency": "EUR",
+        "endToEndId": "f4fdab3742af4a1386df4ca82c05ced6",
+        "remittanceInformation": "payment",
+        "remittanceInformationType": "unstructured"
+      }],
+      "consentReference": "ad8f28f9-7ba1-4caf-9e7d-df2c04f88dd8",
+      "debtorAccountReference": "BE5283671456644082",
+      "debtorAccountReferenceType": "IBAN",
+      "debtorName": "Delmer Hermann",
+      "productType": "sepa-credit-transfer",
+      "requestedExecutionDate": "2020-02-05",
+      "status": "error",
+      "statusReason":"invalid"
+    },
+    "id": "7fbdf174-325a-4c1a-808e-4eec951c1b4d",
+    "relationships": {
+      "financialInstitution": {
+        "data": {
+          "id": "9c6dad12-4927-4a40-af87-20f8ff4a4433",
+          "type": "financialInstitution"
+        },
+        "links": {
+          "related": "https://api.ibanity.com/xs2a/financial-institutions/9c6dad12-4927-4a40-af87-20f8ff4a4433"
+        }
+      }
+    },
+    "type": "bulkPaymentInitiationRequest"
+  }
+}

@@ -3,9 +3,9 @@ package com.ibanity.apis.client.products.xs2a.services.impl;
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.IbanityProduct;
-import com.ibanity.apis.client.products.xs2a.models.PaymentInitiationRequestAuthorization;
-import com.ibanity.apis.client.products.xs2a.models.create.PaymentInitiationRequestAuthorizationCreationQuery;
-import com.ibanity.apis.client.products.xs2a.models.links.PaymentInitiationRequestAuthorizationLinks;
+import com.ibanity.apis.client.products.xs2a.models.PeriodicPaymentInitiationRequestAuthorization;
+import com.ibanity.apis.client.products.xs2a.models.create.PeriodicPaymentInitiationRequestAuthorizationCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.links.PeriodicPaymentInitiationRequestAuthorizationLinks;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class PaymentInitiationRequestAuthorizationsServiceImplTest {
+class PeriodicPaymentInitiationRequestAuthorizationsServiceImplTest {
 
     private static final UUID FINANCIAL_INSTITUTION_ID = fromString("4876fdd6-7333-4f9f-b142-ba520ca497b1");
     private static final UUID PAYMENT_INITIATION_REQUEST_ID = fromString("cd273ba1-cb2a-464d-b85d-62c9fc4dc8d9");
@@ -38,11 +38,11 @@ class PaymentInitiationRequestAuthorizationsServiceImplTest {
     private static final String AUTHORIZATION_CODE = "fndsfhskdfslfjhdskfjdsn";
     private static final String CUSTOMER_ACCESS_TOKEN = "kdsfldsfmnvlds;md,vms.kvmdsk.vmd";
 
-    private static final String AUTHORIZATION_ENDPOINT = "https://api.ibanity.com/xs2a/customer/financial-institutions/{financialInstitutionId}/payment-initiation-requests/{paymentInitiationRequestId}/authorizations/{authorizationId}";
-    private static final String AUTHORIZATION_ENDPOINT_FOR_CREATE = "https://api.ibanity.com/xs2a/customer/financial-institutions/4876fdd6-7333-4f9f-b142-ba520ca497b1/payment-initiation-requests/cd273ba1-cb2a-464d-b85d-62c9fc4dc8d9/authorizations";
+    private static final String AUTHORIZATION_ENDPOINT = "https://api.ibanity.com/xs2a/customer/financial-institutions/{financialInstitutionId}/periodic-payment-initiation-requests/{paymentInitiationRequestId}/authorizations/{authorizationId}";
+    private static final String AUTHORIZATION_ENDPOINT_FOR_CREATE = "https://api.ibanity.com/xs2a/customer/financial-institutions/4876fdd6-7333-4f9f-b142-ba520ca497b1/periodic-payment-initiation-requests/cd273ba1-cb2a-464d-b85d-62c9fc4dc8d9/authorizations";
 
     @InjectMocks
-    private PaymentInitiationRequestAuthorizationsServiceImpl authorizationsService;
+    private PeriodicPaymentInitiationRequestAuthorizationsServiceImpl authorizationsService;
 
     @Mock
     private ApiUrlProvider apiUrlProvider;
@@ -55,7 +55,7 @@ class PaymentInitiationRequestAuthorizationsServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "paymentInitiationRequest", "authorizations"))
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "periodicPaymentInitiationRequest", "authorizations"))
                 .thenReturn(AUTHORIZATION_ENDPOINT);
     }
 
@@ -63,28 +63,28 @@ class PaymentInitiationRequestAuthorizationsServiceImplTest {
     void create() throws IOException {
         Map<String, String> queryParams = newHashMap();
         queryParams.put("code", AUTHORIZATION_CODE);
-        PaymentInitiationRequestAuthorizationCreationQuery creationQuery = PaymentInitiationRequestAuthorizationCreationQuery.builder()
+        PeriodicPaymentInitiationRequestAuthorizationCreationQuery creationQuery = PeriodicPaymentInitiationRequestAuthorizationCreationQuery.builder()
                 .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                 .queryParameters(queryParams)
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                 .paymentInitiationRequestId(PAYMENT_INITIATION_REQUEST_ID)
                 .build();
 
-        when(ibanityHttpClient.post(eq(buildUri(AUTHORIZATION_ENDPOINT_FOR_CREATE)), argumentCaptor.capture(), eq(emptyMap()), eq(CUSTOMER_ACCESS_TOKEN))).thenReturn(loadHttpResponse("json/createPaymentInitiationRequestAuthorization.json"));
+        when(ibanityHttpClient.post(eq(buildUri(AUTHORIZATION_ENDPOINT_FOR_CREATE)), argumentCaptor.capture(), eq(emptyMap()), eq(CUSTOMER_ACCESS_TOKEN))).thenReturn(loadHttpResponse("json/createPeriodicPaymentInitiationRequestAuthorization.json"));
 
-        PaymentInitiationRequestAuthorization authorization = authorizationsService.create(creationQuery);
+        PeriodicPaymentInitiationRequestAuthorization authorization = authorizationsService.create(creationQuery);
 
         assertThat(authorization).isEqualTo(expected());
-        PaymentInitiationRequestAuthorizationsServiceImpl.PaymentInitiationRequestAuthorization authorizationRequest =
-                (PaymentInitiationRequestAuthorizationsServiceImpl.PaymentInitiationRequestAuthorization) argumentCaptor.getValue().getData().getAttributes();
+        PeriodicPaymentInitiationRequestAuthorizationsServiceImpl.PeriodicPaymentInitiationRequestAuthorization authorizationRequest =
+                (PeriodicPaymentInitiationRequestAuthorizationsServiceImpl.PeriodicPaymentInitiationRequestAuthorization) argumentCaptor.getValue().getData().getAttributes();
         assertThat(authorizationRequest.getQueryParameters().get("code")).isEqualTo(AUTHORIZATION_CODE);
     }
 
-    private PaymentInitiationRequestAuthorization expected() {
-        return PaymentInitiationRequestAuthorization.builder()
+    private PeriodicPaymentInitiationRequestAuthorization expected() {
+        return PeriodicPaymentInitiationRequestAuthorization.builder()
                 .id(AUTHORIZATION_ID)
                 .status("succeeded")
-                .links(PaymentInitiationRequestAuthorizationLinks.builder()
+                .links(PeriodicPaymentInitiationRequestAuthorizationLinks.builder()
                         .nextRedirect("https://www.bnpp.com/next-step")
                         .build())
                 .build();
