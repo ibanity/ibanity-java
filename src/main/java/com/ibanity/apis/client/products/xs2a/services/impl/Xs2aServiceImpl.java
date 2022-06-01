@@ -14,13 +14,17 @@ public class Xs2aServiceImpl implements Xs2aService {
     private final BatchSynchronizationService batchSynchronizationService;
     private final CustomerAccessTokensService customerAccessTokensService;
     private final FinancialInstitutionsService financialInstitutionsService;
+    private final BulkPaymentInitiationRequestService bulkPaymentInitiationRequestService;
+    private final BulkPaymentInitiationRequestAuthorizationsServiceImpl bulkPaymentInitiationRequestAuthorizationsService;
     private final PaymentInitiationRequestService paymentInitiationRequestService;
+    private final PaymentInitiationRequestAuthorizationsServiceImpl paymentInitiationRequestAuthorizationsService;
+    private final PeriodicPaymentInitiationRequestService periodicPaymentInitiationRequestService;
+    private final PeriodicPaymentInitiationRequestAuthorizationsServiceImpl periodicPaymentInitiationRequestAuthorizationsService;
     private final AccountInformationAccessRequestsService accountInformationAccessRequestsService;
     private final CustomerService customerService;
     private final HoldingsServiceImpl holdingsService;
     private final AuthorizationsServiceImpl authorizationsService;
     private final AccountInformationAccessRequestAuthorizationsServiceImpl accountInformationAccessRequestAuthorizationsService;
-    private final PaymentInitiationRequestAuthorizationsServiceImpl paymentInitiationRequestAuthorizationsService;
     private final FinancialInstitutionCountriesService financialInstitutionCountriesService;
 
     public Xs2aServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
@@ -30,10 +34,14 @@ public class Xs2aServiceImpl implements Xs2aService {
         batchSynchronizationService = new BatchSynchronizationServiceImpl(apiUrlProvider, ibanityHttpClient);
         customerAccessTokensService = new CustomerAccessTokensServiceImpl(apiUrlProvider, ibanityHttpClient);
         financialInstitutionsService = new FinancialInstitutionsServiceImpl(apiUrlProvider, ibanityHttpClient);
+        bulkPaymentInitiationRequestService = new BulkPaymentInitiationRequestServiceImpl(apiUrlProvider, ibanityHttpClient);
+        bulkPaymentInitiationRequestAuthorizationsService = new BulkPaymentInitiationRequestAuthorizationsServiceImpl(apiUrlProvider, ibanityHttpClient);
         paymentInitiationRequestService = new PaymentInitiationRequestServiceImpl(apiUrlProvider, ibanityHttpClient);
+        paymentInitiationRequestAuthorizationsService = new PaymentInitiationRequestAuthorizationsServiceImpl(apiUrlProvider, ibanityHttpClient);
+        periodicPaymentInitiationRequestService = new PeriodicPaymentInitiationRequestServiceImpl(apiUrlProvider, ibanityHttpClient);
+        periodicPaymentInitiationRequestAuthorizationsService = new PeriodicPaymentInitiationRequestAuthorizationsServiceImpl(apiUrlProvider, ibanityHttpClient);
         accountInformationAccessRequestsService = new AccountInformationAccessRequestsServiceImpl(apiUrlProvider, ibanityHttpClient);
         accountInformationAccessRequestAuthorizationsService = new AccountInformationAccessRequestAuthorizationsServiceImpl(apiUrlProvider, ibanityHttpClient);
-        paymentInitiationRequestAuthorizationsService = new PaymentInitiationRequestAuthorizationsServiceImpl(apiUrlProvider, ibanityHttpClient);
         financialInstitutionCountriesService = new FinancialInstitutionCountriesServiceImpl(apiUrlProvider, ibanityHttpClient);
         sandboxService = new SandboxServiceImpl(apiUrlProvider, ibanityHttpClient);
         customerService = new CustomerServiceImpl(apiUrlProvider, ibanityHttpClient);
@@ -42,8 +50,33 @@ public class Xs2aServiceImpl implements Xs2aService {
     }
 
     @Override
+    public BulkPaymentInitiationRequestService bulkPaymentInitiationRequestService() {
+        return bulkPaymentInitiationRequestService;
+    }
+
+    @Override
+    public BulkPaymentInitiationRequestAuthorizationsService bulkPaymentInitiationRequestAuthorizationsService() {
+        return bulkPaymentInitiationRequestAuthorizationsService;
+    }
+
+    @Override
     public PaymentInitiationRequestService paymentInitiationRequestService() {
         return paymentInitiationRequestService;
+    }
+
+    @Override
+    public PaymentInitiationRequestAuthorizationsService paymentInitiationRequestAuthorizationsService() {
+        return paymentInitiationRequestAuthorizationsService;
+    }
+
+    @Override
+    public PeriodicPaymentInitiationRequestService periodicPaymentInitiationRequestService() {
+        return periodicPaymentInitiationRequestService;
+    }
+
+    @Override
+    public PeriodicPaymentInitiationRequestAuthorizationsService periodicPaymentInitiationRequestAuthorizationsService() {
+        return periodicPaymentInitiationRequestAuthorizationsService;
     }
 
     @Override
@@ -103,11 +136,6 @@ public class Xs2aServiceImpl implements Xs2aService {
     @Override
     public AccountInformationAccessRequestAuthorizationsService accountInformationAccessRequestAuthorizationsService() {
         return accountInformationAccessRequestAuthorizationsService;
-    }
-
-    @Override
-    public PaymentInitiationRequestAuthorizationsService paymentInitiationRequestAuthorizationsService() {
-        return paymentInitiationRequestAuthorizationsService;
     }
 
     @Override

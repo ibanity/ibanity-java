@@ -4,7 +4,17 @@ import com.ibanity.apis.client.products.xs2a.sandbox.services.SandboxService;
 
 public interface Xs2aService {
 
+    BulkPaymentInitiationRequestService bulkPaymentInitiationRequestService();
+
+    BulkPaymentInitiationRequestAuthorizationsService bulkPaymentInitiationRequestAuthorizationsService();
+
     PaymentInitiationRequestService paymentInitiationRequestService();
+
+    PaymentInitiationRequestAuthorizationsService paymentInitiationRequestAuthorizationsService();
+
+    PeriodicPaymentInitiationRequestService periodicPaymentInitiationRequestService();
+
+    PeriodicPaymentInitiationRequestAuthorizationsService periodicPaymentInitiationRequestAuthorizationsService();
 
     FinancialInstitutionsService financialInstitutionsService();
 
@@ -31,8 +41,6 @@ public interface Xs2aService {
     AuthorizationsService authorizationsService();
 
     AccountInformationAccessRequestAuthorizationsService accountInformationAccessRequestAuthorizationsService();
-
-    PaymentInitiationRequestAuthorizationsService paymentInitiationRequestAuthorizationsService();
 
     HoldingsService holdingsService();
 
