@@ -3,9 +3,9 @@ package com.ibanity.apis.client.products.xs2a.services.impl;
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.IbanityProduct;
-import com.ibanity.apis.client.products.xs2a.models.PaymentInitiationRequestAuthorization;
-import com.ibanity.apis.client.products.xs2a.models.create.PaymentInitiationRequestAuthorizationCreationQuery;
-import com.ibanity.apis.client.products.xs2a.models.links.PaymentInitiationRequestAuthorizationLinks;
+import com.ibanity.apis.client.products.xs2a.models.BulkPaymentInitiationRequestAuthorization;
+import com.ibanity.apis.client.products.xs2a.models.create.BulkPaymentInitiationRequestAuthorizationCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.links.BulkPaymentInitiationRequestAuthorizationLinks;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class PaymentInitiationRequestAuthorizationsServiceImplTest {
+class BulkPaymentInitiationRequestAuthorizationsServiceImplTest {
 
     private static final UUID FINANCIAL_INSTITUTION_ID = fromString("4876fdd6-7333-4f9f-b142-ba520ca497b1");
     private static final UUID PAYMENT_INITIATION_REQUEST_ID = fromString("cd273ba1-cb2a-464d-b85d-62c9fc4dc8d9");
@@ -42,7 +42,7 @@ class PaymentInitiationRequestAuthorizationsServiceImplTest {
     private static final String AUTHORIZATION_ENDPOINT_FOR_CREATE = "https://api.ibanity.com/xs2a/customer/financial-institutions/4876fdd6-7333-4f9f-b142-ba520ca497b1/payment-initiation-requests/cd273ba1-cb2a-464d-b85d-62c9fc4dc8d9/authorizations";
 
     @InjectMocks
-    private PaymentInitiationRequestAuthorizationsServiceImpl authorizationsService;
+    private BulkPaymentInitiationRequestAuthorizationsServiceImpl authorizationsService;
 
     @Mock
     private ApiUrlProvider apiUrlProvider;
@@ -55,7 +55,7 @@ class PaymentInitiationRequestAuthorizationsServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "paymentInitiationRequest", "authorizations"))
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "bulkPaymentInitiationRequest", "authorizations"))
                 .thenReturn(AUTHORIZATION_ENDPOINT);
     }
 
@@ -63,7 +63,7 @@ class PaymentInitiationRequestAuthorizationsServiceImplTest {
     void create() throws IOException {
         Map<String, String> queryParams = newHashMap();
         queryParams.put("code", AUTHORIZATION_CODE);
-        PaymentInitiationRequestAuthorizationCreationQuery creationQuery = PaymentInitiationRequestAuthorizationCreationQuery.builder()
+        BulkPaymentInitiationRequestAuthorizationCreationQuery creationQuery = BulkPaymentInitiationRequestAuthorizationCreationQuery.builder()
                 .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                 .queryParameters(queryParams)
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
@@ -72,19 +72,19 @@ class PaymentInitiationRequestAuthorizationsServiceImplTest {
 
         when(ibanityHttpClient.post(eq(buildUri(AUTHORIZATION_ENDPOINT_FOR_CREATE)), argumentCaptor.capture(), eq(emptyMap()), eq(CUSTOMER_ACCESS_TOKEN))).thenReturn(loadHttpResponse("json/createPaymentInitiationRequestAuthorization.json"));
 
-        PaymentInitiationRequestAuthorization authorization = authorizationsService.create(creationQuery);
+        BulkPaymentInitiationRequestAuthorization authorization = authorizationsService.create(creationQuery);
 
         assertThat(authorization).isEqualTo(expected());
-        PaymentInitiationRequestAuthorizationsServiceImpl.PaymentInitiationRequestAuthorization authorizationRequest =
-                (PaymentInitiationRequestAuthorizationsServiceImpl.PaymentInitiationRequestAuthorization) argumentCaptor.getValue().getData().getAttributes();
+        BulkPaymentInitiationRequestAuthorizationsServiceImpl.BulkPaymentInitiationRequestAuthorization authorizationRequest =
+                (BulkPaymentInitiationRequestAuthorizationsServiceImpl.BulkPaymentInitiationRequestAuthorization) argumentCaptor.getValue().getData().getAttributes();
         assertThat(authorizationRequest.getQueryParameters().get("code")).isEqualTo(AUTHORIZATION_CODE);
     }
 
-    private PaymentInitiationRequestAuthorization expected() {
-        return PaymentInitiationRequestAuthorization.builder()
+    private BulkPaymentInitiationRequestAuthorization expected() {
+        return BulkPaymentInitiationRequestAuthorization.builder()
                 .id(AUTHORIZATION_ID)
                 .status("succeeded")
-                .links(PaymentInitiationRequestAuthorizationLinks.builder()
+                .links(BulkPaymentInitiationRequestAuthorizationLinks.builder()
                         .nextRedirect("https://www.bnpp.com/next-step")
                         .build())
                 .build();
