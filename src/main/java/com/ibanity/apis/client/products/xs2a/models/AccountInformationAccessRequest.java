@@ -25,6 +25,7 @@ public class AccountInformationAccessRequest implements IbanityModel {
 
     private String status;
     private boolean allowFinancialInstitutionRedirectUri;
+    private boolean skipIbanityCompletionCallback;
 
     @Builder.Default
     private List<String> requestedAccountReferences = Collections.emptyList();

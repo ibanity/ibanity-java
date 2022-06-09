@@ -39,6 +39,8 @@ public class BulkPaymentInitiationRequest implements IbanityModel {
     private String status;
     private String statusReason;
     private String financialInstitutionCustomerReference;
+    private boolean allowFinancialInstitutionRedirectUri;
+    private boolean skipIbanityCompletionCallback;
 
     @Builder.Default
     private List<Payment> payments = Collections.emptyList();
