@@ -201,6 +201,8 @@ class BulkPaymentInitiationRequestServiceImplTest {
                 .debtorAccountReferenceType("IBAN")
                 .status("error")
                 .statusReason("invalid")
+                .skipIbanityCompletionCallback(true)
+                .allowFinancialInstitutionRedirectUri(true)
                 .financialInstitutionLink(FinancialInstitutionLinks.builder().related(FINANCIAL_INSTITUTION_RELATED_LINK).build())
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                 .build();
@@ -215,6 +217,8 @@ class BulkPaymentInitiationRequestServiceImplTest {
                 .debtorName("Delmer Hermann")
                 .debtorAccountReference("BE5283671456644082")
                 .debtorAccountReferenceType("IBAN")
+                .skipIbanityCompletionCallback(true)
+                .allowFinancialInstitutionRedirectUri(true)
                 .payments(
                         Collections.singletonList(
                                 BulkPaymentInitiationRequest.Payment.builder()

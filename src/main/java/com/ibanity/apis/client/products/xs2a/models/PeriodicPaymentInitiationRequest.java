@@ -45,6 +45,8 @@ public class PeriodicPaymentInitiationRequest implements IbanityModel {
     private String status;
     private String statusReason;
     private String financialInstitutionCustomerReference;
+    private boolean allowFinancialInstitutionRedirectUri;
+    private boolean skipIbanityCompletionCallback;
 
     private BigDecimal amount;
 

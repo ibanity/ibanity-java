@@ -46,6 +46,11 @@
             <email>damien.bravin@ibanity.com</email>
             <organizationUrl>https://www.ibanity.com</organizationUrl>
         </developer>
+        <developer>
+            <name>Christophe Leclef</name>
+            <email>christophe.leclef@ibanity.com</email>
+            <organizationUrl>https://www.ibanity.com</organizationUrl>
+        </developer>
     </developers>
 
     <properties>

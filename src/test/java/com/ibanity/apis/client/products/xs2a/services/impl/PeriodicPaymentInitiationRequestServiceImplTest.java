@@ -183,6 +183,8 @@ class PeriodicPaymentInitiationRequestServiceImplTest {
                 .endToEndId("f4fdab3742af4a1386df4ca82c05ced6")
                 .status("error")
                 .statusReason("invalid")
+                .skipIbanityCompletionCallback(true)
+                .allowFinancialInstitutionRedirectUri(true)
                 .financialInstitutionLink(FinancialInstitutionLinks.builder().related(FINANCIAL_INSTITUTION_RELATED_LINK).build())
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                 .build();
@@ -210,6 +212,8 @@ class PeriodicPaymentInitiationRequestServiceImplTest {
                 .creditorAgent("NBBEBEBB203")
                 .creditorAgentType("BIC")
                 .endToEndId("f4fdab3742af4a1386df4ca82c05ced6")
+                .skipIbanityCompletionCallback(true)
+                .allowFinancialInstitutionRedirectUri(true)
                 .links(PeriodicPaymentInitiationAuthorizationLinks.builder().redirect(REDIRECT_LINK).build())
                 .financialInstitutionLink(FinancialInstitutionLinks.builder().related(FINANCIAL_INSTITUTION_RELATED_LINK).build())
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
