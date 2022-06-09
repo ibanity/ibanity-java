@@ -128,8 +128,6 @@ class AccountInformationAccessRequestsServiceImplTest {
                         .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                         .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                         .accountInformationAccessRequestId(ACCOUNT_INFORMATION_ACCESS_REQUEST_ID)
-                        .skipIbanityCompletionCallback(true)
-                        .allowFinancialInstitutionRedirectUri(true)
                         .build();
 
         when(ibanityHttpClient.get(buildUri(AIAR_ENDPOINT_FOR_FIND), emptyMap(), creationQuery.getCustomerAccessToken()))
