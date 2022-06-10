@@ -110,6 +110,7 @@ public class BulkPaymentInitiationRequestServiceImpl implements BulkPaymentIniti
         private String customerIpAddress;
         private boolean allowFinancialInstitutionRedirectUri;
         private boolean skipIbanityCompletionCallback;
+        private boolean batchBookingPreferred;
         private String state;
         private String financialInstitutionCustomerReference;
 
