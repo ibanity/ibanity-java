@@ -41,6 +41,7 @@ public class BulkPaymentInitiationRequest implements IbanityModel {
     private String financialInstitutionCustomerReference;
     private boolean allowFinancialInstitutionRedirectUri;
     private boolean skipIbanityCompletionCallback;
+    private boolean batchBookingPreferred;
 
     @Builder.Default
     private List<Payment> payments = Collections.emptyList();

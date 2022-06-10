@@ -67,6 +67,7 @@ class BulkPaymentInitiationRequestServiceImplTest {
                         .locale("fr")
                         .skipIbanityCompletionCallback(true)
                         .allowFinancialInstitutionRedirectUri(true)
+                        .batchBookingPreferred(true)
                         .state(CUSTOM_STATE)
                         .requestedExecutionDate(LocalDate.parse("2020-02-05"))
                         .financialInstitutionCustomerReference("jdoe001")
@@ -161,6 +162,7 @@ class BulkPaymentInitiationRequestServiceImplTest {
                 .state(query.getState())
                 .skipIbanityCompletionCallback(query.isSkipIbanityCompletionCallback())
                 .allowFinancialInstitutionRedirectUri(query.isAllowFinancialInstitutionRedirectUri())
+                .batchBookingPreferred(query.isBatchBookingPreferred())
                 .requestedExecutionDate(query.getRequestedExecutionDate())
                 .financialInstitutionCustomerReference(query.getFinancialInstitutionCustomerReference())
                 .build();
@@ -203,6 +205,7 @@ class BulkPaymentInitiationRequestServiceImplTest {
                 .statusReason("invalid")
                 .skipIbanityCompletionCallback(true)
                 .allowFinancialInstitutionRedirectUri(true)
+                .batchBookingPreferred(true)
                 .financialInstitutionLink(FinancialInstitutionLinks.builder().related(FINANCIAL_INSTITUTION_RELATED_LINK).build())
                 .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
                 .build();
@@ -219,6 +222,7 @@ class BulkPaymentInitiationRequestServiceImplTest {
                 .debtorAccountReferenceType("IBAN")
                 .skipIbanityCompletionCallback(true)
                 .allowFinancialInstitutionRedirectUri(true)
+                .batchBookingPreferred(true)
                 .payments(
                         Collections.singletonList(
                                 BulkPaymentInitiationRequest.Payment.builder()

@@ -27,6 +27,7 @@ public class BulkPaymentInitiationRequestMapper {
                 .locale(query.getLocale())
                 .skipIbanityCompletionCallback(query.isSkipIbanityCompletionCallback())
                 .allowFinancialInstitutionRedirectUri(query.isAllowFinancialInstitutionRedirectUri())
+                .batchBookingPreferred(query.isBatchBookingPreferred())
                 .state(query.getState())
                 .requestedExecutionDate(query.getRequestedExecutionDate())
                 .payments(query.getPayments().stream().map(payment -> {

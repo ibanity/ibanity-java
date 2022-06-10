@@ -8,6 +8,7 @@
       "productType": "sepa-credit-transfer",
       "skipIbanityCompletionCallback": true,
       "allowFinancialInstitutionRedirectUri": true,
+      "batchBookingPreferred": true,
       "payments": [{
         "amount": 59,
         "creditorAccountReference": "BE4215561520006651",
