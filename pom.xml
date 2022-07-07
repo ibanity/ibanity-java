@@ -67,7 +67,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Artifact Dependencies Version-->
-        <commons-configuration2.version>2.7</commons-configuration2.version>
+        <commons-configuration2.version>2.8.0</commons-configuration2.version>
         <commons-lang.version>3.12.0</commons-lang.version>
         <commons-io.version>2.11.0</commons-io.version>
         <commons-math3.version>3.6.1</commons-math3.version>
