@@ -4,6 +4,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -65,52 +68,12 @@ class IbanityHttpSignatureServiceImplTest {
         assertThat(actual).containsKey("Signature");
     }
 
-    @Test
-    void verifySignature_whenProxyIsNull() throws Exception {
-        httpSignatureService = new IbanityHttpSignatureServiceImpl(loadPrivateKey(), loadCertificate(), CERTIFICATE_ID, CLOCK, "https://api.ibanity.com/", null);
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {"", "https://myproxy.com", "http://my-proxy/rewriting-the-path"})
+    void verifySignature(String proxyUrl) throws Exception {
+        httpSignatureService = new IbanityHttpSignatureServiceImpl(loadPrivateKey(), loadCertificate(), CERTIFICATE_ID, CLOCK, "https://api.ibanity.com/", proxyUrl);
         Map<String, String> actual = getSignatureHeaders(IBANITY_ENDPOINT);
-
-        Signature publicSignature = Signature.getInstance("RSASSA-PSS");
-        publicSignature.setParameter(IbanityHttpSignatureServiceImpl.PARAMETER_SPEC);
-
-        PublicKey publicKey = loadPublicKey();
-        publicSignature.initVerify(publicKey);
-
-        publicSignature.update(EXPECTED_SIGNING_STRING.getBytes(UTF_8));
-
-        String signaturePart = getSignaturePart(actual);
-        byte[] signatureBytes = Base64.getDecoder().decode(signaturePart);
-
-        assert publicSignature.verify(signatureBytes);
-    }
-
-    @Test
-    void verifySignature_whenProxyIsHost() throws Exception {
-        String proxyUrl = "https://myproxy.com";
-
-        httpSignatureService = new IbanityHttpSignatureServiceImpl(loadPrivateKey(), loadCertificate(), CERTIFICATE_ID, CLOCK, "https://api.ibanity.com/", proxyUrl);
-        Map<String, String> actual = getSignatureHeaders(proxyUrl);
-
-        Signature publicSignature = Signature.getInstance("RSASSA-PSS");
-        publicSignature.setParameter(IbanityHttpSignatureServiceImpl.PARAMETER_SPEC);
-
-        PublicKey publicKey = loadPublicKey();
-        publicSignature.initVerify(publicKey);
-
-        publicSignature.update(EXPECTED_SIGNING_STRING.getBytes(UTF_8));
-
-        String signaturePart = getSignaturePart(actual);
-        byte[] signatureBytes = Base64.getDecoder().decode(signaturePart);
-
-        assert publicSignature.verify(signatureBytes);
-    }
-
-    @Test
-    void verifySignature_whenCustomProxyPath() throws Exception {
-        String proxyUrl = "http://my-proxy/rewriting-the-path";
-        httpSignatureService = new IbanityHttpSignatureServiceImpl(loadPrivateKey(), loadCertificate(), CERTIFICATE_ID, CLOCK, "https://api.ibanity.com/", proxyUrl);
-
-        Map<String, String> actual = getSignatureHeaders(proxyUrl);
 
         Signature publicSignature = Signature.getInstance("RSASSA-PSS");
         publicSignature.setParameter(IbanityHttpSignatureServiceImpl.PARAMETER_SPEC);
