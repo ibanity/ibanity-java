@@ -287,11 +287,10 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
     }
 
     private String getPath(URL url) {
-        if(proxyEndpoint == null) {
+        if (proxyEndpoint == null) {
             return url.getPath();
         } else {
-            String path = url.getPath();
-            return path.replace(URI.create(proxyEndpoint).getPath(), "");
+            return url.getPath().replace(URI.create(proxyEndpoint).getPath(), "");
         }
     }
 }

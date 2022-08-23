@@ -2,6 +2,7 @@ package com.ibanity.apis.client.http.service.impl;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -62,7 +63,8 @@ class IbanityHttpSignatureServiceImplTest {
 
     @Test
     void getHttpSignatureHeaders() throws MalformedURLException {
-        Map<String, String> actual = getSignatureHeaders(IBANITY_ENDPOINT);
+        URL url = new URL(IBANITY_ENDPOINT + "/xs2a/customer-access-tokens?test=1&test=2");
+        Map<String, String> actual = getSignatureHeaders(url);
         assertThat(actual).isNotEmpty().hasSize(2);
         assertThat(actual).containsEntry("Digest", EXPECTED_DIGEST);
         assertThat(actual).containsKey("Signature");
@@ -72,8 +74,10 @@ class IbanityHttpSignatureServiceImplTest {
     @NullSource
     @ValueSource(strings = {"", "https://myproxy.com", "http://my-proxy/rewriting-the-path"})
     void verifySignature(String proxyUrl) throws Exception {
+        String basePath = StringUtils.isBlank(proxyUrl) ? IBANITY_ENDPOINT : proxyUrl;
+        URL url = new URL(basePath + "/xs2a/customer-access-tokens?test=1&test=2");
         httpSignatureService = new IbanityHttpSignatureServiceImpl(loadPrivateKey(), CERTIFICATE_ID, CLOCK, "https://api.ibanity.com/", proxyUrl);
-        Map<String, String> actual = getSignatureHeaders(IBANITY_ENDPOINT);
+        Map<String, String> actual = getSignatureHeaders(url);
 
         Signature publicSignature = Signature.getInstance("RSASSA-PSS");
         publicSignature.setParameter(IbanityHttpSignatureServiceImpl.PARAMETER_SPEC);
@@ -132,8 +136,7 @@ class IbanityHttpSignatureServiceImplTest {
         return "{\"msg\":\"hello\"}";
     }
 
-    private Map<String, String> getSignatureHeaders(String host) throws MalformedURLException {
-        URL url = new URL(host + "/xs2a/customer-access-tokens?test=1&test=2");
+    private Map<String, String> getSignatureHeaders(URL url) throws MalformedURLException {
         return httpSignatureService.getHttpSignatureHeaders("POST", url, getRequestHeaders(), getRequestPayload());
     }
 
