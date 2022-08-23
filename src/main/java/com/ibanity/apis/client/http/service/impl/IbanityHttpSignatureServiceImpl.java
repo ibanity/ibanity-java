@@ -46,6 +46,10 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
     private String ibanityEndpoint;
     private String proxyEndpoint;
 
+    /**
+     *
+     * @deprecated certificate parameter is not used anymore.
+     */
     public IbanityHttpSignatureServiceImpl(
             @NonNull PrivateKey privateKey,
             @NonNull X509Certificate certificate,
@@ -56,6 +60,17 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
 
     public IbanityHttpSignatureServiceImpl(
             @NonNull PrivateKey privateKey,
+            @NonNull String certificateId,
+            @NonNull String ibanityEndpoint) {
+        this(privateKey, certificateId, Clock.systemUTC(), ibanityEndpoint, null);
+    }
+
+    /**
+     *
+     * @deprecated certificate parameter is not used anymore.
+     */
+    public IbanityHttpSignatureServiceImpl(
+            @NonNull PrivateKey privateKey,
             @NonNull X509Certificate certificate,
             @NonNull String certificateId,
             @NonNull String ibanityEndpoint,
@@ -63,6 +78,18 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
         this(privateKey, certificate, certificateId, Clock.systemUTC(), ibanityEndpoint, proxyEndpoint);
     }
 
+    public IbanityHttpSignatureServiceImpl(
+            @NonNull PrivateKey privateKey,
+            @NonNull String certificateId,
+            @NonNull String ibanityEndpoint,
+            @NonNull String proxyEndpoint) {
+        this(privateKey, certificateId, Clock.systemUTC(), ibanityEndpoint, proxyEndpoint);
+    }
+
+    /**
+     *
+     * @deprecated certificate parameter is not used anymore.
+     */
     public IbanityHttpSignatureServiceImpl(
             @NonNull PrivateKey privateKey,
             @NonNull X509Certificate certificate,
@@ -77,7 +104,35 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
 
     public IbanityHttpSignatureServiceImpl(
             @NonNull PrivateKey privateKey,
+            @NonNull String certificateId,
+            @NonNull Clock clock,
+            @NonNull String ibanityEndpoint) {
+        this.privateKey = privateKey;
+        this.certificateId = certificateId;
+        this.clock = clock;
+        this.ibanityEndpoint = ibanityEndpoint;
+    }
+
+    /**
+     *
+     * @deprecated certificate parameter is not used anymore.
+     */
+    public IbanityHttpSignatureServiceImpl(
+            @NonNull PrivateKey privateKey,
             @NonNull X509Certificate certificate,
+            @NonNull String certificateId,
+            @NonNull Clock clock,
+            @NonNull String ibanityEndpoint,
+            String proxyEndpoint) {
+        this.privateKey = privateKey;
+        this.certificateId = certificateId;
+        this.clock = clock;
+        this.ibanityEndpoint = ibanityEndpoint;
+        this.proxyEndpoint = proxyEndpoint;
+    }
+
+    public IbanityHttpSignatureServiceImpl(
+            @NonNull PrivateKey privateKey,
             @NonNull String certificateId,
             @NonNull Clock clock,
             @NonNull String ibanityEndpoint,

@@ -57,7 +57,7 @@ class IbanityHttpSignatureServiceImplTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        httpSignatureService = new IbanityHttpSignatureServiceImpl(loadPrivateKey(), loadCertificate(), CERTIFICATE_ID, CLOCK, "https://api.ibanity.com/");
+        httpSignatureService = new IbanityHttpSignatureServiceImpl(loadPrivateKey(), CERTIFICATE_ID, CLOCK, "https://api.ibanity.com/");
     }
 
     @Test
@@ -72,7 +72,7 @@ class IbanityHttpSignatureServiceImplTest {
     @NullSource
     @ValueSource(strings = {"", "https://myproxy.com", "http://my-proxy/rewriting-the-path"})
     void verifySignature(String proxyUrl) throws Exception {
-        httpSignatureService = new IbanityHttpSignatureServiceImpl(loadPrivateKey(), loadCertificate(), CERTIFICATE_ID, CLOCK, "https://api.ibanity.com/", proxyUrl);
+        httpSignatureService = new IbanityHttpSignatureServiceImpl(loadPrivateKey(), CERTIFICATE_ID, CLOCK, "https://api.ibanity.com/", proxyUrl);
         Map<String, String> actual = getSignatureHeaders(IBANITY_ENDPOINT);
 
         Signature publicSignature = Signature.getInstance("RSASSA-PSS");
