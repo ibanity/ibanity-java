@@ -11,6 +11,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -20,12 +21,7 @@ import java.security.spec.MGF1ParameterSpec;
 import java.security.spec.PSSParameterSpec;
 import java.time.Clock;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -44,32 +40,98 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
     private static final String ACCEPTED_HEADERS_REGEX = "(authorization|ibanity.*?)";
     private static final Pattern HEADERS_PATTERN = Pattern.compile(ACCEPTED_HEADERS_REGEX, Pattern.CASE_INSENSITIVE);
     private static final String SIGNATURE_HEADER_ALGORITHM = "hs2019";
-
     private Clock clock;
     private String certificateId;
     private PrivateKey privateKey;
-    private X509Certificate certificate;
     private String ibanityEndpoint;
+    private String proxyEndpoint;
 
+    /**
+     *
+     * @deprecated certificate parameter is not used anymore.
+     */
     public IbanityHttpSignatureServiceImpl(
             @NonNull PrivateKey privateKey,
             @NonNull X509Certificate certificate,
             @NonNull String certificateId,
             @NonNull String ibanityEndpoint) {
-        this(privateKey, certificate, certificateId, Clock.systemUTC(), ibanityEndpoint);
+        this(privateKey, certificate, certificateId, Clock.systemUTC(), ibanityEndpoint, null);
     }
 
+    public IbanityHttpSignatureServiceImpl(
+            @NonNull PrivateKey privateKey,
+            @NonNull String certificateId,
+            @NonNull String ibanityEndpoint) {
+        this(privateKey, certificateId, Clock.systemUTC(), ibanityEndpoint, null);
+    }
+
+    /**
+     *
+     * @deprecated certificate parameter is not used anymore.
+     */
+    public IbanityHttpSignatureServiceImpl(
+            @NonNull PrivateKey privateKey,
+            @NonNull X509Certificate certificate,
+            @NonNull String certificateId,
+            @NonNull String ibanityEndpoint,
+            @NonNull String proxyEndpoint) {
+        this(privateKey, certificate, certificateId, Clock.systemUTC(), ibanityEndpoint, proxyEndpoint);
+    }
+
+    public IbanityHttpSignatureServiceImpl(
+            @NonNull PrivateKey privateKey,
+            @NonNull String certificateId,
+            @NonNull String ibanityEndpoint,
+            @NonNull String proxyEndpoint) {
+        this(privateKey, certificateId, Clock.systemUTC(), ibanityEndpoint, proxyEndpoint);
+    }
+
+    /**
+     *
+     * @deprecated certificate parameter is not used anymore.
+     */
     public IbanityHttpSignatureServiceImpl(
             @NonNull PrivateKey privateKey,
             @NonNull X509Certificate certificate,
             @NonNull String certificateId,
             @NonNull Clock clock,
             @NonNull String ibanityEndpoint) {
+        this(privateKey, certificateId, Clock.systemUTC(), ibanityEndpoint, null);
+    }
+
+    public IbanityHttpSignatureServiceImpl(
+            @NonNull PrivateKey privateKey,
+            @NonNull String certificateId,
+            @NonNull Clock clock,
+            @NonNull String ibanityEndpoint) {
+        this(privateKey, certificateId, Clock.systemUTC(), ibanityEndpoint, null);
+    }
+
+    /**
+     *
+     * @deprecated certificate parameter is not used anymore.
+     */
+    public IbanityHttpSignatureServiceImpl(
+            @NonNull PrivateKey privateKey,
+            @NonNull X509Certificate certificate,
+            @NonNull String certificateId,
+            @NonNull Clock clock,
+            @NonNull String ibanityEndpoint,
+            String proxyEndpoint) {
+        this(privateKey, certificateId, Clock.systemUTC(), ibanityEndpoint, proxyEndpoint);
+    }
+
+    public IbanityHttpSignatureServiceImpl(
+            @NonNull PrivateKey privateKey,
+            @NonNull String certificateId,
+            @NonNull Clock clock,
+            @NonNull String ibanityEndpoint,
+            String proxyEndpoint) {
         this.privateKey = privateKey;
-        this.certificate = certificate;
         this.certificateId = certificateId;
         this.clock = clock;
         this.ibanityEndpoint = ibanityEndpoint;
+        this.proxyEndpoint = proxyEndpoint;
     }
 
     @Override
@@ -207,10 +269,18 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
     }
 
     private String getRequestTarget(String httpMethod, URL url) {
-        String requestTarget = httpMethod.toLowerCase() + " " + url.getPath();
+        String requestTarget = httpMethod.toLowerCase() + " " + getPath(url);
         if (url.getQuery() != null) {
             requestTarget += "?" + url.getQuery();
         }
         return requestTarget;
+    }
+
+    private String getPath(URL url) {
+        if (proxyEndpoint == null) {
+            return url.getPath();
+        } else {
+            return url.getPath().replace(URI.create(proxyEndpoint).getPath(), "");
+        }
     }
 }

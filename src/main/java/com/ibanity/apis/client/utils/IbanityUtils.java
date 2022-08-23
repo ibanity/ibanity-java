@@ -167,7 +167,6 @@ public final class IbanityUtils {
     private static IbanityHttpSignatureServiceImpl getIbanityHttpSignatureService(SignatureCredentials signatureCertificate, String ibanityApiEndpoint) {
         return new IbanityHttpSignatureServiceImpl(
                 signatureCertificate.getPrivateKey(),
-                signatureCertificate.getCertificate(),
                 signatureCertificate.getCertificateId(),
                 ibanityApiEndpoint);
     }

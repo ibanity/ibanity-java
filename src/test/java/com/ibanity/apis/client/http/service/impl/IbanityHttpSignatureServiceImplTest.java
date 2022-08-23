@@ -2,8 +2,12 @@ package com.ibanity.apis.client.http.service.impl;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,7 +44,6 @@ class IbanityHttpSignatureServiceImplTest {
     private static final String PRIVATE_KEY_FILENAME = "75b5d796-de5c-400a-81ce-e72371b01cbc-private_key.pem";
 
     private static final String EXPECTED_DIGEST = "SHA-512=pX9+OFjSGF4KFWUh8fv1Ihh4PuSb2KnyobO/hr228nkET5vRUhi0Qj2Ai5OcBXtzmzgII18sZiaEH4PoxkYqew==";
-    private static final String EXPECTED_SIGNATURE_HEADERS = "(request-target) host digest (created) ibanity-idempotency-key";
     private static final String EXPECTED_SIGNING_STRING = String.join("\n",
             "(request-target): post /xs2a/customer-access-tokens?test=1&test=2",
             "host: api.ibanity.com",
@@ -48,26 +51,33 @@ class IbanityHttpSignatureServiceImplTest {
             "(created): 1548841917",
             "ibanity-idempotency-key: 61f02718-eeee-46e1-b5eb-e8fd6e799c2d"
     );
+    public static final String IBANITY_ENDPOINT = "https://api.ibanity.com";
 
     private IbanityHttpSignatureServiceImpl httpSignatureService;
 
 
     @BeforeEach
     void setUp() throws Exception {
-        httpSignatureService = new IbanityHttpSignatureServiceImpl(loadPrivateKey(), loadCertificate(), CERTIFICATE_ID, CLOCK, "https://api.ibanity.com/");
+        httpSignatureService = new IbanityHttpSignatureServiceImpl(loadPrivateKey(), CERTIFICATE_ID, CLOCK, "https://api.ibanity.com/");
     }
 
     @Test
     void getHttpSignatureHeaders() throws MalformedURLException {
-        Map<String, String> actual = getSignatureHeaders();
+        URL url = new URL(IBANITY_ENDPOINT + "/xs2a/customer-access-tokens?test=1&test=2");
+        Map<String, String> actual = getSignatureHeaders(url);
         assertThat(actual).isNotEmpty().hasSize(2);
         assertThat(actual).containsEntry("Digest", EXPECTED_DIGEST);
         assertThat(actual).containsKey("Signature");
     }
 
-    @Test
-    void verifySignature() throws Exception {
-        Map<String, String> actual = getSignatureHeaders();
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {"", "https://myproxy.com", "http://my-proxy/rewriting-the-path"})
+    void verifySignature(String proxyUrl) throws Exception {
+        String basePath = StringUtils.isBlank(proxyUrl) ? IBANITY_ENDPOINT : proxyUrl;
+        URL url = new URL(basePath + "/xs2a/customer-access-tokens?test=1&test=2");
+        httpSignatureService = new IbanityHttpSignatureServiceImpl(loadPrivateKey(), CERTIFICATE_ID, CLOCK, "https://api.ibanity.com/", proxyUrl);
+        Map<String, String> actual = getSignatureHeaders(url);
 
         Signature publicSignature = Signature.getInstance("RSASSA-PSS");
         publicSignature.setParameter(IbanityHttpSignatureServiceImpl.PARAMETER_SPEC);
@@ -126,8 +136,7 @@ class IbanityHttpSignatureServiceImplTest {
         return "{\"msg\":\"hello\"}";
     }
 
-    private Map<String, String> getSignatureHeaders() throws MalformedURLException {
-        URL url = new URL("https://myproxy.com/xs2a/customer-access-tokens?test=1&test=2");
+    private Map<String, String> getSignatureHeaders(URL url) throws MalformedURLException {
         return httpSignatureService.getHttpSignatureHeaders("POST", url, getRequestHeaders(), getRequestPayload());
     }
 
