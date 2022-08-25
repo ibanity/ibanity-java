@@ -93,7 +93,7 @@ public final class IbanityUtils {
         SignatureCredentials signatureCredentials = configuration.getSignatureCredentials();
         String apiEndpoint = configuration.getApiEndpoint();
         if (signatureCredentials != null) {
-            IbanityHttpSignatureServiceImpl httpSignatureService = getIbanityHttpSignatureService(signatureCredentials, apiEndpoint);
+            IbanityHttpSignatureServiceImpl httpSignatureService = getIbanityHttpSignatureService(signatureCredentials, apiEndpoint, configuration.getProxyEndpoint());
             httpClientBuilder.addInterceptorLast(new IbanitySignatureInterceptor(httpSignatureService, apiEndpoint));
         }
         RequestConfig requestConfig = RequestConfig.custom()
@@ -164,11 +164,12 @@ public final class IbanityUtils {
         return keyStore;
     }
 
-    private static IbanityHttpSignatureServiceImpl getIbanityHttpSignatureService(SignatureCredentials signatureCertificate, String ibanityApiEndpoint) {
+    private static IbanityHttpSignatureServiceImpl getIbanityHttpSignatureService(SignatureCredentials signatureCertificate, String ibanityApiEndpoint, String proxyEndpoint) {
         return new IbanityHttpSignatureServiceImpl(
                 signatureCertificate.getPrivateKey(),
                 signatureCertificate.getCertificateId(),
-                ibanityApiEndpoint);
+                ibanityApiEndpoint,
+                proxyEndpoint);
     }
 
     private static KeyManager[] createKeyManagers(KeyStore keyStore, String passphrase) throws NoSuchAlgorithmException, KeyStoreException, UnrecoverableKeyException {
