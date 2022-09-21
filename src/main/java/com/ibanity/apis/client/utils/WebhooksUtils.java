@@ -80,6 +80,20 @@ public class WebhooksUtils {
                 return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.SynchronizationFailed.mappingFunction());
             case com.ibanity.apis.client.webhooks.models.ponto_connect.SynchronizationSucceededWithoutChange.TYPE:
                 return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.SynchronizationSucceededWithoutChange.mappingFunction());
+            case com.ibanity.apis.client.webhooks.models.ponto_connect.IntegrationAccountAdded.TYPE:
+                return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.IntegrationAccountAdded.mappingFunction());
+            case com.ibanity.apis.client.webhooks.models.ponto_connect.IntegrationAccountRevoked.TYPE:
+                return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.IntegrationAccountRevoked.mappingFunction());
+            case com.ibanity.apis.client.webhooks.models.ponto_connect.IntegrationCreated.TYPE:
+                return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.IntegrationCreated.mappingFunction());
+            case com.ibanity.apis.client.webhooks.models.ponto_connect.IntegrationRevoked.TYPE:
+                return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.IntegrationRevoked.mappingFunction());
+            case com.ibanity.apis.client.webhooks.models.ponto_connect.OrganizationBlocked.TYPE:
+                return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.OrganizationBlocked.mappingFunction());
+            case com.ibanity.apis.client.webhooks.models.ponto_connect.OrganizationUnblocked.TYPE:
+                return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.OrganizationUnblocked.mappingFunction());
+            case com.ibanity.apis.client.webhooks.models.ponto_connect.AccountReauthorized.TYPE:
+                return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.AccountReauthorized.mappingFunction());
         }
 
         throw new IbanityRuntimeException(format("Event Type not handled by the java library \"%s\".", type));
