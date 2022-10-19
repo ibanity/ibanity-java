@@ -74,7 +74,7 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
             @NonNull X509Certificate certificate,
             @NonNull String certificateId,
             @NonNull String ibanityEndpoint,
-            @NonNull String proxyEndpoint) {
+            String proxyEndpoint) {
         this(privateKey, certificate, certificateId, Clock.systemUTC(), ibanityEndpoint, proxyEndpoint);
     }
 
@@ -82,7 +82,7 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
             @NonNull PrivateKey privateKey,
             @NonNull String certificateId,
             @NonNull String ibanityEndpoint,
-            @NonNull String proxyEndpoint) {
+            String proxyEndpoint) {
         this(privateKey, certificateId, Clock.systemUTC(), ibanityEndpoint, proxyEndpoint);
     }
 
