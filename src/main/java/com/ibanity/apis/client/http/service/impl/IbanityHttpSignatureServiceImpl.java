@@ -96,7 +96,7 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
             @NonNull String certificateId,
             @NonNull Clock clock,
             @NonNull String ibanityEndpoint) {
-        this(privateKey, certificateId, Clock.systemUTC(), ibanityEndpoint, null);
+        this(privateKey, certificateId, clock, ibanityEndpoint, null);
     }
 
     public IbanityHttpSignatureServiceImpl(
@@ -104,7 +104,7 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
             @NonNull String certificateId,
             @NonNull Clock clock,
             @NonNull String ibanityEndpoint) {
-        this(privateKey, certificateId, Clock.systemUTC(), ibanityEndpoint, null);
+        this(privateKey, certificateId, clock, ibanityEndpoint, null);
     }
 
     /**
@@ -118,7 +118,7 @@ public class IbanityHttpSignatureServiceImpl implements IbanityHttpSignatureServ
             @NonNull Clock clock,
             @NonNull String ibanityEndpoint,
             String proxyEndpoint) {
-        this(privateKey, certificateId, Clock.systemUTC(), ibanityEndpoint, proxyEndpoint);
+        this(privateKey, certificateId, clock, ibanityEndpoint, proxyEndpoint);
     }
 
     public IbanityHttpSignatureServiceImpl(
