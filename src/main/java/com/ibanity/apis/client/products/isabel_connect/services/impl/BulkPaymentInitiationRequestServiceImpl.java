@@ -12,7 +12,6 @@ import com.ibanity.apis.client.services.ApiUrlProvider;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -66,7 +65,7 @@ public class BulkPaymentInitiationRequestServiceImpl implements BulkPaymentIniti
     private void setHeaders(HttpPost httpPost, BulkPaymentInitiationRequestCreateQuery query) {
         httpPost.setHeader("Accept", "application/vnd.api+json");
         httpPost.setHeader("Content-Type", "application/xml");
-        httpPost.setHeader("Content-Disposition", "inline; filename=" + query.getFilename());
+        httpPost.setHeader("Content-Disposition", "inline; filename=\"" + query.getFilename() + "\"");
 
         if (query.getShared() != null) {
             httpPost.setHeader("Is-Shared", query.getShared().toString());
