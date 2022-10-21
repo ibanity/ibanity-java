@@ -28,6 +28,7 @@ public class AccountDetailsUpdated implements IbanityWebhookEvent {
     private String type;
     private UUID accountId;
     private UUID synchronizationId;
+    private UUID batchSynchronizationId;
     private Instant createdAt;
 
     public static Function<DataApiModel, AccountDetailsUpdated> mappingFunction() {
@@ -42,6 +43,11 @@ public class AccountDetailsUpdated implements IbanityWebhookEvent {
             RelationshipsApiModel synchronizationRelationship = dataApiModel.getRelationships().get("synchronization");
             if (synchronizationRelationship != null) {
                 accountTransactionsCreated.setSynchronizationId(fromString(synchronizationRelationship.getData().getId()));
+            }
+
+            RelationshipsApiModel batchSynchronizationRelationship = dataApiModel.getRelationships().get("batchSynchronization");
+            if (batchSynchronizationRelationship != null) {
+                accountTransactionsCreated.setBatchSynchronizationId(fromString(batchSynchronizationRelationship.getData().getId()));
             }
 
             return accountTransactionsCreated;
