@@ -12,6 +12,12 @@
           "type": "account"
         }
       },
+      "organization": {
+        "data": {
+          "id": "429fd324-c238-4ee9-8420-01fa455cdcdc",
+          "type": "organization"
+        }
+      },
       "synchronization": {
         "data": {
           "id": "cabf4560-6e4a-4790-8af6-4f4df4bf441b",
