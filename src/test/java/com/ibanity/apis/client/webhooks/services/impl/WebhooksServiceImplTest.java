@@ -59,7 +59,7 @@ public class WebhooksServiceImplTest {
     public void verifyAndParseEvent() throws Exception {
         IbanityWebhookEvent webhooks = webhooksSignatureService.verifyAndParseEvent(payload(), JWT);
         assertThat(webhooks).isInstanceOf(SynchronizationSucceededWithoutChange.class);
-        assertThat(webhooks).isEqualToComparingFieldByFieldRecursively(createExpectedWebhook());
+        assertThat(webhooks).isEqualTo(createExpectedWebhook()).usingRecursiveComparison();
     }
 
     private SynchronizationSucceededWithoutChange createExpectedWebhook() {
