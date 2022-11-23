@@ -18,6 +18,7 @@ import org.mockito.quality.Strictness;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.UUID;
 
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static java.util.Collections.emptyMap;
@@ -61,6 +62,8 @@ class UserinfoServiceImplTest {
         return Userinfo.builder()
                 .paymentsActivated(true)
                 .onboardingComplete(true)
+                .representativeOrganizationName("Awesome accountant")
+                .representativeOrganizationId(UUID.fromString("6680437c-8ed8-425b-84b7-2c31e5ca628f"))
                 .name("New documentation")
                 .sub("6680437c-8ed8-425b-84b7-2c31e5ca625d")
                 .build();
