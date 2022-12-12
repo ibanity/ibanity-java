@@ -15,5 +15,6 @@ public class Userinfo {
     private String representativeOrganizationName;
     private UUID representativeOrganizationId;
     private boolean paymentsActivated;
+    private boolean paymentsActivationRequested;
     private boolean onboardingComplete;
 }
