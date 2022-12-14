@@ -23,13 +23,15 @@ public class FinancialInstitutionUpdateQuery {
     private boolean financialInstitutionCustomerReferenceRequired;
     private String sharedBrandReference;
     private String sharedBrandName;
+    private boolean pendingTransactionsAvailable;
 
     public static FinancialInstitutionUpdateQueryBuilder from(final FinancialInstitution financialInstitution) {
         Objects.requireNonNull(financialInstitution, "Missing required 'financialInstitution'");
 
         return new FinancialInstitutionUpdateQueryBuilder()
                 .financialInstitutionId(financialInstitution.getId())
-                .name(financialInstitution.getName());
+                .name(financialInstitution.getName())
+                .pendingTransactionsAvailable(financialInstitution.isPendingTransactionsAvailable());
     }
 
     public static class FinancialInstitutionUpdateQueryBuilder {}

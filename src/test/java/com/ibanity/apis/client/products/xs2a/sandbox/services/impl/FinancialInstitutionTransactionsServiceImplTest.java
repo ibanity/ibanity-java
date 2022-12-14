@@ -28,7 +28,6 @@ import static com.ibanity.apis.client.models.IbanityProduct.Xs2a;
 import static java.time.Instant.parse;
 import static java.util.UUID.fromString;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.util.Lists.newArrayList;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -168,6 +167,7 @@ class FinancialInstitutionTransactionsServiceImplTest {
                 .cardReference(query.getCardReference())
                 .cardReferenceType(query.getCardReferenceType())
                 .fee(query.getFee())
+                .automaticBooking(query.isAutomaticBooking())
                 .build();
         return RequestApiModel.builder()
                 .data(
@@ -204,6 +204,8 @@ class FinancialInstitutionTransactionsServiceImplTest {
                 .cardReference("6666")
                 .cardReferenceType("MASKEDPAN")
                 .fee(new BigDecimal("3.14"))
+                .automaticBooking(false)
+                .status("booked")
                 .financialInstitutionAccountId(fromString("63b35ad7-5af7-47b7-b27c-da4791320d21"))
                 .selfLink("https://api.ibanity.com/sandbox/financial-institutions/eb4aca94-136d-4077-bce0-220daeb50a4e/financial-institution-users/d2c3aaf0-e617-44e6-9da8-e28bed46d9d4/financial-institution-accounts/63b35ad7-5af7-47b7-b27c-da4791320d21/financial-institution-transactions/6411162a-fe6f-428e-ae52-850291497f6b")
                 .build();
