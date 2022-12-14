@@ -35,7 +35,8 @@
       "sharedBrandName": "Deckow",
       "maintenanceFrom": "2018-10-25T00:00:00Z",
       "maintenanceTo": "2018-11-25T00:00:00Z",
-      "maintenanceType": "internal"
+      "maintenanceType": "internal",
+      "pendingTransactionsAvailable": false
     },
     "id": "268c9f39-736b-4a9a-b198-4191030c0e21",
     "links": {

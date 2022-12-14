@@ -21,6 +21,7 @@ public class FinancialInstitutionCreationQuery {
     private boolean financialInstitutionCustomerReferenceRequired;
     private String sharedBrandReference;
     private String sharedBrandName;
+    private boolean pendingTransactionsAvailable;
 
     @Builder.Default
     private List<String> authorizationModels = Collections.emptyList();

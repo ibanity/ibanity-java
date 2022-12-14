@@ -1,0 +1,42 @@
+{
+  "data": {
+    "attributes": {
+      "amount": 6.99,
+      "counterpartName": "ABBOTSTONE AGRICULTURAL PROPERTY UNIT TRUST",
+      "counterpartReference": "BE4779002273920627",
+      "currency": "EUR",
+      "description": "Small Cotton Shoes",
+      "executionDate": "2018-10-25T00:00:00.000Z",
+      "remittanceInformation": "NEW SHOES",
+      "remittanceInformationType": "unstructured",
+      "valueDate": "2018-10-22T00:00:00.000Z",
+      "internalReference": "transaction_12345",
+      "bankTransactionCode": "PMNT-IRCT-ESCT",
+      "proprietaryBankTransactionCode": "prop123",
+      "endToEndId": "61dd468606594217af9965ad3928280d",
+      "purposeCode": "CASH",
+      "mandateId": "12345678",
+      "creditorId": "98765",
+      "additionalInformation": "addional",
+      "cardReferenceType": "MASKEDPAN",
+      "cardReference": "6666",
+      "fee": 3.14
+    },
+    "id": "eb535c31-f619-4092-9db2-4db84149ddcb",
+    "links": {
+      "self": "https://api.ibanity.com/xs2a/customer/financial-institutions/99477654-a061-414c-afb4-19e37d13c5a3/accounts/1c020714-759c-4ee6-ae87-5ce667937e77/pending-transactions/eb535c31-f619-4092-9db2-4db84149ddcb"
+    },
+    "relationships": {
+      "account": {
+        "data": {
+          "id": "1c020714-759c-4ee6-ae87-5ce667937e77",
+          "type": "account"
+        },
+        "links": {
+          "related": "https://api.ibanity.com/xs2a/customer/financial-institutions/99477654-a061-414c-afb4-19e37d13c5a3/accounts/1c020714-759c-4ee6-ae87-5ce667937e77"
+        }
+      }
+    },
+    "type": "pendingTransaction"
+  }
+}

@@ -55,6 +55,6 @@ public class FinancialInstitution implements IbanityModel {
     private boolean paymentsEnabled;
     private boolean periodicPaymentsEnabled;
     private boolean financialInstitutionCustomerReferenceRequired;
-
+    private boolean pendingTransactionsAvailable;
 
 }
