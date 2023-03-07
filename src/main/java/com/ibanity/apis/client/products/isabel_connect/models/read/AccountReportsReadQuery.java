@@ -13,7 +13,9 @@ import static java.util.Collections.emptyMap;
 @ToString
 @EqualsAndHashCode
 public class AccountReportsReadQuery {
+
     private String accessToken;
+    private String after;
     private IsabelPagingSpec pagingSpec;
 
     @Builder.Default

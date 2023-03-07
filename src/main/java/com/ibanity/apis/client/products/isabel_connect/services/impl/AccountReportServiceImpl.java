@@ -8,7 +8,6 @@ import com.ibanity.apis.client.models.IsabelCollection;
 import com.ibanity.apis.client.products.isabel_connect.models.AccountReport;
 import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReportReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReportsReadQuery;
-import com.ibanity.apis.client.products.isabel_connect.models.read.IsabelPagingSpec;
 import com.ibanity.apis.client.products.isabel_connect.services.AccountReportService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import com.ibanity.apis.client.utils.IbanityUtils;
@@ -16,6 +15,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 
 import java.io.IOException;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -36,10 +38,14 @@ public class AccountReportServiceImpl implements AccountReportService {
 
     @Override
     public IsabelCollection<AccountReport> list(AccountReportsReadQuery query) {
+        Map<String, String> queryParameters = new HashMap<>();
+        queryParameters.put("after", query.getAfter());
+        URI uri = buildUri(getUrl(), query.getPagingSpec(), queryParameters);
         return mapCollection(ibanityHttpClient.get(
-                buildUri(getUrl(), query.getPagingSpec()),
+                uri,
                 query.getAdditionalHeaders(),
-                query.getAccessToken()));
+                query.getAccessToken())
+        );
     }
 
     @Override
