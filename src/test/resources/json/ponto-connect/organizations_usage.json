@@ -12,6 +12,7 @@
     "id": "2020-08",
     "attributes": {
       "paymentCount": 1.1,
+      "bulkPaymentCount": 1.5,
       "paymentAccountCount": 10,
       "accountCount": 1
     }

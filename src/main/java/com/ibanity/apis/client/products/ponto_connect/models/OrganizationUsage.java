@@ -17,6 +17,7 @@ public class OrganizationUsage {
     private String requestId;
 
     private BigDecimal paymentCount;
+    private BigDecimal bulkPaymentCount;
     private BigDecimal paymentAccountCount;
     private BigDecimal accountCount;
 }

@@ -69,6 +69,7 @@ class UsageServiceImplTest {
         return OrganizationUsage.builder()
                 .accountCount(BigDecimal.ONE)
                 .paymentAccountCount(BigDecimal.TEN)
+                .bulkPaymentCount(new BigDecimal("1.5"))
                 .id(MONTH)
                 .paymentCount(new BigDecimal("1.1"))
                 .build();

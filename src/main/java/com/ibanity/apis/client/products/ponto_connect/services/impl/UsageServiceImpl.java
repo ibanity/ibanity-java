@@ -48,6 +48,7 @@ public class UsageServiceImpl implements UsageService {
                 .paymentCount(new BigDecimal(dataApiModel.get("data").get("attributes").get("paymentCount").toString()))
                 .accountCount(new BigDecimal(dataApiModel.get("data").get("attributes").get("accountCount").toString()))
                 .paymentAccountCount(new BigDecimal(dataApiModel.get("data").get("attributes").get("paymentAccountCount").toString()))
+                .bulkPaymentCount(new BigDecimal(dataApiModel.get("data").get("attributes").get("bulkPaymentCount").toString()))
                 .build();
     }
 
