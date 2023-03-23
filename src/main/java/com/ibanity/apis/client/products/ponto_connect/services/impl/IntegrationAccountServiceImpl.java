@@ -39,7 +39,7 @@ public class IntegrationAccountServiceImpl implements IntegrationAccountService 
             pagingSpec = DEFAULT_PAGING_SPEC;
         }
 
-        HttpResponse response = ibanityHttpClient.get(buildUri(getUrl(), pagingSpec), integrationAccountsReadQuery.getAdditionalHeaders(), integrationAccountsReadQuery.getClientAccessToken());
+        HttpResponse response = ibanityHttpClient.get(buildUri(getUrl(), pagingSpec), integrationAccountsReadQuery.getAdditionalHeaders(), integrationAccountsReadQuery.getAccessToken());
         return IbanityModelMapper.mapCollection(response, customMappingFunction());
     }
 

@@ -16,7 +16,7 @@ import static java.util.Collections.emptyMap;
 @EqualsAndHashCode
 public class IntegrationAccountsReadQuery {
 
-    private String clientAccessToken;
+    private String accessToken;
 
     private IbanityPagingSpec pagingSpec;
 

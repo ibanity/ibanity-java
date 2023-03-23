@@ -55,7 +55,7 @@ class IntegrationAccountServiceImplTest {
 
         IbanityCollection<IntegrationAccount> integrationAccounts = integrationAccountService.list(
                 IntegrationAccountsReadQuery.builder()
-                        .clientAccessToken(CLIENT_TOKEN)
+                        .accessToken(CLIENT_TOKEN)
                         .pagingSpec(IbanityPagingSpec.builder().limit(2).build())
                         .build());
 
