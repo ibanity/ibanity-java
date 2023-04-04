@@ -1,4 +1,4 @@
-package com.ibanity.apis.client.webhooks.models.ponto_connect;
+package com.ibanity.apis.client.webhooks.models.xs2a;
 
 import com.ibanity.apis.client.jsonapi.DataApiModel;
 import com.ibanity.apis.client.jsonapi.RelationshipsApiModel;
@@ -20,38 +20,38 @@ import static java.util.UUID.fromString;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class SynchronizationFailed implements IbanityWebhookEvent {
+public class AccountTransactionsUpdated implements IbanityWebhookEvent {
 
-    public final static String TYPE = "pontoConnect.synchronization.failed";
+    public final static String TYPE = "xs2a.account.transactionsUpdated";
 
     private UUID id;
     private String type;
     private UUID accountId;
     private UUID synchronizationId;
-    private UUID organizationId;
-    private String synchronizationSubtype;
+    private UUID batchSynchronizationId;
+    private int count;
     private Instant createdAt;
 
-    public static Function<DataApiModel, SynchronizationFailed> mappingFunction() {
+    public static Function<DataApiModel, AccountTransactionsUpdated> mappingFunction() {
         return dataApiModel -> {
-            SynchronizationFailed synchronizationFailed = toIbanityWebhooks(dataApiModel, SynchronizationFailed.class);
+            AccountTransactionsUpdated accountPendingTransactionsCreated = toIbanityWebhooks(dataApiModel, AccountTransactionsUpdated.class);
 
             RelationshipsApiModel accountRelationship = dataApiModel.getRelationships().get("account");
             if (accountRelationship != null) {
-                synchronizationFailed.setAccountId(fromString(accountRelationship.getData().getId()));
+                accountPendingTransactionsCreated.setAccountId(fromString(accountRelationship.getData().getId()));
             }
 
             RelationshipsApiModel synchronizationRelationship = dataApiModel.getRelationships().get("synchronization");
             if (synchronizationRelationship != null) {
-                synchronizationFailed.setSynchronizationId(fromString(synchronizationRelationship.getData().getId()));
+                accountPendingTransactionsCreated.setSynchronizationId(fromString(synchronizationRelationship.getData().getId()));
             }
 
-            RelationshipsApiModel organizationRelationship = dataApiModel.getRelationships().get("organization");
-            if (organizationRelationship != null) {
-                synchronizationFailed.setOrganizationId(fromString(organizationRelationship.getData().getId()));
+            RelationshipsApiModel batchSynchronizationRelationship = dataApiModel.getRelationships().get("batchSynchronization");
+            if (batchSynchronizationRelationship != null) {
+                accountPendingTransactionsCreated.setBatchSynchronizationId(fromString(batchSynchronizationRelationship.getData().getId()));
             }
 
-            return synchronizationFailed;
+            return accountPendingTransactionsCreated;
         };
     }
 }

@@ -34,24 +34,24 @@ public class AccountTransactionsUpdated implements IbanityWebhookEvent {
 
     public static Function<DataApiModel, AccountTransactionsUpdated> mappingFunction() {
         return dataApiModel -> {
-            AccountTransactionsUpdated accountTransactionsCreated = toIbanityWebhooks(dataApiModel, AccountTransactionsUpdated.class);
+            AccountTransactionsUpdated accountTransactionsUpdated = toIbanityWebhooks(dataApiModel, AccountTransactionsUpdated.class);
 
             RelationshipsApiModel accountRelationship = dataApiModel.getRelationships().get("account");
             if (accountRelationship != null) {
-                accountTransactionsCreated.setAccountId(fromString(accountRelationship.getData().getId()));
+                accountTransactionsUpdated.setAccountId(fromString(accountRelationship.getData().getId()));
             }
 
             RelationshipsApiModel synchronizationRelationship = dataApiModel.getRelationships().get("synchronization");
             if (synchronizationRelationship != null) {
-                accountTransactionsCreated.setSynchronizationId(fromString(synchronizationRelationship.getData().getId()));
+                accountTransactionsUpdated.setSynchronizationId(fromString(synchronizationRelationship.getData().getId()));
             }
 
             RelationshipsApiModel organizationRelationship = dataApiModel.getRelationships().get("organization");
             if (organizationRelationship != null) {
-                accountTransactionsCreated.setOrganizationId(fromString(organizationRelationship.getData().getId()));
+                accountTransactionsUpdated.setOrganizationId(fromString(organizationRelationship.getData().getId()));
             }
 
-            return accountTransactionsCreated;
+            return accountTransactionsUpdated;
         };
     }
 }
