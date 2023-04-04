@@ -59,6 +59,10 @@ public class WebhooksUtils {
                 return mapWebhookResource(payload, AccountTransactionsCreated.mappingFunction());
             case AccountTransactionsUpdated.TYPE:
                 return mapWebhookResource(payload, AccountTransactionsUpdated.mappingFunction());
+            case AccountPendingTransactionsCreated.TYPE:
+                return mapWebhookResource(payload, AccountPendingTransactionsCreated.mappingFunction());
+            case AccountPendingTransactionsUpdated.TYPE:
+                return mapWebhookResource(payload, AccountPendingTransactionsUpdated.mappingFunction());
             case SynchronizationFailed.TYPE:
                 return mapWebhookResource(payload, SynchronizationFailed.mappingFunction());
             case SynchronizationSucceededWithoutChange.TYPE:

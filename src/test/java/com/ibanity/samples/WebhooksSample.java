@@ -34,14 +34,20 @@ public class WebhooksSample {
         System.out.println(webhooksService.keysService().list());
         IbanityWebhookEvent ibanityWebhookEvent = webhooksService.verifyAndParseEvent(PAYLOAD, JWT);
         switch (ibanityWebhookEvent.getType()) {
-            case AccountTransactionsCreated.TYPE:
-                System.out.println("AccountTransactionsCreated received");
-                break;
             case AccountDetailsUpdated.TYPE:
                 System.out.println("AccountDetailsUpdated received");
                 break;
+            case AccountTransactionsCreated.TYPE:
+                System.out.println("AccountTransactionsCreated received");
+                break;
             case AccountTransactionsUpdated.TYPE:
                 System.out.println("AccountTransactionsUpdated received");
+                break;
+            case AccountPendingTransactionsCreated.TYPE:
+                System.out.println("AccountPendingTransactionsCreated received");
+                break;
+            case AccountPendingTransactionsUpdated.TYPE:
+                System.out.println("AccountPendingTransactionsUpdated received");
                 break;
             case SynchronizationFailed.TYPE:
                 System.out.println("SynchronizationFailed received");

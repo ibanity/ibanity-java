@@ -34,24 +34,24 @@ public class SynchronizationFailed implements IbanityWebhookEvent {
 
     public static Function<DataApiModel, SynchronizationFailed> mappingFunction() {
         return dataApiModel -> {
-            SynchronizationFailed accountTransactionsCreated = toIbanityWebhooks(dataApiModel, SynchronizationFailed.class);
+            SynchronizationFailed synchronizationFailed = toIbanityWebhooks(dataApiModel, SynchronizationFailed.class);
 
             RelationshipsApiModel accountRelationship = dataApiModel.getRelationships().get("account");
             if (accountRelationship != null) {
-                accountTransactionsCreated.setAccountId(fromString(accountRelationship.getData().getId()));
+                synchronizationFailed.setAccountId(fromString(accountRelationship.getData().getId()));
             }
 
             RelationshipsApiModel synchronizationRelationship = dataApiModel.getRelationships().get("synchronization");
             if (synchronizationRelationship != null) {
-                accountTransactionsCreated.setSynchronizationId(fromString(synchronizationRelationship.getData().getId()));
+                synchronizationFailed.setSynchronizationId(fromString(synchronizationRelationship.getData().getId()));
             }
 
             RelationshipsApiModel batchSynchronizationRelationship = dataApiModel.getRelationships().get("batchSynchronization");
             if (batchSynchronizationRelationship != null) {
-                accountTransactionsCreated.setBatchSynchronizationId(fromString(batchSynchronizationRelationship.getData().getId()));
+                synchronizationFailed.setBatchSynchronizationId(fromString(batchSynchronizationRelationship.getData().getId()));
             }
 
-            return accountTransactionsCreated;
+            return synchronizationFailed;
         };
     }
 }

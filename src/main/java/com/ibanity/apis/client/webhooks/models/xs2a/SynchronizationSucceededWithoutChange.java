@@ -34,24 +34,24 @@ public class SynchronizationSucceededWithoutChange implements IbanityWebhookEven
 
     public static Function<DataApiModel, SynchronizationSucceededWithoutChange> mappingFunction() {
         return dataApiModel -> {
-            SynchronizationSucceededWithoutChange accountTransactionsCreated = toIbanityWebhooks(dataApiModel, SynchronizationSucceededWithoutChange.class);
+            SynchronizationSucceededWithoutChange synchronizationSucceededWithoutChange = toIbanityWebhooks(dataApiModel, SynchronizationSucceededWithoutChange.class);
 
             RelationshipsApiModel accountRelationship = dataApiModel.getRelationships().get("account");
             if (accountRelationship != null) {
-                accountTransactionsCreated.setAccountId(fromString(accountRelationship.getData().getId()));
+                synchronizationSucceededWithoutChange.setAccountId(fromString(accountRelationship.getData().getId()));
             }
 
             RelationshipsApiModel synchronizationRelationship = dataApiModel.getRelationships().get("synchronization");
             if (synchronizationRelationship != null) {
-                accountTransactionsCreated.setSynchronizationId(fromString(synchronizationRelationship.getData().getId()));
+                synchronizationSucceededWithoutChange.setSynchronizationId(fromString(synchronizationRelationship.getData().getId()));
             }
 
             RelationshipsApiModel batchSynchronizationRelationship = dataApiModel.getRelationships().get("batchSynchronization");
             if (batchSynchronizationRelationship != null) {
-                accountTransactionsCreated.setBatchSynchronizationId(fromString(batchSynchronizationRelationship.getData().getId()));
+                synchronizationSucceededWithoutChange.setBatchSynchronizationId(fromString(batchSynchronizationRelationship.getData().getId()));
             }
 
-            return accountTransactionsCreated;
+            return synchronizationSucceededWithoutChange;
         };
     }
 }
