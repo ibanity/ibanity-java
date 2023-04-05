@@ -10,6 +10,7 @@ public class Xs2aServiceImpl implements Xs2aService {
     private final com.ibanity.apis.client.products.xs2a.sandbox.services.SandboxService sandboxService;
     private final AccountsService accountService;
     private final TransactionsService transactionService;
+    private final PendingTransactionsService pendingTransactionService;
     private final SynchronizationService synchronizationService;
     private final BatchSynchronizationService batchSynchronizationService;
     private final CustomerAccessTokensService customerAccessTokensService;
@@ -30,6 +31,7 @@ public class Xs2aServiceImpl implements Xs2aService {
     public Xs2aServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
         accountService = new AccountsServiceImpl(apiUrlProvider, ibanityHttpClient);
         transactionService = new TransactionsServiceImpl(apiUrlProvider, ibanityHttpClient);
+        pendingTransactionService = new PendingTransactionsServiceImpl(apiUrlProvider, ibanityHttpClient);
         synchronizationService = new SynchronizationServiceImpl(apiUrlProvider, ibanityHttpClient);
         batchSynchronizationService = new BatchSynchronizationServiceImpl(apiUrlProvider, ibanityHttpClient);
         customerAccessTokensService = new CustomerAccessTokensServiceImpl(apiUrlProvider, ibanityHttpClient);
@@ -102,6 +104,11 @@ public class Xs2aServiceImpl implements Xs2aService {
     @Override
     public TransactionsService transactionService() {
         return transactionService;
+    }
+
+    @Override
+    public PendingTransactionsService pendingTransactionService() {
+        return pendingTransactionService;
     }
 
     @Override
