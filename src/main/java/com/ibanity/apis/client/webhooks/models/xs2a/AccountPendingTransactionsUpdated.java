@@ -20,9 +20,9 @@ import static java.util.UUID.fromString;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class AccountTransactionsUpdated implements IbanityWebhookEvent {
+public class AccountPendingTransactionsUpdated implements IbanityWebhookEvent {
 
-    public final static String TYPE = "xs2a.account.transactionsUpdated";
+    public final static String TYPE = "xs2a.account.pendingTransactionsUpdated";
 
     private UUID id;
     private String type;
@@ -32,9 +32,9 @@ public class AccountTransactionsUpdated implements IbanityWebhookEvent {
     private int count;
     private Instant createdAt;
 
-    public static Function<DataApiModel, AccountTransactionsUpdated> mappingFunction() {
+    public static Function<DataApiModel, AccountPendingTransactionsUpdated> mappingFunction() {
         return dataApiModel -> {
-            AccountTransactionsUpdated accountPendingTransactionsCreated = toIbanityWebhooks(dataApiModel, AccountTransactionsUpdated.class);
+            AccountPendingTransactionsUpdated accountPendingTransactionsCreated = toIbanityWebhooks(dataApiModel, AccountPendingTransactionsUpdated.class);
 
             RelationshipsApiModel accountRelationship = dataApiModel.getRelationships().get("account");
             if (accountRelationship != null) {

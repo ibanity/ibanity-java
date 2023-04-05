@@ -65,7 +65,6 @@ public class TransactionsServiceImplTest {
                         .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
                         .build();
 
-
         when(ibanityHttpClient.get(new URI(TRANSACTION_URI), emptyMap(), CUSTOMER_ACCESS_TOKEN))
                 .thenReturn(IbanityTestHelper.loadHttpResponse("json/transaction.json"));
 

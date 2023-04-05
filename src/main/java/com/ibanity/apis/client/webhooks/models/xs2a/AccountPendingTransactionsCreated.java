@@ -22,7 +22,7 @@ import static java.util.UUID.fromString;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class AccountPendingTransactionsCreated implements IbanityWebhookEvent {
 
-    public final static String TYPE = "xs2a.account.transactionsCreated";
+    public final static String TYPE = "xs2a.account.pendingTransactionsCreated";
 
     private UUID id;
     private String type;
