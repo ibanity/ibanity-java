@@ -24,6 +24,8 @@ public interface Xs2aService {
 
     AccountInformationAccessRequestsService accountInformationAccessRequestsService();
 
+    PendingTransactionsService pendingTransactionService();
+
     TransactionsService transactionService();
 
     BatchSynchronizationService batchSynchronizationService();
