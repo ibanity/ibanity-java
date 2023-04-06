@@ -56,5 +56,6 @@ public class FinancialInstitution implements IbanityModel {
     private boolean periodicPaymentsEnabled;
     private boolean financialInstitutionCustomerReferenceRequired;
     private boolean pendingTransactionsAvailable;
+    private String timezone;
 
 }
