@@ -22,6 +22,7 @@ public class FinancialInstitutionCreationQuery {
     private String sharedBrandReference;
     private String sharedBrandName;
     private boolean pendingTransactionsAvailable;
+    private String timeZone;
 
     @Builder.Default
     private List<String> authorizationModels = Collections.emptyList();
