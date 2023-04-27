@@ -60,6 +60,7 @@ class OnboardingDetailsServiceImplTest {
                 .organizationName("Smith Ltd")
                 .phoneNumber("+32484000000")
                 .vatNumber("BE0999999999")
+                .initialFinancialInstitutionId(UUID.fromString("8ca9b992-f415-40d3-9624-dc459619b675"))
                 .build();
 
         when(ibanityHttpClient.post(eq(new URI(ONBOARDING_DETAILS_ENDPOINT)), any(),eq(emptyMap()), eq(ACCESS_TOKEN)))
@@ -83,6 +84,7 @@ class OnboardingDetailsServiceImplTest {
                 .organizationName("Smith Ltd")
                 .phoneNumber("+32484000000")
                 .vatNumber("BE0999999999")
+                .initialFinancialInstitutionId(UUID.fromString("8ca9b992-f415-40d3-9624-dc459619b675"))
                 .build();
     }
 }

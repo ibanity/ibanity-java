@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.util.Map;
+import java.util.UUID;
 
 import static java.util.Collections.emptyMap;
 
@@ -31,4 +32,5 @@ public class OnboardingDetailsCreateQuery {
     private String addressPostalCode;
     private String addressCountry;
     private String addressCity;
+    private UUID initialFinancialInstitutionId;
 }
