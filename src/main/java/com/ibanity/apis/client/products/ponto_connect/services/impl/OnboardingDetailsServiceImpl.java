@@ -46,6 +46,7 @@ public class OnboardingDetailsServiceImpl implements OnboardingDetailsService {
                 .organizationName(onboardingDetailsCreateQuery.getOrganizationName())
                 .phoneNumber(onboardingDetailsCreateQuery.getPhoneNumber())
                 .vatNumber(onboardingDetailsCreateQuery.getVatNumber())
+                .initialFinancialInstitutionId(onboardingDetailsCreateQuery.getInitialFinancialInstitutionId())
                 .build();
     }
 
