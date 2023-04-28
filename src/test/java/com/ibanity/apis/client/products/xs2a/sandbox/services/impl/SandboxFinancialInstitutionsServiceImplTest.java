@@ -56,6 +56,7 @@ class SandboxFinancialInstitutionsServiceImplTest {
                 .financialInstitutionCustomerReferenceRequired(true)
                 .sharedBrandName("ABC INTERNATIONAL BANK PLC")
                 .sharedBrandReference("abc-international-bank-plc-be")
+                .timeZone("Europe/Brussels")
                 .build();
 
         when(ibanityHttpClient.post(new URI(API_ENDPOINT), createRequest()))
@@ -74,6 +75,7 @@ class SandboxFinancialInstitutionsServiceImplTest {
                 .financialInstitutionCustomerReferenceRequired(true)
                 .sharedBrandName("ABC INTERNATIONAL BANK PLC")
                 .sharedBrandReference("abc-international-bank-plc-be")
+                .timeZone("Europe/Brussels")
                 .build();
 
         when(ibanityHttpClient.post(new URI(API_ENDPOINT), createRequest(AUTHORIZATION_MODELS)))
@@ -92,6 +94,7 @@ class SandboxFinancialInstitutionsServiceImplTest {
                 .financialInstitutionCustomerReferenceRequired(true)
                 .sharedBrandName("ABC INTERNATIONAL BANK PLC")
                 .sharedBrandReference("abc-international-bank-plc-be")
+                .timeZone("Europe/Brussels")
                 .build();
 
         when(ibanityHttpClient.patch(new URI(API_ENDPOINT_WITH_ID), createRequest()))
@@ -121,6 +124,7 @@ class SandboxFinancialInstitutionsServiceImplTest {
                 .name("MetaBank")
                 .authorizationModels(AUTHORIZATION_MODELS)
                 .sandbox(true)
+                .timeZone("Europe/Brussels")
                 .id(FINANCIAL_INSTITUTION_ID)
                 .build();
     }
