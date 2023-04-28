@@ -6,7 +6,8 @@
         "financialInstitutionOffered"
       ],
       "name": "MetaBank",
-      "sandbox": true
+      "sandbox": true,
+      "timeZone": "Europe/Brussels"
     },
     "id": "1c57b438-6a38-437f-8130-a186f547c6b7",
     "type": "financialInstitution"
