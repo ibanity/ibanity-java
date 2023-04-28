@@ -24,6 +24,7 @@ public class FinancialInstitutionUpdateQuery {
     private String sharedBrandReference;
     private String sharedBrandName;
     private boolean pendingTransactionsAvailable;
+    private String timeZone;
 
     public static FinancialInstitutionUpdateQueryBuilder from(final FinancialInstitution financialInstitution) {
         Objects.requireNonNull(financialInstitution, "Missing required 'financialInstitution'");
