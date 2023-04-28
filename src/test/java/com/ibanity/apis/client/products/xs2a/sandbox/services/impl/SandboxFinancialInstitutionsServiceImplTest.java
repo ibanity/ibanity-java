@@ -144,6 +144,7 @@ class SandboxFinancialInstitutionsServiceImplTest {
                                 .financialInstitutionCustomerReferenceRequired(true)
                                 .sharedBrandName("ABC INTERNATIONAL BANK PLC")
                                 .sharedBrandReference("abc-international-bank-plc-be")
+                                .timeZone("Europe/Brussels")
                                 .build())
                         .build())
                 .build();
