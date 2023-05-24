@@ -26,5 +26,6 @@ public class FinancialInstitution implements IbanityModel {
     private String country;
     private String status;
     private boolean deprecated;
+    private String timeZone;
 }
 

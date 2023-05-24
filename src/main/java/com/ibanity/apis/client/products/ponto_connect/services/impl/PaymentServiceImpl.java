@@ -97,6 +97,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .remittanceInformationType(paymentCreateQuery.getRemittanceInformationType())
                 .requestedExecutionDate(paymentCreateQuery.getRequestedExecutionDate())
                 .redirectUri(paymentCreateQuery.getRedirectUri())
+                .endToEndId(paymentCreateQuery.getEndToEndId())
                 .build();
     }
 
@@ -116,5 +117,6 @@ public class PaymentServiceImpl implements PaymentService {
         private String creditorAccountReferenceType;
         private String creditorAccountReference;
         private String redirectUri;
+        private String endToEndId;
     }
 }

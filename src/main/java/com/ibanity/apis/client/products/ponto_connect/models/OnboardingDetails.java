@@ -29,4 +29,5 @@ public class OnboardingDetails implements IbanityModel {
     private String addressPostalCode;
     private String addressCountry;
     private String addressCity;
+    private UUID initialFinancialInstitutionId;
 }

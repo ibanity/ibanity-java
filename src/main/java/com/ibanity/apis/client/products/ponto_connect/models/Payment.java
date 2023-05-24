@@ -31,6 +31,7 @@ public class Payment implements IbanityModel {
     private String creditorAccountReferenceType;
     private String creditorAccountReference;
     private BigDecimal amount;
+    private String endToEndId;
     private String redirectLink;
 
 }

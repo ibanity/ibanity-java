@@ -13,7 +13,8 @@
       "addressStreetAddress": "123 Main St",
       "addressPostalCode": "1000",
       "addressCountry": "BE",
-      "addressCity": "Brussels"
+      "addressCity": "Brussels",
+      "initialFinancialInstitutionId": "8ca9b992-f415-40d3-9624-dc459619b675"
     }
   }
 }
