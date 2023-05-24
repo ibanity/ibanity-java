@@ -46,5 +46,6 @@ public class BulkPaymentCreateQuery {
         private String creditorAccountReferenceType;
         private String creditorAccountReference;
         private BigDecimal amount;
+        private String endToEndId;
     }
 }
