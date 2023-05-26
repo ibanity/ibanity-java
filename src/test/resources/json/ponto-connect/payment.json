@@ -13,7 +13,8 @@
       "creditorAgent": "anAgent",
       "creditorAccountReferenceType": "IBAN",
       "creditorAccountReference": "BE84732645584359",
-      "amount": "1"
+      "amount": "1",
+      "endToEndId": "1234567890"
     }
   }
 }
