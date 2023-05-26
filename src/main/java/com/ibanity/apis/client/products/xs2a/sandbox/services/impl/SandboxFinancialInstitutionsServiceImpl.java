@@ -64,6 +64,7 @@ public class SandboxFinancialInstitutionsServiceImpl extends FinancialInstitutio
                 .sharedBrandReference(financialInstitutionUpdateQuery.getSharedBrandReference())
                 .sharedBrandName(financialInstitutionUpdateQuery.getSharedBrandName())
                 .financialInstitutionCustomerReferenceRequired(financialInstitutionUpdateQuery.isFinancialInstitutionCustomerReferenceRequired())
+                .timeZone(financialInstitutionUpdateQuery.getTimeZone())
                 .build();
         RequestApiModel request = buildRequest(FinancialInstitution.RESOURCE_TYPE, financialInstitution);
 
