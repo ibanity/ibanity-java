@@ -111,6 +111,7 @@ class PaymentServiceImplTest {
                 .requestedExecutionDate(LocalDate.parse("2019-01-01"))
                 .status("pending")
                 .redirectLink(redirect)
+                .endToEndId("1234567890")
                 .build();
     }
 }
