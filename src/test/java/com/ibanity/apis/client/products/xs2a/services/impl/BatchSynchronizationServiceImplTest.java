@@ -57,7 +57,7 @@ class BatchSynchronizationServiceImplTest {
                         .build();
 
         when(ibanityHttpClient.post(new URI(BATCH_SYNCHRONIZATION_ENDPOINT), createRequest(batchSynchronizationCreationQuery), emptyMap(), null))
-                .thenReturn(IbanityTestHelper.loadHttpResponse("json/create_batch_synchronization.json"));
+                .thenReturn(IbanityTestHelper.loadHttpResponse("json/createBatchSynchronization.json"));
 
         BatchSynchronization actual = batchSynchronizationService.create(batchSynchronizationCreationQuery);
 

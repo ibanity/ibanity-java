@@ -52,7 +52,7 @@ class FinancialInstitutionCountriesServiceImplTest {
                         .build();
 
         when(ibanityHttpClient.get(new URI(FINANCIAL_INSTITUTION_COUNTRIES_API + "?page%5Bafter%5D=AU&page%5Blimit%5D=10"), emptyMap(), null))
-                .thenReturn(loadHttpResponse("json/financial_institution_countries.json"));
+                .thenReturn(loadHttpResponse("json/financialInstitutionCountries.json"));
 
         Collection<FinancialInstitutionCountry> actual = countriesService.list(readQuery);
 
