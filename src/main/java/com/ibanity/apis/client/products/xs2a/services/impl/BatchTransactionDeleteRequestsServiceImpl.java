@@ -6,7 +6,7 @@ import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.mappers.BatchTransactionDeleteRequestMapper;
 import com.ibanity.apis.client.products.xs2a.models.BatchTransactionDeleteRequest;
 import com.ibanity.apis.client.products.xs2a.models.create.BatchTransactionDeleteRequestCreationQuery;
-import com.ibanity.apis.client.products.xs2a.services.BatchTransactionDeleteRequestService;
+import com.ibanity.apis.client.products.xs2a.services.BatchTransactionDeleteRequestsService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.apache.http.HttpResponse;
 
@@ -15,12 +15,12 @@ import static com.ibanity.apis.client.mappers.ModelMapperHelper.buildRequest;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static org.apache.commons.lang3.StringUtils.removeEnd;
 
-public class BatchTransactionDeleteRequestServiceImpl implements BatchTransactionDeleteRequestService {
+public class BatchTransactionDeleteRequestsServiceImpl implements BatchTransactionDeleteRequestsService {
 
     private final ApiUrlProvider apiUrlProvider;
     private final IbanityHttpClient ibanityHttpClient;
 
-    public BatchTransactionDeleteRequestServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
+    public BatchTransactionDeleteRequestsServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
         super();
         this.apiUrlProvider = apiUrlProvider;
         this.ibanityHttpClient = ibanityHttpClient;

@@ -28,7 +28,11 @@ public interface Xs2aService {
 
     TransactionsService transactionService();
 
+    TransactionDeleteRequestsService transactionDeleteRequestsService();
+
     BatchSynchronizationService batchSynchronizationService();
+
+    BatchTransactionDeleteRequestsService batchTransactionDeleteRequestsService();
 
     SynchronizationService synchronizationService();
 

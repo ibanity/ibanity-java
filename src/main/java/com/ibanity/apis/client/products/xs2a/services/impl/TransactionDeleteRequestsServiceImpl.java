@@ -6,7 +6,7 @@ import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.mappers.TransactionDeleteRequestMapper;
 import com.ibanity.apis.client.products.xs2a.models.TransactionDeleteRequest;
 import com.ibanity.apis.client.products.xs2a.models.create.TransactionDeleteRequestCreationQuery;
-import com.ibanity.apis.client.products.xs2a.services.TransactionDeleteRequestService;
+import com.ibanity.apis.client.products.xs2a.services.TransactionDeleteRequestsService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.apache.http.HttpResponse;
 
@@ -15,12 +15,12 @@ import static com.ibanity.apis.client.mappers.ModelMapperHelper.buildRequest;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
 import static org.apache.commons.lang3.StringUtils.removeEnd;
 
-public class TransactionDeleteRequestServiceImpl implements TransactionDeleteRequestService {
+public class TransactionDeleteRequestsServiceImpl implements TransactionDeleteRequestsService {
 
     private final ApiUrlProvider apiUrlProvider;
     private final IbanityHttpClient ibanityHttpClient;
 
-    public TransactionDeleteRequestServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
+    public TransactionDeleteRequestsServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
         super();
         this.apiUrlProvider = apiUrlProvider;
         this.ibanityHttpClient = ibanityHttpClient;

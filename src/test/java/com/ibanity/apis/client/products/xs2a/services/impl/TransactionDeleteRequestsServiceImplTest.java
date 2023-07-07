@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class TransactionDeleteRequestServiceImplTest {
+class TransactionDeleteRequestsServiceImplTest {
 
     private static final UUID BATCH_TRANSACTION_DELETE_REQUEST_ID = fromString("04e98b21-8213-4aec-b373-13eb51f948e9");
     private static final String BATCH_TRANSACTION_DELETE_REQUEST_ENDPOINT = "https://api.ibanity.com/xs2a/transaction-delete-requests";
@@ -37,7 +37,7 @@ class TransactionDeleteRequestServiceImplTest {
     private IbanityHttpClient ibanityHttpClient;
 
     @InjectMocks
-    private TransactionDeleteRequestServiceImpl transactionDeleteRequestService;
+    private TransactionDeleteRequestsServiceImpl transactionDeleteRequestsService;
 
     @BeforeEach
     void setUp() {
@@ -54,7 +54,7 @@ class TransactionDeleteRequestServiceImplTest {
         when(ibanityHttpClient.post(new URI(BATCH_TRANSACTION_DELETE_REQUEST_ENDPOINT), createRequest(transactionDeleteRequestCreationQuery), emptyMap(), null))
                 .thenReturn(IbanityTestHelper.loadHttpResponse("json/createTransactionDeleteRequest.json"));
 
-        TransactionDeleteRequest actual = transactionDeleteRequestService.create(transactionDeleteRequestCreationQuery);
+        TransactionDeleteRequest actual = transactionDeleteRequestsService.create(transactionDeleteRequestCreationQuery);
 
         assertThat(actual).isEqualToComparingFieldByField(createExpected());
     }

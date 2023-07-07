@@ -10,9 +10,11 @@ public class Xs2aServiceImpl implements Xs2aService {
     private final com.ibanity.apis.client.products.xs2a.sandbox.services.SandboxService sandboxService;
     private final AccountsService accountService;
     private final TransactionsService transactionService;
+    private final TransactionDeleteRequestsService transactionDeleteRequestsService;
     private final PendingTransactionsService pendingTransactionService;
     private final SynchronizationService synchronizationService;
     private final BatchSynchronizationService batchSynchronizationService;
+    private final BatchTransactionDeleteRequestsService batchTransactionDeleteRequestsService;
     private final CustomerAccessTokensService customerAccessTokensService;
     private final FinancialInstitutionsService financialInstitutionsService;
     private final BulkPaymentInitiationRequestService bulkPaymentInitiationRequestService;
@@ -31,9 +33,11 @@ public class Xs2aServiceImpl implements Xs2aService {
     public Xs2aServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient) {
         accountService = new AccountsServiceImpl(apiUrlProvider, ibanityHttpClient);
         transactionService = new TransactionsServiceImpl(apiUrlProvider, ibanityHttpClient);
+        transactionDeleteRequestsService = new TransactionDeleteRequestsServiceImpl(apiUrlProvider, ibanityHttpClient);
         pendingTransactionService = new PendingTransactionsServiceImpl(apiUrlProvider, ibanityHttpClient);
         synchronizationService = new SynchronizationServiceImpl(apiUrlProvider, ibanityHttpClient);
         batchSynchronizationService = new BatchSynchronizationServiceImpl(apiUrlProvider, ibanityHttpClient);
+        batchTransactionDeleteRequestsService = new BatchTransactionDeleteRequestsServiceImpl(apiUrlProvider, ibanityHttpClient);
         customerAccessTokensService = new CustomerAccessTokensServiceImpl(apiUrlProvider, ibanityHttpClient);
         financialInstitutionsService = new FinancialInstitutionsServiceImpl(apiUrlProvider, ibanityHttpClient);
         bulkPaymentInitiationRequestService = new BulkPaymentInitiationRequestServiceImpl(apiUrlProvider, ibanityHttpClient);
@@ -107,6 +111,11 @@ public class Xs2aServiceImpl implements Xs2aService {
     }
 
     @Override
+    public TransactionDeleteRequestsService transactionDeleteRequestsService() {
+        return transactionDeleteRequestsService;
+    }
+
+    @Override
     public PendingTransactionsService pendingTransactionService() {
         return pendingTransactionService;
     }
@@ -119,6 +128,11 @@ public class Xs2aServiceImpl implements Xs2aService {
     @Override
     public BatchSynchronizationService batchSynchronizationService() {
         return batchSynchronizationService;
+    }
+
+    @Override
+    public BatchTransactionDeleteRequestsService batchTransactionDeleteRequestsService() {
+        return batchTransactionDeleteRequestsService;
     }
 
     @Override
