@@ -32,8 +32,6 @@ public interface Xs2aService {
 
     BatchSynchronizationService batchSynchronizationService();
 
-    BatchTransactionDeleteRequestsService batchTransactionDeleteRequestsService();
-
     SynchronizationService synchronizationService();
 
     SandboxService sandbox();

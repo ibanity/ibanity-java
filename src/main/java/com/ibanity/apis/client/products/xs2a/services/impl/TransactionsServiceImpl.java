@@ -69,7 +69,7 @@ public class TransactionsServiceImpl implements TransactionsService {
 
     private String getUrl(UUID financialInstitutionId, UUID accountId) {
         String url = apiUrlProvider
-            .find(IbanityProduct.Xs2a, "customer", "financialInstitution", "transactions")
+            .find(IbanityProduct.Xs2a, "customer", "financialInstitution", "account", "transactions")
             .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
             .replace(Account.API_URL_TAG_ID, accountId.toString())
             .replace(Transaction.API_URL_TAG_ID, "");
