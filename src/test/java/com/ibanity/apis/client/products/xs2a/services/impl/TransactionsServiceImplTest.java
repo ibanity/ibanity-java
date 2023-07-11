@@ -55,7 +55,7 @@ public class TransactionsServiceImplTest {
 
     @Test
     public void find() throws Exception {
-        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "transactions")).thenReturn(TRANSACTION_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "account", "transactions")).thenReturn(TRANSACTION_ENDPOINT);
 
         TransactionReadQuery transactionReadQuery =
                 TransactionReadQuery.builder()
@@ -75,7 +75,7 @@ public class TransactionsServiceImplTest {
 
     @Test
     public void listForAccount() throws Exception {
-        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "transactions")).thenReturn(TRANSACTION_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "account", "transactions")).thenReturn(TRANSACTION_ENDPOINT);
 
         IbanityCollection<Transaction> expected =
                 IbanityCollection.<Transaction>builder()

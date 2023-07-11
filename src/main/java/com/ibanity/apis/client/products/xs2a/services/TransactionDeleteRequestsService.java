@@ -5,5 +5,9 @@ import com.ibanity.apis.client.products.xs2a.models.create.TransactionDeleteRequ
 
 public interface TransactionDeleteRequestsService {
 
-    TransactionDeleteRequest create(TransactionDeleteRequestCreationQuery transactionDeleteRequestCreationQuery);
+    TransactionDeleteRequest createForApplication(TransactionDeleteRequestCreationQuery transactionDeleteRequestCreationQuery);
+
+    TransactionDeleteRequest createForCustomer(TransactionDeleteRequestCreationQuery transactionDeleteRequestCreationQuery);
+
+    TransactionDeleteRequest createForAccount(TransactionDeleteRequestCreationQuery transactionDeleteRequestCreationQuery);
 }

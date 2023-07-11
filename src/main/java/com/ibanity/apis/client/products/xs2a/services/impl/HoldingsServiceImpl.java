@@ -54,7 +54,7 @@ public class HoldingsServiceImpl implements HoldingsService {
     }
 
     private String getUrl(UUID financialInstitutionId, UUID accountId) {
-        String url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "holdings");
+        String url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "account", "holdings");
         return StringUtils.removeEnd(url
                         .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
                         .replace(Account.API_URL_TAG_ID, accountId.toString())

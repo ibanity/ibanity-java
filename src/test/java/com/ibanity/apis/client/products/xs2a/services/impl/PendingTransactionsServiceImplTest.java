@@ -55,7 +55,7 @@ public class PendingTransactionsServiceImplTest {
 
     @Test
     public void find() throws Exception {
-        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "pendingTransactions")).thenReturn(PENDING_TRANSACTION_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "account", "pendingTransactions")).thenReturn(PENDING_TRANSACTION_ENDPOINT);
 
         PendingTransactionReadQuery pendingTransactionReadQuery =
                 PendingTransactionReadQuery.builder()
@@ -76,7 +76,7 @@ public class PendingTransactionsServiceImplTest {
 
     @Test
     public void listForAccount() throws Exception {
-        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "pendingTransactions")).thenReturn(PENDING_TRANSACTION_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "account", "pendingTransactions")).thenReturn(PENDING_TRANSACTION_ENDPOINT);
 
         IbanityCollection<PendingTransaction> expected =
                 IbanityCollection.<PendingTransaction>builder()

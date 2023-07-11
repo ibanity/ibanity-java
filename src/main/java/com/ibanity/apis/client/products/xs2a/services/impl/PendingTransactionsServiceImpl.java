@@ -69,7 +69,7 @@ public class PendingTransactionsServiceImpl implements PendingTransactionsServic
 
     private String getUrl(UUID financialInstitutionId, UUID accountId) {
         String url = apiUrlProvider
-            .find(IbanityProduct.Xs2a, "customer", "financialInstitution", "pendingTransactions")
+            .find(IbanityProduct.Xs2a, "customer", "financialInstitution", "account", "pendingTransactions")
             .replace(FinancialInstitution.API_URL_TAG_ID, financialInstitutionId.toString())
             .replace(Account.API_URL_TAG_ID, accountId.toString())
             .replace(PendingTransaction.API_URL_TAG_ID, "");

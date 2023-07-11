@@ -7,7 +7,6 @@ import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.models.TransactionDeleteRequest;
 import com.ibanity.apis.client.products.xs2a.models.create.TransactionDeleteRequestCreationQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,9 +25,14 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class TransactionDeleteRequestsServiceImplTest {
 
-    private static final UUID BATCH_TRANSACTION_DELETE_REQUEST_ID = fromString("04e98b21-8213-4aec-b373-13eb51f948e9");
-    private static final String BATCH_TRANSACTION_DELETE_REQUEST_ENDPOINT = "https://api.ibanity.com/xs2a/transaction-delete-requests";
-    private static final Instant BATCH_TRANSACTION_DELETE_REQUEST_X_DATE = Instant.parse("2022-05-17T00:00:00.000Z");
+    private static final UUID ACCOUNT_ID = UUID.fromString("1c020714-759c-4ee6-ae87-5ce667937e77");
+    private static final UUID FINANCIAL_INSTITUTION_ID = UUID.fromString("99477654-a061-414c-afb4-19e37d13c5a3");
+    private static final UUID TRANSACTION_DELETE_REQUEST_ID = fromString("04e98b21-8213-4aec-b373-13eb51f948e9");
+    private static final String TRANSACTION_DELETE_REQUEST_FOR_APPLICATION_ENDPOINT = "https://api.ibanity.com/xs2a/transaction-delete-requests";
+    private static final String TRANSACTION_DELETE_REQUEST_FOR_CUSTOMER_ENDPOINT = "https://api.ibanity.com/xs2a/customer/transaction-delete-requests";
+    private static final String TRANSACTION_DELETE_REQUEST_FOR_ACCOUNT_ENDPOINT = "https://api.ibanity.com/xs2a/customer/financial-institutions/id/accounts/1c020714-759c-4ee6-ae87-5ce667937e77/transaction-delete-requests";
+    private static final Instant TRANSACTION_DELETE_REQUEST_X_DATE = Instant.parse("2022-05-17T00:00:00.000Z");
+    private static final String CUSTOMER_ACCESS_TOKEN = "itsme";
 
     @Mock
     private ApiUrlProvider apiUrlProvider;
@@ -39,22 +43,57 @@ class TransactionDeleteRequestsServiceImplTest {
     @InjectMocks
     private TransactionDeleteRequestsServiceImpl transactionDeleteRequestsService;
 
-    @BeforeEach
-    void setUp() {
-        when(apiUrlProvider.find(IbanityProduct.Xs2a, "transactionDeleteRequests")).thenReturn(BATCH_TRANSACTION_DELETE_REQUEST_ENDPOINT);
+    @Test
+    void createForApplication() throws Exception {
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "transactionDeleteRequests")).thenReturn(TRANSACTION_DELETE_REQUEST_FOR_APPLICATION_ENDPOINT);
+
+        TransactionDeleteRequestCreationQuery transactionDeleteRequestCreationQuery =
+                TransactionDeleteRequestCreationQuery.builder()
+                        .beforeDate(TRANSACTION_DELETE_REQUEST_X_DATE)
+                        .build();
+
+        when(ibanityHttpClient.post(new URI(TRANSACTION_DELETE_REQUEST_FOR_APPLICATION_ENDPOINT), createRequest(transactionDeleteRequestCreationQuery), emptyMap(), null))
+                .thenReturn(IbanityTestHelper.loadHttpResponse("json/createTransactionDeleteRequest.json"));
+
+        TransactionDeleteRequest actual = transactionDeleteRequestsService.createForApplication(transactionDeleteRequestCreationQuery);
+
+        assertThat(actual).isEqualToComparingFieldByField(createExpected());
     }
 
     @Test
-    void create() throws Exception {
+    void createForCustomer() throws Exception {
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "transactionDeleteRequests")).thenReturn(TRANSACTION_DELETE_REQUEST_FOR_CUSTOMER_ENDPOINT);
+
         TransactionDeleteRequestCreationQuery transactionDeleteRequestCreationQuery =
                 TransactionDeleteRequestCreationQuery.builder()
-                        .beforeDate(BATCH_TRANSACTION_DELETE_REQUEST_X_DATE)
+                        .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
+                        .beforeDate(TRANSACTION_DELETE_REQUEST_X_DATE)
                         .build();
 
-        when(ibanityHttpClient.post(new URI(BATCH_TRANSACTION_DELETE_REQUEST_ENDPOINT), createRequest(transactionDeleteRequestCreationQuery), emptyMap(), null))
+        when(ibanityHttpClient.post(new URI(TRANSACTION_DELETE_REQUEST_FOR_CUSTOMER_ENDPOINT), createRequest(transactionDeleteRequestCreationQuery), emptyMap(), CUSTOMER_ACCESS_TOKEN))
                 .thenReturn(IbanityTestHelper.loadHttpResponse("json/createTransactionDeleteRequest.json"));
 
-        TransactionDeleteRequest actual = transactionDeleteRequestsService.create(transactionDeleteRequestCreationQuery);
+        TransactionDeleteRequest actual = transactionDeleteRequestsService.createForCustomer(transactionDeleteRequestCreationQuery);
+
+        assertThat(actual).isEqualToComparingFieldByField(createExpected());
+    }
+
+    @Test
+    void createForAccount() throws Exception {
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "account", "transactionDeleteRequests")).thenReturn(TRANSACTION_DELETE_REQUEST_FOR_ACCOUNT_ENDPOINT);
+
+        TransactionDeleteRequestCreationQuery transactionDeleteRequestCreationQuery =
+                TransactionDeleteRequestCreationQuery.builder()
+                        .customerAccessToken(CUSTOMER_ACCESS_TOKEN)
+                        .financialInstitutionId(FINANCIAL_INSTITUTION_ID)
+                        .accountId(ACCOUNT_ID)
+                        .beforeDate(TRANSACTION_DELETE_REQUEST_X_DATE)
+                        .build();
+
+        when(ibanityHttpClient.post(new URI(TRANSACTION_DELETE_REQUEST_FOR_ACCOUNT_ENDPOINT), createRequest(transactionDeleteRequestCreationQuery), emptyMap(), CUSTOMER_ACCESS_TOKEN))
+                .thenReturn(IbanityTestHelper.loadHttpResponse("json/createTransactionDeleteRequest.json"));
+
+        TransactionDeleteRequest actual = transactionDeleteRequestsService.createForAccount(transactionDeleteRequestCreationQuery);
 
         assertThat(actual).isEqualToComparingFieldByField(createExpected());
     }
@@ -75,8 +114,8 @@ class TransactionDeleteRequestsServiceImplTest {
 
     private TransactionDeleteRequest createExpected() {
         TransactionDeleteRequest.TransactionDeleteRequestBuilder transactionDeleteRequestBuilder = TransactionDeleteRequest.builder()
-                .id(BATCH_TRANSACTION_DELETE_REQUEST_ID)
-                .beforeDate(BATCH_TRANSACTION_DELETE_REQUEST_X_DATE);
+                .id(TRANSACTION_DELETE_REQUEST_ID)
+                .beforeDate(TRANSACTION_DELETE_REQUEST_X_DATE);
 
         return transactionDeleteRequestBuilder
                 .build();

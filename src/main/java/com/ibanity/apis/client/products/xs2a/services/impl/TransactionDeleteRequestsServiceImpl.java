@@ -13,7 +13,6 @@ import org.apache.http.HttpResponse;
 import static com.ibanity.apis.client.mappers.IbanityModelMapper.mapResource;
 import static com.ibanity.apis.client.mappers.ModelMapperHelper.buildRequest;
 import static com.ibanity.apis.client.utils.URIHelper.buildUri;
-import static org.apache.commons.lang3.StringUtils.removeEnd;
 
 public class TransactionDeleteRequestsServiceImpl implements TransactionDeleteRequestsService {
 
@@ -27,18 +26,35 @@ public class TransactionDeleteRequestsServiceImpl implements TransactionDeleteRe
     }
 
     @Override
-    public TransactionDeleteRequest create(TransactionDeleteRequestCreationQuery transactionDeleteRequestCreationQuery) {
+    public TransactionDeleteRequest createForApplication(TransactionDeleteRequestCreationQuery transactionDeleteRequestCreationQuery) {
         TransactionDeleteRequest transactionDeleteRequest = TransactionDeleteRequest.builder()
                 .beforeDate(transactionDeleteRequestCreationQuery.getBeforeDate())
                 .build();
-        String url = getUrl();
+        String url = apiUrlProvider.find(IbanityProduct.Xs2a, "transactionDeleteRequests");
         RequestApiModel request = buildRequest(TransactionDeleteRequest.RESOURCE_TYPE, transactionDeleteRequest);
         HttpResponse response = ibanityHttpClient.post(buildUri(url), request, transactionDeleteRequestCreationQuery.getAdditionalHeaders(), transactionDeleteRequestCreationQuery.getCustomerAccessToken());
         return mapResource(response, (TransactionDeleteRequestMapper::map));
     }
 
-    private String getUrl() {
-        String url = apiUrlProvider.find(IbanityProduct.Xs2a, "transactionDeleteRequests");
-        return removeEnd(url.replace(TransactionDeleteRequest.API_URL_TAG_ID, ""), "/");
+    @Override
+    public TransactionDeleteRequest createForCustomer(TransactionDeleteRequestCreationQuery transactionDeleteRequestCreationQuery) {
+        TransactionDeleteRequest transactionDeleteRequest = TransactionDeleteRequest.builder()
+                .beforeDate(transactionDeleteRequestCreationQuery.getBeforeDate())
+                .build();
+        String url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "transactionDeleteRequests");
+        RequestApiModel request = buildRequest(TransactionDeleteRequest.RESOURCE_TYPE, transactionDeleteRequest);
+        HttpResponse response = ibanityHttpClient.post(buildUri(url), request, transactionDeleteRequestCreationQuery.getAdditionalHeaders(), transactionDeleteRequestCreationQuery.getCustomerAccessToken());
+        return mapResource(response, (TransactionDeleteRequestMapper::map));
+    }
+
+    @Override
+    public TransactionDeleteRequest createForAccount(TransactionDeleteRequestCreationQuery transactionDeleteRequestCreationQuery) {
+        TransactionDeleteRequest transactionDeleteRequest = TransactionDeleteRequest.builder()
+                .beforeDate(transactionDeleteRequestCreationQuery.getBeforeDate())
+                .build();
+        String url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "account", "transactionDeleteRequests");
+        RequestApiModel request = buildRequest(TransactionDeleteRequest.RESOURCE_TYPE, transactionDeleteRequest);
+        HttpResponse response = ibanityHttpClient.post(buildUri(url), request, transactionDeleteRequestCreationQuery.getAdditionalHeaders(), transactionDeleteRequestCreationQuery.getCustomerAccessToken());
+        return mapResource(response, (TransactionDeleteRequestMapper::map));
     }
 }

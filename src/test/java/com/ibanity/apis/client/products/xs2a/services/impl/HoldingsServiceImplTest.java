@@ -55,7 +55,7 @@ class HoldingsServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "holdings")).thenReturn(HOLDINGS_ENDPOINT);
+        when(apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "account", "holdings")).thenReturn(HOLDINGS_ENDPOINT);
     }
 
     @Test
