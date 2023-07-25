@@ -4,8 +4,10 @@ import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.jsonapi.RequestApiModel;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.xs2a.mappers.TransactionDeleteRequestMapper;
-import com.ibanity.apis.client.products.xs2a.models.TransactionDeleteRequest;
+import com.ibanity.apis.client.products.xs2a.models.Account;
 import com.ibanity.apis.client.products.xs2a.models.create.TransactionDeleteRequestCreationQuery;
+import com.ibanity.apis.client.products.xs2a.models.FinancialInstitution;
+import com.ibanity.apis.client.products.xs2a.models.TransactionDeleteRequest;
 import com.ibanity.apis.client.products.xs2a.services.TransactionDeleteRequestsService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.apache.http.HttpResponse;
@@ -32,7 +34,7 @@ public class TransactionDeleteRequestsServiceImpl implements TransactionDeleteRe
                 .build();
         String url = apiUrlProvider.find(IbanityProduct.Xs2a, "transactionDeleteRequests");
         RequestApiModel request = buildRequest(TransactionDeleteRequest.RESOURCE_TYPE, transactionDeleteRequest);
-        HttpResponse response = ibanityHttpClient.post(buildUri(url), request, transactionDeleteRequestCreationQuery.getAdditionalHeaders());
+        HttpResponse response = ibanityHttpClient.post(buildUri(url), request, transactionDeleteRequestCreationQuery.getAdditionalHeaders(), null);
         return mapResource(response, (TransactionDeleteRequestMapper::map));
     }
 
@@ -52,7 +54,9 @@ public class TransactionDeleteRequestsServiceImpl implements TransactionDeleteRe
         TransactionDeleteRequest transactionDeleteRequest = TransactionDeleteRequest.builder()
                 .beforeDate(transactionDeleteRequestCreationQuery.getBeforeDate())
                 .build();
-        String url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "account", "transactionDeleteRequests");
+        String url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "account", "transactionDeleteRequests")
+                    .replace(FinancialInstitution.API_URL_TAG_ID, transactionDeleteRequestCreationQuery.getFinancialInstitutionId())
+                    .replace(Account.API_URL_TAG_ID, transactionDeleteRequestCreationQuery.getAccountId());
         RequestApiModel request = buildRequest(TransactionDeleteRequest.RESOURCE_TYPE, transactionDeleteRequest);
         HttpResponse response = ibanityHttpClient.post(buildUri(url), request, transactionDeleteRequestCreationQuery.getAdditionalHeaders(), transactionDeleteRequestCreationQuery.getCustomerAccessToken());
         return mapResource(response, (TransactionDeleteRequestMapper::map));
