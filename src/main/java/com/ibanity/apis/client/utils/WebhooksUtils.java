@@ -59,6 +59,8 @@ public class WebhooksUtils {
                 return mapWebhookResource(payload, AccountTransactionsCreated.mappingFunction());
             case AccountTransactionsUpdated.TYPE:
                 return mapWebhookResource(payload, AccountTransactionsUpdated.mappingFunction());
+            case AccountTransactionsDeleted.TYPE:
+                return mapWebhookResource(payload, AccountTransactionsDeleted.mappingFunction());
             case AccountPendingTransactionsCreated.TYPE:
                 return mapWebhookResource(payload, AccountPendingTransactionsCreated.mappingFunction());
             case AccountPendingTransactionsUpdated.TYPE:
@@ -67,6 +69,18 @@ public class WebhooksUtils {
                 return mapWebhookResource(payload, SynchronizationFailed.mappingFunction());
             case SynchronizationSucceededWithoutChange.TYPE:
                 return mapWebhookResource(payload, SynchronizationSucceededWithoutChange.mappingFunction());
+            case BulkPaymentInitiationRequestAuthorizationCompleted.TYPE:
+                return mapWebhookResource(payload, BulkPaymentInitiationRequestAuthorizationCompleted.mappingFunction());
+            case BulkPaymentInitiationRequestStatusUpdated.TYPE:
+                return mapWebhookResource(payload, BulkPaymentInitiationRequestStatusUpdated.mappingFunction());
+            case PaymentInitiationRequestAuthorizationCompleted.TYPE:
+                return mapWebhookResource(payload, PaymentInitiationRequestAuthorizationCompleted.mappingFunction());
+            case PaymentInitiationRequestStatusUpdated.TYPE:
+                return mapWebhookResource(payload, PaymentInitiationRequestStatusUpdated.mappingFunction());
+            case PeriodicPaymentInitiationRequestAuthorizationCompleted.TYPE:
+                return mapWebhookResource(payload, PeriodicPaymentInitiationRequestAuthorizationCompleted.mappingFunction());
+            case PeriodicPaymentInitiationRequestStatusUpdated.TYPE:
+                return mapWebhookResource(payload, PeriodicPaymentInitiationRequestStatusUpdated.mappingFunction());
         }
 
         throw new IbanityRuntimeException(format("Event Type not handled by the java library \"%s\".", type));

@@ -32,7 +32,7 @@ public class TransactionDeleteRequestsServiceImpl implements TransactionDeleteRe
                 .build();
         String url = apiUrlProvider.find(IbanityProduct.Xs2a, "transactionDeleteRequests");
         RequestApiModel request = buildRequest(TransactionDeleteRequest.RESOURCE_TYPE, transactionDeleteRequest);
-        HttpResponse response = ibanityHttpClient.post(buildUri(url), request, transactionDeleteRequestCreationQuery.getAdditionalHeaders(), transactionDeleteRequestCreationQuery.getCustomerAccessToken());
+        HttpResponse response = ibanityHttpClient.post(buildUri(url), request, transactionDeleteRequestCreationQuery.getAdditionalHeaders());
         return mapResource(response, (TransactionDeleteRequestMapper::map));
     }
 
