@@ -55,8 +55,8 @@ public class TransactionDeleteRequestsServiceImpl implements TransactionDeleteRe
                 .beforeDate(transactionDeleteRequestCreationQuery.getBeforeDate())
                 .build();
         String url = apiUrlProvider.find(IbanityProduct.Xs2a, "customer", "financialInstitution", "account", "transactionDeleteRequests")
-                    .replace(FinancialInstitution.API_URL_TAG_ID, transactionDeleteRequestCreationQuery.getFinancialInstitutionId())
-                    .replace(Account.API_URL_TAG_ID, transactionDeleteRequestCreationQuery.getAccountId());
+                    .replace(FinancialInstitution.API_URL_TAG_ID, transactionDeleteRequestCreationQuery.getFinancialInstitutionId().toString())
+                    .replace(Account.API_URL_TAG_ID, transactionDeleteRequestCreationQuery.getAccountId().toString());
         RequestApiModel request = buildRequest(TransactionDeleteRequest.RESOURCE_TYPE, transactionDeleteRequest);
         HttpResponse response = ibanityHttpClient.post(buildUri(url), request, transactionDeleteRequestCreationQuery.getAdditionalHeaders(), transactionDeleteRequestCreationQuery.getCustomerAccessToken());
         return mapResource(response, (TransactionDeleteRequestMapper::map));
