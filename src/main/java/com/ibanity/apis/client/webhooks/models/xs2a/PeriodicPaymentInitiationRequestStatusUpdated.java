@@ -27,7 +27,7 @@ public class PeriodicPaymentInitiationRequestStatusUpdated implements IbanityWeb
     private UUID id;
     private String type;
     private UUID periodicPaymentInitiationRequestId;
-    private int deletedBefore;
+    private String status;
     private Instant createdAt;
 
     public static Function<DataApiModel, PeriodicPaymentInitiationRequestStatusUpdated> mappingFunction() {

@@ -27,7 +27,7 @@ public class PaymentInitiationRequestAuthorizationCompleted implements IbanityWe
     private UUID id;
     private String type;
     private UUID paymentInitiationRequestId;
-    private int deletedBefore;
+    private String status;
     private Instant createdAt;
 
     public static Function<DataApiModel, PaymentInitiationRequestAuthorizationCompleted> mappingFunction() {
