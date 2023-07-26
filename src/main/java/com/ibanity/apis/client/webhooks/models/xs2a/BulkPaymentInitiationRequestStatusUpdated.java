@@ -27,7 +27,7 @@ public class BulkPaymentInitiationRequestStatusUpdated implements IbanityWebhook
     private UUID id;
     private String type;
     private UUID bulkPaymentInitiationRequestId;
-    private int deletedBefore;
+    private String status;
     private Instant createdAt;
 
     public static Function<DataApiModel, BulkPaymentInitiationRequestStatusUpdated> mappingFunction() {
