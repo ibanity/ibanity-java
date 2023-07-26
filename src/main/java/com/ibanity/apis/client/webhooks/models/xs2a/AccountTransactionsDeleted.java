@@ -27,7 +27,7 @@ public class AccountTransactionsDeleted implements IbanityWebhookEvent {
     private UUID id;
     private String type;
     private UUID accountId;
-    private UUID transactionsDeleteRequestId;
+    private UUID transactionDeleteRequestId;
     private Instant deletedBefore;
     private int count;
     private Instant createdAt;
@@ -40,9 +40,9 @@ public class AccountTransactionsDeleted implements IbanityWebhookEvent {
             if (accountRelationship != null) {
                 accountTransactionsDeleted.setAccountId(fromString(accountRelationship.getData().getId()));
             }
-            RelationshipsApiModel transactionsDeleteRequestRelationship = dataApiModel.getRelationships().get("transactionsDeleteRequest");
-            if (accountRelationship != null) {
-                accountTransactionsDeleted.setTransactionsDeleteRequestId(fromString(transactionsDeleteRequestRelationship.getData().getId()));
+            RelationshipsApiModel transactionDeleteRequestRelationship = dataApiModel.getRelationships().get("transactionDeleteRequest");
+            if (transactionDeleteRequestRelationship != null) {
+                accountTransactionsDeleted.setTransactionDeleteRequestId(fromString(transactionDeleteRequestRelationship.getData().getId()));
             }
 
             return accountTransactionsDeleted;
