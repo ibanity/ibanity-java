@@ -23,6 +23,7 @@ public class AccountReport extends IsabelModel<String> {
     }
 
     private List<String> accountReferences = Collections.emptyList();
+    private List<AccountReferencesAndCurrencies> accountReferencesAndCurrencies = Collections.emptyList();
     private String fileFormat;
     private String fileName;
     private BigInteger fileSize;

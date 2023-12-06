@@ -6,6 +6,12 @@
         "accountReferences": [
           "BE96153112434405"
         ],
+        "accountReferencesAndCurrencies": [
+          {
+            "accountReference": "BE96153112434405",
+            "currency": "EUR"
+          }
+        ],
         "fileFormat": "CODA",
         "fileName": "CODA_20181009_BE96153112434405",
         "fileSize": 29680,
