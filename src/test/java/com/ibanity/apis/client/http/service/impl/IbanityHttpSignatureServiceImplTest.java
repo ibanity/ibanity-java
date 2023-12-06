@@ -136,7 +136,7 @@ class IbanityHttpSignatureServiceImplTest {
         return "{\"msg\":\"hello\"}";
     }
 
-    private Map<String, String> getSignatureHeaders(URL url) throws MalformedURLException {
+    private Map<String, String>     getSignatureHeaders(URL url) throws MalformedURLException {
         return httpSignatureService.getHttpSignatureHeaders("POST", url, getRequestHeaders(), getRequestPayload());
     }
 

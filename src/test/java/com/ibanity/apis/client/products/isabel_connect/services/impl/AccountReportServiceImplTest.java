@@ -3,6 +3,7 @@ package com.ibanity.apis.client.products.isabel_connect.services.impl;
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.IsabelCollection;
+import com.ibanity.apis.client.products.isabel_connect.models.AccountReferencesAndCurrencies;
 import com.ibanity.apis.client.products.isabel_connect.models.AccountReport;
 import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReportReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.read.AccountReportsReadQuery;
@@ -118,6 +119,10 @@ public class AccountReportServiceImplTest {
 
     private AccountReport createExpected() {
         String[] refs = {"BE96153112434405"};
+        AccountReferencesAndCurrencies accountReferencesAndCurrencies = AccountReferencesAndCurrencies.builder()
+                .accountReference("BE96153112434405")
+                .currency("EUR")
+                .build();
 
         return AccountReport.builder()
                 .id(ACCOUNT_REPORT_ID)
@@ -127,6 +132,7 @@ public class AccountReportServiceImplTest {
                 .fileSize(BigInteger.valueOf(29680L))
                 .financialInstitutionName("GringotBank")
                 .receivedAt(LocalDateTime.parse("2018-10-09T03:55:00.710"))
+                .accountReferencesAndCurrencies(Arrays.asList(accountReferencesAndCurrencies))
                 .build();
     }
 }
