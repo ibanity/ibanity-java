@@ -14,6 +14,7 @@ public class PontoConnectServiceImpl implements PontoConnectService {
     private final AccountService accountService;
     private final UserinfoService userinfoService;
     private final TransactionService transactionService;
+    private final PendingTransactionService pendingTransactionService;
     private final SynchronizationService synchronizationService;
     private final FinancialInstitutionService financialInstitutionService;
     private final PaymentService paymentService;
@@ -31,6 +32,7 @@ public class PontoConnectServiceImpl implements PontoConnectService {
         accountService = new AccountServiceImpl(apiUrlProvider, ibanityHttpClient);
         userinfoService = new UserinfoServiceImpl(apiUrlProvider, ibanityHttpClient);
         transactionService = new TransactionServiceImpl(apiUrlProvider, ibanityHttpClient);
+        pendingTransactionService = new PendingTransactionServiceImpl(apiUrlProvider, ibanityHttpClient);
         synchronizationService = new SynchronizationServiceImpl(apiUrlProvider, ibanityHttpClient);
         financialInstitutionService = new FinancialInstitutionServiceImpl(apiUrlProvider, ibanityHttpClient);
         paymentService = new PaymentServiceImpl(apiUrlProvider, ibanityHttpClient);
@@ -56,6 +58,11 @@ public class PontoConnectServiceImpl implements PontoConnectService {
     @Override
     public TransactionService transactionService() {
         return transactionService;
+    }
+
+    @Override
+    public PendingTransactionService pendingTransactionService() {
+        return pendingTransactionService;
     }
 
     @Override

@@ -110,6 +110,7 @@ public class FinancialInstitutionTransactionsServiceImpl implements FinancialIns
                 .cardReference(transactionCreationQuery.getCardReference())
                 .cardReferenceType(transactionCreationQuery.getCardReferenceType())
                 .fee(transactionCreationQuery.getFee())
+                .automaticBooking(transactionCreationQuery.isAutomaticBooking())
                 .build();
     }
 
