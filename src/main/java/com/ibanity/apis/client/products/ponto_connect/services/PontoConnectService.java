@@ -10,6 +10,8 @@ public interface PontoConnectService {
 
     TransactionService transactionService();
 
+    PendingTransactionService pendingTransactionService();
+
     FinancialInstitutionService financialInstitutionService();
 
     SynchronizationService synchronizationService();
