@@ -20,6 +20,7 @@ public class FinancialInstitutionTransaction extends Transaction {
     public static final String API_URL_TAG_ID = "{" + RESOURCE_TYPE + URL_PARAMETER_ID_POSTFIX + "}";
 
     private UUID financialInstitutionAccountId;
+    private boolean automaticBooking;
 
     private Instant createdAt;
     private Instant updatedAt;

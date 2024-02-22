@@ -40,4 +40,6 @@ public class FinancialInstitutionTransactionCreationQuery {
     private BigDecimal fee;
     private String cardReference;
     private String cardReferenceType;
+
+    private boolean automaticBooking;
 }
