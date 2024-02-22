@@ -76,7 +76,7 @@
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <httpclient.version>4.5.13</httpclient.version>
         <jackson.version>2.13.3</jackson.version>
-        <bcpkix-jdk14.version>1.70</bcpkix-jdk14.version>
+        <bcpkix-jdk17.version>1.70</bcpkix-jdk17.version>
         <lombok.version>1.18.22</lombok.version>
 
         <!-- IBAN Generator -->
@@ -193,8 +193,8 @@
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk14</artifactId>
-            <version>${bcpkix-jdk14.version}</version>
+            <artifactId>bcpkix-jdk17</artifactId>
+            <version>${bcpkix-jdk17.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -332,7 +332,7 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
-            <!-- To sign the artifacts -->
+<!-- To sign the artifacts -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
