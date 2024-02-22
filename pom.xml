@@ -76,7 +76,7 @@
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <httpclient.version>4.5.13</httpclient.version>
         <jackson.version>2.13.3</jackson.version>
-        <bcpkix-jdk17.version>1.70</bcpkix-jdk17.version>
+        <bcpkix-jdk15to18.version>1.77</bcpkix-jdk15to18.version>
         <lombok.version>1.18.22</lombok.version>
 
         <!-- IBAN Generator -->
@@ -193,8 +193,8 @@
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk17</artifactId>
-            <version>${bcpkix-jdk17.version}</version>
+            <artifactId>bcpkix-jdk15to18</artifactId>
+            <version>${bcpkix-jdk15to18.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
