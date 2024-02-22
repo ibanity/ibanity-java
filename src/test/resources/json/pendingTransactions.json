@@ -38,7 +38,7 @@
           }
         }
       },
-      "type": "transaction"
+      "type": "pendingTransaction"
     }
   ],
   "links": {
@@ -74,7 +74,7 @@
         "resourceId": "1c020714-759c-4ee6-ae87-5ce667937e77",
         "resourceType": "account",
         "status": "success",
-        "subtype": "accountPendingTransactions",
+        "subtype": "accountTransactionsWithUnsettled",
         "updatedAt": "2019-04-25T09:06:08.044Z"
       },
       "id": "b49dff7e-ad7b-4992-9753-8f2a004cf343",
