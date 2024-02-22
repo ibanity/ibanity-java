@@ -86,7 +86,7 @@ public class PendingTransactionsServiceImplTest {
                         .latestSynchronization(Synchronization.builder()
                                 .resourceId("1c020714-759c-4ee6-ae87-5ce667937e77")
                                 .resourceType("account")
-                                .subtype("accountPendingTransactions")
+                                .subtype("accountTransactionsWithUnsettled")
                                 .status("success")
                                 .errors(Collections.singletonList(IbanityError.builder()
                                         .code("authorizationInvalid")
