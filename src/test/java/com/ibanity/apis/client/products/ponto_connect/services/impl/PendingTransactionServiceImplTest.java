@@ -103,7 +103,7 @@ public class PendingTransactionServiceImplTest {
         return PendingTransaction.builder()
                 .id(PENDING_TRANSACTION_ID)
                 .valueDate(parse("2020-06-19T00:00:00.000Z"))
-                .executionDate(parse("2020-06-19T00:00:00.000Z"))
+                .executionDate(parse("2020-06-20T00:00:00.000Z"))
                 .amount(new BigDecimal("2.76"))
                 .counterpartName("Rice Ltd")
                 .counterpartReference("BE62467153327786")
