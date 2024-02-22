@@ -326,7 +326,7 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
-            <!-- To sign the artifacts -->
+<!-- To sign the artifacts -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
