@@ -35,4 +35,6 @@ public interface PontoConnectService {
     PaymentActivationRequestService paymentActivationRequestService();
 
     IntegrationAccountService integrationAccountService();
+
+    PaymentRequestService paymentRequestService();
 }

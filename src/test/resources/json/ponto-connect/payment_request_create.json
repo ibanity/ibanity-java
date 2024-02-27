@@ -1,0 +1,24 @@
+{
+  "data": {
+    "type": "paymentRequest",
+    "id": "6c0350b5-a724-42e5-b4ce-ca3a6994df3d",
+    "links": {
+      "redirect": "https://sandbox-pay.myponto.com/organizations/5fa92700-7416-4fd4-a8f4-fbdb2a533d11/payment-requests/6c0350b5-a724-42e5-b4ce-ca3a6994df3d"
+    },
+    "attributes": {
+      "remittanceInformationType": "unstructured",
+      "remittanceInformation": "ThisIsATest",
+      "currency": "EUR",
+      "creditorAccountReferenceType": "IBAN",
+      "creditorAccountReference": "BE84732645584359",
+      "debtorAccountReferenceType": "IBAN",
+      "debtorAccountReference": null,
+      "amount": "1",
+      "endToEndId": "4874366da78549e0b3014a86cd646dc4",
+      "closedAt": null,
+      "signedAt": null,
+      "signingUri": "https://sandbox-pay.myponto.com/organizations/5fa92700-7416-4fd4-a8f4-fbdb2a533d11/payment-requests/6c0350b5-a724-42e5-b4ce-ca3a6994df3d",
+      "redirectUri": "https://www.mywebsite/payment-confirmation"
+    }
+  }
+}
