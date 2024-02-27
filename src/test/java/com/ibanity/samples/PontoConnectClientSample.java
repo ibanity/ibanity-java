@@ -7,10 +7,12 @@ import com.ibanity.apis.client.models.IbanityCollection;
 import com.ibanity.apis.client.products.ponto_connect.models.*;
 import com.ibanity.apis.client.products.ponto_connect.models.create.BulkPaymentCreateQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.create.PaymentCreateQuery;
+import com.ibanity.apis.client.products.ponto_connect.models.create.PaymentRequestCreateQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.create.SynchronizationCreateQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.create.TokenCreateQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.delete.BulkPaymentDeleteQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.delete.PaymentDeleteQuery;
+import com.ibanity.apis.client.products.ponto_connect.models.delete.PaymentRequestDeleteQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.read.*;
 import com.ibanity.apis.client.products.ponto_connect.models.refresh.TokenRefreshQuery;
 import com.ibanity.apis.client.products.ponto_connect.models.revoke.TokenRevokeQuery;
@@ -103,6 +105,8 @@ public class PontoConnectClientSample {
         LOGGER.info("payment {}", payment);
         BulkPayment bulkPayment = bulkPayments(pontoConnectService.bulkPaymentService(), accountId, accessToken);
         LOGGER.info("bulk payment {}", bulkPayment);
+        PaymentRequest paymentRequest = paymentRequests(pontoConnectService.paymentRequestService(), accountId, accessToken);
+        LOGGER.info("payment request {}", paymentRequest);
 
         revokeToken(pontoConnectService.tokenService(), accessToken);
     }
@@ -347,6 +351,31 @@ public class PontoConnectClientSample {
                 .creditorAgent("NBBEBEBB203")
                 .creditorAgentType("BIC")
                 .build();
+    }
+
+    private static PaymentRequest paymentRequests(PaymentRequestService paymentRequestService, UUID accountId, String accessToken) {
+        LOGGER.info("Payment request samples");
+        PaymentRequest paymentRequest = paymentRequestService.create(PaymentRequestCreateQuery.builder()
+                .accessToken(accessToken)
+                .accountId(accountId)
+                .remittanceInformation("payment")
+                .remittanceInformationType("unstructured")
+                .amount(BigDecimal.valueOf(0.5))
+                .build());
+
+        paymentRequest = paymentRequestService.find(PaymentRequestReadQuery.builder()
+                .accessToken(accessToken)
+                .accountId(accountId)
+                .paymentRequestId(paymentRequest.getId())
+                .build());
+
+        paymentRequestService.delete(PaymentRequestDeleteQuery.builder()
+                .accessToken(accessToken)
+                .accountId(accountId)
+                .paymentRequestId(paymentRequest.getId())
+                .build());
+
+        return paymentRequest;
     }
 
 }

@@ -25,6 +25,7 @@ public class PontoConnectServiceImpl implements PontoConnectService {
     private final ReauthorizationRequestService reauthorizationRequestService;
     private final PaymentActivationRequestService paymentActivationRequestService;
     private final IntegrationAccountService integrationAccountService;
+    private final PaymentRequestService paymentRequestService;
 
     public PontoConnectServiceImpl(ApiUrlProvider apiUrlProvider, IbanityHttpClient ibanityHttpClient, OAuthHttpClient oAuthHttpClient) {
         tokenService = new TokenServiceImpl(apiUrlProvider, oAuthHttpClient);
@@ -43,6 +44,7 @@ public class PontoConnectServiceImpl implements PontoConnectService {
         reauthorizationRequestService = new ReauthorizationRequestServiceImpl(apiUrlProvider, ibanityHttpClient);
         paymentActivationRequestService = new PaymentActivationRequestServiceImpl(apiUrlProvider, ibanityHttpClient);
         integrationAccountService = new IntegrationAccountServiceImpl(apiUrlProvider, ibanityHttpClient);
+        paymentRequestService = new PaymentRequestServiceImpl(apiUrlProvider, ibanityHttpClient);
     }
 
     @Override
@@ -121,5 +123,10 @@ public class PontoConnectServiceImpl implements PontoConnectService {
     @Override
     public IntegrationAccountService integrationAccountService() {
         return integrationAccountService;
+    }
+
+    @Override
+    public PaymentRequestService paymentRequestService() {
+        return paymentRequestService;
     }
 }
