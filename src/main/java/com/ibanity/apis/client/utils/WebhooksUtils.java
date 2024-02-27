@@ -112,6 +112,8 @@ public class WebhooksUtils {
                 return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.OrganizationUnblocked.mappingFunction());
             case com.ibanity.apis.client.webhooks.models.ponto_connect.AccountReauthorized.TYPE:
                 return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.AccountReauthorized.mappingFunction());
+            case com.ibanity.apis.client.webhooks.models.ponto_connect.PaymentRequestClosed.TYPE:
+                return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.PaymentRequestClosed.mappingFunction());
         }
 
         throw new IbanityRuntimeException(format("Event Type not handled by the java library \"%s\".", type));
