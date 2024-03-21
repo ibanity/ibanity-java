@@ -73,7 +73,6 @@
         <commons-math3.version>3.6.1</commons-math3.version>
         <commons-codec.version>1.15</commons-codec.version>
         <slf4j.version>1.7.35</slf4j.version>
-        <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <httpclient.version>4.5.13</httpclient.version>
         <jackson.version>2.13.3</jackson.version>
         <bcpkix-jdk14.version>1.70</bcpkix-jdk14.version>
@@ -136,11 +135,6 @@
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>${commons-codec.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>${commons-beanutils.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
