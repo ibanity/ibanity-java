@@ -61,6 +61,9 @@ class OnboardingDetailsServiceImplTest {
                 .phoneNumber("+32484000000")
                 .vatNumber("BE0999999999")
                 .initialFinancialInstitutionId(UUID.fromString("8ca9b992-f415-40d3-9624-dc459619b675"))
+                .automaticSubmissionOnCompletedForms(true)
+                .preferredOtpMethod("sms")
+                .requestedOrganisationId(UUID.fromString("9ca9b992-f415-40d3-9624-dc459619b675"))
                 .build();
 
         when(ibanityHttpClient.post(eq(new URI(ONBOARDING_DETAILS_ENDPOINT)), any(),eq(emptyMap()), eq(ACCESS_TOKEN)))
@@ -85,6 +88,9 @@ class OnboardingDetailsServiceImplTest {
                 .phoneNumber("+32484000000")
                 .vatNumber("BE0999999999")
                 .initialFinancialInstitutionId(UUID.fromString("8ca9b992-f415-40d3-9624-dc459619b675"))
+                .automaticSubmissionOnCompletedForms(true)
+                .preferredOtpMethod("sms")
+                .requestedOrganisationId(UUID.fromString("9ca9b992-f415-40d3-9624-dc459619b675"))
                 .build();
     }
 }

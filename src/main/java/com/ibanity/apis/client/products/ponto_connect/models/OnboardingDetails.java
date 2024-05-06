@@ -30,4 +30,7 @@ public class OnboardingDetails implements IbanityModel {
     private String addressCountry;
     private String addressCity;
     private UUID initialFinancialInstitutionId;
+    private Boolean automaticSubmissionOnCompletedForms;
+    private String preferredOtpMethod;
+    private UUID requestedOrganisationId;
 }
