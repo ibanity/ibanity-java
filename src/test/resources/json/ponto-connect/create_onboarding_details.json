@@ -15,6 +15,9 @@
       "addressCountry": "BE",
       "addressCity": "Brussels",
       "initialFinancialInstitutionId": "8ca9b992-f415-40d3-9624-dc459619b675",
+      "automaticSubmissionOnCompletedForms": true,
+      "preferredOtpMethod": "sms",
+      "requestedOrganisationId": "9ca9b992-f415-40d3-9624-dc459619b675",
       "organizationType": "business"
     }
   }
