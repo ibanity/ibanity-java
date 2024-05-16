@@ -112,6 +112,6 @@ public class PaymentRequestServiceImpl implements PaymentRequestService {
         private String endToEndId;
         private String signingUri;
         private Instant closedAt;
-        private LocalDate signedAt;
+        private Instant signedAt;
     }
 }

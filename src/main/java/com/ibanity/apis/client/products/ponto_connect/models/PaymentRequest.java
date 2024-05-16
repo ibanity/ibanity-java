@@ -31,7 +31,7 @@ public class PaymentRequest implements IbanityModel {
     private BigDecimal amount;
     private String endToEndId;
     private Instant closedAt;
-    private LocalDate signedAt;
+    private Instant signedAt;
     private String redirectLink;
     private String signingLink;
 }
