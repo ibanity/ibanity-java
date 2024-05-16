@@ -4,6 +4,7 @@ import com.ibanity.apis.client.models.IbanityModel;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -29,7 +30,7 @@ public class PaymentRequest implements IbanityModel {
     private String debtorAccountReference;
     private BigDecimal amount;
     private String endToEndId;
-    private LocalDate closedAt;
+    private Instant closedAt;
     private LocalDate signedAt;
     private String redirectLink;
     private String signingLink;
