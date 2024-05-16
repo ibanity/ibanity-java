@@ -16,6 +16,7 @@ import org.apache.http.HttpResponse;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 import java.util.function.Function;
@@ -110,7 +111,7 @@ public class PaymentRequestServiceImpl implements PaymentRequestService {
         private String redirectUri;
         private String endToEndId;
         private String signingUri;
-        private LocalDate closedAt;
+        private Instant closedAt;
         private LocalDate signedAt;
     }
 }
