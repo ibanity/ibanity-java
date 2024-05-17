@@ -94,7 +94,7 @@ public class WebhooksUtils {
                 return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.AccountTransactionsCreated.mappingFunction());
             case com.ibanity.apis.client.webhooks.models.ponto_connect.AccountTransactionsUpdated.TYPE:
                 return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.AccountTransactionsUpdated.mappingFunction());
-                        case com.ibanity.apis.client.webhooks.models.ponto_connect.AccountPendingTransactionsCreated.TYPE:
+            case com.ibanity.apis.client.webhooks.models.ponto_connect.AccountPendingTransactionsCreated.TYPE:
                 return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.AccountPendingTransactionsCreated.mappingFunction());
             case com.ibanity.apis.client.webhooks.models.ponto_connect.AccountPendingTransactionsUpdated.TYPE:
                 return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.AccountPendingTransactionsUpdated.mappingFunction());
