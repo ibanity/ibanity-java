@@ -29,6 +29,7 @@ public class AccountReport extends IsabelModel<String> {
     private BigInteger fileSize;
     private String financialInstitutionName;
     private LocalDateTime receivedAt;
+    private String fileBankFormatType;
 
     private String requestId;
 }
