@@ -60,15 +60,29 @@ public class AccountReportServiceImplTest {
     }
 
     @Test
-    public void list() throws Exception {
+    public void listWithoutFileBankFormatType() throws Exception {
         when(ibanityHttpClient.get(new URI(LIST_ACCOUNT_REPORTS_ENDPOINT), emptyMap(), ACCESS_TOKEN))
-                .thenReturn(loadHttpResponse("json/isabel-connect/account_reports.json"));
+                .thenReturn(loadHttpResponse("json/isabel-connect/account_reports_without_file_bank_format_type.json"));
 
         IsabelCollection<AccountReport> actual = accountReportService.list(AccountReportsReadQuery.builder()
                 .accessToken(ACCESS_TOKEN)
                 .build());
 
-        Assertions.assertThat(actual.getItems()).containsExactly(createExpected());
+        Assertions.assertThat(actual.getItems()).containsExactly(createExpectedWithoutFileBankFormatType());
+        Assertions.assertThat(actual.getPagingOffset()).isEqualTo(0);
+        Assertions.assertThat(actual.getPagingTotal()).isEqualTo(2);
+    }
+
+    @Test
+    public void listWithFileBankFormatType() throws Exception {
+        when(ibanityHttpClient.get(new URI(LIST_ACCOUNT_REPORTS_ENDPOINT), emptyMap(), ACCESS_TOKEN))
+                .thenReturn(loadHttpResponse("json/isabel-connect/account_reports_with_file_bank_format_type.json"));
+
+        IsabelCollection<AccountReport> actual = accountReportService.list(AccountReportsReadQuery.builder()
+                .accessToken(ACCESS_TOKEN)
+                .build());
+
+        Assertions.assertThat(actual.getItems()).containsExactly(createExpectedWithFileBankFormatType());
         Assertions.assertThat(actual.getPagingOffset()).isEqualTo(0);
         Assertions.assertThat(actual.getPagingTotal()).isEqualTo(2);
     }
@@ -117,7 +131,7 @@ public class AccountReportServiceImplTest {
         Assertions.assertThat(actual).isEqualTo(expected);
     }
 
-    private AccountReport createExpected() {
+    private AccountReport createExpectedWithoutFileBankFormatType() {
         String[] refs = {"BE96153112434405"};
         AccountReferencesAndCurrencies accountReferencesAndCurrencies = AccountReferencesAndCurrencies.builder()
                 .accountReference("BE96153112434405")
@@ -133,6 +147,26 @@ public class AccountReportServiceImplTest {
                 .financialInstitutionName("GringotBank")
                 .receivedAt(LocalDateTime.parse("2018-10-09T03:55:00.710"))
                 .accountReferencesAndCurrencies(Arrays.asList(accountReferencesAndCurrencies))
+                .build();
+    }
+
+    private AccountReport createExpectedWithFileBankFormatType() {
+        String[] refs = {"BE96153112434405"};
+        AccountReferencesAndCurrencies accountReferencesAndCurrencies = AccountReferencesAndCurrencies.builder()
+                .accountReference("BE96153112434405")
+                .currency("EUR")
+                .build();
+
+        return AccountReport.builder()
+                .id(ACCOUNT_REPORT_ID)
+                .accountReferences(Arrays.asList(refs))
+                .fileFormat("CODA")
+                .fileName("CODA_20181009_BE96153112434405")
+                .fileSize(BigInteger.valueOf(29680L))
+                .financialInstitutionName("GringotBank")
+                .receivedAt(LocalDateTime.parse("2018-10-09T03:55:00.710"))
+                .accountReferencesAndCurrencies(Arrays.asList(accountReferencesAndCurrencies))
+                .fileBankFormatType("DIVXML")
                 .build();
     }
 }
