@@ -31,4 +31,8 @@ public class OnboardingDetails implements IbanityModel {
     private String addressCity;
     private UUID initialFinancialInstitutionId;
     private String organizationType;
+    private String partnerReference;
+    private Boolean automaticSubmissionOnCompletedForms;
+    private String preferredOtpMethod;
+    private UUID requestedOrganisationId;
 }

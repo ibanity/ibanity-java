@@ -48,6 +48,10 @@ public class OnboardingDetailsServiceImpl implements OnboardingDetailsService {
                 .vatNumber(onboardingDetailsCreateQuery.getVatNumber())
                 .initialFinancialInstitutionId(onboardingDetailsCreateQuery.getInitialFinancialInstitutionId())
                 .organizationType(onboardingDetailsCreateQuery.getOrganizationType())
+                .partnerReference(onboardingDetailsCreateQuery.getPartnerReference())
+                .automaticSubmissionOnCompletedForms(onboardingDetailsCreateQuery.getAutomaticSubmissionOnCompletedForms())
+                .preferredOtpMethod(onboardingDetailsCreateQuery.getPreferredOtpMethod())
+                .requestedOrganisationId(onboardingDetailsCreateQuery.getRequestedOrganisationId())
                 .build();
     }
 
