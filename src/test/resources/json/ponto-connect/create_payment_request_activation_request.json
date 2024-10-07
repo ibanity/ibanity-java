@@ -1,0 +1,9 @@
+{
+  "data": {
+    "type": "paymentRequestActivationRequest",
+    "links": {
+      "redirect": "https://authorize.development.myponto.net/organizations/6680437c-8ed8-425b-84b7-2c31e5ca625d/sandbox/integrations/1f5caef0-7dcd-41d0-9318-24bf40ba9d16/payment-request-activation-requests/7e7fca4c-cc8e-4e23-9a5f-cfa4dc175a88"
+    },
+    "id": "7e7fca4c-cc8e-4e23-9a5f-cfa4dc175a88"
+  }
+}
