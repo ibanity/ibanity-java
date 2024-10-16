@@ -11,8 +11,7 @@ import com.ibanity.apis.client.products.isabel_connect.services.BulkPaymentIniti
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import lombok.NonNull;
 import lombok.SneakyThrows;
-import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpEntity;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
