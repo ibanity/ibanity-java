@@ -11,7 +11,7 @@ import com.ibanity.apis.client.products.isabel_connect.models.read.AccountsReadQ
 import com.ibanity.apis.client.products.isabel_connect.models.read.IsabelPagingSpec;
 import com.ibanity.apis.client.products.isabel_connect.services.AccountService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 
 import java.util.function.Function;
