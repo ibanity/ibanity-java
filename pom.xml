@@ -97,6 +97,7 @@
         <junit-platform-launcher.version>1.8.2</junit-platform-launcher.version>
         <junit-platform-surefire-provider.version>1.2.0</junit-platform-surefire-provider.version>
         <mockito.version>4.3.1</mockito.version>
+        <assertj.version>3.22.0</assertj.version>
 
         <!-- Sonar -->
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -129,6 +130,7 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math3</artifactId>
             <version>${commons-math3.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
