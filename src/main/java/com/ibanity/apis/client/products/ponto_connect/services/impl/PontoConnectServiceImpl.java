@@ -24,6 +24,7 @@ public class PontoConnectServiceImpl implements PontoConnectService {
     private final BulkPaymentService bulkPaymentService;
     private final ReauthorizationRequestService reauthorizationRequestService;
     private final PaymentActivationRequestService paymentActivationRequestService;
+    private final PaymentRequestActivationRequestService paymentRequestActivationRequestService;
     private final IntegrationAccountService integrationAccountService;
     private final PaymentRequestService paymentRequestService;
 
@@ -43,6 +44,7 @@ public class PontoConnectServiceImpl implements PontoConnectService {
         bulkPaymentService = new BulkPaymentServiceImpl(apiUrlProvider, ibanityHttpClient);
         reauthorizationRequestService = new ReauthorizationRequestServiceImpl(apiUrlProvider, ibanityHttpClient);
         paymentActivationRequestService = new PaymentActivationRequestServiceImpl(apiUrlProvider, ibanityHttpClient);
+        paymentRequestActivationRequestService = new PaymentRequestActivationRequestServiceImpl(apiUrlProvider, ibanityHttpClient);
         integrationAccountService = new IntegrationAccountServiceImpl(apiUrlProvider, ibanityHttpClient);
         paymentRequestService = new PaymentRequestServiceImpl(apiUrlProvider, ibanityHttpClient);
     }
@@ -119,6 +121,9 @@ public class PontoConnectServiceImpl implements PontoConnectService {
 
     @Override
     public PaymentActivationRequestService paymentActivationRequestService() { return paymentActivationRequestService;}
+
+    @Override
+    public PaymentRequestActivationRequestService paymentRequestActivationRequestService() { return paymentRequestActivationRequestService;}
 
     @Override
     public IntegrationAccountService integrationAccountService() {
