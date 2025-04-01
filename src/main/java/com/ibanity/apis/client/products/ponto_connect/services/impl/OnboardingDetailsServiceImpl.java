@@ -52,6 +52,7 @@ public class OnboardingDetailsServiceImpl implements OnboardingDetailsService {
                 .preferredOtpMethod(onboardingDetailsCreateQuery.getPreferredOtpMethod())
                 .requestedOrganisationId(onboardingDetailsCreateQuery.getRequestedOrganisationId())
                 .organizationType(onboardingDetailsCreateQuery.getOrganizationType())
+                .skipFinancialInstitutionSelection(onboardingDetailsCreateQuery.getSkipFinancialInstitutionSelection())
                 .build();
     }
 

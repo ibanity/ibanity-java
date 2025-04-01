@@ -35,4 +35,5 @@ public class OnboardingDetails implements IbanityModel {
     private String preferredOtpMethod;
     private UUID requestedOrganisationId;
     private String organizationType;
+    private Boolean skipFinancialInstitutionSelection;
 }

@@ -66,6 +66,7 @@ class OnboardingDetailsServiceImplTest {
                 .preferredOtpMethod("sms")
                 .requestedOrganisationId(UUID.fromString("9ca9b992-f415-40d3-9624-dc459619b675"))
                 .organizationType("business")
+                .skipFinancialInstitutionSelection(false)
                 .build();
 
         when(ibanityHttpClient.post(eq(new URI(ONBOARDING_DETAILS_ENDPOINT)), any(),eq(emptyMap()), eq(ACCESS_TOKEN)))
@@ -95,6 +96,7 @@ class OnboardingDetailsServiceImplTest {
                 .preferredOtpMethod("sms")
                 .requestedOrganisationId(UUID.fromString("9ca9b992-f415-40d3-9624-dc459619b675"))
                 .organizationType("business")
+                .skipFinancialInstitutionSelection(false)
                 .build();
     }
 }
