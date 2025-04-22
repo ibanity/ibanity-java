@@ -17,4 +17,5 @@ public class FinancialInstitutionResponseApiModel {
     private Instant timestamp;
     private String requestUri;
     private Integer statusCode;
+    private String responseId;
 }

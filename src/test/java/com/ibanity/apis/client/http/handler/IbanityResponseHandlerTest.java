@@ -58,6 +58,25 @@ class IbanityResponseHandlerTest {
     }
 
     @Test
+    void handleResponse_whenServerErrorWithResponseID_thenThrowIbanityServiceSideExceptionWithResponseID() {
+        // language=JSON
+        String expected = errorPayloadWithResponseIdJson();
+
+        when(httpResponse.getEntity()).thenReturn(EntityBuilder.create().setText(expected).build());
+        when(httpResponse.getStatusLine()).thenReturn(new BasicStatusLine(dummyProtocolVersion(), 500, ""));
+        when(httpResponse.getFirstHeader(IBANITY_REQUEST_ID_HEADER))
+                .thenReturn(new BasicHeader(IBANITY_REQUEST_ID_HEADER, REQUEST_ID));
+
+        IbanityServerException actual = assertThrows(IbanityServerException.class,
+                () -> ibanityResponseHandler.handleResponse(httpResponse));
+
+        actual.getErrors().forEach(error -> 
+            assertThat(error.getMeta().getFinancialInstitutionResponse().getResponseId())
+            .isEqualTo("gdhed515hrtzehg")
+        );
+    }
+
+    @Test
     void handleResponse_whenResourceNotFound_thenThrowIbanityClientSideException() {
         //language=JSON
         String expected = errorPayloadWithJson();
@@ -150,6 +169,37 @@ class IbanityResponseHandlerTest {
                 "            ]\n" +
                 "          },\n" +
                 "          \"requestId\": \"354fwfwef4w684\",\n" +
+                "          \"timestamp\": \"2019-05-09T09:18:00.000Z\",\n" +
+                "          \"requestUri\": \"http://google.com\"\n" +
+                "        }\n" +
+                "      " +
+                "}\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
+    }
+
+    private String errorPayloadWithResponseIdJson() {
+        //language=JSON
+        return "{\n" +
+                "  \"errors\": [\n" +
+                "    {\n" +
+                "      \"code\": \"invalidCredentials\",\n" +
+                "      \"detail\": \"Your credentials are invalid.\",\n" +
+                "      \"meta\": {\n" +
+                "        \"financialInstitutionResponse\": {\n" +
+                "          \"statusCode\": 500,\n" +
+                "          \"body\": {\n" +
+                "            \"tppMessages\": [\n" +
+                "              {\n" +
+                "                \"category\": \"ERROR\",\n" +
+                "                \"code\": \"NOT_FOUND\",\n" +
+                "                \"text\": \"3.2 - Not Found\"\n" +
+                "              }\n" +
+                "            ]\n" +
+                "          },\n" +
+                "          \"requestId\": \"354fwfwef4w684\",\n" +
+                "          \"responseId\": \"gdhed515hrtzehg\",\n" +
                 "          \"timestamp\": \"2019-05-09T09:18:00.000Z\",\n" +
                 "          \"requestUri\": \"http://google.com\"\n" +
                 "        }\n" +

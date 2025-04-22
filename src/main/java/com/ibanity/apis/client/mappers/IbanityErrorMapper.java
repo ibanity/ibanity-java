@@ -25,6 +25,7 @@ public class IbanityErrorMapper {
                         .statusCode(financialInstitutionResponseApiModel.getStatusCode())
                         .body(parseBody(financialInstitutionResponseApiModel))
                         .requestId(financialInstitutionResponseApiModel.getRequestId())
+                        .responseId(financialInstitutionResponseApiModel.getResponseId())
                         .timestamp(financialInstitutionResponseApiModel.getTimestamp())
                         .build();
                 errorMetaBuilder.financialInstitutionResponse(financialInstitutionResponse);
