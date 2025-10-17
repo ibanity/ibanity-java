@@ -75,7 +75,7 @@
         <slf4j.version>1.7.35</slf4j.version>
         <httpclient.version>4.5.13</httpclient.version>
         <jackson.version>2.13.3</jackson.version>
-        <bcpkix-jdk18.version>1.78.1</bcpkix-jdk18.version>
+        <bcpkix-jdk18.version>1.79</bcpkix-jdk18.version>
         <lombok.version>1.18.22</lombok.version>
 
         <!-- IBAN Generator -->
