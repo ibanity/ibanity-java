@@ -1,6 +1,6 @@
 package com.ibanity.apis.client.jsonapi;
 
-import tools.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Getter
