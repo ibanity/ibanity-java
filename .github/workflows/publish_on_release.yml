@@ -1,6 +1,5 @@
 name: Publish release to the Maven Central Repository
 
-
 on:
   release:
     types: [published]
