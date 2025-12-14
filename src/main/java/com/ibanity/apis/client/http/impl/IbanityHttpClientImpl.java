@@ -1,6 +1,6 @@
 package com.ibanity.apis.client.http.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import tools.jackson.core.JsonProcessingException;
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.http.handler.IbanityResponseHandler;
 import lombok.NonNull;

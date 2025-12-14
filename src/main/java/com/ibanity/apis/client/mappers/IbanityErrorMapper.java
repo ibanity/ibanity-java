@@ -1,6 +1,6 @@
 package com.ibanity.apis.client.mappers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import tools.jackson.core.JsonProcessingException;
 import com.ibanity.apis.client.jsonapi.FinancialInstitutionResponseApiModel;
 import com.ibanity.apis.client.jsonapi.IbanityErrorApiModel;
 import com.ibanity.apis.client.jsonapi.OAuth2ErrorResourceApiModel;

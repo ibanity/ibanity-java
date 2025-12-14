@@ -1,6 +1,6 @@
 package com.ibanity.apis.client.products.isabel_connect.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import tools.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

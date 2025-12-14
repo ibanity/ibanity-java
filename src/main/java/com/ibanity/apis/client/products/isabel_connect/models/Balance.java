@@ -1,6 +1,6 @@
 package com.ibanity.apis.client.products.isabel_connect.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import tools.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
