@@ -6,7 +6,6 @@ import com.ibanity.apis.client.models.IbanityWebhookEvent;
 import com.ibanity.apis.client.utils.IbanityUtils;
 import tools.jackson.core.JacksonException;
 
-import java.io.IOException;
 import java.util.function.Function;
 
 import static java.lang.String.format;
