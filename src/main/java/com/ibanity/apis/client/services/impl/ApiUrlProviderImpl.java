@@ -59,7 +59,7 @@ public class ApiUrlProviderImpl implements ApiUrlProvider {
 
             return Stream.of(subPaths)
                     .reduce(apiUrls, JsonNode::get, (jsonNode1, jsonNode2) -> jsonNode2)
-                    .textValue();
+                    .asString();
         } catch (Exception exception) {
             throw new IllegalArgumentException("Url cannot be found", exception);
         }

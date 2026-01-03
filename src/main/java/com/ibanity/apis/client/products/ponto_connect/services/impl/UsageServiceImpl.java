@@ -44,7 +44,7 @@ public class UsageServiceImpl implements UsageService {
 
     private OrganizationUsage map(JsonNode dataApiModel) {
         return OrganizationUsage.builder()
-                .id(dataApiModel.get("data").get("id").textValue())
+                .id(dataApiModel.get("data").get("id").asString())
                 .paymentCount(new BigDecimal(dataApiModel.get("data").get("attributes").get("paymentCount").toString()))
                 .accountCount(new BigDecimal(dataApiModel.get("data").get("attributes").get("accountCount").toString()))
                 .paymentAccountCount(new BigDecimal(dataApiModel.get("data").get("attributes").get("paymentAccountCount").toString()))

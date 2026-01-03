@@ -32,7 +32,7 @@ public class WebhooksServiceImpl implements WebhooksService {
         verify(payload, jwt);
         try {
             JsonNode jsonNode = IbanityUtils.objectMapper().readTree(payload);
-            String type = jsonNode.get("data").get("type").textValue();
+            String type = jsonNode.get("data").get("type").asString();
             return WebhooksUtils.webhookEventParser(payload, type);
         } catch (JacksonException exception) {
             throw new IllegalArgumentException("Response cannot be parsed", exception);

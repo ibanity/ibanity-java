@@ -33,6 +33,12 @@ public final class IbanityUtils {
     private static final String CA_TRUST_STORE_KEY = "ibanity-ca";
     private static final String TLS_PROTOCOL = "TLS";
 
+    public static final ObjectMapper OBJECT_MAPPER = JsonMapper.builder()
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
+            .changeDefaultPropertyInclusion(incl -> incl.withContentInclusion(JsonInclude.Include.NON_NULL))
+            .build();
+
     private IbanityUtils() {
 
     }
@@ -73,11 +79,7 @@ public final class IbanityUtils {
     }
 
     public static ObjectMapper objectMapper() {
-        return JsonMapper.builder()
-                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
-                .changeDefaultPropertyInclusion(incl -> incl.withContentInclusion(JsonInclude.Include.NON_NULL))
-                .build();
+        return OBJECT_MAPPER;
     }
 
     private static void configureHttpClient(SSLContext sslContext,
