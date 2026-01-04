@@ -1,11 +1,6 @@
 package com.ibanity.apis.client.utils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ibanity.apis.client.builders.IbanityConfiguration;
 import com.ibanity.apis.client.http.interceptor.IbanitySignatureInterceptor;
 import com.ibanity.apis.client.http.interceptor.IdempotencyInterceptor;
@@ -17,6 +12,9 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.DefaultClientConnectionReuseStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import javax.net.ssl.*;
 import java.io.IOException;
@@ -34,6 +32,12 @@ public final class IbanityUtils {
     private static final String ALIAS_KEY_STORE = "application certificate";
     private static final String CA_TRUST_STORE_KEY = "ibanity-ca";
     private static final String TLS_PROTOCOL = "TLS";
+
+    public static final ObjectMapper OBJECT_MAPPER = JsonMapper.builder()
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
+            .changeDefaultPropertyInclusion(incl -> incl.withContentInclusion(JsonInclude.Include.NON_NULL))
+            .build();
 
     private IbanityUtils() {
 
@@ -75,12 +79,7 @@ public final class IbanityUtils {
     }
 
     public static ObjectMapper objectMapper() {
-        return new ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .registerModule(new Jdk8Module())
-                .registerModule(new JavaTimeModule())
-                .setSerializationInclusion(JsonInclude.Include.NON_NULL)
-                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        return OBJECT_MAPPER;
     }
 
     private static void configureHttpClient(SSLContext sslContext,

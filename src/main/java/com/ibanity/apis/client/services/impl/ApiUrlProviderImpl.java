@@ -1,6 +1,6 @@
 package com.ibanity.apis.client.services.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.services.ApiUrlProvider;
@@ -59,7 +59,7 @@ public class ApiUrlProviderImpl implements ApiUrlProvider {
 
             return Stream.of(subPaths)
                     .reduce(apiUrls, JsonNode::get, (jsonNode1, jsonNode2) -> jsonNode2)
-                    .textValue();
+                    .asString();
         } catch (Exception exception) {
             throw new IllegalArgumentException("Url cannot be found", exception);
         }

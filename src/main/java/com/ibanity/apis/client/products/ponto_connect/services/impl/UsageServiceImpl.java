@@ -1,6 +1,6 @@
 package com.ibanity.apis.client.products.ponto_connect.services.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.products.ponto_connect.models.OrganizationUsage;
@@ -44,7 +44,7 @@ public class UsageServiceImpl implements UsageService {
 
     private OrganizationUsage map(JsonNode dataApiModel) {
         return OrganizationUsage.builder()
-                .id(dataApiModel.get("data").get("id").textValue())
+                .id(dataApiModel.get("data").get("id").asString())
                 .paymentCount(new BigDecimal(dataApiModel.get("data").get("attributes").get("paymentCount").toString()))
                 .accountCount(new BigDecimal(dataApiModel.get("data").get("attributes").get("accountCount").toString()))
                 .paymentAccountCount(new BigDecimal(dataApiModel.get("data").get("attributes").get("paymentAccountCount").toString()))

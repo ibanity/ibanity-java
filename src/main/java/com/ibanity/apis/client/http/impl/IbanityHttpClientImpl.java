@@ -1,6 +1,5 @@
 package com.ibanity.apis.client.http.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.http.handler.IbanityResponseHandler;
 import lombok.NonNull;
@@ -11,6 +10,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
+import tools.jackson.core.JacksonException;
 
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
@@ -72,7 +72,7 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
             HttpPost httpPost = new HttpPost(path);
             httpPost.setEntity(createEntityRequest(objectMapper().writeValueAsString(requestApiModel)));
             return execute(additionalHeaders, customerAccessToken, httpPost);
-        } catch (JsonProcessingException exception) {
+        } catch (JacksonException exception) {
             throw new RuntimeException("An error occurred while converting object to json", exception);
         }
     }
@@ -109,7 +109,7 @@ public class IbanityHttpClientImpl implements IbanityHttpClient {
             HttpPatch httpPatch = new HttpPatch(path);
             httpPatch.setEntity(createEntityRequest(objectMapper().writeValueAsString(requestApiModel)));
             return execute(additionalHeaders, customerAccessToken, httpPatch);
-        } catch (JsonProcessingException exception) {
+        } catch (JacksonException exception) {
             throw new RuntimeException("An error occurred while converting object to json", exception);
         }
     }

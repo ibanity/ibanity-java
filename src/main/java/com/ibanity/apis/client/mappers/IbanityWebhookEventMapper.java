@@ -4,8 +4,8 @@ import com.ibanity.apis.client.jsonapi.DataApiModel;
 import com.ibanity.apis.client.jsonapi.ResourceApiModel;
 import com.ibanity.apis.client.models.IbanityWebhookEvent;
 import com.ibanity.apis.client.utils.IbanityUtils;
+import tools.jackson.core.JacksonException;
 
-import java.io.IOException;
 import java.util.function.Function;
 
 import static java.lang.String.format;
@@ -17,7 +17,7 @@ public class IbanityWebhookEventMapper {
         try {
             DataApiModel dataApiModel = IbanityUtils.objectMapper().readValue(payload, ResourceApiModel.class).getData();
             return customMapping.apply(dataApiModel);
-        } catch (IOException exception) {
+        } catch (JacksonException exception) {
             throw new IllegalArgumentException("Response cannot be parsed", exception);
         }
     }

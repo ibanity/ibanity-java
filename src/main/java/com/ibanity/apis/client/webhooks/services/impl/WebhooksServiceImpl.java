@@ -1,7 +1,7 @@
 package com.ibanity.apis.client.webhooks.services.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
 import com.ibanity.apis.client.exceptions.IbanityRuntimeException;
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityWebhookEvent;
@@ -32,9 +32,9 @@ public class WebhooksServiceImpl implements WebhooksService {
         verify(payload, jwt);
         try {
             JsonNode jsonNode = IbanityUtils.objectMapper().readTree(payload);
-            String type = jsonNode.get("data").get("type").textValue();
+            String type = jsonNode.get("data").get("type").asString();
             return WebhooksUtils.webhookEventParser(payload, type);
-        } catch (JsonProcessingException exception) {
+        } catch (JacksonException exception) {
             throw new IllegalArgumentException("Response cannot be parsed", exception);
         }
     }
