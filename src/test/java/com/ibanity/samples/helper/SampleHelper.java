@@ -9,9 +9,8 @@ import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitution
 import com.ibanity.apis.client.products.xs2a.sandbox.models.FinancialInstitutionUser;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.create.FinancialInstitutionHoldingCreationQuery;
 import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.create.FinancialInstitutionTransactionCreationQuery;
+import de.speedbanking.iban.RandomIban;
 import org.apache.commons.math3.util.Precision;
-import org.iban4j.CountryCode;
-import org.iban4j.Iban;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +67,7 @@ public class SampleHelper {
                 .description("Car rental")
 
                 .counterpartName("Stroman, Hettinger and Swift")
-                .counterpartReference(Iban.random(CountryCode.BE).getAccountNumber())
+                .counterpartReference(RandomIban.of("BE").getAccountNumber())
 
                 .executionDate(Instant.now().plus(3, ChronoUnit.DAYS))
                 .valueDate(Instant.now().minus(1, ChronoUnit.DAYS))
@@ -96,7 +95,7 @@ public class SampleHelper {
                 .currency("EUR")
 
                 .creditorName("Fake Creditor Name")
-                .creditorAccountReference(Iban.random(CountryCode.BE).toString())
+                .creditorAccountReference(RandomIban.of("BE").toString())
                 .creditorAccountReferenceType("IBAN")
 
                 .remittanceInformationType("unstructured")

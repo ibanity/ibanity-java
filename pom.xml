@@ -67,17 +67,18 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Artifact Dependencies Versions -->
-        <commons-configuration2.version>2.10.1</commons-configuration2.version>
-        <commons-lang.version>3.18.0</commons-lang.version>
-        <commons-io.version>2.17.0</commons-io.version>
+        <commons-configuration2.version>2.14.0</commons-configuration2.version>
+        <commons-lang.version>3.20.0</commons-lang.version>
+        <commons-io.version>2.21.0</commons-io.version>
         <commons-math3.version>3.6.1</commons-math3.version>
-        <commons-codec.version>1.15</commons-codec.version>
-        <slf4j.version>1.7.35</slf4j.version>
-        <httpclient.version>4.5.13</httpclient.version>
-        <jackson.version>2.13.3</jackson.version>
-        <bcpkix-jdk18.version>1.79</bcpkix-jdk18.version>
-        <lombok.version>1.18.22</lombok.version>
-        <iban4j.version>3.2.3-RELEASE</iban4j.version>
+        <commons-codec.version>1.21.0</commons-codec.version>
+        <slf4j.version>2.0.17</slf4j.version>
+        <httpclient.version>4.5.14</httpclient.version>
+        <jackson-annotations.version>2.21</jackson-annotations.version>
+        <jackson-datatype.version>2.21.2</jackson-datatype.version>
+        <bcpkix-jdk18.version>1.83</bcpkix-jdk18.version>
+        <lombok.version>1.18.44</lombok.version>
+        <iban-commons.version>1.8.6</iban-commons.version>
 
         <!-- Maven Plugin Versions -->
         <exec-maven-plugin.version>3.6.3</exec-maven-plugin.version>
@@ -159,19 +160,19 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jdk8</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>${jackson.version}</version>
+            <version>${jackson-annotations.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+            <version>${jackson-datatype.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>${jackson.version}</version>
+            <version>${jackson-datatype.version}</version>
         </dependency>
         <dependency>
             <groupId>org.bitbucket.b_c</groupId>
@@ -185,9 +186,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.iban4j</groupId>
-            <artifactId>iban4j</artifactId>
-            <version>${iban4j.version}</version>
+            <groupId>de.speedbanking</groupId>
+            <artifactId>iban-commons</artifactId>
+            <version>${iban-commons.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- use single aggregator artefact to pull in JUnit 5 -->
