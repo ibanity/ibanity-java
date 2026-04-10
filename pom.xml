@@ -77,27 +77,24 @@
         <jackson.version>2.13.3</jackson.version>
         <bcpkix-jdk18.version>1.79</bcpkix-jdk18.version>
         <lombok.version>1.18.22</lombok.version>
-
-        <!-- IBAN Generator -->
         <iban4j.version>3.2.3-RELEASE</iban4j.version>
 
         <!-- Maven Plugin Versions -->
-        <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
-        <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
-        <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
-        <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
-        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-        <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
-        <maven-checkstyle-plugin.version>3.0.0</maven-checkstyle-plugin.version>
-        <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
+        <exec-maven-plugin.version>3.6.3</exec-maven-plugin.version>
+        <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
+        <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
+        <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
+        <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
+        <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
+        <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
+        <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
         <extra-enforcer-rules.version>1.12.0</extra-enforcer-rules.version>
 
         <!-- Tests version -->
         <junit.version>5.10.2</junit.version>
         <junit-platform-launcher.version>1.8.2</junit-platform-launcher.version>
-        <junit-platform-surefire-provider.version>1.2.0</junit-platform-surefire-provider.version>
         <mockito.version>4.3.1</mockito.version>
         <assertj.version>3.22.0</assertj.version>
 
@@ -255,10 +252,8 @@
                         <phase>validate</phase>
                         <configuration>
                             <configLocation>google_checks.xml</configLocation>
-                            <encoding>UTF-8</encoding>
                             <consoleOutput>true</consoleOutput>
                             <failsOnError>true</failsOnError>
-                            <linkXRef>false</linkXRef>
                             <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
                             <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
                         </configuration>
@@ -356,7 +351,7 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
-<!-- To sign the artifacts -->
+            <!-- To sign the artifacts -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
@@ -383,7 +378,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <!--                    <argLine>${surefireArgLine}</argLine>-->
+                    <!-- <argLine>${surefireArgLine}</argLine> -->
                     <reuseForks>true</reuseForks>
                     <trimStackTrace>false</trimStackTrace>
                     <includes>
@@ -402,18 +397,6 @@
                         <exclude>**/utils/*</exclude>
                     </excludes>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.junit.platform</groupId>
-                        <artifactId>junit-platform-surefire-provider</artifactId>
-                        <version>${junit-platform-surefire-provider.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.junit.jupiter</groupId>
-                        <artifactId>junit-jupiter-engine</artifactId>
-                        <version>${junit.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
