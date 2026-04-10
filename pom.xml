@@ -219,6 +219,8 @@
     </dependencies>
 
     <build>
+        <defaultGoal>clean verify</defaultGoal>
+
         <plugins>
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
