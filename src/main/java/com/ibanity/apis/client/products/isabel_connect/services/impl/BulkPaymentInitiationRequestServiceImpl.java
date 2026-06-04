@@ -74,6 +74,10 @@ public class BulkPaymentInitiationRequestServiceImpl implements BulkPaymentIniti
         if (query.getHideDetails() != null ) {
             httpPost.setHeader("Hide-Details", query.getHideDetails().toString());
         }
+
+        if (StringUtils.isNotBlank(query.getEnvelopeName())) {
+            httpPost.setHeader("envelopeName", query.getEnvelopeName());
+        }
     }
 
     @Override
