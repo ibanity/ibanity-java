@@ -12,6 +12,7 @@ public class BulkPaymentInitiationRequestCreateQuery {
     private String accessToken;
     private Boolean shared;
     private Boolean hideDetails;
+    private String envelopeName;
     private String content;
     private File file;
     private String filename;
@@ -21,12 +22,14 @@ public class BulkPaymentInitiationRequestCreateQuery {
     private BulkPaymentInitiationRequestCreateQuery(String accessToken,
                                                     Boolean shared,
                                                     Boolean hideDetails,
+                                                    String envelopeName,
                                                     File file,
                                                     String filename,
                                                     Map<String, String> additionalHeaders) {
         this.accessToken = accessToken;
         this.shared = shared;
         this.hideDetails = hideDetails;
+        this.envelopeName = envelopeName;
         this.file = file;
         this.filename = filename;
         this.additionalHeaders = additionalHeaders;
@@ -35,12 +38,14 @@ public class BulkPaymentInitiationRequestCreateQuery {
     private BulkPaymentInitiationRequestCreateQuery(String accessToken,
                                                     Boolean shared,
                                                     Boolean hideDetails,
+                                                    String envelopeName,
                                                     String content,
                                                     String filename,
                                                     Map<String, String> additionalHeaders) {
         this.accessToken = accessToken;
         this.shared = shared;
         this.hideDetails = hideDetails;
+        this.envelopeName = envelopeName;
         this.content = content;
         this.filename = filename;
         this.additionalHeaders = additionalHeaders;
@@ -58,6 +63,7 @@ public class BulkPaymentInitiationRequestCreateQuery {
         private String accessToken;
         private Boolean shared;
         private Boolean hideDetails;
+        private String envelopeName;
         private File file;
         private String content;
         private String filename;
@@ -79,6 +85,11 @@ public class BulkPaymentInitiationRequestCreateQuery {
 
         public BulkPaymentInitiationRequestCreateQueryBuilder hideDetails(Boolean hideDetails) {
             this.hideDetails = hideDetails;
+            return this;
+        }
+
+        public BulkPaymentInitiationRequestCreateQueryBuilder envelopeName(String envelopeName) {
+            this.envelopeName = envelopeName;
             return this;
         }
 
@@ -113,11 +124,11 @@ public class BulkPaymentInitiationRequestCreateQuery {
                 throw new IllegalStateException("At most one of 'content' or 'file' must be present but both are provided");
 
             if (this.content != null) {
-                return new BulkPaymentInitiationRequestCreateQuery(accessToken, shared, hideDetails, content, filename, additionalHeaders);
+                return new BulkPaymentInitiationRequestCreateQuery(accessToken, shared, hideDetails, envelopeName, content, filename, additionalHeaders);
             }
 
             if (this.file != null) {
-                return new BulkPaymentInitiationRequestCreateQuery(accessToken, shared, hideDetails, file, filename, additionalHeaders);
+                return new BulkPaymentInitiationRequestCreateQuery(accessToken, shared, hideDetails, envelopeName, file, filename, additionalHeaders);
             }
 
             throw new IllegalStateException("At least one of 'content' or 'file' should be provided");
@@ -129,6 +140,7 @@ public class BulkPaymentInitiationRequestCreateQuery {
             sb.append("accessToken='").append(accessToken).append('\'');
             sb.append(", shared=").append(shared);
             sb.append(", hideDetails=").append(hideDetails);
+            if (envelopeName != null) sb.append(", envelopeName=").append(envelopeName);
             if (file != null) sb.append(", file=").append(file);
             if (content != null) sb.append(", content=").append(content);
             sb.append(", filename='").append(filename).append('\'');
