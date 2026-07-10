@@ -1,0 +1,26 @@
+{
+  "data": [
+    {
+      "attributes": {
+        "amount": 100.00,
+        "datetime": "2026-07-09T00:00:00",
+        "subtype": "CLBD"
+      },
+      "type": "balance"
+    },
+    {
+      "attributes": {
+        "amount": 200.00,
+        "datetime": "2026-07-10T09:23:40.987445389",
+        "subtype": "CLBD"
+      },
+      "type": "balance"
+    }
+  ],
+  "meta": {
+    "paging": {
+      "offset": 0,
+      "total": 2
+    }
+  }
+}

@@ -62,6 +62,22 @@ public class BalanceServiceImplTest {
         assertThat(actual.getPagingTotal()).isEqualTo(4);
     }
 
+    @Test
+    public void listWithVariablePrecisionDatetimes() throws Exception {
+        when(ibanityHttpClient.get(new URI(LIST_BALANCES_ENDPOINT), emptyMap(), ACCESS_TOKEN))
+                .thenReturn(loadHttpResponse("json/isabel-connect/balances_variable_precision.json"));
+
+        IsabelCollection<Balance> actual = balanceService.list(BalancesReadQuery.builder()
+                .accountId(ACCOUNT_ID)
+                .accessToken(ACCESS_TOKEN)
+                .build());
+
+        assertThat(actual.getItems()).extracting(Balance::getDatetime)
+                .containsExactly(
+                        LocalDateTime.parse("2026-07-09T00:00:00"),
+                        LocalDateTime.parse("2026-07-10T09:23:40.987445389"));
+    }
+
     private Balance createExpected() {
         return Balance.builder()
                 .datetime(LocalDateTime.parse("2018-10-12T22:46:32.417"))
