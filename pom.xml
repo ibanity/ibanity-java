@@ -47,7 +47,7 @@
 
     <properties>
         <!-- Artifact Version parts -->
-        <revision>6.1</revision>
+        <revision>6.2</revision>
         <changelist>-SNAPSHOT</changelist>
         <timestamp>${maven.build.timestamp}</timestamp>
 
