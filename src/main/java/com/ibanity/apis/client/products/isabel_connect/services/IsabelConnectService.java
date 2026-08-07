@@ -15,4 +15,8 @@ public interface IsabelConnectService {
     TransactionService transactionService();
 
     TokenService tokenService();
+
+    PaymentNotificationService paymentNotificationService();
+
+    PaymentStatusService paymentStatusService();
 }

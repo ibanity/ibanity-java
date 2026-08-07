@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "paging": {
+      "offset": 0,
+      "total": 1
+    }
+  },
+  "data": [
+    {
+      "attributes": {
+        "notificationType": "payment.status.updated",
+        "createdAt": "2026-06-04T14:30:00.000Z"
+      },
+      "type": "paymentNotification",
+      "id": "14e2bff5-e365-4bc7-bf48-76b7bcd464e9"
+    }
+  ]
+}

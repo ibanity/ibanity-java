@@ -14,6 +14,8 @@ public class IsabelConnectServiceImpl implements IsabelConnectService {
     private final IntradayTransactionService intradayTransactionService;
     private final TransactionService transactionService;
     private final TokenService tokenService;
+    private final PaymentNotificationService paymentNotificationService;
+    private final PaymentStatusService paymentStatusService;
 
     public IsabelConnectServiceImpl(
             ApiUrlProvider apiUrlProvider,
@@ -26,6 +28,8 @@ public class IsabelConnectServiceImpl implements IsabelConnectService {
         transactionService = new TransactionServiceImpl(apiUrlProvider, ibanityHttpClient);
         tokenService = new TokenServiceImpl(apiUrlProvider, oAuthHttpClient);
         bulkPaymentInitiationRequestService = new BulkPaymentInitiationRequestServiceImpl(apiUrlProvider, new IbanityResponseHandler(), ibanityHttpClient);
+        paymentNotificationService = new PaymentNotificationServiceImpl(apiUrlProvider, ibanityHttpClient);
+        paymentStatusService = new PaymentStatusServiceImpl(apiUrlProvider, ibanityHttpClient);
     }
 
     @Override
@@ -48,4 +52,10 @@ public class IsabelConnectServiceImpl implements IsabelConnectService {
 
     @Override
     public TokenService tokenService() { return tokenService; }
+
+    @Override
+    public PaymentNotificationService paymentNotificationService() { return paymentNotificationService; }
+
+    @Override
+    public PaymentStatusService paymentStatusService() { return paymentStatusService; }
 }
