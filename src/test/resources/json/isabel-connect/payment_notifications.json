@@ -12,7 +12,15 @@
         "createdAt": "2026-06-04T14:30:00.000Z"
       },
       "type": "paymentNotification",
-      "id": "14e2bff5-e365-4bc7-bf48-76b7bcd464e9"
+      "id": "14e2bff5-e365-4bc7-bf48-76b7bcd464e9",
+      "relationships": {
+        "payment": {
+          "data": {
+            "id": "90000036388319",
+            "type": "bulkPayment"
+          }
+        }
+      }
     }
   ]
 }

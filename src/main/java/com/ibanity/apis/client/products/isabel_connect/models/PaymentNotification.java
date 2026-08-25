@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.time.Instant;
+
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
@@ -18,5 +20,6 @@ public class PaymentNotification extends IsabelModel<String> {
     public static final String RESOURCE_TYPE = "paymentNotification";
 
     private String notificationType;
-    private String createdAt;
+    private Instant createdAt;
+    private String paymentId;
 }

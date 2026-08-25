@@ -1,0 +1,18 @@
+{
+  "data": {
+    "attributes": {
+      "createdAt": "2026-06-04T14:30:00.000Z",
+      "notificationType": "payment.status.updated"
+    },
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "relationships": {
+      "payment": {
+        "data": {
+          "id": "90000036388319",
+          "type": "bulkPayment"
+        }
+      }
+    },
+    "type": "isabelConnect.payment.status.updated"
+  }
+}

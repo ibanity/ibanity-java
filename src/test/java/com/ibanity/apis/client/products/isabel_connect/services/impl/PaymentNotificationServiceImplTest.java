@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.Collections;
 
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.createHttpResponse;
@@ -65,7 +66,8 @@ public class PaymentNotificationServiceImplTest {
         PaymentNotification notification = actual.getItems().get(0);
         assertThat(notification.getId()).isEqualTo(NOTIFICATION_ID);
         assertThat(notification.getNotificationType()).isEqualTo("payment.status.updated");
-        assertThat(notification.getCreatedAt()).isEqualTo("2026-06-04T14:30:00.000Z");
+        assertThat(notification.getCreatedAt()).isEqualTo(Instant.parse("2026-06-04T14:30:00.000Z"));
+        assertThat(notification.getPaymentId()).isEqualTo("90000036388319");
     }
 
     @Test

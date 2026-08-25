@@ -1,6 +1,7 @@
 package com.ibanity.apis.client.utils;
 
 import com.ibanity.apis.client.models.IbanityWebhookEvent;
+import com.ibanity.apis.client.webhooks.models.isabel_connect.PaymentStatusUpdated;
 import com.ibanity.apis.client.webhooks.models.ponto_connect.SynchronizationSucceededWithoutChange;
 import org.junit.jupiter.api.Test;
 
@@ -25,6 +26,23 @@ class WebhooksUtilsTest {
         String payload = loadFile("json/webhooks/ponto-connect/synchronizationSucceededWithoutChange.json");
         IbanityWebhookEvent ibanityWebhookEvent = WebhooksUtils.webhookEventParser(payload, "pontoConnect.synchronization.succeededWithoutChange");
         assertThat(ibanityWebhookEvent).isEqualTo(createExpectedWebhook()).usingRecursiveComparison();
+    }
+
+    @Test
+    void webhookEventParser_isabelConnect() throws IOException {
+        String payload = loadFile("json/webhooks/isabel-connect/paymentStatusUpdated.json");
+        IbanityWebhookEvent ibanityWebhookEvent = WebhooksUtils.webhookEventParser(payload, "isabelConnect.payment.status.updated");
+        assertThat(ibanityWebhookEvent).isEqualTo(createExpectedIsabelConnectWebhook()).usingRecursiveComparison();
+    }
+
+    private PaymentStatusUpdated createExpectedIsabelConnectWebhook() {
+        return PaymentStatusUpdated.builder()
+                .type("isabelConnect.payment.status.updated")
+                .notificationType("payment.status.updated")
+                .paymentId("90000036388319")
+                .id(UUID.fromString("550e8400-e29b-41d4-a716-446655440000"))
+                .createdAt(Instant.parse("2026-06-04T14:30:00.000Z"))
+                .build();
     }
 
     private SynchronizationSucceededWithoutChange createExpectedWebhook() {

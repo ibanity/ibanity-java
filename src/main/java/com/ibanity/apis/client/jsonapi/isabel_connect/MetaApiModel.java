@@ -12,10 +12,10 @@ public class MetaApiModel {
     private PagingApiModel paging;
 
     public Integer getPaginationOffset() {
-        return paging.getOffset();
+        return paging == null ? null : paging.getOffset();
     }
 
     public Integer getPaginationTotal() {
-        return paging.getTotal();
+        return paging == null ? null : paging.getTotal();
     }
 }
