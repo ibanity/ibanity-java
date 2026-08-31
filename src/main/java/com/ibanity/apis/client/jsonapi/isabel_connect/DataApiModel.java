@@ -1,5 +1,6 @@
 package com.ibanity.apis.client.jsonapi.isabel_connect;
 
+import com.ibanity.apis.client.jsonapi.RelationshipsApiModel;
 import lombok.*;
 
 import java.util.Map;
@@ -18,4 +19,6 @@ public class DataApiModel {
 
     @Builder.Default
     private Map<String, Object> attributes = emptyMap();
+    @Builder.Default
+    private Map<String, RelationshipsApiModel> relationships = emptyMap();
 }

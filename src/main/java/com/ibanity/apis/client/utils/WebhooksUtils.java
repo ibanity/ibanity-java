@@ -2,6 +2,7 @@ package com.ibanity.apis.client.utils;
 
 import com.ibanity.apis.client.exceptions.IbanityRuntimeException;
 import com.ibanity.apis.client.models.IbanityWebhookEvent;
+import com.ibanity.apis.client.webhooks.models.isabel_connect.PaymentStatusUpdated;
 import com.ibanity.apis.client.webhooks.models.xs2a.*;
 import org.apache.commons.codec.digest.MessageDigestAlgorithms;
 
@@ -46,6 +47,8 @@ public class WebhooksUtils {
     public static IbanityWebhookEvent webhookEventParser(String payload, String type) {
         if (type.contains("xs2a.")) {
             return parseXs2aEvent(payload, type);
+        } else if (type.contains("isabelConnect.")) {
+            return parseIsabelConnectEvent(payload, type);
         } else {
             return parsePontoConnectEvent(payload, type);
         }
@@ -118,6 +121,15 @@ public class WebhooksUtils {
                 return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.AccountReauthorized.mappingFunction());
             case com.ibanity.apis.client.webhooks.models.ponto_connect.PaymentRequestClosed.TYPE:
                 return mapWebhookResource(payload, com.ibanity.apis.client.webhooks.models.ponto_connect.PaymentRequestClosed.mappingFunction());
+        }
+
+        throw new IbanityRuntimeException(format("Event Type not handled by the java library \"%s\".", type));
+    }
+
+    private static IbanityWebhookEvent parseIsabelConnectEvent(String payload, String type) {
+        switch (type) {
+            case PaymentStatusUpdated.TYPE:
+                return mapWebhookResource(payload, PaymentStatusUpdated.mappingFunction());
         }
 
         throw new IbanityRuntimeException(format("Event Type not handled by the java library \"%s\".", type));

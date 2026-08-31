@@ -20,10 +20,10 @@ public class CollectionApiModel {
     private List<DataApiModel> data = emptyList();
 
     public Integer getPaginationOffset() {
-        return meta.getPaginationOffset();
+        return meta == null ? null : meta.getPaginationOffset();
     }
 
     public Integer getPaginationTotal() {
-        return meta.getPaginationTotal();
+        return meta == null ? null : meta.getPaginationTotal();
     }
 }
