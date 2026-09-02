@@ -7,7 +7,6 @@ import com.ibanity.apis.client.mappers.IsabelModelMapper;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.IsabelCollection;
 import com.ibanity.apis.client.products.isabel_connect.models.PaymentNotification;
-import com.ibanity.apis.client.products.isabel_connect.models.delete.PaymentNotificationDeleteQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.read.PaymentNotificationsReadQuery;
 import com.ibanity.apis.client.products.isabel_connect.services.PaymentNotificationService;
 import com.ibanity.apis.client.services.ApiUrlProvider;
@@ -39,12 +38,6 @@ public class PaymentNotificationServiceImpl implements PaymentNotificationServic
         });
     }
 
-    @Override
-    public void delete(PaymentNotificationDeleteQuery query) {
-        URI uri = buildUri(getNotificationUrl(query.getPaymentNotificationId()));
-        ibanityHttpClient.delete(uri, query.getAdditionalHeaders(), query.getAccessToken());
-    }
-
     private String extractPaymentId(DataApiModel data) {
         return Optional.ofNullable(data.getRelationships())
                 .map(relationships -> relationships.get("payment"))
@@ -57,13 +50,6 @@ public class PaymentNotificationServiceImpl implements PaymentNotificationServic
         String url = apiUrlProvider
                 .find(IbanityProduct.IsabelConnect, "bulkPaymentInitiationRequests")
                 .replace("{bulkPaymentInitiationRequestId}", "notifications");
-        return StringUtils.removeEnd(url, "/");
-    }
-
-    private String getNotificationUrl(String paymentNotificationId) {
-        String url = apiUrlProvider
-                .find(IbanityProduct.IsabelConnect, "bulkPaymentInitiationRequests")
-                .replace("{bulkPaymentInitiationRequestId}", "notifications/" + paymentNotificationId);
         return StringUtils.removeEnd(url, "/");
     }
 }

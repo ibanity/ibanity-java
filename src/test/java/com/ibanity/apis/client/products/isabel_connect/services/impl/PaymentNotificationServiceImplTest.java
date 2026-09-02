@@ -4,7 +4,6 @@ import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityProduct;
 import com.ibanity.apis.client.models.IsabelCollection;
 import com.ibanity.apis.client.products.isabel_connect.models.PaymentNotification;
-import com.ibanity.apis.client.products.isabel_connect.models.delete.PaymentNotificationDeleteQuery;
 import com.ibanity.apis.client.products.isabel_connect.models.read.PaymentNotificationsReadQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,10 +19,8 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.Collections;
 
-import static com.ibanity.apis.client.helpers.IbanityTestHelper.createHttpResponse;
 import static com.ibanity.apis.client.helpers.IbanityTestHelper.loadHttpResponse;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,7 +30,6 @@ public class PaymentNotificationServiceImplTest {
     private static final String BPIR_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/bulk-payment-initiation-requests/{bulkPaymentInitiationRequestId}";
     private static final String LIST_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/bulk-payment-initiation-requests/notifications?size=20";
     private static final String NOTIFICATION_ID = "14e2bff5-e365-4bc7-bf48-76b7bcd464e9";
-    private static final String DELETE_ENDPOINT = "https://api.ibanity.localhost/isabel-connect/bulk-payment-initiation-requests/notifications/" + NOTIFICATION_ID;
 
     @InjectMocks
     private PaymentNotificationServiceImpl service;
@@ -70,16 +66,4 @@ public class PaymentNotificationServiceImplTest {
         assertThat(notification.getPaymentId()).isEqualTo("90000036388319");
     }
 
-    @Test
-    public void delete() throws Exception {
-        when(ibanityHttpClient.delete(new URI(DELETE_ENDPOINT), Collections.emptyMap(), ACCESS_TOKEN))
-                .thenReturn(createHttpResponse(""));
-
-        service.delete(PaymentNotificationDeleteQuery.builder()
-                .accessToken(ACCESS_TOKEN)
-                .paymentNotificationId(NOTIFICATION_ID)
-                .build());
-
-        verify(ibanityHttpClient).delete(new URI(DELETE_ENDPOINT), Collections.emptyMap(), ACCESS_TOKEN);
-    }
 }
