@@ -38,7 +38,7 @@ class WebhooksUtilsTest {
     private PaymentStatusUpdated createExpectedIsabelConnectWebhook() {
         return PaymentStatusUpdated.builder()
                 .type("isabelConnect.payment.status.updated")
-                .notificationType("payment.status.updated")
+                .notificationId("14e2bff5-e365-4bc7-bf48-76b7bcd464e9")
                 .paymentId("90000036388319")
                 .id(UUID.fromString("550e8400-e29b-41d4-a716-446655440000"))
                 .createdAt(Instant.parse("2026-06-04T14:30:00.000Z"))

@@ -25,7 +25,7 @@ public class PaymentStatusUpdated implements IbanityWebhookEvent {
 
     private UUID id;
     private String type;
-    private String notificationType;
+    private String notificationId;
     private Instant createdAt;
     private String paymentId;
 
