@@ -61,7 +61,7 @@ public class PaymentNotificationServiceImplTest {
 
         PaymentNotification notification = actual.getItems().get(0);
         assertThat(notification.getId()).isEqualTo(NOTIFICATION_ID);
-        assertThat(notification.getNotificationType()).isEqualTo("payment.status.updated");
+        assertThat(notification.getNotificationId()).isEqualTo("b0221d66-b407-419a-9d8e-9e84894e37cc");
         assertThat(notification.getCreatedAt()).isEqualTo(Instant.parse("2026-06-04T14:30:00.000Z"));
         assertThat(notification.getPaymentId()).isEqualTo("90000036388319");
     }

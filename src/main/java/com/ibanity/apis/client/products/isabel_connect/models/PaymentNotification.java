@@ -19,7 +19,7 @@ import java.time.Instant;
 public class PaymentNotification extends IsabelModel<String> {
     public static final String RESOURCE_TYPE = "paymentNotification";
 
-    private String notificationType;
+    private String notificationId;
     private Instant createdAt;
     private String paymentId;
 }

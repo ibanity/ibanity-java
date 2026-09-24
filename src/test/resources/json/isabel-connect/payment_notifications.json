@@ -8,7 +8,7 @@
   "data": [
     {
       "attributes": {
-        "notificationType": "payment.status.updated",
+        "notificationId": "b0221d66-b407-419a-9d8e-9e84894e37cc",
         "createdAt": "2026-06-04T14:30:00.000Z"
       },
       "type": "paymentNotification",
