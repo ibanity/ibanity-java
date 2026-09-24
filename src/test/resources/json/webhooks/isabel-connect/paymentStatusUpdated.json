@@ -2,7 +2,7 @@
   "data": {
     "attributes": {
       "createdAt": "2026-06-04T14:30:00.000Z",
-      "notificationType": "payment.status.updated"
+      "notificationId": "14e2bff5-e365-4bc7-bf48-76b7bcd464e9"
     },
     "id": "550e8400-e29b-41d4-a716-446655440000",
     "relationships": {
