@@ -2,6 +2,7 @@ package com.ibanity.apis.client.products.isabel_connect.services.impl;
 
 import com.ibanity.apis.client.http.IbanityHttpClient;
 import com.ibanity.apis.client.models.IbanityProduct;
+import com.ibanity.apis.client.products.isabel_connect.models.PaymentStatusResult;
 import com.ibanity.apis.client.products.isabel_connect.models.read.PaymentStatusReadQuery;
 import com.ibanity.apis.client.services.ApiUrlProvider;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+
+import org.apache.http.message.BasicHeader;
 
 import java.net.URI;
 import java.util.Collections;
@@ -51,12 +54,13 @@ public class PaymentStatusServiceImplTest {
         when(ibanityHttpClient.get(new URI(FIND_ENDPOINT), Collections.emptyMap(), ACCESS_TOKEN))
                 .thenReturn(createHttpResponse(xmlContent));
 
-        String actual = service.find(PaymentStatusReadQuery.builder()
+        PaymentStatusResult actual = service.find(PaymentStatusReadQuery.builder()
                 .accessToken(ACCESS_TOKEN)
                 .bulkPaymentInitiationRequestId(PAYMENT_ID)
                 .build());
 
-        assertThat(actual).isEqualTo(xmlContent);
+        assertThat(actual.getBody()).isEqualTo(xmlContent);
+        assertThat(actual.getNotificationStatus()).isNull();
     }
 
     @Test
@@ -65,12 +69,28 @@ public class PaymentStatusServiceImplTest {
         when(ibanityHttpClient.get(new URI(FIND_WITH_NOTIFICATION_ENDPOINT), Collections.emptyMap(), ACCESS_TOKEN))
                 .thenReturn(createHttpResponse(xmlContent));
 
-        String actual = service.find(PaymentStatusReadQuery.builder()
+        PaymentStatusResult actual = service.find(PaymentStatusReadQuery.builder()
                 .accessToken(ACCESS_TOKEN)
                 .bulkPaymentInitiationRequestId(PAYMENT_ID)
                 .notificationId("a")
                 .build());
 
-        assertThat(actual).isEqualTo(xmlContent);
+        assertThat(actual.getBody()).isEqualTo(xmlContent);
+        assertThat(actual.getNotificationStatus()).isNull();
+    }
+
+    @Test
+    public void findWithNotificationIdWhenStatusIsUpToDate() throws Exception {
+        when(ibanityHttpClient.get(new URI(FIND_WITH_NOTIFICATION_ENDPOINT), Collections.emptyMap(), ACCESS_TOKEN))
+                .thenReturn(createHttpResponse("", new BasicHeader("x-notification-status", "upToDate")));
+
+        PaymentStatusResult actual = service.find(PaymentStatusReadQuery.builder()
+                .accessToken(ACCESS_TOKEN)
+                .bulkPaymentInitiationRequestId(PAYMENT_ID)
+                .notificationId("a")
+                .build());
+
+        assertThat(actual.getNotificationStatus()).isEqualTo("upToDate");
+        assertThat(actual.getBody()).isNull();
     }
 }
