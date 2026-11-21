@@ -9,8 +9,7 @@ import com.ibanity.apis.client.products.xs2a.sandbox.models.factory.read.Financi
 import com.ibanity.apis.client.products.xs2a.sandbox.services.FinancialInstitutionAccountsService;
 import com.ibanity.apis.client.services.IbanityService;
 import com.ibanity.samples.helper.SampleHelper;
-import org.iban4j.CountryCode;
-import org.iban4j.Iban;
+import de.speedbanking.iban.RandomIban;
 
 import static java.time.Instant.parse;
 import java.util.UUID;
@@ -30,7 +29,7 @@ public class FinancialInstitutionAccountSample {
                         .currentBalance(SampleHelper.generateRandomAmount())
                         .currency("EUR")
                         .description("Checking Account")
-                        .reference(Iban.random(CountryCode.BE).toString())
+                        .reference(RandomIban.of("BE").toString())
                         .referenceType("IBAN")
                         .product("Easy account")
                         .holderName("John Doe")
